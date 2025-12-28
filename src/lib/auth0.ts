@@ -19,7 +19,7 @@
  *   - https://bwb.pt/claims/org_roles
  */
 import "server-only";
-import { Auth0Client } from "@auth0/nextjs-auth0/server";
+import type { Auth0Client } from "@auth0/nextjs-auth0/server";
 
 // Lazy-initialized Auth0Client instance
 let _auth0Client: Auth0Client | null = null;
@@ -32,20 +32,28 @@ let _auth0Client: Auth0Client | null = null;
  */
 export function getAuth0(): Auth0Client {
   if (!_auth0Client) {
-    _auth0Client = new Auth0Client();
+    // Dynamic import to avoid build-time evaluation
+    const { Auth0Client: Auth0ClientClass } = require("@auth0/nextjs-auth0/server");
+    _auth0Client = new Auth0ClientClass();
   }
   return _auth0Client;
 }
 
-// Re-export for backwards compatibility (deprecated - use getAuth0() instead)
-// This creates a Proxy that delegates all calls to the lazy-initialized client
-export const auth0: Auth0Client = new Proxy({} as Auth0Client, {
-  get(_target, prop) {
-    const client = getAuth0();
-    const value = client[prop as keyof Auth0Client];
-    if (typeof value === "function") {
-      return value.bind(client);
-    }
-    return value;
+/**
+ * Auth0 client accessor object.
+ * Provides a compatible interface while ensuring lazy initialization.
+ */
+export const auth0 = {
+  get client(): Auth0Client {
+    return getAuth0();
   },
-});
+  getSession(...args: Parameters<Auth0Client["getSession"]>) {
+    return getAuth0().getSession(...args);
+  },
+  getAccessToken(...args: Parameters<Auth0Client["getAccessToken"]>) {
+    return getAuth0().getAccessToken(...args);
+  },
+  middleware(req: Parameters<Auth0Client["middleware"]>[0]) {
+    return getAuth0().middleware(req);
+  },
+};
