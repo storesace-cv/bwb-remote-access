@@ -34,7 +34,6 @@ interface UsersListClientProps {
   initialTotal: number;
   allowedDomains: ValidDomain[];
   filterDomain: ValidDomain | null;
-  isSuperAdmin: boolean;
 }
 
 export default function UsersListClient({
@@ -42,7 +41,6 @@ export default function UsersListClient({
   initialTotal,
   allowedDomains,
   filterDomain,
-  isSuperAdmin,
 }: UsersListClientProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [total, setTotal] = useState(initialTotal);
