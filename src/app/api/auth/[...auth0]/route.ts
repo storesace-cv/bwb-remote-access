@@ -16,7 +16,13 @@
  *   - https://bwb.pt/claims/org_roles
  */
 
+import { NextRequest, NextResponse } from "next/server";
 import { auth0 } from "@/lib/auth0";
 
-export const GET = auth0.handleAuth();
-export const POST = auth0.handleAuth();
+export async function GET(req: NextRequest): Promise<NextResponse> {
+  return auth0.handler(req);
+}
+
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  return auth0.handler(req);
+}
