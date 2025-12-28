@@ -1,32 +1,26 @@
-// Version: 2025-12-22T21:26:00Z - Re-deploy after syntax fix
-// Previous: 2025-12-22T19:38:00Z - Fixed auth pattern to match admin-list-groups (service role key)
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY =
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 interface CreateGroupRequest {
   name: string;
   description?: string;
   parent_group_id?: string;
-}
-
-function jsonResponse(
-  body: Record<string, unknown>,
-  status = 200,
-): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
 }
 
 async function fetchSupabaseJson(
@@ -46,87 +40,50 @@ async function fetchSupabaseJson(
 }
 
 async function handler(req: Request): Promise<Response> {
-  // CRITICAL: Handle OPTIONS first, before ANY other code
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("admin-create-group", correlationId);
+
   if (req.method === "OPTIONS") {
-    console.log("[admin-create-group] OPTIONS preflight request");
+    logger.info("OPTIONS preflight request");
     return new Response("ok", { headers: corsHeaders });
   }
 
-  // Wrap entire handler in try-catch to ensure errors return CORS headers
   try {
     if (req.method !== "POST") {
-      console.log(`[admin-create-group] Invalid method: ${req.method}`);
-      return jsonResponse({ error: "method_not_allowed" }, 405);
+      logger.warn("Invalid method", { method: req.method });
+      return jsonResponse({ error: "method_not_allowed" }, 405, corsHeaders);
     }
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      console.error("[admin-create-group] Missing Supabase env vars");
+      logger.error("Missing Supabase configuration");
       return jsonResponse(
-        {
-          error: "config_error",
-          message: "Missing Supabase configuration",
-        },
+        { error: "config_error", message: "Missing Supabase configuration" },
         500,
+        corsHeaders,
       );
     }
 
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("[admin-create-group] Missing Authorization header");
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Missing or invalid Authorization header",
-        },
-        401,
-      );
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
     }
 
-    const jwt = authHeader.substring(7);
-
-    // Validate JWT using service role key to bypass RLS
-    const authCheck = await fetchSupabaseJson(
-      `/auth/v1/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-        },
-      },
-    );
-
-    if (!authCheck.ok) {
-      console.error(
-        "[admin-create-group] JWT validation failed:",
-        authCheck.status,
-        authCheck.text,
-      );
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid or expired token",
-        },
-        401,
-      );
-    }
-
-    const user = authCheck.data as { id?: string } | null;
-    const authUserId = user?.id;
-
+    const authUserId = authResult.context.authUserId;
     if (!authUserId) {
-      console.log("[admin-create-group] No user ID in token");
+      logger.warn("No user ID in token");
       return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid user",
-        },
+        { error: "unauthorized", message: "Invalid user" },
         401,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-create-group] Caller auth_user_id: ${authUserId}`);
+    logger.info("User authenticated", undefined, authUserId);
 
-    // Get caller's mesh_user record to check user_type and agent_id
+    // Get caller's mesh_user record
     const callerCheck = await fetchSupabaseJson(
       `/rest/v1/mesh_users?select=id,user_type,domain,agent_id&auth_user_id=eq.${authUserId}`,
       {
@@ -139,29 +96,21 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!callerCheck.ok) {
-      console.error(
-        "[admin-create-group] Failed to get caller info:",
-        callerCheck.status,
-        callerCheck.text,
-      );
+      logger.error("Failed to get caller info", { status: callerCheck.status }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Failed to verify user permissions",
-        },
+        { error: "forbidden", message: "Failed to verify user permissions" },
         403,
+        corsHeaders,
       );
     }
 
     const callerData = Array.isArray(callerCheck.data) ? callerCheck.data : [];
     if (callerData.length === 0) {
-      console.log("[admin-create-group] No mesh_user record found for auth_user_id:", authUserId);
+      logger.warn("No mesh_user record found", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "User not found in mesh_users table",
-        },
+        { error: "forbidden", message: "User not found in mesh_users table" },
         403,
+        corsHeaders,
       );
     }
 
@@ -170,39 +119,35 @@ async function handler(req: Request): Promise<Response> {
     const userType = callerRecord.user_type;
     const agentId = callerRecord.agent_id ?? null;
 
-    console.log(`[admin-create-group] Caller user_type: ${userType}, agent_id: ${agentId}`);
+    logger.info("Caller info", { user_type: userType, agent_id: agentId }, authUserId);
 
-    // Validate user can create groups (agent, minisiteadmin, collaborator, or siteadmin)
+    // Validate permissions
     if (!["agent", "minisiteadmin", "colaborador", "siteadmin"].includes(userType ?? "")) {
-      console.log(`[admin-create-group] Access denied: user_type=${userType}`);
+      logger.warn("Access denied", { user_type: userType }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Only agents, minisiteadmins, siteadmins, and collaborators can create groups",
-        },
+        { error: "forbidden", message: "Only agents, minisiteadmins, siteadmins, and collaborators can create groups" },
         403,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-create-group] Access granted: user_type=${userType}`);
+    logger.info("Access granted", { user_type: userType }, authUserId);
 
     // Parse request body
     const body = await req.json() as CreateGroupRequest;
 
     if (!body.name || !body.name.trim()) {
+      logger.warn("Missing name", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "bad_request",
-          message: "name is required",
-        },
+        { error: "bad_request", message: "name is required" },
         400,
+        corsHeaders,
       );
     }
 
-    // Normalize name for duplicate detection
     const normalizedName = body.name.trim().toLowerCase().replace(/\s+/g, ' ');
 
-    // If parent_group_id is provided, verify it exists and belongs to the agent's tenant
+    // Validate parent group if provided
     if (body.parent_group_id) {
       const parentCheck = await fetchSupabaseJson(
         `/rest/v1/mesh_groups?select=id,agent_id,level&id=eq.${body.parent_group_id}&deleted_at=is.null`,
@@ -216,42 +161,37 @@ async function handler(req: Request): Promise<Response> {
       );
 
       if (!parentCheck.ok) {
-        console.error("[admin-create-group] Error checking parent group:", parentCheck.status, parentCheck.text);
+        logger.error("Error checking parent group", { status: parentCheck.status }, authUserId);
         return jsonResponse(
-          {
-            error: "database_error",
-            message: "Failed to verify parent group",
-          },
+          { error: "database_error", message: "Failed to verify parent group" },
           502,
+          corsHeaders,
         );
       }
 
       const parentData = Array.isArray(parentCheck.data) ? parentCheck.data : [];
       if (parentData.length === 0) {
+        logger.warn("Parent group not found", { parent_group_id: body.parent_group_id }, authUserId);
         return jsonResponse(
-          {
-            error: "not_found",
-            message: "Parent group not found",
-          },
+          { error: "not_found", message: "Parent group not found" },
           404,
+          corsHeaders,
         );
       }
 
       const parentGroup = parentData[0] as { agent_id: string; level: number };
       if (parentGroup.agent_id !== agentId) {
+        logger.warn("Parent group not in tenant", { parent_agent_id: parentGroup.agent_id, caller_agent_id: agentId }, authUserId);
         return jsonResponse(
-          {
-            error: "forbidden",
-            message: "Parent group does not belong to your tenant",
-          },
+          { error: "forbidden", message: "Parent group does not belong to your tenant" },
           403,
+          corsHeaders,
         );
       }
 
-      // CRITICAL: Enforce 2-level hierarchy limit (level 0 = root, level 1 = subgroup)
-      // Parent must be level 0 (root) to allow creating a subgroup
+      // Enforce 2-level hierarchy
       if (parentGroup.level >= 1) {
-        console.log(`[admin-create-group] Rejected: parent group level=${parentGroup.level}, max allowed=0`);
+        logger.warn("Hierarchy limit exceeded", { parent_level: parentGroup.level }, authUserId);
         return jsonResponse(
           {
             error: "hierarchy_limit",
@@ -259,11 +199,12 @@ async function handler(req: Request): Promise<Response> {
             details: "Parent group must be a root group (level 0)",
           },
           400,
+          corsHeaders,
         );
       }
     }
 
-    // Check for duplicate group name at same level (using normalized name)
+    // Check for duplicate
     const existingQuery = await fetchSupabaseJson(
       `/rest/v1/mesh_groups?select=id,name,parent_group_id&agent_id=eq.${agentId}&deleted_at=is.null`,
       {
@@ -279,24 +220,22 @@ async function handler(req: Request): Promise<Response> {
       const existingGroups = existingQuery.data as Array<{ name: string; parent_group_id: string | null }>;
       for (const existing of existingGroups) {
         const existingNormalized = existing.name.trim().toLowerCase().replace(/\s+/g, ' ');
-        const sameLevel = body.parent_group_id 
+        const sameLevel = body.parent_group_id
           ? existing.parent_group_id === body.parent_group_id
           : !existing.parent_group_id;
 
         if (existingNormalized === normalizedName && sameLevel) {
+          logger.warn("Duplicate group name", { name: body.name }, authUserId);
           return jsonResponse(
-            {
-              error: "conflict",
-              message: "Group with this name already exists at this level",
-              existing_name: existing.name,
-            },
+            { error: "conflict", message: "Group with this name already exists at this level", existing_name: existing.name },
             409,
+            corsHeaders,
           );
         }
       }
     }
 
-    // Create group using service role key (bypasses RLS)
+    // Create group
     const insertPayload = {
       agent_id: agentId,
       owner_user_id: callerId,
@@ -321,25 +260,21 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!createQuery.ok) {
-      console.error("[admin-create-group] Failed to create group:", createQuery.status, createQuery.text);
+      logger.error("Failed to create group", { status: createQuery.status }, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Failed to create group",
-          details: createQuery.text,
-        },
+        { error: "database_error", message: "Failed to create group", details: createQuery.text },
         502,
+        corsHeaders,
       );
     }
 
     const groups = Array.isArray(createQuery.data) ? createQuery.data : [];
     if (groups.length === 0) {
+      logger.error("Group created but not returned", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Group created but not returned",
-        },
+        { error: "database_error", message: "Group created but not returned" },
         502,
+        corsHeaders,
       );
     }
 
@@ -353,7 +288,7 @@ async function handler(req: Request): Promise<Response> {
       created_at: string;
     };
 
-    console.log(`[admin-create-group] Successfully created group: ${group.id}`);
+    logger.info("Group created successfully", { id: group.id, name: group.name }, authUserId);
 
     return jsonResponse(
       {
@@ -369,14 +304,14 @@ async function handler(req: Request): Promise<Response> {
         },
       } as Record<string, unknown>,
       201,
+      corsHeaders,
     );
   } catch (err) {
-    // CRITICAL: Catch all errors and return with CORS headers
-    console.error("[admin-create-group] Unhandled error:", err);
-    const message = err instanceof Error ? err.message : String(err);
+    logger.error("Unhandled error", { error: err instanceof Error ? err.message : String(err) });
     return jsonResponse(
-      { error: "internal_error", message },
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
       500,
+      corsHeaders,
     );
   }
 }
