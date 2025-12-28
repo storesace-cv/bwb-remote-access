@@ -24,23 +24,27 @@ export function AddDevicePanel({ onStartRegistration }: AddDevicePanelProps) {
         <button
           type="button"
           onClick={onStartRegistration}
-          className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 text-left"
+          className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-5 text-left flex items-center gap-5"
         >
-          <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl mb-3">
+          <div className="w-16 h-16 rounded-xl bg-sky-600/20 flex items-center justify-center text-3xl flex-shrink-0">
             📷
           </div>
-          <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
-          <p className="text-xs text-slate-400">Para dispositivos com câmara</p>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-base font-semibold text-white">Escanear QR Code</h3>
+            <p className="text-sm text-slate-400">Para dispositivos com câmara</p>
+          </div>
         </button>
         <Link
           href="/provisioning"
-          className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4"
+          className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-5 flex items-center gap-5"
         >
-          <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl mb-3">
+          <div className="w-16 h-16 rounded-xl bg-purple-600/20 flex items-center justify-center text-3xl flex-shrink-0">
             🔢
           </div>
-          <h3 className="font-medium text-white mb-1">Provisionamento sem QR</h3>
-          <p className="text-xs text-slate-400">Para Android TV e boxes</p>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-base font-semibold text-white">Provisionamento sem QR</h3>
+            <p className="text-sm text-slate-400">Para Android TV e boxes</p>
+          </div>
         </Link>
       </div>
 

@@ -22,23 +22,27 @@ export function AgentPanel({ userDomain }: AgentPanelProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Link
           href="/dashboard/collaborators"
-          className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all"
+          className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-5 transition-all flex items-center gap-5"
         >
-          <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl mb-3">
+          <div className="w-16 h-16 rounded-xl bg-emerald-600/20 flex items-center justify-center text-3xl flex-shrink-0">
             👥
           </div>
-          <h3 className="font-medium text-white mb-1">Colaboradores</h3>
-          <p className="text-xs text-slate-400">Criar e gerir colaboradores</p>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-base font-semibold text-white">Colaboradores</h3>
+            <p className="text-sm text-slate-400">Criar e gerir colaboradores</p>
+          </div>
         </Link>
         <Link
           href="/dashboard/groups"
-          className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all"
+          className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-5 transition-all flex items-center gap-5"
         >
-          <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl mb-3">
+          <div className="w-16 h-16 rounded-xl bg-blue-600/20 flex items-center justify-center text-3xl flex-shrink-0">
             📦
           </div>
-          <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
-          <p className="text-xs text-slate-400">Organizar dispositivos e permissões</p>
+          <div className="flex flex-col gap-1">
+            <h3 className="text-base font-semibold text-white">Grupos e Permissões</h3>
+            <p className="text-sm text-slate-400">Organizar dispositivos e permissões</p>
+          </div>
         </Link>
       </div>
     </section>
