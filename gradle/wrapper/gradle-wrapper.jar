@@ -1,0 +1,4 @@
+This is a placeholder file for the Gradle wrapper JAR.
+For a fully self-contained wrapper, regenerate it locally by running:
+  gradle wrapper --gradle-version 8.7
+This will overwrite this file with the proper binary JAR.

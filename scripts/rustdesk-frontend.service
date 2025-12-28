@@ -1,0 +1,55 @@
+[Unit]
+Description=RustDesk Web Frontend
+Documentation=https://github.com/softgenai/sg-00e556e4-1309-4eac-a867-9e42d8025b56-1765151303.git
+After=network.target
+
+[Service]
+Type=simple
+User=rustdeskweb
+Group=rustdeskweb
+WorkingDirectory=/opt/rustdesk-frontend
+
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+ExecStart=/usr/bin/npm start
+
+Restart=always
+RestartSec=10
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rustdesk-frontend
+
+# --- Security hardening (tight) ---
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+# Só permitir escrita onde é necessário
+ReadWritePaths=/opt/rustdesk-frontend/.next /opt/rustdesk-frontend/logs /opt/rustdesk-frontend/tmp /var/log/rustdesk-mesh
+
+# Bloqueia paths típicos de dropper
+InaccessiblePaths=/root /home /opt/rustdesk-frontend/scripts /opt/rustdesk-frontend/.pm2
+
+# Restrições adicionais
+LockPersonality=true
+RestrictSUIDSGID=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictNamespaces=true
+RestrictRealtime=true
+
+SystemCallArchitectures=native
+SystemCallFilter=~@mount @swap @reboot @raw-io @module @debug @obsolete
+
+# Evita execução em tmp
+NoExecPaths=/opt/rustdesk-frontend/tmp /tmp /var/tmp /dev/shm
+
+[Install]
+WantedBy=multi-user.target

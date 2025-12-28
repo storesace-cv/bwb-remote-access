@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <!-- SCREEN 1 — Initial State (Installation Code) -->
+    <LinearLayout
+        android:id="@+id/screenEnterCode"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BWB – Android Provisioner"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+        <TextView
+            android:id="@+id/textInitialState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This device is not yet associated."
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/labelInstallationCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Installation Code"
+            android:paddingBottom="4dp" />
+
+        <EditText
+            android:id="@+id/editInstallationCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="4"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:nextFocusDown="@id/buttonValidateCode" />
+
+        <Button
+            android:id="@+id/buttonValidateCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Validate Code"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+
+    <!-- SCREEN 2 — Confirmation (READ-ONLY) -->
+    <LinearLayout
+        android:id="@+id/screenConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/confirmTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BWB – Android Provisioner"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Company"
+            android:paddingTop="4dp" />
+
+        <TextView
+            android:id="@+id/textCompanyValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BWB"
+            android:textStyle="bold"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Account"
+            android:paddingTop="4dp" />
+
+        <TextView
+            android:id="@+id/textAccountValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="support@bwb.pt"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tenant ID"
+            android:paddingTop="4dp" />
+
+        <TextView
+            android:id="@+id/textTenantIdValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User ID"
+            android:paddingTop="4dp" />
+
+        <TextView
+            android:id="@+id/textUserIdValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:paddingTop="4dp" />
+
+        <TextView
+            android:id="@+id/textStatusValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pending adoption"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/textConfirmMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This device will be associated with the account above."
+            android:paddingBottom="24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonConfirmConfigure"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Confirm and Configure"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp" />
+
+            <Button
+                android:id="@+id/buttonCancelConfirm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- SCREEN 3 — Provisioning -->
+    <LinearLayout
+        android:id="@+id/screenProvisioning"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/provisioningTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Provisioning"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+        <TextView
+            android:id="@+id/provisioningSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please wait..."
+            android:paddingBottom="12dp" />
+
+        <ScrollView
+            android:id="@+id/logScroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:padding="4dp" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/buttonContinueAfterInstall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue (RustDesk Installed)"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- SCREEN 4 — Completion (kept for backward compatibility but may not be shown) -->
+    <LinearLayout
+        android:id="@+id/screenCompletion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/completionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RustDesk Installed"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+        <TextView
+            android:id="@+id/completionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RustDesk has been installed successfully. Now you need to configure it."
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/completionStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: Installation complete"
+            android:paddingBottom="24dp" />
+
+        <Button
+            android:id="@+id/buttonOpenRustdesk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next: Configure RustDesk"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp" />
+    </LinearLayout>
+
+    <!-- SCREEN 5 — Config Instructions -->
+    <ScrollView
+        android:id="@+id/screenConfigInstructions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="top">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Configure RustDesk"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RustDesk is installed! Now configure the server settings:"
+                android:paddingBottom="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 1: Review Server Configuration"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Use the values below and the Copy buttons to fill RustDesk Network settings."
+                android:paddingBottom="12dp" />
+
+            <!-- ID Server row -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID Server"
+                android:textStyle="bold"
+                android:paddingBottom="2dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/textIdServer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textIsSelectable="true"
+                    android:paddingEnd="8dp" />
+
+                <Button
+                    android:id="@+id/buttonCopyIdServer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Copy" />
+            </LinearLayout>
+
+            <!-- Relay Server row -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Relay Server"
+                android:textStyle="bold"
+                android:paddingBottom="2dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/textRelayServer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textIsSelectable="true"
+                    android:paddingEnd="8dp" />
+
+                <Button
+                    android:id="@+id/buttonCopyRelayServer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Copy" />
+            </LinearLayout>
+
+            <!-- API Server row -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="API Server"
+                android:textStyle="bold"
+                android:paddingBottom="2dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:id="@+id/textApiServer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textIsSelectable="true"
+                    android:paddingEnd="8dp" />
+
+                <Button
+                    android:id="@+id/buttonCopyApiServer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Copy" />
+            </LinearLayout>
+
+            <!-- Key row -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Key"
+                android:textStyle="bold"
+                android:paddingBottom="2dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/textKey"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textIsSelectable="true"
+                    android:paddingEnd="8dp" />
+
+                <Button
+                    android:id="@+id/buttonCopyKey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Copy" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonConfigRustdesk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CONFIG RUSTDESK"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 2: Open RustDesk"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Launch RustDesk to paste the configuration."
+                android:paddingBottom="8dp" />
+
+            <Button
+                android:id="@+id/buttonOpenRustdeskFromInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🚀 Open RustDesk"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 3: Paste Settings in RustDesk"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. In RustDesk, tap the Menu icon (⋮)\n2. Select 'Settings'\n3. Tap 'Network'\n4. Manually paste each copied value:\n   • ID Server\n   • Relay Server\n   • API Server\n   • Key\n5. Tap 'Apply' to save the configuration"
+                android:paddingBottom="16dp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RustDesk ID"
+                android:textStyle="bold"
+                android:paddingBottom="2dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
+
+                <EditText
+                    android:id="@+id/editRustDeskId"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:hint="Ex: 123456789"
+                    android:singleLine="true"
+                    android:maxLength="12"
+                    android:paddingEnd="8dp" />
+
+                <Button
+                    android:id="@+id/buttonPasteRustDeskId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PASTE RD ID" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Step 4: Verify Configuration"
+                android:textStyle="bold"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="After pasting all values, verify that ID Server, Relay Server, API Server, and Key are all filled in RustDesk Network settings."
+                android:paddingBottom="8dp" />
+
+            <Button
+                android:id="@+id/buttonVerifyConfig"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="✓ I Applied All Settings (Verify)"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp" />
+
+            <Button
+                android:id="@+id/buttonSendRustDeskId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ENVIAR RUSTDESK ID"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:layout_marginTop="12dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

@@ -1,0 +1,280 @@
+bash-3.2$ ./scripts/build-and-deploy-android.sh release
+╔════════════════════════════════════════════════════════════╗
+║       Build e Deploy de Android APK para Droplet          ║
+╚════════════════════════════════════════════════════════════╝
+
+📍 Repositório: /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration
+📍 Build Type:  release
+📍 Log local:   /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/logs/android-build/build-and-deploy-20251224-151542.log
+
+☕ JAVA_HOME forçado para Java 17: /Library/Java/JavaVirtualMachines/liberica-jdk-17.jdk/Contents/Home
+
+🧹 A limpar builds anteriores...
+> Task :clean
+> Task :androidProvisioner:clean
+> Task :provisionerApp:clean
+
+[Incubating] Problems report is available at: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 850ms
+3 actionable tasks: 3 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.2.1/userguide/configuration_cache_enabling.html
+
+🔨 A compilar APK (release)...
+WARNING: We recommend using a newer Android Gradle plugin to use compileSdk = 35
+
+This Android Gradle plugin (8.5.2) was tested up to compileSdk = 34.
+
+You are strongly encouraged to update your project to use a newer
+Android Gradle plugin that has been tested with compileSdk = 35.
+
+If you are already using the latest version of the Android Gradle plugin,
+you may need to wait until a newer version with support for compileSdk = 35 is available.
+
+For more information refer to the compatibility table:
+https://d.android.com/r/tools/api-level-support
+
+To suppress this warning, add/update
+    android.suppressUnsupportedCompileSdk=35
+to this project's gradle.properties.
+> Task :androidProvisioner:checkKotlinGradlePluginConfigurationErrors
+> Task :androidProvisioner:preBuild UP-TO-DATE
+> Task :androidProvisioner:preReleaseBuild UP-TO-DATE
+> Task :provisionerApp:buildKotlinToolingMetadata
+> Task :androidProvisioner:generateReleaseResValues FROM-CACHE
+> Task :provisionerApp:checkKotlinGradlePluginConfigurationErrors
+> Task :provisionerApp:preBuild UP-TO-DATE
+> Task :provisionerApp:preReleaseBuild UP-TO-DATE
+> Task :androidProvisioner:generateReleaseResources FROM-CACHE
+> Task :androidProvisioner:packageReleaseResources FROM-CACHE
+> Task :provisionerApp:generateReleaseBuildConfig
+> Task :provisionerApp:generateReleaseResValues FROM-CACHE
+> Task :androidProvisioner:parseReleaseLocalResources FROM-CACHE
+> Task :androidProvisioner:generateReleaseRFile FROM-CACHE
+> Task :provisionerApp:mapReleaseSourceSetPaths
+> Task :provisionerApp:generateReleaseResources
+> Task :androidProvisioner:javaPreCompileRelease FROM-CACHE
+> Task :androidProvisioner:extractProguardFiles
+> Task :androidProvisioner:processReleaseManifest FROM-CACHE
+> Task :androidProvisioner:prepareLintJarForPublish UP-TO-DATE
+> Task :androidProvisioner:compileReleaseLibraryResources FROM-CACHE
+> Task :androidProvisioner:writeReleaseAarMetadata
+> Task :androidProvisioner:extractDeepLinksRelease FROM-CACHE
+> Task :androidProvisioner:mergeReleaseJniLibFolders
+> Task :androidProvisioner:mergeReleaseNativeLibs NO-SOURCE
+> Task :androidProvisioner:stripReleaseDebugSymbols NO-SOURCE
+> Task :androidProvisioner:copyReleaseJniLibsProjectAndLocalJars
+> Task :androidProvisioner:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :androidProvisioner:mergeReleaseShaders
+> Task :androidProvisioner:compileReleaseShaders NO-SOURCE
+> Task :androidProvisioner:generateReleaseAssets UP-TO-DATE
+> Task :androidProvisioner:packageReleaseAssets
+> Task :androidProvisioner:prepareReleaseArtProfile UP-TO-DATE
+> Task :androidProvisioner:writeReleaseLintModelMetadata
+> Task :androidProvisioner:copyReleaseJniLibsProjectOnly
+> Task :provisionerApp:checkReleaseAarMetadata
+> Task :provisionerApp:packageReleaseResources
+> Task :provisionerApp:createReleaseCompatibleScreenManifests
+> Task :provisionerApp:extractDeepLinksRelease FROM-CACHE
+> Task :provisionerApp:parseReleaseLocalResources
+> Task :provisionerApp:processReleaseMainManifest FROM-CACHE
+> Task :provisionerApp:processReleaseManifest FROM-CACHE
+> Task :provisionerApp:processReleaseManifestForPackage FROM-CACHE
+> Task :provisionerApp:javaPreCompileRelease FROM-CACHE
+> Task :provisionerApp:extractProguardFiles
+> Task :provisionerApp:mergeReleaseJniLibFolders
+> Task :provisionerApp:mergeReleaseNativeLibs NO-SOURCE
+> Task :provisionerApp:stripReleaseDebugSymbols NO-SOURCE
+> Task :provisionerApp:extractReleaseNativeSymbolTables NO-SOURCE
+> Task :provisionerApp:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :provisionerApp:desugarReleaseFileDependencies FROM-CACHE
+> Task :provisionerApp:mergeReleaseStartupProfile UP-TO-DATE
+> Task :provisionerApp:mergeReleaseShaders
+> Task :provisionerApp:mergeReleaseArtProfile
+> Task :provisionerApp:compileReleaseShaders NO-SOURCE
+> Task :provisionerApp:generateReleaseAssets UP-TO-DATE
+> Task :provisionerApp:mergeReleaseAssets
+> Task :provisionerApp:compressReleaseAssets FROM-CACHE
+> Task :provisionerApp:checkReleaseDuplicateClasses
+> Task :provisionerApp:extractReleaseVersionControlInfo
+> Task :provisionerApp:mergeExtDexRelease FROM-CACHE
+> Task :androidProvisioner:kspReleaseKotlin
+> Task :provisionerApp:mergeReleaseResources
+> Task :provisionerApp:collectReleaseDependencies
+> Task :provisionerApp:sdkReleaseDependencyData
+> Task :provisionerApp:writeReleaseAppMetadata
+> Task :provisionerApp:writeReleaseSigningConfigVersions
+> Task :provisionerApp:processReleaseResources
+> Task :androidProvisioner:compileReleaseKotlin
+> Task :androidProvisioner:compileReleaseJavaWithJavac NO-SOURCE
+> Task :androidProvisioner:generateReleaseLintVitalModel
+> Task :androidProvisioner:bundleLibRuntimeToJarRelease
+> Task :androidProvisioner:processReleaseJavaRes
+> Task :androidProvisioner:createFullJarRelease
+> Task :androidProvisioner:generateReleaseLintModel
+> Task :androidProvisioner:bundleLibCompileToJarRelease
+> Task :androidProvisioner:extractReleaseAnnotations
+> Task :androidProvisioner:mergeReleaseGeneratedProguardFiles
+> Task :androidProvisioner:mergeReleaseConsumerProguardFiles
+> Task :provisionerApp:optimizeReleaseResources
+> Task :androidProvisioner:mergeReleaseJavaResource
+> Task :androidProvisioner:bundleLibRuntimeToDirRelease
+> Task :androidProvisioner:syncReleaseLibJars
+> Task :androidProvisioner:bundleReleaseLocalLintAar
+
+> Task :provisionerApp:compileReleaseKotlin FAILED
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:123:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:182:13 Unresolved reference: onValidateCodeClicked
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:186:13 Unresolved reference: onConfirmAndConfigure
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:191:13 Unresolved reference: showScreen
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:207:13 Unresolved reference: onContinueAfterInstallClicked
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:234:9 Unresolved reference: showScreen
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:235:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:245:9 Unresolved reference: handleDeepLinkIfPresent
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:250:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:259:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:265:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:271:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:276:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:285:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:304:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:313:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:321:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:335:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:349:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:350:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:351:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:352:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:353:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:359:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:363:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:372:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:391:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:404:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:411:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:416:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:423:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:430:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:437:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:470:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:475:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:477:21 Unresolved reference: showScreen
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:484:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:491:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:515:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:516:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:523:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:530:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:539:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:549:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:550:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:555:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:562:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:570:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:571:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:572:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:575:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:578:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:581:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:593:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:613:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:614:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:618:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:619:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:647:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:648:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:666:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:680:33 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:681:33 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:682:33 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:691:33 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:692:33 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:705:41 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:711:37 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:718:37 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:727:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:728:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:740:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:741:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:756:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:757:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:764:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:771:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:774:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:780:50 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:790:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:796:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:803:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:809:46 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:816:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:843:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:852:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:853:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:854:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:855:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:868:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:869:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:876:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:885:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:893:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:911:45 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:919:33 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:926:29 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:933:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:934:25 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:941:46 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:948:21 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:956:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:963:17 Unresolved reference: showScreen
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:985:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:986:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:987:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:993:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1002:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1003:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1010:9 Unresolved reference: showScreen
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1021:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1033:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1034:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1035:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1036:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1044:17 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1068:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1069:9 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1073:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1088:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1089:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1091:13 Unresolved reference: appendLog
+e: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/provisionerApp/src/main/java/pt/bwb/provisioner/app/MainActivity.kt:1105:17 Unresolved reference: appendLog
+
+> Task :androidProvisioner:lintVitalAnalyzeRelease
+
+[Incubating] Problems report is available at: file:///Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':provisionerApp:compileReleaseKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.2.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 7s
+71 actionable tasks: 49 executed, 18 from cache, 4 up-to-date

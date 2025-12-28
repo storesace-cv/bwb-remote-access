@@ -1,0 +1,341 @@
+devtools:
+
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-delete-device' \
+-X 'POST' \
+-H 'Content-Type: application/json' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1Njc2OTU5LCJpYXQiOjE3NjU2NzMzNTksImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU2NzMzNTl9XSwic2Vzc2lvbl9pZCI6IjI5OTU1M2JmLTQyMDYtNGI5ZC1iM2Y5LWExMjFhYjQ0ZTU5YiIsImlzX2Fub255bW91cyI6ZmFsc2V9.AsJLxBKfyGYrQ09Hm2RM336SXziGlKWWjmw3C1sWKnM' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Origin: https://rustdesk.bwb.pt' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Content-Length: 26' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+--data-raw '{"device_id":"1858682034"}'
+
+
+-------------------------------------------------
+
+[Error] Failed to load resource: the server responded with a status of 502 () (admin-delete-device, line 0)
+[Error] Erro ao apagar device (admin): – "Failed to delete device"
+	(anonymous function) (3a838be12a266aba.js:1:16266)
+
+---------------------------------------------------
+
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-delete-device' \
+-X 'POST' \
+-H 'Content-Type: application/json' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1Njc2OTU5LCJpYXQiOjE3NjU2NzMzNTksImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU2NzMzNTl9XSwic2Vzc2lvbl9pZCI6IjI5OTU1M2JmLTQyMDYtNGI5ZC1iM2Y5LWExMjFhYjQ0ZTU5YiIsImlzX2Fub255bW91cyI6ZmFsc2V9.AsJLxBKfyGYrQ09Hm2RM336SXziGlKWWjmw3C1sWKnM' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Origin: https://rustdesk.bwb.pt' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Content-Length: 26' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+--data-raw '{"device_id":"1858682034"}'
+
+
+-----------------------------------------------------
+
+[Error] Failed to load resource: the server responded with a status of 502 () (admin-update-device, line 0)
+
+[Error] Erro ao reatribuir device (admin): – "Failed to update device"
+	(anonymous function) (3a838be12a266aba.js:1:15649)
+-------------------------------------------------------
+
+admin-delete-device
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "5927360c-cdfa-4e3c-ba52-4ddd2042278e",
+    "level": "log",
+    "timestamp": 1765673486504000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "38574d6d-e6de-4fee-b678-2f622e365d23",
+    "level": "log",
+    "timestamp": 1765673486314000
+  },
+  {
+    "event_message": "[admin-delete-device] Error updating device: 400 {\"code\":\"PGRST204\",\"details\":null,\"hint\":null,\"message\":\"Could not find the 'updated_at' column of 'android_devices' in the schema cache\"}\n",
+    "event_type": "Log",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "06909e12-ea37-456e-b92d-97d19ea05b9c",
+    "level": "error",
+    "timestamp": 1765673411656000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "f9b6a835-7a5d-4126-9bfb-869da4bfb3f0",
+    "level": "info",
+    "timestamp": 1765673411480000
+  },
+  {
+    "event_message": "booted (time: 33ms)",
+    "event_type": "Boot",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "40eee015-2149-4c24-87ef-01383ba505f0",
+    "level": "log",
+    "timestamp": 1765673411478000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "c278bb8d-a58b-4073-aec5-9472d19df6b4",
+    "level": "info",
+    "timestamp": 1765673411299000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "ce2e41fd-4508-44bf-be2a-3bf2c5d40a05",
+    "level": "log",
+    "timestamp": 1765673411298000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "abd07dc8-78a6-4b80-b14b-34b89d3da6c5",
+    "level": "log",
+    "timestamp": 1765672586864000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "fca8bfcc-9128-4afe-b21f-1275e8ecf2d9",
+    "level": "log",
+    "timestamp": 1765672586672000
+  },
+  {
+    "event_message": "[admin-delete-device] Error updating device: {\n  code: \"PGRST204\",\n  details: null,\n  hint: null,\n  message: \"Could not find the 'updated_at' column of 'android_devices' in the schema cache\"\n}\n",
+    "event_type": "Log",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "b9d17e0d-6714-44ac-98cc-6f2c9a892c2b",
+    "level": "error",
+    "timestamp": 1765672512283000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "0a21eb30-d442-468f-91c4-98351e22f11f",
+    "level": "info",
+    "timestamp": 1765672511833000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "82c8e9c4-c994-41c0-bcde-3100fbaafe6c",
+    "level": "log",
+    "timestamp": 1765672511829000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "1b9b28e6-a819-49c2-bab3-3eba46f1b295",
+    "level": "info",
+    "timestamp": 1765672511640000
+  },
+  {
+    "event_message": "booted (time: 58ms)",
+    "event_type": "Boot",
+    "function_id": "8bcdf106-f250-4018-b932-0adc6cb77c7d",
+    "id": "b2d5e809-fd08-4d53-a2c8-1a5a5508f37f",
+    "level": "log",
+    "timestamp": 1765672511634000
+  }
+]
+
+-------------------------------------------------------
+
+admin-list-mesh-users
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "a829dbaf-5836-4612-a315-0e624a25049c",
+    "level": "log",
+    "timestamp": 1765673435727000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ee2c5144-07ee-42a2-82ac-01e6e8a8333d",
+    "level": "log",
+    "timestamp": 1765673435582000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "aec2d94a-0533-4837-82fe-44cc13f5e2c4",
+    "level": "info",
+    "timestamp": 1765673360711000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ee779adc-68e3-4a6b-8df4-5074e3deddf9",
+    "level": "log",
+    "timestamp": 1765673360703000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "608bc87d-f2d0-401a-88aa-c624714aee83",
+    "level": "info",
+    "timestamp": 1765673360560000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "2b2c99f8-381b-4cf4-aa0b-9bb1cf8cc27c",
+    "level": "log",
+    "timestamp": 1765673360558000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "0c427b02-1685-4262-b163-2fdf232cd9d4",
+    "level": "log",
+    "timestamp": 1765672329677000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "904b0bf5-7579-41eb-9bff-1e7631917a93",
+    "level": "log",
+    "timestamp": 1765672329414000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "32b6d0d5-d6bb-4ca3-8a2e-b33691ca7daf",
+    "level": "info",
+    "timestamp": 1765672254660000
+  },
+  {
+    "event_message": "booted (time: 63ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "561c5b0e-af33-4c2a-8982-c9b8d7a058d4",
+    "level": "log",
+    "timestamp": 1765672254656000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "17f082db-d208-4db5-9964-f395cefb658f",
+    "level": "info",
+    "timestamp": 1765672254396000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "a405e22b-75c7-480d-ae17-3c536b5195da",
+    "level": "log",
+    "timestamp": 1765672254393000
+  }
+]
+
+-------------------------------------------------------
+
+admin-update-device
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "4142849a-0681-4386-8e38-c2467e8db4f9",
+    "level": "log",
+    "timestamp": 1765673785889000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "571d4270-7ec7-4c97-8f91-5b550df96042",
+    "level": "log",
+    "timestamp": 1765673785734000
+  },
+  {
+    "event_message": "[admin-update-device] Error updating device: 400 {\"code\":\"PGRST204\",\"details\":null,\"hint\":null,\"message\":\"Could not find the 'updated_at' column of 'android_devices' in the schema cache\"}\n",
+    "event_type": "Log",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "9131e89e-d670-497f-a24b-97ddfd01ddd8",
+    "level": "error",
+    "timestamp": 1765673711258000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "44deddff-e488-437d-9ed8-4ef1c152246e",
+    "level": "info",
+    "timestamp": 1765673710862000
+  },
+  {
+    "event_message": "booted (time: 32ms)",
+    "event_type": "Boot",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "20256917-eb36-43fc-9c4e-0af8a0828a9d",
+    "level": "log",
+    "timestamp": 1765673710860000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "7d7c1934-f7b4-4a00-8499-48184a3784d7",
+    "level": "info",
+    "timestamp": 1765673710699000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "2dc820f2-4d53-4b08-a8a3-fe40beaed3a4",
+    "level": "log",
+    "timestamp": 1765673710698000
+  }
+]
+
+-------------------------------------------------------
+

@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rustdesk.bwb.pt/schemas/android-models.json",
+  "title": "Android Provisioner Networking Models (SoT)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ClaimRequest": {
+      "type": "object",
+      "description": "Request body for POST /api/provision/claim",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "4-digit install code. Backend strips all non-digits and requires exactly 4 digits.",
+          "minLength": 1,
+          "pattern": "^[0-9]{1,}$"
+        },
+        "device_hint": {
+          "type": ["string", "null"],
+          "description": "Optional human-readable hint about the device (model, location, etc.)."
+        },
+        "nonce": {
+          "type": ["string", "null"],
+          "description": "Optional client-generated random string, hashed server-side for potential binding."
+        }
+      },
+      "required": ["code"]
+    },
+    "ClaimResponse": {
+      "type": "object",
+      "description": "Successful response for POST /api/provision/claim",
+      "additionalProperties": false,
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "Provisioning token, prefixed with 'p_'. Must be treated as an opaque string by the client.",
+          "minLength": 3
+        },
+        "expires_in": {
+          "type": "integer",
+          "description": "Token TTL in seconds (currently 900 = 15 minutes).",
+          "minimum": 1
+        }
+      },
+      "required": ["token", "expires_in"]
+    },
+    "ProvisionStartRequest": {
+      "type": "object",
+      "description": "Request body for POST /api/provision/start (known tenant/user, no-QR flow).",
+      "additionalProperties": false,
+      "properties": {
+        "tenant_id": {
+          "type": "string",
+          "description": "Logical tenant identifier (UUID or slug). Used for logging and future multi-tenancy.",
+          "minLength": 1
+        },
+        "user_id": {
+          "type": "string",
+          "description": "Supabase auth.users.id (UUID) of the end user that should own the device.",
+          "minLength": 1
+        },
+        "abi": {
+          "type": "string",
+          "description": "Detected ABI. Must be one of: 'arm64-v8a', 'armeabi-v7a', 'x86_64'.",
+          "enum": ["arm64-v8a", "armeabi-v7a", "x86_64"]
+        },
+        "device_fingerprint": {
+          "type": "string",
+          "description": "Stable, client-generated identifier for the device, used as provisional device_id until the real RustDesk ID is known.",
+          "minLength": 1
+        },
+        "device_name": {
+          "type": ["string", "null"],
+          "description": "Optional friendly name for the device suggested by the Provisioner."
+        },
+        "model": {
+          "type": ["string", "null"],
+          "description": "Optional device model (for logging only)."
+        },
+        "os_version": {
+          "type": ["string", "null"],
+          "description": "Optional Android OS version (for logging only)."
+        }
+      },
+      "required": ["tenant_id", "user_id", "abi", "device_fingerprint"]
+    },
+    "ProvisionStartResponse": {
+      "type": "object",
+      "description": "Successful response for POST /api/provision/start.",
+      "additionalProperties": false,
+      "properties": {
+        "provision_id": {
+          "type": "string",
+          "description": "Logical provisioning session identifier (UUID). Currently used only for logging and config_url.",
+          "minLength": 1
+        },
+        "config_url": {
+          "type": "string",
+          "description": "Absolute HTTPS URL for the Provisioner to fetch the RustDesk configuration bundle.",
+          "format": "uri"
+        },
+        "apk_url": {
+          "type": "string",
+          "description": "Absolute HTTPS URL for the Provisioner to download the correct RustDesk APK for the given ABI. May issue HTTP 302 redirects.",
+          "format": "uri"
+        }
+      },
+      "required": ["provision_id", "config_url", "apk_url"]
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "description": "Standard error envelope used by Provision API endpoints.",
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Machine-readable error code (e.g. 'invalid_code', 'rate_limited', 'mesh_user_not_found').",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable error message intended for the UI.",
+          "minLength": 1
+        },
+        "db_error_code": {
+          "type": "string",
+          "description": "Optional database driver error code, present only for some 502/database_error responses."
+        },
+        "db_error_message": {
+          "type": "string",
+          "description": "Optional database driver error message, present only for some 502/database_error responses."
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional note field used in some idempotent success-on-error cases (e.g. token already revoked)."
+        }
+      },
+      "required": ["error", "message"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "ClaimRequest",
+    "ClaimResponse",
+    "ProvisionStartRequest",
+    "ProvisionStartResponse",
+    "ErrorResponse"
+  ]
+}

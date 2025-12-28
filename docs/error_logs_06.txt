@@ -1,0 +1,130 @@
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/register-device' \
+-X 'POST' \
+-H 'Content-Type: application/json' \
+-H 'Pragma: no-cache' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1Njg2NTMwLCJpYXQiOjE3NjU2ODI5MzAsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NTY4MjkzMH1dLCJzZXNzaW9uX2lkIjoiYWY3YjRiZGYtZmE3Mi00YjI3LTkwODktMGVmNjQ4NWZhODc2IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.y2uvprEQI12Nk5uOCgki3foFXfVk0mNlx3NqC7elRfU' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Cache-Control: no-cache' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Origin: https://rustdesk.bwb.pt' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'Content-Length: 78' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+--data-raw '{"device_id":"1886522715","friendly_name":"One Plus","notes":"Pessoal | Casa"}'
+
+
+POST /functions/v1/register-device H3
+Content-Type: application/json
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1Njg2NTMwLCJpYXQiOjE3NjU2ODI5MzAsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NTY4MjkzMH1dLCJzZXNzaW9uX2lkIjoiYWY3YjRiZGYtZmE3Mi00YjI3LTkwODktMGVmNjQ4NWZhODc2IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.y2uvprEQI12Nk5uOCgki3foFXfVk0mNlx3NqC7elRfU
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+Origin: https://rustdesk.bwb.pt
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Referer: https://rustdesk.bwb.pt/
+Content-Length: 78
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+
+H3 546 
+Content-Encoding: gzip
+Set-Cookie: __cf_bm=.W4R6_alOTFmvtyL0t4P93LnITcqKBxV8fXn80XGw6Q-1765683121-1.0.1.1-PQzPfo6fg5SUL27YgcAz8guYIGqDVehyM5uMKOV0UckEGWBxILOFJHa3Kyx6Xlcr4_FddAtbx1wQT5FTCpvaVAL85.V2HiTjOuUhKb6PVNcGjgvKOoozxlLnugjs1Tna; path=/; expires=Sun, 14-Dec-25 04:02:01 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+Access-Control-Allow-Origin: *
+Server-Timing: cfExtPri
+Access-Control-Allow-Headers: authorization, x-client-info, apikey
+Content-Length: 132
+Vary: Accept-Encoding
+Date: Sun, 14 Dec 2025 03:32:01 GMT
+Content-Type: application/json
+sb-request-id: 019b1ae7-fede-77f5-a358-4bad132074f7
+Server: cloudflare
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+sb-project-ref: kqwaibgvmzcqeoctukoy
+x-deno-execution-id: 96b38dfb-95bd-4092-be92-85e7a8381d36
+Alt-Svc: h3=":443"; ma=86400
+x-served-by: supabase-edge-runtime
+Priority: u=3,i
+x-sb-edge-region: eu-west-3
+cf-cache-status: DYNAMIC
+cf-ray: 9ada9e048b4441f6-LIS
+
+
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "4ed022b0-89a7-4e6b-8c33-0696573498a5",
+    "level": "log",
+    "timestamp": 1765683121179000
+  },
+  {
+    "event_message": "booted (time: 24ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "118c168c-63ca-4244-aa86-f245d49a19da",
+    "level": "log",
+    "timestamp": 1765682971175000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "7a7a0426-9c17-44fc-96a3-a0e4ec61e048",
+    "level": "log",
+    "timestamp": 1765682809867000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "40a5ff42-5102-4cd2-bea2-9775fd154144",
+    "level": "log",
+    "timestamp": 1765682659858000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "25babc3d-f92f-4378-a418-56ca1bf6715d",
+    "level": "log",
+    "timestamp": 1765681365980000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "a971292c-d674-442a-9b91-ba13f17bd0d7",
+    "level": "log",
+    "timestamp": 1765681215976000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "bb30ec1b-0a8d-46e0-ba7d-f9e3ba6aab9a",
+    "level": "log",
+    "timestamp": 1765681052053000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "25369d3a-883c-4fa1-ab3d-c886efd9ce7d",
+    "level": "log",
+    "timestamp": 1765680902049000
+  }
+]

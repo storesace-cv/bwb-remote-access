@@ -1,0 +1,841 @@
+root@remote-srv:/opt/rustdesk-frontend#  journalctl -u rustdesk-sync-api -f
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [SYNC] Completed successfully (2857ms)
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [SYNC] stdout: [sync-devices] 🚀 Iniciando sincronização...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando sync de devices RustDesk...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] ℹ️  Sem devices no RustDesk
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando matching temporal...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] ℹ️  Sem sessões ativas
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Base MeshCentral: /opt/meshcentral/meshcentral-files//ANDROID
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔄 Sync de devices.json...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 👤 User admin → /opt/meshcentral/meshcentral-files//ANDROID/Admin
+
+_______________
+
+root@remote-srv:/opt/rustdesk-frontend# systemctl status rustdesk-sync-api
+● rustdesk-sync-api.service - RustDesk Sync API - On-demand device synchronization
+     Loaded: loaded (/etc/systemd/system/rustdesk-sync-api.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2025-12-12 22:21:56 UTC; 17min ago
+   Main PID: 92479 (node)
+      Tasks: 7 (limit: 2307)
+     Memory: 11.3M
+        CPU: 944ms
+     CGroup: /system.slice/rustdesk-sync-api.service
+             └─92479 /usr/bin/node /opt/rustdesk-frontend/server/sync-api.js
+
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [SYNC] Completed successfully (2857ms)
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [SYNC] stdout: [sync-devices] 🚀 Iniciando sincronização...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando sync de devices RustDesk...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] ℹ️  Sem devices no RustDesk
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando matching temporal...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] ℹ️  Sem sessões ativas
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Base MeshCentral: /opt/meshcentral/meshcentral-files//ANDROID
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔄 Sync de devices.json...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 👤 User admin → /opt/meshcentral/meshcentral-files//ANDROID/Admin
+root@remote-srv:/opt/rustdesk-frontend# 
+
+----------------
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fcb98313-fca1-4660-8bde-69c69e519ec2",
+    "level": "log",
+    "timestamp": 1765579150983000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "292dfa6b-d3f7-428d-937a-082d6b285f71",
+    "level": "log",
+    "timestamp": 1765579147138000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "056d159c-394c-4fde-89c3-eca617f27535",
+    "level": "log",
+    "timestamp": 1765579146977000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8b78b075-f7af-4fe8-8ec5-dc9004442522",
+    "level": "info",
+    "timestamp": 1765579076136000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "939eb518-8b1a-44b1-8c7c-e74c0b19057f",
+    "level": "info",
+    "timestamp": 1765579076092000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 00e81c42-4fdc-4d70-8c56-0de612a846b3\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "548b3255-b527-4cd6-af02-2effadb3d2ed",
+    "level": "info",
+    "timestamp": 1765579076092000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5e7ea475-e7e7-4189-bdc0-941013a9fe91",
+    "level": "info",
+    "timestamp": 1765579076040000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "4a2cf2bc-40ad-477a-ae59-2320f74961a4",
+    "level": "error",
+    "timestamp": 1765579076040000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "2fb478dc-5ee3-4090-9e48-10efa65083b0",
+    "level": "info",
+    "timestamp": 1765579076036000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "adc34d38-0018-419a-b35e-b2beca6c0d9b",
+    "level": "info",
+    "timestamp": 1765579076036000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "db1d2cd8-f581-4a8d-b111-75b38f6cee00",
+    "level": "info",
+    "timestamp": 1765579075969000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "58c11af3-7361-45c4-8a4b-be84aaa59431",
+    "level": "info",
+    "timestamp": 1765579075967000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "21162d6d-c70c-482f-8969-71eb813cf2ae",
+    "level": "log",
+    "timestamp": 1765579075962000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ccd00537-f153-4929-8ee1-18eb1d36b8ae",
+    "level": "info",
+    "timestamp": 1765579072383000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 00e81c42-4fdc-4d70-8c56-0de612a846b3\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "24200ad3-1693-49e9-997e-4b83d2761a11",
+    "level": "info",
+    "timestamp": 1765579072333000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5e05fb92-6d0f-4f24-95ec-f72dedf7a5c3",
+    "level": "info",
+    "timestamp": 1765579072333000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fcd752a0-b49f-48ef-ad3a-04165455c0b9",
+    "level": "error",
+    "timestamp": 1765579072254000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a7c14134-5054-4da9-bad8-1c98589ad4be",
+    "level": "info",
+    "timestamp": 1765579072254000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "858f4f03-49b4-4c63-a8e7-d087394e59c8",
+    "level": "info",
+    "timestamp": 1765579072250000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a6516dc3-275b-46b0-84e0-abb34a3e01d8",
+    "level": "info",
+    "timestamp": 1765579072250000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "625dd734-0560-4ee1-9e27-fe5021c384be",
+    "level": "info",
+    "timestamp": 1765579072126000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "85503085-4923-4e10-a36f-b8400518f220",
+    "level": "info",
+    "timestamp": 1765579072123000
+  },
+  {
+    "event_message": "booted (time: 40ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ae741b8f-2674-45f5-ae4f-1c7d06e73b63",
+    "level": "log",
+    "timestamp": 1765579072120000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "bcc33cdf-38d2-4a42-ba83-b1f8cb174d2c",
+    "level": "info",
+    "timestamp": 1765579071953000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "912fe962-a43b-45ce-a79c-a2cd2139c127",
+    "level": "info",
+    "timestamp": 1765579071950000
+  },
+  {
+    "event_message": "booted (time: 42ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "bf7281c1-7575-4e18-9741-37803a1de88b",
+    "level": "log",
+    "timestamp": 1765579071945000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "60abbcfc-9f06-46d3-b361-e0e7ad28c022",
+    "level": "log",
+    "timestamp": 1765579057125000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "bedbd5a1-7c0a-494d-ad0e-2b2fd9a98a48",
+    "level": "log",
+    "timestamp": 1765579011559000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8662c45f-b9b7-4651-8eb2-888dad5d27ce",
+    "level": "log",
+    "timestamp": 1765579011405000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f9e9fcc8-b249-4e32-bbf4-d1aa314c454d",
+    "level": "error",
+    "timestamp": 1765578982348000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a5ef53de-bdb4-47dd-aeb8-851a28152382",
+    "level": "info",
+    "timestamp": 1765578982348000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "24a710ee-0677-4b52-af0d-fd963eb45fd9",
+    "level": "info",
+    "timestamp": 1765578982344000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "68f2ceaa-ea6d-4d7d-8838-fbaaf8fe4c6b",
+    "level": "info",
+    "timestamp": 1765578982343000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "43c657e5-7a84-4260-a8a0-783030fbb881",
+    "level": "info",
+    "timestamp": 1765578982235000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "737eeaf3-5c7a-461c-8bb3-8a369fbbb261",
+    "level": "info",
+    "timestamp": 1765578982099000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "9a3a5970-47d5-4532-ade1-4370a73365b5",
+    "level": "info",
+    "timestamp": 1765578982099000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "37f69445-c4fa-4930-bf48-874ff08308a3",
+    "level": "log",
+    "timestamp": 1765578982099000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d707306b-894f-4b9e-b154-a344b87d4112",
+    "level": "info",
+    "timestamp": 1765578936793000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 588beb13-9887-4617-8bce-01ee440d7f4b\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ad423e11-dae8-451c-b0f3-aa4c72fbfdfd",
+    "level": "info",
+    "timestamp": 1765578936744000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a24023cb-6be6-439f-ad12-e1a6bd7ee88e",
+    "level": "info",
+    "timestamp": 1765578936744000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ac993eb1-7580-4dd9-b312-b988a6826652",
+    "level": "error",
+    "timestamp": 1765578936680000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fc95d7f7-cd28-4c4d-994d-959b3ea97f03",
+    "level": "info",
+    "timestamp": 1765578936680000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "29538bbc-758d-4226-8110-7a68a476e2d0",
+    "level": "info",
+    "timestamp": 1765578936676000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "af95cabf-3f67-4b59-b1ef-a9bfd6b3482e",
+    "level": "info",
+    "timestamp": 1765578936676000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5ffe2839-ce2b-4ada-9b45-d732f88c2f0e",
+    "level": "info",
+    "timestamp": 1765578936547000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d7413cd1-c08e-4f35-9e25-6429c986b697",
+    "level": "info",
+    "timestamp": 1765578936545000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "40dc1606-9d7d-43f1-a082-726d83d7676f",
+    "level": "log",
+    "timestamp": 1765578936542000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "eb403dd5-386c-409d-a407-d6bbc96fc216",
+    "level": "info",
+    "timestamp": 1765578936384000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "952c914c-58bd-4eeb-9815-ed338a60ec8b",
+    "level": "info",
+    "timestamp": 1765578936381000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "aca79ecd-b9db-4b16-aa1b-e231e8e6c0e5",
+    "level": "log",
+    "timestamp": 1765578936376000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "2adb9b06-48f4-4f45-868c-65ea5a1806bc",
+    "level": "log",
+    "timestamp": 1765578934967000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fc3dbe7a-bce3-4a9c-861e-6da69a9d20d1",
+    "level": "log",
+    "timestamp": 1765578933189000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "608b5d83-eef5-4144-bd3c-e9669b2b9241",
+    "level": "log",
+    "timestamp": 1765578933033000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8a167064-ddeb-47c5-9fdd-185c6bc4620d",
+    "level": "info",
+    "timestamp": 1765578860163000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 588beb13-9887-4617-8bce-01ee440d7f4b\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "6dd84673-0d49-4ce3-aa5c-812e735ece1c",
+    "level": "info",
+    "timestamp": 1765578860090000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f40b5e2b-8b42-41d3-83b5-ccd0462d6603",
+    "level": "info",
+    "timestamp": 1765578860090000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "41c931c0-626e-44a9-9315-4ccbf7f76bcd",
+    "level": "info",
+    "timestamp": 1765578860036000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a130fd23-48b7-4336-9c07-d9d1aad86991",
+    "level": "error",
+    "timestamp": 1765578860036000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "cd14da5c-c476-43dc-90f6-9373278e1def",
+    "level": "info",
+    "timestamp": 1765578860032000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "37c8bf29-eee5-4d6d-b409-66ee86d52d41",
+    "level": "info",
+    "timestamp": 1765578860032000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e7365397-64d4-4546-ab73-646deb9aff48",
+    "level": "info",
+    "timestamp": 1765578859953000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7284cd45-6fb2-47a9-a8e2-9ac36e68d842",
+    "level": "info",
+    "timestamp": 1765578859951000
+  },
+  {
+    "event_message": "booted (time: 37ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "379dedd2-dcc4-4613-8dab-c9408c44c661",
+    "level": "log",
+    "timestamp": 1765578859947000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "747608ea-b0ef-4d26-acb2-3e1dc0521572",
+    "level": "info",
+    "timestamp": 1765578858445000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 588beb13-9887-4617-8bce-01ee440d7f4b\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5d2aa42e-72ab-4754-b4ff-11b955170b27",
+    "level": "info",
+    "timestamp": 1765578858343000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c5871307-282a-4515-8f6b-a996d8bd395a",
+    "level": "info",
+    "timestamp": 1765578858343000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "456915fb-5a40-4319-be82-fecc799b74f2",
+    "level": "error",
+    "timestamp": 1765578858285000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "94443da2-9d1d-4b54-9fbd-22866c582cf5",
+    "level": "info",
+    "timestamp": 1765578858285000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fdaf6a8d-2847-4acb-83ea-77689088ebdf",
+    "level": "info",
+    "timestamp": 1765578858282000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "4fb409d0-56e9-4b2e-8336-2c51e422f879",
+    "level": "info",
+    "timestamp": 1765578858282000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "487640a9-012e-4ad2-9e11-d5457c6fcac3",
+    "level": "info",
+    "timestamp": 1765578858179000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "11ba2fcb-1487-4144-bac5-eaa0aba8263d",
+    "level": "info",
+    "timestamp": 1765578858177000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d81764cf-8a58-4d20-8109-d471321a0481",
+    "level": "log",
+    "timestamp": 1765578858173000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f64395df-e42f-47cc-977d-9c4765fbd81c",
+    "level": "info",
+    "timestamp": 1765578858012000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ec72c9fe-d126-43cf-9f3c-6edb796d155e",
+    "level": "info",
+    "timestamp": 1765578858008000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f3297177-4032-417f-84cb-a156a403fc44",
+    "level": "log",
+    "timestamp": 1765578858005000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "4b591e4b-ae53-4571-afb8-47b52539d250",
+    "level": "log",
+    "timestamp": 1765578854289000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e3545ce6-5e29-41f1-a9b3-871be26ea995",
+    "level": "log",
+    "timestamp": 1765578854123000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d5ad12b5-396c-45a2-ac03-6f44bf558910",
+    "level": "log",
+    "timestamp": 1765578843403000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "340dbf2f-cefd-44a0-8f6b-b2127f131407",
+    "level": "log",
+    "timestamp": 1765578843234000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "775bf52d-dbb5-45c4-92b5-17d0ea9c55e3",
+    "level": "log",
+    "timestamp": 1765578822784000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a08c87b7-41be-47a6-a228-b6ab10cc575c",
+    "level": "log",
+    "timestamp": 1765578820981000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "59b32787-4e5b-4244-abc9-888de932d2ee",
+    "level": "log",
+    "timestamp": 1765578820847000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "172bba69-cf2d-4c31-b010-31d83d463fc2",
+    "level": "log",
+    "timestamp": 1765578813636000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f450ee22-7913-42f4-8b0f-100a6ba4db9b",
+    "level": "log",
+    "timestamp": 1765578813490000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "19715287-b364-404d-a844-a612e9299588",
+    "level": "info",
+    "timestamp": 1765578779518000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 588beb13-9887-4617-8bce-01ee440d7f4b\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "276896d9-a5aa-434f-b59f-476d11713f2d",
+    "level": "info",
+    "timestamp": 1765578779471000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d3c78ad9-7fa4-4f94-b3ba-3a5ec2b298d2",
+    "level": "info",
+    "timestamp": 1765578779470000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7ec135de-e87f-43da-87d3-e39322a4cd3f",
+    "level": "info",
+    "timestamp": 1765578779419000
+  },
+  {
+    "event_message": "[check-registration-status] Failed to trigger sync: TypeError: error sending request for url (http://127.0.0.1:3001/sync): client error (Connect): tcp connect error: Connection refused (os error 111): Connection refused (os error 111)\n    at async mainFetch (ext:deno_fetch/26_fetch.js:191:12)\n    at async fetch (ext:deno_fetch/26_fetch.js:465:11)\n    at async triggerSyncAPI (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:22:22)\n    at async Server.handler (file:///var/tmp/sb-compile-edge-runtime/check-registration-status/index.ts:186:5)\n    at async Server.#respond (https://deno.land/std@0.168.0/http/server.ts:221:18) {\n  code: \"ECONNREFUSED\"\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fc87e80c-88e4-48aa-bee5-e013c6a67083",
+    "level": "error",
+    "timestamp": 1765578779419000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "1ce09d60-eae4-45bb-9082-39f1282dba17",
+    "level": "info",
+    "timestamp": 1765578779415000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "47a9e095-05d9-4933-88c6-99760fb979c7",
+    "level": "info",
+    "timestamp": 1765578779415000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d1fb692b-f3d7-4d06-87be-62ea8a5f9ee7",
+    "level": "info",
+    "timestamp": 1765578779286000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "821a12fc-6182-40be-9431-29a14457f690",
+    "level": "info",
+    "timestamp": 1765578779283000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fd547449-4540-4dfa-98ca-2ff56c1e9c48",
+    "level": "log",
+    "timestamp": 1765578779266000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "3af18cc5-5d1e-4cd7-b095-91154110d7b2",
+    "level": "info",
+    "timestamp": 1765578779102000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e4246750-e98b-4624-869b-840ced6bedff",
+    "level": "info",
+    "timestamp": 1765578779100000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "18d34ee0-3b9c-47ae-be03-5899efb76960",
+    "level": "log",
+    "timestamp": 1765578779097000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "753182b5-9aa0-4f85-95d7-d5ad4accd4ef",
+    "level": "info",
+    "timestamp": 1765578768675000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 588beb13-9887-4617-8bce-01ee440d7f4b\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5b3f55a4-e83c-404e-bc6f-dafdf136f5dd",
+    "level": "info",
+    "timestamp": 1765578768577000
+  }
+]![Screenshot 2025-12-12 at 22.38.10.png](/public/Screenshot 2025-12-12 at 22.38.10.png)

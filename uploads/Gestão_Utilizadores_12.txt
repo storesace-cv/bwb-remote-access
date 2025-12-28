@@ -1,0 +1,61 @@
+Navigated to https://rustdesk.bwb.pt/
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Navigated to https://rustdesk.bwb.pt/
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+51f7a75ae860f2c8.js:1 Fetch finished loading: POST "https://rustdesk.bwb.pt/api/login".
+y @ 51f7a75ae860f2c8.js:1
+sX @ 8caed091165340c7.js:1
+(anonymous) @ 8caed091165340c7.js:1
+tI @ 8caed091165340c7.js:1
+s3 @ 8caed091165340c7.js:1
+fC @ 8caed091165340c7.js:1
+fN @ 8caed091165340c7.js:1
+VM5634 06484008b95573d0.js:1 🔍 [DEBUG] checkUserTypeAndDomain iniciado: {jwt: '✅ Existe', authUserId: '69280e26-e868-478d-8562-7de0c160535e'}authUserId: "69280e26-e868-478d-8562-7de0c160535e"jwt: "✅ Existe"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+VM5634 06484008b95573d0.js:1 🔍 [DEBUG] Resposta checkUserTypeAndDomain: {status: 200, ok: true}ok: truestatus: 200[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+VM5634 06484008b95573d0.js:1 🔍 [DEBUG] Dados do utilizador: [{…}]
+VM5634 06484008b95573d0.js:1 ✅ [DEBUG] Utilizador é AGENT, domain: zonetech
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] DEBUG Query URL (without role filter): https://kqwaibgvmzcqeoctukoy.supabase.co/rest/v1/mesh_users?select=*&domain=eq.zonetech&deleted_at=is.null&user_type=neq.agent&order=mesh_username.asc
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] JWT (primeiros 50 chars): eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] Response Status: 200
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] Response OK: true
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] Response Headers: {content-length: '2', content-location: '/mesh_users?deleted_at=is.null&domain=eq.zonetech&…=mesh_username.asc&select=%2A&user_type=neq.agent', content-range: '*/*', content-type: 'application/json; charset=utf-8', date: 'Sun, 21 Dec 2025 21:55:34 GMT', …}content-length: "2"content-location: "/mesh_users?deleted_at=is.null&domain=eq.zonetech&order=mesh_username.asc&select=%2A&user_type=neq.agent"content-range: "*/*"content-type: "application/json; charset=utf-8"date: "Sun, 21 Dec 2025 21:55:34 GMT"server: "cloudflare"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] RAW API Response: []
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] Total records returned: 0
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] After client filtering: 0
+VM5634 06484008b95573d0.js:1 🔥 [CRITICAL] Excluded by role: 0

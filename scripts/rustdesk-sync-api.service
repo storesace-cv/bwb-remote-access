@@ -1,0 +1,21 @@
+[Unit]
+Description=RustDesk Sync API - On-demand device synchronization
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/rustdesk-frontend/server
+Environment="NODE_ENV=production"
+Environment="SYNC_API_PORT=3001"
+# IMPORTANTE: Definir SYNC_API_SECRET em /opt/rustdesk-frontend/server/.env
+EnvironmentFile=-/opt/rustdesk-frontend/server/.env
+ExecStart=/usr/bin/node /opt/rustdesk-frontend/server/sync-api.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rustdesk-sync-api
+
+[Install]
+WantedBy=multi-user.target

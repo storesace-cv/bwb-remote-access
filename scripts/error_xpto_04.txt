@@ -1,0 +1,54 @@
+root@remote-srv:/opt/rustdesk-frontend# curl -sS -w "\n%{http_code}\n" \
+  -H "apikey: $SUPABASE_SERVICE_ROLE_KEY" \
+  "$SUPABASE_URL/rest/v1/mesh_users?limit=1"
+[{"id":"d0e4556e-49b6-407d-98b4-dbfdfc51b218","mesh_username":"admin","display_name":"Admin","created_at":"2025-12-01T03:03:16.359696+00:00","auth_user_id":"9ebfa3dd-392c-489d-882f-8a1762cb36e8"}]
+200
+root@remote-srv:/opt/rustdesk-frontend# 
+
+
+
+✅ Confirmado: o diagnóstico “é schema mismatch” está correcto.
+
+O teu GET devolveu um registo com estas colunas:
+	•	id
+	•	mesh_username
+	•	display_name
+	•	created_at
+	•	auth_user_id
+
+E não aparece:
+	•	disabled (já confirmado pelo PGRST204)
+	•	external_user_id (que o script usa em on_conflict=external_user_id)
+	•	nem source, role, email, domain_key, etc.
+
+Isto significa que o Supabase está OK (200 ✅), mas a tabela mesh_users não tem o modelo que o sync espera, portanto o sync vai continuar a falhar até alinhar o schema ou alinhar o script ao schema actual.
+
+⸻
+
+Próximo passo recomendado (para o sync “completo” funcionar)
+
+Opção Unica — alinhar o schema Supabase ao script (recomendado)
+
+Adiciona as colunas que o script usa (incluindo disabled e external_user_id) e cria o índice único para o on_conflict.
+
+No SQL editor do Supabase (ou via migração), corre:
+
+alter table public.mesh_users
+  add column if not exists external_user_id text,
+  add column if not exists domain_key text,
+  add column if not exists domain text,
+  add column if not exists domain_dns text,
+  add column if not exists email text,
+  add column if not exists name text,
+  add column if not exists siteadmin bigint,
+  add column if not exists domainadmin bigint,
+  add column if not exists role text,
+  add column if not exists source text,
+  add column if not exists disabled boolean default false;
+
+create unique index if not exists mesh_users_external_user_id_uidx
+  on public.mesh_users (external_user_id);
+
+Depois disso:
+	•	o PATCH {"disabled": true} deixa de dar PGRST204
+	•	o upsert com on_conflict=external_user_id passa a ser válido

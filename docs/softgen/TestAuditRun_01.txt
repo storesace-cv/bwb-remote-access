@@ -1,0 +1,130 @@
+Prompt Softgen.ai — Test & Audit Run (exaustivo, baseado nas regras novas)
+
+You are acting as a senior QA + DevOps engineer. Your mission is to run an exhaustive verification pass on this repository to detect failures that would not be caught by simple code review.
+
+Non-negotiable gates
+
+You must comply with:
+	•	Schema Verification Gate
+	•	Edge Functions Gate
+	•	Runtime Verification Gate
+	•	And you MUST use docs/softgen/PR_CHECKLIST.md as the final output gate.
+
+Your final response MUST start with the completed PR checklist.
+
+⸻
+
+Objective
+
+Perform a “Test & Audit Run” to uncover:
+	•	missing routes / missing Edge Functions called by code
+	•	runtime fetch failures (“Failed to fetch” class)
+	•	auth/RLS breaks (401/403)
+	•	schema drift / wrong column usage
+	•	broken UI states (null refs, missing data)
+	•	regressions introduced by recent changes
+
+⸻
+
+Required audit steps (must follow in this order)
+
+Step 1 — Build an inventory (static analysis)
+	1.	List all API entry points:
+
+	•	Next.js route handlers under src/app/api/**
+	•	Supabase Edge Functions under supabase/functions/**
+
+	2.	List all outbound calls from frontend/backend code:
+
+	•	fetch(...) calls
+	•	supabase.functions.invoke(...)
+	•	calls to /functions/v1/*
+	•	calls to /api/*
+
+	3.	Output a table:
+
+	•	Caller file + line range
+	•	Target endpoint/function name
+	•	HTTP method (if known)
+	•	Required auth (anon/session/service role)
+
+If any call targets an endpoint that does not exist, raise it as P0 bug.
+
+Step 2 — Schema verification for all touched tables
+
+Produce SCHEMA SNAPSHOT for all tables referenced by:
+	•	queries in API handlers
+	•	Edge Functions
+	•	services under src/services/*
+	•	any SQL in code
+
+Detect “likely wrong columns” and report as Schema Drift risk.
+
+Step 3 — Runtime verification plan (reproducible)
+
+Create a reproducible test plan that can run on a dev machine and/or droplet:
+	•	env vars required
+	•	commands to start the app
+	•	commands to run tests/lint/typecheck
+	•	curl commands for critical endpoints
+
+If you can run commands in this environment, run them.
+If you cannot, output the exact commands and expected outputs.
+
+Step 4 — Execute verification (as much as possible)
+
+Run in this order:
+	1.	npm ci (or pnpm i depending on repo lockfile)
+	2.	npm run lint
+	3.	npm run typecheck (or tsc -p ...)
+	4.	npm test (if tests exist)
+	5.	npm run build
+
+Then run runtime checks:
+	•	hit /api/* endpoints via curl (where applicable)
+	•	verify that any /functions/v1/* call maps to a function folder
+	•	verify any “Gestão de …” pages do not trigger “Failed to fetch”
+
+Step 5 — Failure-path testing (mandatory)
+
+For at least 3 critical flows, include failure tests:
+	•	missing auth token
+	•	insufficient role (RLS denial)
+	•	network failure simulation (or expected UI handling)
+
+You must verify the UI surfaces a meaningful error.
+
+Step 6 — Produce a bug report + patch plan
+
+Output a prioritized list:
+	•	P0: breaks core flows / blank screens / missing endpoints
+	•	P1: wrong data / security/RLS issues
+	•	P2: UI/UX issues / minor regressions
+
+For each issue:
+	•	reproduction steps
+	•	root cause
+	•	exact file(s) to change
+	•	proposed fix
+	•	how to verify the fix
+
+⸻
+
+Deliverables
+	1.	PR Checklist (completed) — must be the first section
+	2.	Inventory table of endpoints & calls
+	3.	Schema Snapshot(s)
+	4.	Test plan (commands + env vars)
+	5.	Results (what passed/failed)
+	6.	Bug list with severity + fixes
+	7.	If changes are needed: create a PR with fixes and include evidence (logs/snippets)
+
+⸻
+
+Strict stop condition
+
+If you cannot run tests due to missing credentials or environment:
+	•	STOP
+	•	list exactly what is missing (tokens, urls, env vars)
+	•	provide a runnable plan for the user to execute locally
+Do NOT claim “tested” without evidence.

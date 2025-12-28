@@ -1,0 +1,1376 @@
+curl 'https://rustdesk.bwb.pt/' \
+  -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: max-age=0' \
+  -H 'if-none-match: "eg4e9ms6mi66y"' \
+  -H 'priority: u=0, i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: document' \
+  -H 'sec-fetch-mode: navigate' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-fetch-user: ?1' \
+  -H 'sec-gpc: 1' \
+  -H 'upgrade-insecure-requests: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/a953cd901618a8a7.css' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/475fa0f5a019bf38.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/a30c509391ef7a7d.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/0ce1b91260867447.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/8caed091165340c7.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/turbopack-800e3eb553ea95a0.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/ff1a16fafef87110.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/247eb132b7f7b574.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/1dcf9d33b9a59068.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/18e13fd735316c71.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'chrome-extension://ncibgoaomkmdpilpocfeponihegamlic/token-signing-page-script.js' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'Referer;' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=1r34m' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/favicon.ico?favicon.0b3bf435.ico' \
+  -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: image' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=1pn8p' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=nn07o' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_index' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=m8rs8' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /auth' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=n1e48' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /auth/reset-password' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=2y9rz' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /auth/reset-password/__PAGE__' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/c803332e4fa40c29.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/api/login' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw $'{"email":"suporte@bwb.pt","password":"Admin123\u0021"}' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=vusbg' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-state-tree: %5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D' \
+  -H 'next-url: /' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/6c819eec47f07c87.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/9db9e87f2aeaad82.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=1vedp' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-state-tree: %5B%22%22%2C%7B%22children%22%3A%5B%22dashboard%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2C%22refetch%22%5D%7D%2Cnull%2Cnull%5D' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=18t7j' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=18t7j' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=oh8t4' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=vnny3' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=8ajn1' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/profile' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=oh8t4' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=1sd2v' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/users' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=1mv8o' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/users/__PAGE__' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=1eurx' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/profile/__PAGE__' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/b193569503e86d17.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/3a76a8ff11544528.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=1ndc6' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /dashboard/users' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard/users' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=141xs' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /dashboard/users' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard/users' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=1k79m' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/__PAGE__' \
+  -H 'next-url: /dashboard/users' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard/users' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-update-auth-user' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization,content-type' \
+  -H 'access-control-request-method: POST' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-update-auth-user' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw '{"id":"69280e26-e868-478d-8562-7de0c160535e","email_confirm":true,"ban":false,"display_name":"rui.abreu","mesh_username":"datalink@datalink.pt","email":"datalink@datalink.pt"}'
+
+
+------------------------------------
+
+curl 'https://rustdesk.bwb.pt/' \
+  -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: max-age=0' \
+  -H 'if-none-match: "eg4e9ms6mi66y"' \
+  -H 'priority: u=0, i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: document' \
+  -H 'sec-fetch-mode: navigate' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-fetch-user: ?1' \
+  -H 'sec-gpc: 1' \
+  -H 'upgrade-insecure-requests: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/a953cd901618a8a7.css' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/475fa0f5a019bf38.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/a30c509391ef7a7d.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/0ce1b91260867447.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/8caed091165340c7.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/turbopack-800e3eb553ea95a0.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/ff1a16fafef87110.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/247eb132b7f7b574.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/1dcf9d33b9a59068.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/18e13fd735316c71.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'chrome-extension://ncibgoaomkmdpilpocfeponihegamlic/token-signing-page-script.js' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'Referer;' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=1r34m' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/favicon.ico?favicon.0b3bf435.ico' \
+  -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: image' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=1pn8p' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=nn07o' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_index' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=m8rs8' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /auth' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=n1e48' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /auth/reset-password' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/auth/reset-password?_rsc=2y9rz' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /auth/reset-password/__PAGE__' \
+  -H 'next-url: /' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/c803332e4fa40c29.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/api/login' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw $'{"email":"suporte@bwb.pt","password":"Admin123\u0021"}' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=vusbg' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-state-tree: %5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D' \
+  -H 'next-url: /' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/6c819eec47f07c87.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/9db9e87f2aeaad82.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=1vedp' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-state-tree: %5B%22%22%2C%7B%22children%22%3A%5B%22dashboard%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2C%22refetch%22%5D%7D%2Cnull%2Cnull%5D' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=18t7j' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=18t7j' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=oh8t4' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=vnny3' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=8ajn1' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/profile' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=oh8t4' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=1sd2v' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/users' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/users?_rsc=1mv8o' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/users/__PAGE__' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard/profile?_rsc=1eurx' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/profile/__PAGE__' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/b193569503e86d17.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://rustdesk.bwb.pt/_next/static/chunks/3a76a8ff11544528.js' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Referer: https://rustdesk.bwb.pt/dashboard' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=1ndc6' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_tree' \
+  -H 'next-url: /dashboard/users' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard/users' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=141xs' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /_head' \
+  -H 'next-url: /dashboard/users' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard/users' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://rustdesk.bwb.pt/dashboard?_rsc=1k79m' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'next-router-prefetch: 1' \
+  -H 'next-router-segment-prefetch: /dashboard/__PAGE__' \
+  -H 'next-url: /dashboard/users' \
+  -H 'priority: i' \
+  -H 'referer: https://rustdesk.bwb.pt/dashboard/users' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-auth-users?page=1&per_page=200' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-update-auth-user' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization,content-type' \
+  -H 'access-control-request-method: POST' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-update-auth-user' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MjY3NTA0LCJpYXQiOjE3NjYyNjM5MDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjI2MzkwNH1dLCJzZXNzaW9uX2lkIjoiNTBiMTNhNGUtNDM1ZS00YzkxLWE1MTMtZmQ5M2RmMzkxNzg3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.2xQf-7fBs6bStpHnRQDTdh8KGzNU4fR0beyrDJHKkTU' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw '{"id":"69280e26-e868-478d-8562-7de0c160535e","email_confirm":true,"ban":false,"display_name":"rui.abreu","mesh_username":"datalink@datalink.pt","email":"datalink@datalink.pt"}'
+
+
+-----------------------------------
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "e497508f-dca4-454a-9967-3d4d76b8067f",
+    "level": "log",
+    "timestamp": 1766263994341000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "f92e901b-51a0-4f15-98e7-0174ea2796cc",
+    "level": "log",
+    "timestamp": 1766263994144000
+  },
+  {
+    "event_message": "[admin-update-auth-user] Error updating mesh_users row: {\n  code: \"23505\",\n  details: \"Key (mesh_username)=(datalink@datalink.pt) already exists.\",\n  hint: null,\n  message: 'duplicate key value violates unique constraint \"mesh_users_mesh_username_key\"'\n}\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "effd96e8-029b-4a27-8a1d-e9cdd7673ec4",
+    "level": "error",
+    "timestamp": 1766263919682000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "18363d52-189d-4f87-ac65-f7ac41a71212",
+    "level": "info",
+    "timestamp": 1766263919324000
+  },
+  {
+    "event_message": "booted (time: 37ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "c4fc6dd4-b358-4694-90c0-1b77415804f9",
+    "level": "log",
+    "timestamp": 1766263919320000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "fd6bb049-c3b6-4a9c-9ecb-edd2ee9d5eec",
+    "level": "info",
+    "timestamp": 1766263919102000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "c118febd-356c-4d98-b91b-dc908a710aca",
+    "level": "log",
+    "timestamp": 1766263919097000
+  }
+]

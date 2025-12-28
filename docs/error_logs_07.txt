@@ -1,0 +1,204 @@
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/register-device' \
+-X 'POST' \
+-H 'Content-Type: application/json' \
+-H 'Pragma: no-cache' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NjkxNjA0LCJpYXQiOjE3NjU2ODgwMDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NTY4ODAwNH1dLCJzZXNzaW9uX2lkIjoiYzY0ZjA3YWQtNzRmOS00ODE3LWIxYzItZGJkNTE1Y2Y3Yjk3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.hOYeAqejg3LI5tji_XfU4OcJE0MIr4EPLyfOOShwsU4' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Cache-Control: no-cache' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Origin: https://rustdesk.bwb.pt' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'Content-Length: 78' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+--data-raw '{"device_id":"1886522715","friendly_name":"One Plus","notes":"Pessoal | Casa"}'
+
+
+---------------------------------
+
+
+POST /functions/v1/register-device H3
+Content-Type: application/json
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NjkxNjA0LCJpYXQiOjE3NjU2ODgwMDQsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NTY4ODAwNH1dLCJzZXNzaW9uX2lkIjoiYzY0ZjA3YWQtNzRmOS00ODE3LWIxYzItZGJkNTE1Y2Y3Yjk3IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.hOYeAqejg3LI5tji_XfU4OcJE0MIr4EPLyfOOShwsU4
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+Origin: https://rustdesk.bwb.pt
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Referer: https://rustdesk.bwb.pt/
+Content-Length: 78
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+
+--------------------------------
+
+H3 500 
+Content-Encoding: gzip
+Set-Cookie: __cf_bm=nxVvABrR2rkMgV0I80Z6L1SOAQToQpYuC8M6KNUMhA0-1765688028-1.0.1.1-9sK6WxX_fIiPsqVTrFOXNYsoOtCCdSY0MzUysug3WGJtp5asUgdz0pjISo19gLpDFEH9hbH8xpbPYDwI5jKGjrKwmnh3EdUp2WRoOIO_X99J06ECKBiczvyYXyE3plVK; path=/; expires=Sun, 14-Dec-25 05:23:48 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+Access-Control-Allow-Origin: *
+Server-Timing: cfExtPri
+Access-Control-Allow-Headers: authorization, x-client-info, apikey
+Content-Length: 105
+Vary: Accept-Encoding
+Date: Sun, 14 Dec 2025 04:53:48 GMT
+Content-Type: application/json
+sb-request-id: 019b1b35-2950-77ec-a66c-725c5492acd8
+Server: cloudflare
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+sb-project-ref: kqwaibgvmzcqeoctukoy
+x-deno-execution-id: 8ddfd2c7-97da-4c76-beb8-54c093d34519
+Alt-Svc: h3=":443"; ma=86400
+x-served-by: supabase-edge-runtime
+Priority: u=3,i
+x-sb-edge-region: eu-west-3
+cf-cache-status: DYNAMIC
+cf-ray: 9adb197baf01b275-LIS
+
+---------------------------------
+
+
+[
+  {
+    "event_message": "event loop error: ReferenceError: handler is not defined\n    at file:///var/tmp/sb-compile-edge-runtime/register-device/index.ts:328:7",
+    "event_type": "UncaughtException",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "057bb198-3577-4bf8-b8e6-89509adabe81",
+    "level": "error",
+    "timestamp": 1765688028511000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "69c08936-1a56-4173-85a1-423eb30bd0c8",
+    "level": "log",
+    "timestamp": 1765688028509000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "95330908-7796-4b6e-90bc-9625ddbf7635",
+    "level": "log",
+    "timestamp": 1765687519370000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "f81bef83-d31c-494f-ae97-ad6d24b6df8d",
+    "level": "info",
+    "timestamp": 1765687444356000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "1fa028ea-6132-455f-abe4-5b4f763cd474",
+    "level": "log",
+    "timestamp": 1765687444354000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "0fb983c7-872e-44e2-958c-1a2ffb4522c3",
+    "level": "log",
+    "timestamp": 1765686981876000
+  },
+  {
+    "event_message": "[register-device] JWT validated successfully for user 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "985f912c-6fa8-48e1-ad5f-e6ee60b7514b",
+    "level": "info",
+    "timestamp": 1765686907145000
+  },
+  {
+    "event_message": "[register-device] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "6b7e9631-8ac0-4464-8a57-dff097775b82",
+    "level": "info",
+    "timestamp": 1765686906865000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "a46f47ca-1708-4fe8-b56b-e8dc8c62eb4d",
+    "level": "info",
+    "timestamp": 1765686906863000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "96eb7830-e07a-4294-9937-d6810592a7c0",
+    "level": "log",
+    "timestamp": 1765686906861000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "a0bb8e03-fccd-49fa-8d47-3fc080d23727",
+    "level": "log",
+    "timestamp": 1765686481431000
+  },
+  {
+    "event_message": "[register-device] sanity-check handler invoked\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "92efa9d6-5fab-47c5-9e7b-2a8f3fa79177",
+    "level": "info",
+    "timestamp": 1765686406416000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "1dad7606-a3f9-456a-885a-613ee79f08b8",
+    "level": "info",
+    "timestamp": 1765686406414000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "3af6979e-edae-4813-b12e-3031fb4709b9",
+    "level": "log",
+    "timestamp": 1765686406413000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "1a370d44-e1ea-42ca-997d-c05eb7a9ae4c",
+    "level": "log",
+    "timestamp": 1765685191536000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "35eede60-c53b-4ffc-a815-faaada27a53c",
+    "level": "log",
+    "timestamp": 1765685041532000
+  }
+]
+
+
+--------------------------------------
+

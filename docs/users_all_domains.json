@@ -1,0 +1,112 @@
+[
+  {
+    "_id": "user//admin",
+    "domain": "",
+    "name": "admin",
+    "email": "suporte@storesace.cv",
+    "siteadmin": 4294967295,
+    "creation": 1721004286,
+    "login": 1765996903,
+    "access": 1765996903,
+    "llang": "pt"
+  },
+  {
+    "_id": "user//amadeu.cristelo@gmail.com",
+    "domain": "",
+    "name": "amadeu.cristelo@gmail.com",
+    "email": "amadeu.cristelo@gmail.com",
+    "siteadmin": 3850,
+    "creation": 1765997142,
+    "login": 1766003597,
+    "access": 1766010032,
+    "llang": null
+  },
+  {
+    "_id": "user//assistencia@zsa-softwares.com",
+    "domain": "",
+    "name": "assistencia@zsa-softwares.com",
+    "email": "assistencia@zsa-softwares.com",
+    "siteadmin": null,
+    "creation": 1766001759,
+    "login": 1766003972,
+    "access": 1766003972,
+    "llang": null
+  },
+  {
+    "_id": "user//datalink@datalink.pt",
+    "domain": "",
+    "name": "datalink@datalink.pt",
+    "email": "datalink@datalink.pt",
+    "siteadmin": 3850,
+    "creation": 1765997510,
+    "login": 1766022060,
+    "access": 1766022060,
+    "llang": null
+  },
+  {
+    "_id": "user//datalink@gmail.com",
+    "domain": "",
+    "name": "datalink@gmail.com",
+    "email": "datalink@gmail.com",
+    "siteadmin": null,
+    "creation": 1766019060,
+    "login": 1766021973,
+    "access": 1766021973,
+    "llang": null
+  },
+  {
+    "_id": "user//jorge.peixinho",
+    "domain": "",
+    "name": "jorge.peixinho",
+    "email": "jorge.peixinho@storesace.cv",
+    "siteadmin": 4294967295,
+    "creation": 1721006037,
+    "login": 1721006232,
+    "access": 1721031653,
+    "llang": "pt"
+  },
+  {
+    "_id": "user//rui.abreu",
+    "domain": "",
+    "name": "rui.abreu",
+    "email": "datalink@datalink.pt",
+    "siteadmin": 3850,
+    "creation": 1721042453,
+    "login": 1766018652,
+    "access": 1766022248,
+    "llang": "pt"
+  },
+  {
+    "_id": "user//zonetech@bwb.pt",
+    "domain": "",
+    "name": "zonetech@bwb.pt",
+    "email": "zonetech@bwb.pt",
+    "siteadmin": 4294967295,
+    "creation": 1765995138,
+    "login": 1765997392,
+    "access": 1765997392,
+    "llang": null
+  },
+  {
+    "_id": "user//zs.angola",
+    "domain": "",
+    "name": "zs.angola",
+    "email": "amadeu.cristelo@gmail.com",
+    "siteadmin": 3592,
+    "creation": 1763659586,
+    "login": 1765998530,
+    "access": 1766010036,
+    "llang": "pt"
+  },
+  {
+    "_id": "user//zsangola@bwb.pt",
+    "domain": "",
+    "name": "zsangola@bwb.pt",
+    "email": "zsangola@bwb.pt",
+    "siteadmin": 4294967295,
+    "creation": 1765995519,
+    "login": 1765998282,
+    "access": 1766021454,
+    "llang": null
+  }
+]

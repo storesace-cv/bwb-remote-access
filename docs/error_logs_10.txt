@@ -1,0 +1,142 @@
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/register-device' \
+-X 'POST' \
+-H 'Content-Type: application/json' \
+-H 'Pragma: no-cache' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzUyNzgwLCJpYXQiOjE3NjU3NDkxODAsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NDkxODB9XSwic2Vzc2lvbl9pZCI6ImEyNGU3ZWIyLTcwMWMtNDgyOS05N2M2LWY0MzgzMTJlMzI1MCIsImlzX2Fub255bW91cyI6ZmFsc2V9.OH-v856gqqhFX--Whgj52TpeG9OB2m4WQRzv1b12Z08' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Cache-Control: no-cache' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Origin: https://rustdesk.bwb.pt' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'Content-Length: 140' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+--data-raw $'{"device_id":"1886522715","friendly_name":"One Plus","notes":"Pessoal | Caso | Telem\xf3vel de testes...","rustdesk_password":"Quer1asEntrar"}'
+
+--------------------------
+
+POST /functions/v1/register-device H3
+Content-Type: application/json
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzUyNzgwLCJpYXQiOjE3NjU3NDkxODAsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NDkxODB9XSwic2Vzc2lvbl9pZCI6ImEyNGU3ZWIyLTcwMWMtNDgyOS05N2M2LWY0MzgzMTJlMzI1MCIsImlzX2Fub255bW91cyI6ZmFsc2V9.OH-v856gqqhFX--Whgj52TpeG9OB2m4WQRzv1b12Z08
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+Origin: https://rustdesk.bwb.pt
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Referer: https://rustdesk.bwb.pt/
+Content-Length: 140
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+-------------------------
+
+H3 200 
+Content-Type: application/json
+Server-Timing: cfExtPri
+Content-Encoding: gzip
+Set-Cookie: __cf_bm=40PCY42E3F8OpbiRu2DggqciHqGi45K34Pm3wfXzQXM-1765749198-1.0.1.1-OCZBse3HropcOegBW0f_lnXz5ICIddKoSxlWHBHAPmLTMiLAMpwB5eqcHlOzs6r2FdAZw_VGFROyLytW.HIsOUXncHxTYHjczU4eqy1Fif.fC4TwF2AGp51LsCvzMpze; path=/; expires=Sun, 14-Dec-25 22:23:18 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+Date: Sun, 14 Dec 2025 21:53:18 GMT
+Content-Length: 353
+Vary: Accept-Encoding
+sb-request-id: 019b1eda-8b1a-75be-8e96-899871136005
+Alt-Svc: h3=":443"; ma=86400
+Server: cloudflare
+x-deno-execution-id: fcb2ec44-bf46-48f7-8bdd-30c9478936e2
+Priority: u=3,i
+cf-cache-status: DYNAMIC
+x-sb-edge-region: eu-west-3
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+sb-project-ref: kqwaibgvmzcqeoctukoy
+cf-ray: 9ae0eee4eacf5f9a-LIS
+x-served-by: supabase-edge-runtime
+
+---------------------------
+
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+-X 'GET' \
+-H 'Content-Type: application/json' \
+-H 'Pragma: no-cache' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzUyNzgwLCJpYXQiOjE3NjU3NDkxODAsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NDkxODB9XSwic2Vzc2lvbl9pZCI6ImEyNGU3ZWIyLTcwMWMtNDgyOS05N2M2LWY0MzgzMTJlMzI1MCIsImlzX2Fub255bW91cyI6ZmFsc2V9.OH-v856gqqhFX--Whgj52TpeG9OB2m4WQRzv1b12Z08' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Cache-Control: no-cache' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s'
+
+--------------------------
+
+GET /functions/v1/get-devices H3
+Content-Type: application/json
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzUyNzgwLCJpYXQiOjE3NjU3NDkxODAsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NDkxODB9XSwic2Vzc2lvbl9pZCI6ImEyNGU3ZWIyLTcwMWMtNDgyOS05N2M2LWY0MzgzMTJlMzI1MCIsImlzX2Fub255bW91cyI6ZmFsc2V9.OH-v856gqqhFX--Whgj52TpeG9OB2m4WQRzv1b12Z08
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Referer: https://rustdesk.bwb.pt/
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+--------------------------
+
+GET /functions/v1/get-devices H3
+Content-Type: application/json
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzUyNzgwLCJpYXQiOjE3NjU3NDkxODAsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NDkxODB9XSwic2Vzc2lvbl9pZCI6ImEyNGU3ZWIyLTcwMWMtNDgyOS05N2M2LWY0MzgzMTJlMzI1MCIsImlzX2Fub255bW91cyI6ZmFsc2V9.OH-v856gqqhFX--Whgj52TpeG9OB2m4WQRzv1b12Z08
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Referer: https://rustdesk.bwb.pt/
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+----------------------------
+
+H3 200 
+Content-Encoding: gzip
+Set-Cookie: __cf_bm=PQq9_ujEmCl4GhJq5BaIVeLHR2IqIgHToxTacyDi22o-1765749199-1.0.1.1-ZVBMUVH0n1KTXxiZYbJtwzNCqFtq5Oi8xAdKPn5vUz7vOu7QyknM_2zHBNj4Noegut__xIYDR1bBRNcPCR92MTU72_xogB0tZFgCJDyaI7Q; path=/; expires=Sun, 14-Dec-25 22:23:19 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+Access-Control-Allow-Methods: GET, OPTIONS
+Access-Control-Allow-Origin: *
+Server-Timing: cfExtPri
+Access-Control-Allow-Headers: authorization, x-client-info, apikey, content-type
+Content-Length: 365
+Vary: Accept-Encoding
+Date: Sun, 14 Dec 2025 21:53:19 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+sb-request-id: 019b1eda-907f-70ce-9a82-001a263a97db
+Server: cloudflare
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+sb-project-ref: kqwaibgvmzcqeoctukoy
+x-deno-execution-id: 3e6a7d51-0f89-478a-9318-9ce39edd9656
+x-served-by: supabase-edge-runtime
+Alt-Svc: h3=":443"; ma=86400
+Priority: u=3,i
+x-sb-edge-region: eu-west-3
+cf-cache-status: DYNAMIC
+cf-ray: 9ae0eeed8c375f9a-LIS

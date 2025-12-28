@@ -1,0 +1,78 @@
+You are working on the Android app “BWB – Android Provisioner” (Kotlin). We must fix the provisioning flow so that after download it automatically starts the APK installation prompt and then applies RustDesk configuration (Option A: open RustDesk with config import).
+
+Context / Evidence (root cause)
+
+Current runtime log shows a hard error during provisioning:
+
+ERROR: Failed to write config file: Only the original thread that created a view hierarchy can touch its views. Expected: main Calling: DefaultDispatcher-worker-2
+
+This indicates that some UI/state update (View, ViewModel observable state, LiveData/StateFlow, Toast, navigation, dialog, etc.) is being touched from a background dispatcher. The flow then marks the config bundle as failed and never triggers the install prompt. APK download succeeds via DownloadManager, but install UI does not start.
+
+Goal
+	1.	Fix threading so no UI/state that touches UI is updated off the Main thread.
+	2.	Ensure that once APK download completes, we launch the Android package installer UI (prompt) reliably.
+	3.	Implement Option A: after installation, the device should be configured by opening RustDesk and triggering config import using a supported mechanism:
+	•	Preferred: open RustDesk with an explicit Intent and provide a config payload/Uri if RustDesk supports it.
+	•	If RustDesk does NOT support programmatic import via Intent, implement an in-app guided auto-step:
+	•	open RustDesk automatically to the correct screen OR show a single “Tap to import config” action that launches RustDesk import UI with the config file Uri via ACTION_VIEW/ACTION_SEND.
+	•	Do NOT assume RustDesk auto-reads /Download/*.json silently.
+
+Requirements
+	•	Keep changes minimal and localized.
+	•	Use modern Android patterns (Activity Result APIs where appropriate).
+	•	Target Android 10+ behavior and scoped storage rules.
+	•	Use FileProvider for sharing APK and config file URIs (no file:// URIs).
+	•	Use Dispatchers.IO only for file/network. UI/state updates must be in Dispatchers.Main.
+	•	Make the flow resilient:
+	•	If config download succeeds but import trigger fails, provide a clear error + retry button.
+	•	If APK install is cancelled, show status “Install cancelled” and allow retry.
+
+Implementation tasks (do all)
+
+A) Locate the code that writes/saves the config file (e.g., saveConfigFile(...) / “Config saved to /storage/emulated/0/Download/…”) and the code that logs/updates UI afterwards. Fix the crash by ensuring:
+	•	file writing happens on IO dispatcher
+	•	any UI/state update/log UI rendering happens on Main dispatcher
+	•	no View/Compose/LiveData/StateFlow value that is observed by UI is changed from background thread.
+
+B) Ensure the APK install prompt appears automatically when download finishes:
+	•	Use DownloadManager + BroadcastReceiver (ACTION_DOWNLOAD_COMPLETE) OR DownloadManager query polling
+	•	Get the downloaded APK Uri
+	•	Launch installer using Intent with correct flags and MIME:
+application/vnd.android.package-archive
+	•	Use FileProvider if needed and grant read permissions.
+
+C) After install, trigger Option A (auto import / open RustDesk with config):
+	•	Save config to app-specific storage and expose via FileProvider Uri.
+	•	Try to open RustDesk package explicitly:
+	•	package: com.carriez.flutter_hbb (verify actual RustDesk Android package used in this project; search manifest/build config).
+	•	Attempt Intent patterns in order:
+	1.	Explicit intent to RustDesk main activity with extras/Uri (if supported).
+	2.	Fallback: ACTION_VIEW with content://.../bwb-rustdesk-config.json and MIME application/json (or application/octet-stream) targeting RustDesk.
+	3.	Fallback: ACTION_SEND with stream Uri targeting RustDesk.
+	•	If none works, implement guided fallback UI in Provisioner: “Open RustDesk to import config” button, using chooser limited to RustDesk if possible.
+
+D) Add structured logs and status steps:
+	•	“Config download OK”
+	•	“Config saved OK”
+	•	“Launching install prompt…”
+	•	“Install completed” (best-effort; if we can’t detect, provide “Continue” button)
+	•	“Launching RustDesk import…”
+	•	“Import triggered OK / failed”
+
+E) Provide a quick local test plan:
+	•	emulator test steps (Android Studio)
+	•	physical device steps
+	•	include how to verify no threading crash occurs and that the installer prompt appears.
+
+Output
+	•	Commit-ready code changes (Kotlin) with any required manifest/provider config updates.
+	•	If you must add or modify FileProvider XML, include it.
+	•	Ensure build passes.
+
+Reporting style
+
+At the end, output ONLY:
+	•	SUCCESS 100% if everything is implemented and builds cleanly AND the flow is logically correct for Android constraints; OR
+	•	NOT 100% followed by a short bullet list of what didn’t meet requirements and exactly what is missing.
+
+No extra commentary.

@@ -1,0 +1,379 @@
+============================================================
+Provision Claim Diagnostic - /api/provision/claim
+Timestamp (UTC): 2025-12-18T01:32:46Z
+Host: remote-srv
+Repository root: /opt/rustdesk-frontend
+Code under test: 3126
+============================================================
+
+### 1. System Information
+uname -a:
+Linux remote-srv 5.15.0-164-generic #174-Ubuntu SMP Fri Nov 14 20:25:16 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+lsb_release -a (if available):
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.5 LTS
+Release:	22.04
+Codename:	jammy
+
+Current user: root
+Current working directory: /opt/rustdesk-frontend
+
+### 2. systemd services matching rustdesk/frontend/api/node/next
+  kmod-static-nodes.service                      loaded    active     exited       Create List of Static Device Nodes
+  rustdesk-frontend.service                      loaded    active     running      RustDesk Web Frontend
+  rustdesk-hbbr.service                          loaded    active     running      RustDesk Relay Server (hbbr)
+  rustdesk-hbbs.service                          loaded    active     running      RustDesk ID/Rendezvous Server (hbbs)
+  rustdesk-sync-api.service                      loaded    activating auto-restart RustDesk Sync API - On-demand device synchronization
+  systemd-tmpfiles-setup-dev.service             loaded    active     exited       Create Static Device Nodes in /dev
+
+### 2.1 No specific frontend service detected (rustdesk-frontend.service / rustdeskweb.service not found)
+
+### 3. NGINX configuration for rustdesk.bwb.pt
+nginx -T | grep -n 'server_name rustdesk.bwb.pt'
+------------------------------------------------------------
+258:    server_name rustdesk.bwb.pt;
+265:    server_name rustdesk.bwb.pt;
+
+### 4. NGINX access/error logs around /api/provision/claim
+Access log path: /var/log/nginx/access.log
+
+Last 50 lines containing '/api/provision/claim' in access.log:
+------------------------------------------------------------
+No matching lines for /api/provision/claim.
+
+Last 200 lines from access.log:
+------------------------------------------------------------
+98.97.72.42 - - [18/Dec/2025:01:23:12 +0000] "GET /favicon-303x303.png HTTP/2.0" 200 112227 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:21 +0000] "POST / HTTP/2.0" 200 325676 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /styles/ol.css HTTP/2.0" 200 5370 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /styles/ol3-contextmenu.min.css HTTP/2.0" 200 4813 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /styles/xterm.css HTTP/2.0" 200 4632 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /styles/style.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /styles/flatpickr.min.css HTTP/2.0" 200 16479 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/common-0.0.1.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/meshcentral.js HTTP/2.0" 200 2913 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /styles/custom.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/amt-0.2.0.js HTTP/2.0" 200 76452 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/amt-wsman-0.2.0.js HTTP/2.0" 200 16729 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/amt-desktop-0.0.2.js HTTP/2.0" 200 50036 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/amt-terminal-0.0.2.js HTTP/2.0" 200 38096 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/zlib.js HTTP/2.0" 200 4417 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/zlib-adler32.js HTTP/2.0" 200 10228 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/zlib-crc32.js HTTP/2.0" 200 9594 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/amt-redir-ws-0.1.0.js HTTP/2.0" 200 15311 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/amt-wsman-ws-0.2.0.js HTTP/2.0" 200 14458 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/agent-redir-ws-0.1.1.js HTTP/2.0" 200 17560 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/agent-redir-rtc-0.1.0.js HTTP/2.0" 200 6707 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/u2f-api.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/custom.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/zlib-inflate.js HTTP/2.0" 200 90626 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/agent-desktop-0.0.2.js HTTP/2.0" 200 46669 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/agent-rdp-0.0.1.js HTTP/2.0" 200 13241 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/qrcode.min.js HTTP/2.0" 200 19927 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/xterm-addon-fit.js HTTP/2.0" 200 2377 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/flatpickr.js HTTP/2.0" 200 52553 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /mstsc/mstsc.js HTTP/2.0" 200 1881 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /mstsc/keyboard.js HTTP/2.0" 200 10273 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /mstsc/client.js HTTP/2.0" 200 10821 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /mstsc/canvas.js HTTP/2.0" 200 3187 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/chartjs-adapter-moment.js HTTP/2.0" 200 2512 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/filesaver.min.js HTTP/2.0" 200 2565 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/ol3-contextmenu.js HTTP/2.0" 200 11404 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:22 +0000] "GET /scripts/purify.js HTTP/2.0" 200 65343 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /scripts/marked.js HTTP/2.0" 200 103416 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /scripts/charts.js HTTP/2.0" 200 204853 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /scripts/xterm.js HTTP/2.0" 200 271234 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-collapse.png HTTP/2.0" 200 1240 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-expand.png HTTP/2.0" 200 1242 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/x16.png HTTP/2.0" 200 601 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-gear.png HTTP/2.0" 200 310 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/info.png HTTP/2.0" 200 4882 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/user-256.png HTTP/2.0" 200 19435 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/link4.png HTTP/2.0" 200 131 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/link6.png HTTP/2.0" 200 198 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-star-notify-16.png HTTP/2.0" 200 542 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /serverpic.ashx HTTP/2.0" 200 71416 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-relay-notify.png HTTP/2.0" 200 384 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-help-notify-16.png HTTP/2.0" 200 420 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-play.png HTTP/2.0" 200 570 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-chat.png HTTP/2.0" 200 5739 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-notify.png HTTP/2.0" 200 3382 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-lock.png HTTP/2.0" 200 3355 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-url2.png HTTP/2.0" 200 3343 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-background.png HTTP/2.0" 200 3387 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-camera.png HTTP/2.0" 200 3365 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-film.png HTTP/2.0" 200 4728 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-clipboard-in.png HTTP/2.0" 200 5501 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-clipboard-out.png HTTP/2.0" 200 5654 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-refresh.png HTTP/2.0" 200 3718 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-keylock-red.png HTTP/2.0" 200 8164 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-keylock.png HTTP/2.0" 200 3395 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/icon-share2.png HTTP/2.0" 200 521 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/details/graph64.png HTTP/2.0" 200 7643 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/webp/mesh-256.webp HTTP/2.0" 200 22088 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/webp/user-256.webp HTTP/2.0" 200 4812 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:23 +0000] "GET /images/webp/group-256.webp HTTP/2.0" 200 7964 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:24 +0000] "GET /mstsc/rle.js HTTP/2.0" 200 483135 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:24 +0000] "GET /scripts/moment.js HTTP/2.0" 200 622045 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:24 +0000] "GET /scripts/ol.js HTTP/2.0" 200 515485 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:25 +0000] "GET /commander.ashx HTTP/2.0" 200 230682 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:25 +0000] "GET /sounds/chimes.mp3 HTTP/2.0" 206 8832 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:25 +0000] "GET /logo.png HTTP/2.0" 200 21683 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:25 +0000] "GET /images/leftbar-64.png HTTP/2.0" 200 45169 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:26 +0000] "GET /images/views.png HTTP/2.0" 200 3723 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:26 +0000] "GET /images/icons50.png HTTP/2.0" 200 31507 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:26 +0000] "GET /images/c2.png HTTP/2.0" 200 230 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:23:26 +0000] "GET /images/mail12.png HTTP/2.0" 200 3269 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+140.233.190.74 - - [18/Dec/2025:01:23:58 +0000] "CONNECT suterawa.pn-pontianak.go.id:443:443 HTTP/1.1" 400 166 "-" "-"
+38.44.67.90 - - [18/Dec/2025:01:24:14 +0000] "GET /agent.ashx HTTP/1.1" 101 5939 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:01:24:34 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:01:25:05 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:01:25:20 +0000] "GET /images/google-play-140.png HTTP/2.0" 200 4117 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:25:20 +0000] "GET /images/amazon-appstore-140.png HTTP/2.0" 200 3807 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:25:20 +0000] "GET /images/assistant-100.png HTTP/2.0" 200 7700 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:25:20 +0000] "GET /images/assistant2-100.png HTTP/2.0" 200 6603 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+38.44.67.90 - - [18/Dec/2025:01:25:33 +0000] "GET /meshagents?id=4&meshid=L0JKym23JKyusvgziHogBW3v0frBYd1dfCN9gWnrdxnNXVjP9GzT1O3jKdHX0ZtM&installflags=0 HTTP/2.0" 200 3482248 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0"
+98.97.72.42 - - [18/Dec/2025:01:26:20 +0000] "GET /images/link5.png HTTP/2.0" 200 5975 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:26:20 +0000] "GET /images/icons256-1-1.png HTTP/2.0" 200 58356 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:26:21 +0000] "GET /images/details/software64.png HTTP/2.0" 200 5398 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:26:21 +0000] "GET /images/details/meshagent64.png HTTP/2.0" 200 13815 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:26:21 +0000] "GET /images/details/networking64.png HTTP/2.0" 200 7023 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:26:21 +0000] "GET /images/details/amt64.png HTTP/2.0" 200 10289 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+45.77.96.205 - - [18/Dec/2025:01:26:33 +0000] "CONNECT httpbin.org:443 HTTP/1.1" 400 166 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:27:15 +0000] "GET /meshrelay.ashx?browser=1&p=2&nodeid=node//NUGO1$55L8wP88dUrVYmNJAFN8sxyQv0v4btXGMciRW48Ch5srntqdypPjgA5Ue7&id=p8frxt3c4ip&auth=6b50ffd51dc11f49a246cd0b202368875575f24ebfd6b2938547a0681a40e9caf8e470f17d550f4108669742f751b139a155ef7eb58a6d5deb31ab37df902b475e67da034182981e1e98a50f2cbac35147c464aa6e52a8aa48435205f3da7cf608130ba886ef4b8b3b61c01d5e03d4e66f10cb191a8e HTTP/1.1" 101 87385 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+38.44.67.90 - - [18/Dec/2025:01:27:15 +0000] "GET /meshrelay.ashx?p=2&nodeid=node//NUGO1%2455L8wP88dUrVYmNJAFN8sxyQv0v4btXGMciRW48Ch5srntqdypPjgA5Ue7&id=p8frxt3c4ip&rauth=d4cb8a9dd52c3531cbec3d5ba60e14e30902ea1793a271ab51d6ae55ee85606108638e29302a74116b79dbb198dd917af8931961aead4fbe565375c6ec9d0129e6dbe8cbaf7b30688ba6dc6888b559fa9c4e88f9a0b710bf84ce3e3e417d302c0ed534ff2c HTTP/1.1" 101 270 "-" "-"
+188.250.60.132 - - [18/Dec/2025:01:27:42 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:01:28:03 +0000] "GET /images/google-play-140.png HTTP/2.0" 200 4117 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:28:03 +0000] "GET /images/amazon-appstore-140.png HTTP/2.0" 200 3807 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:28:03 +0000] "GET /images/assistant-100.png HTTP/2.0" 200 7700 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:28:03 +0000] "GET /images/assistant2-100.png HTTP/2.0" 200 6603 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+38.44.67.90 - - [18/Dec/2025:01:28:14 +0000] "GET /meshagents?id=4&meshid=L0JKym23JKyusvgziHogBW3v0frBYd1dfCN9gWnrdxnNXVjP9GzT1O3jKdHX0ZtM&installflags=0 HTTP/2.0" 200 3482248 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+188.250.60.132 - - [18/Dec/2025:01:28:44 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+142.171.77.234 - - [18/Dec/2025:01:29:06 +0000] "GET http://checkip.amazonaws.com/ HTTP/1.1" 301 178 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:30:12 +0000] "GET /images/assistant-100.png HTTP/2.0" 200 7700 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:30:12 +0000] "GET /images/assistant2-100.png HTTP/2.0" 200 6603 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+112.86.163.186 - - [18/Dec/2025:01:30:15 +0000] "CONNECT gstatic.com:80 HTTP/1.1" 400 166 "-" "-"
+38.44.67.90 - - [18/Dec/2025:01:30:20 +0000] "GET /meshagents?id=4&meshid=L0JKym23JKyusvgziHogBW3v0frBYd1dfCN9gWnrdxnNXVjP9GzT1O3jKdHX0ZtM&installflags=0 HTTP/2.0" 200 3482248 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0"
+188.250.60.132 - - [18/Dec/2025:01:30:51 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+95.94.36.90 - - [18/Dec/2025:01:30:54 +0000] "GET /control.ashx HTTP/1.1" 101 2023831 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+141.98.11.140 - - [18/Dec/2025:01:31:16 +0000] "GET / HTTP/1.1" 301 178 "-" "-"
+95.94.36.90 - - [18/Dec/2025:01:31:17 +0000] "GET /agent.ashx HTTP/1.1" 101 16309 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+95.94.36.90 - - [18/Dec/2025:01:31:25 +0000] "HEAD /?viewmode=4 HTTP/2.0" 200 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:25 +0000] "GET /?viewmode=4 HTTP/2.0" 200 325831 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:25 +0000] "GET /styles/style.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:25 +0000] "GET /styles/ol3-contextmenu.min.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:25 +0000] "GET /styles/ol.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /styles/xterm.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /styles/flatpickr.min.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /styles/custom.css HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/amt-0.2.0.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/common-0.0.1.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/meshcentral.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/amt-wsman-0.2.0.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/amt-desktop-0.0.2.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/amt-terminal-0.0.2.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/zlib.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/zlib-inflate.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/zlib-adler32.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/zlib-crc32.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/amt-redir-ws-0.1.0.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:26 +0000] "GET /scripts/amt-wsman-ws-0.2.0.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/agent-redir-ws-0.1.1.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/agent-redir-rtc-0.1.0.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/agent-desktop-0.0.2.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/agent-rdp-0.0.1.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/qrcode.min.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/xterm.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/xterm-addon-fit.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/flatpickr.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /mstsc/mstsc.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /mstsc/keyboard.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /mstsc/rle.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /mstsc/client.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /mstsc/canvas.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/u2f-api.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/charts.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/moment.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/chartjs-adapter-moment.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/filesaver.min.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/ol.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/ol3-contextmenu.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/purify.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/marked.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/x32.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/user-256.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /scripts/custom.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/link4.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/link6.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-collapse.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /commander.ashx HTTP/2.0" 200 230682 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-expand.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-gear.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/info.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-star-notify-16.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /serverpic.ashx HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-relay-notify.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-help-notify-16.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-play.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-chat.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-notify.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-lock.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-url2.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-background.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:27 +0000] "GET /images/icon-camera.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-film.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-clipboard-in.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-clipboard-out.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-refresh.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-keylock-red.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-keylock.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/icon-share2.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/details/graph64.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/webp/mesh-256.webp HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/webp/user-256.webp HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/webp/group-256.webp HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/leftbar-128.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /logo.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:31:28 +0000] "GET /images/mail12.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+188.250.60.132 - - [18/Dec/2025:01:31:54 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+102.211.11.65 - - [18/Dec/2025:01:31:56 +0000] "GET /control.ashx HTTP/1.1" 101 233402 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+157.66.218.32 - - [18/Dec/2025:01:31:59 +0000] "CONNECT api64.ipify.org:443 HTTP/1.1" 400 166 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:32:32 +0000] "GET /images/google-play-140.png HTTP/2.0" 200 4117 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:32:32 +0000] "GET /images/amazon-appstore-140.png HTTP/2.0" 200 3807 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:32:32 +0000] "GET /images/assistant-100.png HTTP/2.0" 200 7700 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:32:32 +0000] "GET /images/assistant2-100.png HTTP/2.0" 200 6603 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+38.44.67.90 - - [18/Dec/2025:01:32:42 +0000] "GET /meshagents?id=4&meshid=L0JKym23JKyusvgziHogBW3v0frBYd1dfCN9gWnrdxnNXVjP9GzT1O3jKdHX0ZtM&installflags=0 HTTP/2.0" 200 3482248 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+
+Error log path: /var/log/nginx/error.log
+
+Last 50 lines containing '/api/provision/claim' in error.log:
+------------------------------------------------------------
+No matching lines for /api/provision/claim.
+
+Last 200 lines from error.log:
+------------------------------------------------------------
+
+### 5. HTTP test to https://rustdesk.bwb.pt/api/provision/claim
+curl command:
+------------------------------------------------------------
+curl -vk 'https://rustdesk.bwb.pt/api/provision/claim' \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"3126","device_hint":null,"nonce":null}'
+
+curl output (headers + body):
+------------------------------------------------------------
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 46.101.78.179:443...
+* Connected to rustdesk.bwb.pt (46.101.78.179) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* TLSv1.2 (IN), TLS header, Finished (20):
+{ [5 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+{ [19 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+{ [2595 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+{ [264 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+{ [52 bytes data]
+* TLSv1.2 (OUT), TLS header, Finished (20):
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=rustdesk.bwb.pt
+*  start date: Dec 10 03:16:00 2025 GMT
+*  expire date: Mar 10 03:15:59 2026 GMT
+*  issuer: C=US; O=Let's Encrypt; CN=R12
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* Using HTTP2, server supports multiplexing
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* Using Stream ID: 1 (easy handle 0x5590340a99f0)
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+> POST /api/provision/claim HTTP/2
+> Host: rustdesk.bwb.pt
+> user-agent: curl/7.81.0
+> accept: */*
+> content-type: application/json
+> content-length: 47
+> 
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [265 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [281 bytes data]
+* old SSL session ID is stale, removing
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* We are completely uploaded and fine
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+< HTTP/2 500 
+< server: nginx/1.18.0 (Ubuntu)
+< date: Thu, 18 Dec 2025 01:32:46 GMT
+< content-type: application/json
+< vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+< access-control-allow-headers: Content-Type, Authorization
+< access-control-allow-methods: POST, OPTIONS
+< access-control-allow-origin: *
+< 
+{ [86 bytes data]
+100   133    0    86  100    47    508    278 --:--:-- --:--:-- --:--:--   791
+* Connection #0 to host rustdesk.bwb.pt left intact
+{"error":"config_error","message":"Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"}
+Detected HTTP status line from curl:
+------------------------------------------------------------
+< HTTP/2 500 
+
+============================================================
+Diagnostic finished.
+Log file generated at:
+  /opt/rustdesk-frontend/logs/diagnostics/provision-claim-20251218-013246.log
+You can now download or inspect this file and share it for analysis.
+============================================================

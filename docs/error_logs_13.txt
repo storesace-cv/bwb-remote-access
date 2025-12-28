@@ -1,0 +1,45 @@
+curl 'https://rustdesk.bwb.pt/api/provision/codes' \
+  -X 'POST' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzcxMzI5LCJpYXQiOjE3NjU3Njc3MjksImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3Njc3Mjl9XSwic2Vzc2lvbl9pZCI6IjE5YTA1MTRiLTMzNjEtNGIyYS1iMjY2LTcyYWI1M2ZkZDA1OSIsImlzX2Fub255bW91cyI6ZmFsc2V9.yHJbDnd6wVgQ110BQfkPD6A_hremS1MJD7gTITFspUM' \
+  -H 'content-length: 0' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://rustdesk.bwb.pt' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://rustdesk.bwb.pt/provisioning' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36'
+
+--------------------------
+
+<html>
+<head><title>504 Gateway Time-out</title></head>
+<body>
+<center><h1>504 Gateway Time-out</h1></center>
+<hr><center>nginx/1.18.0 (Ubuntu)</center>
+</body>
+</html>
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+
+----------------------------------
+
+VM1143 80f8ce7cc9f4a99f.js:1  POST https://rustdesk.bwb.pt/api/provision/codes 504 (Gateway Timeout)
+p @ VM1143 80f8ce7cc9f4a99f.js:1
+sX @ 8caed091165340c7.js:1
+(anonymous) @ 8caed091165340c7.js:1
+tI @ 8caed091165340c7.js:1
+s3 @ 8caed091165340c7.js:1
+fC @ 8caed091165340c7.js:1
+fN @ 8caed091165340c7.js:1

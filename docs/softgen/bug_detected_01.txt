@@ -1,0 +1,54 @@
+Prompt para Softgen.ai — Fix dropdown Grupo/Subgrupo + filtro dependente
+
+You are working on the “Editar Dispositivo” modal.
+
+Bug
+
+The “Grupo” dropdown is incorrectly showing subgroup names mixed with group names (e.g., “Casa” appears in the Group list). This is wrong.
+
+Expected behavior (must implement)
+	1.	Group dropdown must display only root Groups (no subgroups).
+	2.	Subgroup dropdown must display only subgroups that belong to the selected Group.
+	3.	If no Group is selected, Subgroup dropdown should be disabled or show “Selecione um grupo primeiro…”.
+	4.	When the user changes Group:
+	•	Clear/reset the currently selected Subgroup (if it no longer belongs to the new group).
+	•	Refetch/recompute subgroup options for the new group.
+
+Mandatory approach (do not guess)
+	1.	Locate the exact component(s) rendering these selects:
+	•	“Editar Dispositivo” modal component
+	•	any grouping.ts helper
+	•	any API/route/function that provides groups/subgroups
+	2.	Identify why subgroups are appearing in the groups list:
+	•	likely the query returns a combined list
+	•	or the UI is using the wrong field/list
+	•	or the same array is used for both selects
+	3.	Fix at the source:
+	•	Ensure the “groups” endpoint/query returns only groups (or explicitly filter by parent_id IS NULL / type = group / level = 0 depending on schema)
+	•	Ensure subgroups are fetched by group_id / parent_id
+
+Data rules (to avoid regressions)
+	•	If you have a hierarchical table, Group = parent_id IS NULL, Subgroup = parent_id = selected_group_id.
+	•	If you have separate tables, Subgroup must be queried by group_id = selected_group_id.
+
+Acceptance criteria
+	•	Group dropdown shows only groups (e.g. “Pessoal”), never subgroups (“Casa”).
+	•	Subgroup dropdown only shows subgroups under the selected group.
+	•	Switching group resets subgroup appropriately.
+	•	No “Failed to fetch” or silent failure: show meaningful errors.
+
+Tests / verification (mandatory)
+	•	Add at least one unit/integration test or a reproducible manual test script:
+	•	Open Edit Device modal → verify Group list contains only groups
+	•	Select Group A → Subgroup list shows only children of A
+	•	Switch to Group B → Subgroup resets and shows only children of B
+
+Deliverable
+
+Commit with:
+fix(ui): separate group vs subgroup options and filter subgroups by selected group
+
+Also include in your final output:
+	•	the files changed
+	•	the exact logic used to distinguish groups from subgroups (e.g., parent_id rule)
+	•	proof that the dropdowns are now correct (test notes)

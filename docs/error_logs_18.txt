@@ -1,0 +1,143 @@
+root@remote-srv:/opt/rustdesk-frontend# ./scripts/test-provision-codes.sh "$JWT"
+POST https://rustdesk.bwb.pt/api/provision/codes
+
+HTTP/2 502 
+server: nginx/1.18.0 (Ubuntu)
+date: Tue, 16 Dec 2025 05:27:10 GMT
+content-type: application/json
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+access-control-allow-headers: Content-Type, Authorization
+access-control-allow-methods: POST, OPTIONS
+access-control-allow-origin: *
+
+{"error":"database_error","message":"Failed to create provisioning code"}root@remote-srv:/opt/rustdesk-frontend# 
+root@remote-srv:/opt/rustdesk-frontend# sudo tail -n 120 logs/app-debug.log
+[2025-12-15T03:02:09.135Z] [INFO] [startup] Debug logger initialized {"logPath":"/opt/rustdesk-frontend/logs/app-debug.log","debugEnabled":false}
+[2025-12-15T03:02:09.135Z] [INFO] [startup] APP_DEBUG_ENABLED is false — debug log will remain minimal.
+[2025-12-15T03:02:09.135Z] [WARN] [startup] Primary debug log path unavailable; using fallback path {"primaryPath":"/var/log/rustdesk-mesh/app-debug.log","fallbackLogPath":"/opt/rustdesk-frontend/logs/app-debug.log"}
+root@remote-srv:/opt/rustdesk-frontend# sudo tail -n 120 /opt/rustdesk-frontend/logs/app-debug.log
+sudo journalctl -u rustdesk-frontend -n 120 --no-pager
+[2025-12-15T03:02:09.135Z] [INFO] [startup] Debug logger initialized {"logPath":"/opt/rustdesk-frontend/logs/app-debug.log","debugEnabled":false}
+[2025-12-15T03:02:09.135Z] [INFO] [startup] APP_DEBUG_ENABLED is false — debug log will remain minimal.
+[2025-12-15T03:02:09.135Z] [WARN] [startup] Primary debug log path unavailable; using fallback path {"primaryPath":"/var/log/rustdesk-mesh/app-debug.log","fallbackLogPath":"/opt/rustdesk-frontend/logs/app-debug.log"}
+Dec 16 01:30:26 remote-srv rustdesk-frontend[179341]: }
+Dec 16 01:30:26 remote-srv systemd[1]: rustdesk-frontend.service: Main process exited, code=exited, status=1/FAILURE
+Dec 16 01:30:26 remote-srv systemd[1]: rustdesk-frontend.service: Failed with result 'exit-code'.
+Dec 16 01:30:26 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.216s CPU time.
+Dec 16 01:30:36 remote-srv systemd[1]: rustdesk-frontend.service: Scheduled restart job, restart counter is at 127.
+Dec 16 01:30:36 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 01:30:36 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.216s CPU time.
+Dec 16 01:30:36 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179881]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179881]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179894]:    ▲ Next.js 16.0.6
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179894]:    - Local:         http://localhost:3000
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179894]:    - Network:       http://0.0.0.0:3000
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179894]:  ✓ Starting...
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179894]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 01:30:37 remote-srv rustdesk-frontend[179894]:  ✓ Ready in 541ms
+Dec 16 01:30:59 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 01:30:59 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 01:30:59 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 01:30:59 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 1.220s CPU time.
+Dec 16 01:31:00 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 01:31:00 remote-srv rustdesk-frontend[180549]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 01:31:00 remote-srv rustdesk-frontend[180549]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 01:31:01 remote-srv rustdesk-frontend[180563]:    ▲ Next.js 16.0.6
+Dec 16 01:31:01 remote-srv rustdesk-frontend[180563]:    - Local:         http://localhost:3000
+Dec 16 01:31:01 remote-srv rustdesk-frontend[180563]:    - Network:       http://0.0.0.0:3000
+Dec 16 01:31:01 remote-srv rustdesk-frontend[180563]:  ✓ Starting...
+Dec 16 01:31:01 remote-srv rustdesk-frontend[180563]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 01:31:01 remote-srv rustdesk-frontend[180563]:  ✓ Ready in 784ms
+Dec 16 01:52:41 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 01:52:41 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 01:52:41 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 01:52:41 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.622s CPU time.
+Dec 16 01:52:42 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 01:52:42 remote-srv rustdesk-frontend[183977]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 01:52:42 remote-srv rustdesk-frontend[183977]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 01:52:43 remote-srv rustdesk-frontend[183991]:    ▲ Next.js 16.0.6
+Dec 16 01:52:43 remote-srv rustdesk-frontend[183991]:    - Local:         http://localhost:3000
+Dec 16 01:52:43 remote-srv rustdesk-frontend[183991]:    - Network:       http://0.0.0.0:3000
+Dec 16 01:52:43 remote-srv rustdesk-frontend[183991]:  ✓ Starting...
+Dec 16 01:52:43 remote-srv rustdesk-frontend[183991]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 01:52:43 remote-srv rustdesk-frontend[183991]:  ✓ Ready in 499ms
+Dec 16 01:53:52 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 01:53:52 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 01:53:52 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 01:53:52 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 1.278s CPU time.
+Dec 16 01:53:52 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184281]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184281]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184297]:    ▲ Next.js 16.0.6
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184297]:    - Local:         http://localhost:3000
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184297]:    - Network:       http://0.0.0.0:3000
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184297]:  ✓ Starting...
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184297]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 01:53:53 remote-srv rustdesk-frontend[184297]:  ✓ Ready in 391ms
+Dec 16 03:42:08 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 03:42:08 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 03:42:08 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 03:42:08 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 1.231s CPU time.
+Dec 16 03:42:08 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194199]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194199]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194213]:    ▲ Next.js 16.0.6
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194213]:    - Local:         http://localhost:3000
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194213]:    - Network:       http://0.0.0.0:3000
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194213]:  ✓ Starting...
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194213]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 03:42:09 remote-srv rustdesk-frontend[194213]:  ✓ Ready in 471ms
+Dec 16 04:04:32 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 04:04:32 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 04:04:32 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 04:04:32 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.348s CPU time.
+Dec 16 04:04:32 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196416]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196416]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196430]:    ▲ Next.js 16.0.6
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196430]:    - Local:         http://localhost:3000
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196430]:    - Network:       http://0.0.0.0:3000
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196430]:  ✓ Starting...
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196430]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 04:04:33 remote-srv rustdesk-frontend[196430]:  ✓ Ready in 495ms
+Dec 16 04:27:22 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 04:27:22 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 04:27:22 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 04:27:22 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.360s CPU time.
+Dec 16 04:27:22 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 04:27:22 remote-srv rustdesk-frontend[198699]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 04:27:22 remote-srv rustdesk-frontend[198699]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 04:27:23 remote-srv rustdesk-frontend[198713]:    ▲ Next.js 16.0.6
+Dec 16 04:27:23 remote-srv rustdesk-frontend[198713]:    - Local:         http://localhost:3000
+Dec 16 04:27:23 remote-srv rustdesk-frontend[198713]:    - Network:       http://0.0.0.0:3000
+Dec 16 04:27:23 remote-srv rustdesk-frontend[198713]:  ✓ Starting...
+Dec 16 04:27:23 remote-srv rustdesk-frontend[198713]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 04:27:23 remote-srv rustdesk-frontend[198713]:  ✓ Ready in 539ms
+Dec 16 05:00:17 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 05:00:18 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 05:00:18 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 05:00:18 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.373s CPU time.
+Dec 16 05:00:18 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 05:00:18 remote-srv rustdesk-frontend[201746]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 05:00:18 remote-srv rustdesk-frontend[201746]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 05:00:18 remote-srv rustdesk-frontend[201760]:    ▲ Next.js 16.0.6
+Dec 16 05:00:18 remote-srv rustdesk-frontend[201760]:    - Local:         http://localhost:3000
+Dec 16 05:00:18 remote-srv rustdesk-frontend[201760]:    - Network:       http://0.0.0.0:3000
+Dec 16 05:00:18 remote-srv rustdesk-frontend[201760]:  ✓ Starting...
+Dec 16 05:00:19 remote-srv rustdesk-frontend[201760]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 05:00:19 remote-srv rustdesk-frontend[201760]:  ✓ Ready in 574ms
+Dec 16 05:24:50 remote-srv systemd[1]: Stopping RustDesk Web Frontend...
+Dec 16 05:24:50 remote-srv systemd[1]: rustdesk-frontend.service: Deactivated successfully.
+Dec 16 05:24:50 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 16 05:24:50 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 2.543s CPU time.
+Dec 16 05:24:50 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 16 05:24:50 remote-srv rustdesk-frontend[203955]: > rustdesk-mesh-integration@0.1.0 start
+Dec 16 05:24:50 remote-srv rustdesk-frontend[203955]: > next start -p 3000 --hostname 0.0.0.0
+Dec 16 05:24:51 remote-srv rustdesk-frontend[203967]:    ▲ Next.js 16.0.6
+Dec 16 05:24:51 remote-srv rustdesk-frontend[203967]:    - Local:         http://localhost:3000
+Dec 16 05:24:51 remote-srv rustdesk-frontend[203967]:    - Network:       http://0.0.0.0:3000
+Dec 16 05:24:51 remote-srv rustdesk-frontend[203967]:  ✓ Starting...
+Dec 16 05:24:51 remote-srv rustdesk-frontend[203967]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 16 05:24:51 remote-srv rustdesk-frontend[203967]:  ✓ Ready in 397ms
+root@remote-srv:/opt/rustdesk-frontend# 

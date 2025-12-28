@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--j_x7A7ePGmIdrkUtCVRK5-->
+<html lang="pt">
+<head>
+    <meta charSet="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/_next/static/chunks/dfef6f94e1dd53da.css" data-precedence="next"/>
+    <link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/cbd55ab9639e1e66.js"/>
+    <script src="/_next/static/chunks/e8e2b7ae95740a88.js" async=""></script>
+    <script src="/_next/static/chunks/aeca31833b607f97.js" async=""></script>
+    <script src="/_next/static/chunks/0ce1b91260867447.js" async=""></script>
+    <script src="/_next/static/chunks/turbopack-183f5d8705210e85.js" async=""></script>
+    <script src="/_next/static/chunks/ff1a16fafef87110.js" async=""></script>
+    <script src="/_next/static/chunks/247eb132b7f7b574.js" async=""></script>
+    <meta name="robots" content="noindex"/>
+    <title>404: This page could not be found.</title>
+    <title>RustDesk Android Support</title>
+    <meta name="description" content="RustDesk + MeshCentral integration frontend"/>
+    <link rel="icon" href="/favicon.ico?favicon.0b3bf435.ico" sizes="256x256" type="image/x-icon"/>
+    <script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule=""></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-50 antialiased">
+    <div hidden="">
+        <!--$-->
+        <!--/$-->
+    </div>
+    <div style="font-family:system-ui,&quot;Segoe UI&quot;,Roboto,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;;height:100vh;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div>
+            <style>
+            body {
+                color: #000;
+                background: #fff;
+                margin:0
+            }
+
+            .next-error-h1 {
+                border-right:1px solid rgba(0, 0, 0, .3)
+            }
+
+            @media (prefers-color-scheme: dark) {
+                body {
+                    color: #fff;
+                    background:#000
+                }
+
+                .next-error-h1 {
+                    border-right: 1px solid rgba(255, 255, 255, .3)
+                }
+            }
+            </style>
+            <h1 class="next-error-h1" style="display:inline-block;margin:0 20px 0 0;padding:0 23px 0 0;font-size:24px;font-weight:500;vertical-align:top;line-height:49px">404</h1>
+            <div style="display:inline-block">
+                <h2 style="font-size:14px;font-weight:400;line-height:49px;margin:0">This page could not be found.</h2>
+            </div>
+        </div>
+    </div>
+    <!--$-->
+    <!--/$-->
+    <script src="/_next/static/chunks/cbd55ab9639e1e66.js" id="_R_" async=""></script>
+    <script>
+    (self.__next_f = self.__next_f || []).push([0])
+    </script>
+    <script>
+    self.__next_f.push([1, "1:\"$Sreact.fragment\"\n2:I[39756,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"default\"]\n3:I[37457,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"default\"]\n4:I[97367,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"OutletBoundary\"]\n5:\"$Sreact.suspense\"\n7:I[97367,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"ViewportBoundary\"]\n9:I[97367,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"MetadataBoundary\"]\nb:I[68027,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"default\"]\n:HL[\"/_next/static/chunks/dfef6f94e1dd53da.css\",\"style\"]\n"])
+    </script>
+    <script>
+    self.__next_f.push([1, "0:{\"P\":null,\"b\":\"j_x7A7ePGmIdrkUtCVRK5\",\"c\":[\"\",\"_not-found\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"/_not-found\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",true],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/dfef6f94e1dd53da.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"pt\",\"children\":[\"$\",\"body\",null,{\"className\":\"min-h-screen bg-slate-950 text-slate-50 antialiased\",\"children\":[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:style\",\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style\",\"children\":404}],[\"$\",\"div\",null,{\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style\",\"children\":[\"$\",\"h2\",null,{\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style\",\"children\":\"This page could not be found.\"}]}]]}]}]],null,[\"$\",\"$L4\",null,{\"children\":[\"$\",\"$5\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@6\"}]}]]}],{},null,false,false]},null,false,false]},null,false,false],[\"$\",\"$1\",\"h\",{\"children\":[[\"$\",\"meta\",null,{\"name\":\"robots\",\"content\":\"noindex\"}],[\"$\",\"$L7\",null,{\"children\":\"$@8\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$L9\",null,{\"children\":[\"$\",\"$5\",null,{\"name\":\"Next.Metadata\",\"children\":\"$@a\"}]}]}],null]}],false]],\"m\":\"$undefined\",\"G\":[\"$b\",\"$undefined\"],\"S\":true}\n"])
+    </script>
+    <script>
+    self.__next_f.push([1, "8:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])
+    </script>
+    <script>
+    self.__next_f.push([1, "c:I[27201,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"IconMark\"]\na:[[\"$\",\"title\",\"0\",{\"children\":\"RustDesk Android Support\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"RustDesk + MeshCentral integration frontend\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.0b3bf435.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"$Lc\",\"3\",{}]]\n6:null\n"])
+    </script>
+</body>
+</html>
+
+
+curl 'https://rustdesk.bwb.pt/undefined/functions/v1/generate-qr-image' \
+-X 'GET' \
+-H 'Accept: */*' \
+-H 'Sec-Fetch-Site: same-origin' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1MjMyNzc4LCJpYXQiOjE3NjUyMjkxNzgsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjUyMjkxNzh9XSwic2Vzc2lvbl9pZCI6IjgxYjcyYjg2LTJhMmQtNGVkZi1hZjFhLTNmNDUzNGU5ODM5YiIsImlzX2Fub255bW91cyI6ZmFsc2V9.zmAFMN3TL0rq7AqwBqEaVmeyU5Md0zcq_O3A_Gy-RQo' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Referer: https://rustdesk.bwb.pt/dashboard' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'apikey: undefined' \
+-H 'Priority: u=3, i'
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<!--j_x7A7ePGmIdrkUtCVRK5-->
+<html lang="pt">
+<head>
+    <meta charSet="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/_next/static/chunks/dfef6f94e1dd53da.css" data-precedence="next"/>
+    <link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/cbd55ab9639e1e66.js"/>
+    <script src="/_next/static/chunks/e8e2b7ae95740a88.js" async=""></script>
+    <script src="/_next/static/chunks/aeca31833b607f97.js" async=""></script>
+    <script src="/_next/static/chunks/0ce1b91260867447.js" async=""></script>
+    <script src="/_next/static/chunks/turbopack-183f5d8705210e85.js" async=""></script>
+    <script src="/_next/static/chunks/ff1a16fafef87110.js" async=""></script>
+    <script src="/_next/static/chunks/247eb132b7f7b574.js" async=""></script>
+    <meta name="robots" content="noindex"/>
+    <title>404: This page could not be found.</title>
+    <title>RustDesk Android Support</title>
+    <meta name="description" content="RustDesk + MeshCentral integration frontend"/>
+    <link rel="icon" href="/favicon.ico?favicon.0b3bf435.ico" sizes="256x256" type="image/x-icon"/>
+    <script src="/_next/static/chunks/a6dad97d9634a72d.js" noModule=""></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-50 antialiased">
+    <div hidden="">
+        <!--$-->
+        <!--/$-->
+    </div>
+    <div style="font-family:system-ui,&quot;Segoe UI&quot;,Roboto,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;;height:100vh;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div>
+            <style>
+            body {
+                color: #000;
+                background: #fff;
+                margin:0
+            }
+
+            .next-error-h1 {
+                border-right:1px solid rgba(0, 0, 0, .3)
+            }
+
+            @media (prefers-color-scheme: dark) {
+                body {
+                    color: #fff;
+                    background:#000
+                }
+
+                .next-error-h1 {
+                    border-right: 1px solid rgba(255, 255, 255, .3)
+                }
+            }
+            </style>
+            <h1 class="next-error-h1" style="display:inline-block;margin:0 20px 0 0;padding:0 23px 0 0;font-size:24px;font-weight:500;vertical-align:top;line-height:49px">404</h1>
+            <div style="display:inline-block">
+                <h2 style="font-size:14px;font-weight:400;line-height:49px;margin:0">This page could not be found.</h2>
+            </div>
+        </div>
+    </div>
+    <!--$-->
+    <!--/$-->
+    <script src="/_next/static/chunks/cbd55ab9639e1e66.js" id="_R_" async=""></script>
+    <script>
+    (self.__next_f = self.__next_f || []).push([0])
+    </script>
+    <script>
+    self.__next_f.push([1, "1:\"$Sreact.fragment\"\n2:I[39756,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"default\"]\n3:I[37457,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"default\"]\n4:I[97367,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"OutletBoundary\"]\n5:\"$Sreact.suspense\"\n7:I[97367,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"ViewportBoundary\"]\n9:I[97367,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"MetadataBoundary\"]\nb:I[68027,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"default\"]\n:HL[\"/_next/static/chunks/dfef6f94e1dd53da.css\",\"style\"]\n"])
+    </script>
+    <script>
+    self.__next_f.push([1, "0:{\"P\":null,\"b\":\"j_x7A7ePGmIdrkUtCVRK5\",\"c\":[\"\",\"_not-found\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"/_not-found\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",true],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/dfef6f94e1dd53da.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"pt\",\"children\":[\"$\",\"body\",null,{\"className\":\"min-h-screen bg-slate-950 text-slate-50 antialiased\",\"children\":[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L2\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L3\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:style\",\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style\",\"children\":404}],[\"$\",\"div\",null,{\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style\",\"children\":[\"$\",\"h2\",null,{\"style\":\"$0:f:0:1:0:props:children:1:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style\",\"children\":\"This page could not be found.\"}]}]]}]}]],null,[\"$\",\"$L4\",null,{\"children\":[\"$\",\"$5\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@6\"}]}]]}],{},null,false,false]},null,false,false]},null,false,false],[\"$\",\"$1\",\"h\",{\"children\":[[\"$\",\"meta\",null,{\"name\":\"robots\",\"content\":\"noindex\"}],[\"$\",\"$L7\",null,{\"children\":\"$@8\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$L9\",null,{\"children\":[\"$\",\"$5\",null,{\"name\":\"Next.Metadata\",\"children\":\"$@a\"}]}]}],null]}],false]],\"m\":\"$undefined\",\"G\":[\"$b\",\"$undefined\"],\"S\":true}\n"])
+    </script>
+    <script>
+    self.__next_f.push([1, "8:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])
+    </script>
+    <script>
+    self.__next_f.push([1, "c:I[27201,[\"/_next/static/chunks/ff1a16fafef87110.js\",\"/_next/static/chunks/247eb132b7f7b574.js\"],\"IconMark\"]\na:[[\"$\",\"title\",\"0\",{\"children\":\"RustDesk Android Support\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"RustDesk + MeshCentral integration frontend\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/favicon.ico?favicon.0b3bf435.ico\",\"sizes\":\"256x256\",\"type\":\"image/x-icon\"}],[\"$\",\"$Lc\",\"3\",{}]]\n6:null\n"])
+    </script>
+</body>
+</html>
+
+
+curl 'https://rustdesk.bwb.pt/undefined/functions/v1/get-devices' \
+-X 'GET' \
+-H 'Content-Type: application/json' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1MjMyNzc4LCJpYXQiOjE3NjUyMjkxNzgsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjUyMjkxNzh9XSwic2Vzc2lvbl9pZCI6IjgxYjcyYjg2LTJhMmQtNGVkZi1hZjFhLTNmNDUzNGU5ODM5YiIsImlzX2Fub255bW91cyI6ZmFsc2V9.zmAFMN3TL0rq7AqwBqEaVmeyU5Md0zcq_O3A_Gy-RQo' \
+-H 'Sec-Fetch-Site: same-origin' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Referer: https://rustdesk.bwb.pt/dashboard' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: undefined'
+

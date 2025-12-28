@@ -1,0 +1,867 @@
+get-devices
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b8a111ee-ca91-4550-bc94-7624e71acda3",
+    "level": "log",
+    "timestamp": 1765691024624000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "862a2289-f2c9-4fbf-aa38-f77db459d54c",
+    "level": "log",
+    "timestamp": 1765691010676000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1d470252-c6f6-41e1-977a-db7fa65eb1e6",
+    "level": "log",
+    "timestamp": 1765690988165000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "706b6f5c-85a8-421e-a79c-55b551a17c73",
+    "level": "log",
+    "timestamp": 1765690978034000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "4e28503c-1814-45a4-be40-199417f80a2d",
+    "level": "info",
+    "timestamp": 1765690966099000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "625b9737-08ae-40d0-90d0-879fd822d47d",
+    "level": "info",
+    "timestamp": 1765690966051000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "f9efdfd4-28be-4765-84b1-5c63175f335f",
+    "level": "info",
+    "timestamp": 1765690965998000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "642a7232-37f9-40b7-8344-462855f8196b",
+    "level": "info",
+    "timestamp": 1765690965931000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "79060032-36bb-41b8-9050-52adff40654c",
+    "level": "info",
+    "timestamp": 1765690965931000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "34ba8788-4b20-4cd0-bb60-6fed183e5b17",
+    "level": "info",
+    "timestamp": 1765690965929000
+  },
+  {
+    "event_message": "booted (time: 37ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "8b5f8b41-30af-41ba-99e0-53bccb177ddc",
+    "level": "log",
+    "timestamp": 1765690965925000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "28077730-4156-49f4-b400-f3b8f96e0e61",
+    "level": "info",
+    "timestamp": 1765690949859000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "225d7ac0-2fe9-4c05-873a-56d305426d18",
+    "level": "info",
+    "timestamp": 1765690949817000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "086167ef-dec5-49e7-a18d-59cfc926825e",
+    "level": "info",
+    "timestamp": 1765690949770000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "9dd592d9-7826-4fa2-93ac-ddaeeb2b6a16",
+    "level": "info",
+    "timestamp": 1765690949612000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ec5fd12b-3e2c-4449-81c7-65232fa2f88b",
+    "level": "info",
+    "timestamp": 1765690949612000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "3decf254-dee7-4984-9bd6-45d6ff79624c",
+    "level": "info",
+    "timestamp": 1765690949610000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "0111d784-7cb8-42da-9610-eafc35be7d29",
+    "level": "log",
+    "timestamp": 1765690949607000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "d6f13a4d-9ec6-44a0-b27a-02423f1edbeb",
+    "level": "info",
+    "timestamp": 1765690935904000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "9bf5b907-54b8-44a5-a75e-6e86f02b2399",
+    "level": "info",
+    "timestamp": 1765690935859000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e5320fba-f7cf-4962-9034-097f50764402",
+    "level": "info",
+    "timestamp": 1765690935774000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "844d2eea-b094-4676-888a-513ead69e7d6",
+    "level": "info",
+    "timestamp": 1765690935662000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "3f91f74b-c25e-4d34-b3ab-807a3c124c81",
+    "level": "info",
+    "timestamp": 1765690935662000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "d74e0a48-dfc4-48c8-9d72-9d7131339708",
+    "level": "info",
+    "timestamp": 1765690935660000
+  },
+  {
+    "event_message": "booted (time: 43ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e9ab2312-34f6-4983-8523-11ea2e694bfb",
+    "level": "log",
+    "timestamp": 1765690935656000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1709d4e3-66f2-4bc8-9b3c-2b2accc6abf9",
+    "level": "info",
+    "timestamp": 1765690930978000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5296cd08-e5b1-49b0-a410-8a4f938d9512",
+    "level": "info",
+    "timestamp": 1765690930937000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "157d8631-f083-463b-922c-3818e85c04a8",
+    "level": "info",
+    "timestamp": 1765690930894000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "60f9f506-3783-4201-af30-1a7e9ae0a6b8",
+    "level": "info",
+    "timestamp": 1765690930847000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6f0be103-e27a-4b5b-8707-089e041ebd75",
+    "level": "info",
+    "timestamp": 1765690930847000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1411dbaf-2a1e-4f5b-ab8b-f650f0406dfc",
+    "level": "info",
+    "timestamp": 1765690913357000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ecd72e20-7b30-49be-9884-e9569aec94b4",
+    "level": "info",
+    "timestamp": 1765690913313000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "7ebf5994-ee9c-4d18-a540-d94307788e96",
+    "level": "info",
+    "timestamp": 1765690913265000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "2ff2b852-4960-400d-aeb0-96bff147c71e",
+    "level": "info",
+    "timestamp": 1765690913154000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "7b20238b-0d7a-44ff-b560-7bc5ce7ceb97",
+    "level": "info",
+    "timestamp": 1765690913153000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "97196323-a218-4c7d-b245-0d615dd2040b",
+    "level": "info",
+    "timestamp": 1765690913152000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "2ff0d38f-55c8-4974-99e0-922c5bb3ba5e",
+    "level": "log",
+    "timestamp": 1765690913148000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "dc76b924-59cf-4fae-9074-47b55f2694f1",
+    "level": "info",
+    "timestamp": 1765690903223000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e721b617-b2b5-46cb-8c88-15945764161c",
+    "level": "info",
+    "timestamp": 1765690903175000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "819b814e-cfe2-4905-8f73-2b7fbd432bee",
+    "level": "info",
+    "timestamp": 1765690903129000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "842d6def-9143-423e-9cf9-c8e921e3479b",
+    "level": "info",
+    "timestamp": 1765690903019000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "74ad0229-b48a-411d-ac4d-d0b0ebcb3e01",
+    "level": "info",
+    "timestamp": 1765690903019000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "c036e90e-8417-46e6-829c-94eed21a6d54",
+    "level": "info",
+    "timestamp": 1765690903017000
+  },
+  {
+    "event_message": "booted (time: 52ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "10e6445c-fc80-4486-a6db-516915e958ff",
+    "level": "log",
+    "timestamp": 1765690903012000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "d8188639-faa9-44aa-9449-00d9c572d03e",
+    "level": "log",
+    "timestamp": 1765690010211000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "17b17d86-1de8-4e35-8fe9-c8ec44b2da4c",
+    "level": "info",
+    "timestamp": 1765689935463000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "83fdd348-f49a-49d5-8f54-abea65f38267",
+    "level": "info",
+    "timestamp": 1765689935401000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1a73d78e-2e44-462d-b654-99dd605f53e4",
+    "level": "info",
+    "timestamp": 1765689935348000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5df35000-01eb-4edc-b75e-eb0d78fa14cc",
+    "level": "info",
+    "timestamp": 1765689935195000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "35d73c97-880b-4a47-9354-45064b5f8c7b",
+    "level": "info",
+    "timestamp": 1765689935194000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5b4d774d-17d4-4e9a-847a-00f86af7e0b1",
+    "level": "info",
+    "timestamp": 1765689935192000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "074330f0-dcaf-456f-aa03-a42c0d3fcdef",
+    "level": "log",
+    "timestamp": 1765689935188000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5a0c212c-99a8-450c-aa6b-d3870b61b7be",
+    "level": "log",
+    "timestamp": 1765689240497000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ebec225a-ed82-4778-9309-b4ff760a69f3",
+    "level": "log",
+    "timestamp": 1765689215965000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "d03c3632-8aac-4c28-a558-c741e7d2cfbf",
+    "level": "info",
+    "timestamp": 1765689165698000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1a638aec-33f0-4123-8f60-02cab64c1c32",
+    "level": "info",
+    "timestamp": 1765689165644000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "08de1111-5ce3-47d3-a48d-ebc859a63e6e",
+    "level": "info",
+    "timestamp": 1765689165592000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e9d313e8-39a1-453c-a42f-5b2a854787c6",
+    "level": "info",
+    "timestamp": 1765689165467000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e3364a6d-99ed-460c-83ad-dbd0277e0ab7",
+    "level": "info",
+    "timestamp": 1765689165466000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "995ac6f5-0008-4adf-9b0b-74261c5c20f0",
+    "level": "info",
+    "timestamp": 1765689165465000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "3a47e0e7-79f5-41b5-8b04-b9d18f6f51a9",
+    "level": "log",
+    "timestamp": 1765689165461000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b182eed4-e04a-496e-a246-ff4c0346641b",
+    "level": "info",
+    "timestamp": 1765689141265000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "14755a7e-0a99-412b-acc9-89b044261faf",
+    "level": "info",
+    "timestamp": 1765689141183000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "04a522b6-6a68-48ea-8ada-aa394f071116",
+    "level": "info",
+    "timestamp": 1765689141105000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1f3772a0-c64f-4f98-9024-d8150e64dfda",
+    "level": "info",
+    "timestamp": 1765689140952000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a966014e-a87b-4bbd-9c95-87f37160d626",
+    "level": "info",
+    "timestamp": 1765689140951000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "9d0a5188-9f94-45f7-983c-06f6b6b9519b",
+    "level": "info",
+    "timestamp": 1765689140949000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e35eab63-4c66-4a94-b8d4-0a78fb3be0b4",
+    "level": "log",
+    "timestamp": 1765689140945000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "f3d796f8-6801-4b72-a214-4a9dc8429f64",
+    "level": "log",
+    "timestamp": 1765688080191000
+  },
+  {
+    "event_message": "[get-devices] Returning 1 devices\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ced3b035-911d-4a36-820c-e062ae4e751f",
+    "level": "info",
+    "timestamp": 1765688005597000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for mesh_user.id=d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "3d577b0e-17b3-4a37-982b-071f9e34cc83",
+    "level": "info",
+    "timestamp": 1765688005510000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "f67e286c-675e-4ed5-9e2b-d281b23ae25f",
+    "level": "info",
+    "timestamp": 1765688005384000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "3949683b-b9d8-475d-b485-f6988a9a0401",
+    "level": "info",
+    "timestamp": 1765688005181000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b351cb52-32f0-4ee9-9277-41ade4fff7d3",
+    "level": "info",
+    "timestamp": 1765688005181000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "124c4023-ca70-4dd6-905d-ad97afed7958",
+    "level": "info",
+    "timestamp": 1765688005179000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "624fcf5a-a733-4196-9fc6-0130d17ad48f",
+    "level": "log",
+    "timestamp": 1765688005176000
+  }
+]
+
+-------------------------------------------------------------
+
+admin-list-mesh-users
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "bc7d4ff7-1257-442d-bd2c-0cd77340fd98",
+    "level": "log",
+    "timestamp": 1765691024900000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "78548518-1a94-43a9-81fa-acfc250f4973",
+    "level": "log",
+    "timestamp": 1765691010641000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "5aab8035-7826-4f09-b6d5-2f74b4a984de",
+    "level": "log",
+    "timestamp": 1765691005904000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3e3661b1-e94e-454b-9235-2e5b7ec83a36",
+    "level": "log",
+    "timestamp": 1765690977873000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "be92c448-c244-4566-96d4-05b1c69a431f",
+    "level": "info",
+    "timestamp": 1765690949870000
+  },
+  {
+    "event_message": "booted (time: 35ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "a94cbe3c-1185-401c-bcda-d97c26a2b72f",
+    "level": "log",
+    "timestamp": 1765690949867000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "d2071856-9b06-41bb-8878-77a456c979e3",
+    "level": "info",
+    "timestamp": 1765690935628000
+  },
+  {
+    "event_message": "booted (time: 25ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "c2c9aa50-fd6f-4a2c-a526-6d0a5e1e879e",
+    "level": "log",
+    "timestamp": 1765690935626000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3edd01ff-193a-45d7-9b9d-16c75fb9ae39",
+    "level": "info",
+    "timestamp": 1765690930878000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "d01bfddc-f0db-4566-8937-c57e6fbad1bc",
+    "level": "log",
+    "timestamp": 1765690930877000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "c57773d1-6e4c-4f9b-a871-c0bd83a61d88",
+    "level": "info",
+    "timestamp": 1765690902845000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "2186072b-1dd5-4798-a46b-2259e6dbbb90",
+    "level": "log",
+    "timestamp": 1765690902844000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "c14c363b-00a8-4383-94fe-60c497b53fd9",
+    "level": "log",
+    "timestamp": 1765690010200000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "b49f761d-e126-4b89-8f3a-8d1c471d55e2",
+    "level": "error",
+    "timestamp": 1765689935344000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "5369d6a1-874d-421b-ba60-3f204558f661",
+    "level": "info",
+    "timestamp": 1765689935186000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "4d10e93f-e565-41f5-a330-90ecc71953d1",
+    "level": "log",
+    "timestamp": 1765689935185000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "bf7c39a4-c161-4e89-81af-5efe16c29340",
+    "level": "log",
+    "timestamp": 1765689240501000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "517041e6-8396-42a9-ab73-d86ffc529806",
+    "level": "log",
+    "timestamp": 1765689215964000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6f3342af-4455-406d-9451-c4d1783af73c",
+    "level": "error",
+    "timestamp": 1765689165609000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "74c29461-84c3-4549-ac03-4fd1e060829b",
+    "level": "info",
+    "timestamp": 1765689165461000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "67866aa0-6992-4153-9ed4-3c8d8a49d527",
+    "level": "log",
+    "timestamp": 1765689165459000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3dcda9cd-6ef8-467e-bc67-d9145edbbb29",
+    "level": "error",
+    "timestamp": 1765689141174000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "9f30d2ad-b30d-4e65-af05-cc917cde83fd",
+    "level": "info",
+    "timestamp": 1765689140930000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "48fd5f52-9030-4fd1-95ff-42ee084dc806",
+    "level": "log",
+    "timestamp": 1765689140929000
+  }
+]
+
+---------------------------------------------------------------------
+
+admin-update-device
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "7c4c6409-89f4-43a7-9a3e-3fb65ec47317",
+    "level": "log",
+    "timestamp": 1765691040559000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "c1dc9974-8b3b-40c1-b1e7-b69b476a429f",
+    "level": "log",
+    "timestamp": 1765690987754000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "3c7ec673-9774-4b2f-8dd1-3c07840a4f7e",
+    "level": "info",
+    "timestamp": 1765690965499000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "4fc32a96-f058-4fc5-a09a-004c36c7bcc5",
+    "level": "log",
+    "timestamp": 1765690965498000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "ce931014-c662-40e5-815c-a9031aeeac6c",
+    "level": "info",
+    "timestamp": 1765690912735000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2afe45c3-4943-4481-88a0-522b88304590",
+    "id": "e7337a96-79ae-400b-b338-d61cb9f7f9ed",
+    "level": "log",
+    "timestamp": 1765690912733000
+  }
+]
+

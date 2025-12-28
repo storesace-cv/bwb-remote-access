@@ -1,0 +1,183 @@
+name: Edge Functions - Deploy to Supabase
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "supabase/functions/**"
+      - ".github/workflows/edge-functions-deploy.yml"
+  pull_request:
+    paths:
+      - "supabase/functions/**"
+      - ".github/workflows/edge-functions-deploy.yml"
+  workflow_dispatch: # Manual trigger
+
+env:
+  SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+jobs:
+  # Job 1: Detect changed functions
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_functions: ${{ steps.changes.outputs.functions }}
+      has_changes: ${{ steps.changes.outputs.has_changes }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Need previous commit for diff
+
+      - name: Detect changed Edge Functions
+        id: changes
+        run: |
+          # Get list of changed files in supabase/functions/
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD -- 'supabase/functions/**/*.ts' || echo "")
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "functions=[]" >> $GITHUB_OUTPUT
+            echo "No Edge Function changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            
+            # Extract unique function names from changed file paths
+            FUNCTIONS=$(echo "$CHANGED_FILES" | grep -oP 'supabase/functions/\K[^/]+' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+            echo "functions=$FUNCTIONS" >> $GITHUB_OUTPUT
+            
+            echo "Changed Edge Functions:"
+            echo "$FUNCTIONS" | jq -r '.[]'
+          fi
+
+  # Job 2: Validate functions
+  validate:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has_changes == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Validate TypeScript syntax
+        run: |
+          echo "Validating Edge Functions TypeScript syntax..."
+          FUNCTIONS='${{ needs.detect-changes.outputs.changed_functions }}'
+          
+          for func in $(echo "$FUNCTIONS" | jq -r '.[]'); do
+            echo "Checking supabase/functions/$func/index.ts"
+            deno check supabase/functions/$func/index.ts || exit 1
+          done
+          
+          echo "✅ All functions validated"
+
+      - name: Check for CORS headers
+        run: |
+          echo "Checking for CORS headers..."
+          FUNCTIONS='${{ needs.detect-changes.outputs.changed_functions }}'
+          
+          for func in $(echo "$FUNCTIONS" | jq -r '.[]'); do
+            if ! grep -q "Access-Control-Allow-Origin" supabase/functions/$func/index.ts; then
+              echo "⚠️ Warning: $func missing CORS headers"
+            fi
+          done
+
+  # Job 3: Deploy to Supabase (only on push to main)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, validate]
+    if: |
+      needs.detect-changes.outputs.has_changes == 'true' && 
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Login to Supabase
+        run: |
+          echo "Logging in to Supabase..."
+          supabase login --token "$SUPABASE_ACCESS_TOKEN"
+
+      - name: Deploy Edge Functions
+        id: deploy
+        run: |
+          echo "Deploying changed Edge Functions..."
+          FUNCTIONS='${{ needs.detect-changes.outputs.changed_functions }}'
+          
+          DEPLOYED=()
+          FAILED=()
+          
+          for func in $(echo "$FUNCTIONS" | jq -r '.[]'); do
+            echo "Deploying $func..."
+            if supabase functions deploy "$func" --project-ref "$SUPABASE_PROJECT_REF"; then
+              echo "✅ $func deployed successfully"
+              DEPLOYED+=("$func")
+            else
+              echo "❌ $func deployment failed"
+              FAILED+=("$func")
+            fi
+          done
+          
+          echo "deployed_count=${#DEPLOYED[@]}" >> $GITHUB_OUTPUT
+          echo "failed_count=${#FAILED[@]}" >> $GITHUB_OUTPUT
+          
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "❌ Deployment failed for: ${FAILED[*]}"
+            exit 1
+          fi
+          
+          echo "✅ All functions deployed successfully"
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployed functions..."
+          
+          # Make scripts executable
+          chmod +x scripts/verify-edge-functions.sh
+          
+          # Run verification
+          if ./scripts/verify-edge-functions.sh; then
+            echo "✅ Verification passed"
+          else
+            echo "⚠️ Verification found issues"
+            exit 1
+          fi
+
+      - name: Create deployment summary
+        if: always()
+        run: |
+          echo "## Edge Function Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Project:** $SUPABASE_PROJECT_REF" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          FUNCTIONS='${{ needs.detect-changes.outputs.changed_functions }}'
+          echo "**Deployed Functions:**" >> $GITHUB_STEP_SUMMARY
+          for func in $(echo "$FUNCTIONS" | jq -r '.[]'); do
+            echo "- ✅ $func" >> $GITHUB_STEP_SUMMARY
+          done
+
+  # Job 4: Rollback on failure (future enhancement)
+  rollback:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: failure()
+    steps:
+      - name: Notify deployment failure
+        run: |
+          echo "❌ Edge Function deployment failed"
+          echo "Manual intervention required"
+          echo "Check logs and consider rollback if needed"

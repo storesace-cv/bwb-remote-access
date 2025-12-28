@@ -1,0 +1,21 @@
+bash-3.2$ ./scripts/Step-3-test-local.sh 
+╔════════════════════════════════════════════════════════════╗
+║           Step 3: Testes e Validação Local                 ║
+╚════════════════════════════════════════════════════════════╝
+
+[Step-3][2025-12-22T18:34:35+0000] Iniciar testes e lint (logs: /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/logs/local/Step-3-test-local-20251222-183435.log)
+
+🔍 [1/3] A executar ESLint...
+[Step-3][2025-12-22T18:34:35+0000] npm run lint
+
+> rustdesk-mesh-integration@0.1.0 lint
+> eslint .
+
+
+/Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/src/app/dashboard/page.tsx
+    8:10  warning  'QrCode' is defined but never used                      @typescript-eslint/no-unused-vars
+   67:10  warning  'refreshError' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  114:10  warning  'showRustdeskQr' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  114:26  warning  'setShowRustdeskQr' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 4 problems (0 errors, 4 warnings)

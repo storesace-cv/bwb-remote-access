@@ -1,0 +1,46 @@
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+VM4602 df5a84e50526dc73.js:1 ✅ [DEBUG] Utilizador é AGENT, domain: zonetech
+VM4602 df5a84e50526dc73.js:1 🔥 [CRITICAL] First record: {id: 'c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b', mesh_username: 'datalink@datalink.pt', display_name: 'zonetech agent', created_at: '2025-12-20T17:53:20.724501+00:00', auth_user_id: '69280e26-e868-478d-8562-7de0c160535e', …}auth_user_id: "69280e26-e868-478d-8562-7de0c160535e"created_at: "2025-12-20T17:53:20.724501+00:00"deleted_at: nulldisabled: falsedisplay_name: "zonetech agent"domain: "zonetech"domain_dns: nulldomain_key: "zonetech"domainadmin: 0email: "datalink@datalink.pt"external_user_id: "user/zonetech/datalink@datalink.pt"id: "c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b"mesh_username: "datalink@datalink.pt"name: "datalink@datalink.pt"role: "LIMITED_ADMIN"siteadmin: 3850source: "meshcentral"user_type: "agent"[[Prototype]]: Object
+VM4602 df5a84e50526dc73.js:1 🔥 [FILTER] datalink@datalink.pt: user_type=agent, role=LIMITED_ADMIN, passes=false

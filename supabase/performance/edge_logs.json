@@ -1,0 +1,77 @@
+{
+   "_comment1": "generate-qr-image",
+}
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "a2c87271-a8b5-49fe-ac78-04876643aa16",
+    "id": "e39d77b2-acd1-41bc-b279-5ffc92c1ba73",
+    "level": "log",
+    "timestamp": 1765227029858000
+  },
+  {
+    "event_message": "[generate-qr-image] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "a2c87271-a8b5-49fe-ac78-04876643aa16",
+    "id": "5ce74d27-5f13-4d13-ac35-40f679b098c5",
+    "level": "info",
+    "timestamp": 1765227003917000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "a2c87271-a8b5-49fe-ac78-04876643aa16",
+    "id": "f8dcab58-bda3-4df4-a934-84969c629b5a",
+    "level": "info",
+    "timestamp": 1765227003915000
+  },
+  {
+    "event_message": "booted (time: 26ms)",
+    "event_type": "Boot",
+    "function_id": "a2c87271-a8b5-49fe-ac78-04876643aa16",
+    "id": "cd7388a7-bdc5-41e1-aefc-8bd15fbb7a17",
+    "level": "log",
+    "timestamp": 1765227003909000
+  }
+]
+
+{
+   "_comment2": "get-devices",
+}
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1fa2df46-b5be-47fc-8a24-209524dc62b9",
+    "level": "log",
+    "timestamp": 1765227078937000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "fa567225-31a3-4acb-a398-8a3e6bbe63c7",
+    "level": "info",
+    "timestamp": 1765227003917000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "14b97212-ee66-4804-ab36-0bf7353315d6",
+    "level": "info",
+    "timestamp": 1765227003915000
+  },
+  {
+    "event_message": "booted (time: 32ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "941edf49-4b10-4eaa-a769-5d5f71a41d7d",
+    "level": "log",
+    "timestamp": 1765227003914000
+  }
+]

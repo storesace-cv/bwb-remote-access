@@ -1,0 +1,802 @@
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a85d8a0d-fff0-4266-be99-df6f21d8ced8",
+    "level": "log",
+    "timestamp": 1766715430515000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "dbb4862d-0f86-4352-9a46-e922f9533829",
+    "level": "log",
+    "timestamp": 1766715430383000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e8ef592c-79c0-4750-845a-11372f598b01",
+    "level": "log",
+    "timestamp": 1766715378939000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "20aa79fc-2175-4ff1-98dc-4957d8db3bae",
+    "level": "log",
+    "timestamp": 1766715378779000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "d6d50376-44dd-4b9b-a97a-cb2efd876b23",
+    "level": "error",
+    "timestamp": 1766715355790000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "f5163eed-c03b-4d54-bc4d-4bbf22e72ca3",
+    "level": "info",
+    "timestamp": 1766715355742000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "131a3514-f80d-4654-8e0e-46bd45e6399e",
+    "level": "info",
+    "timestamp": 1766715355621000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1445177a-7475-49f1-88b1-7d726640ff65",
+    "level": "info",
+    "timestamp": 1766715355506000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e2db5abd-7301-4e83-ac1a-58429c07571a",
+    "level": "info",
+    "timestamp": 1766715355506000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "0365767b-2202-475b-9271-5214693f2cfe",
+    "level": "info",
+    "timestamp": 1766715355504000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "38cb3eb3-7e84-4821-ae37-5b84c7ba4b98",
+    "level": "log",
+    "timestamp": 1766715355501000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "37979764-9f8d-4f0a-870f-4950eaffe723",
+    "level": "info",
+    "timestamp": 1766715355363000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "0b6cb1df-ee5d-4837-b86f-a7c3f064d2da",
+    "level": "info",
+    "timestamp": 1766715355360000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "9686005e-2a2d-4e70-899a-80627f1a1097",
+    "level": "log",
+    "timestamp": 1766715355354000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "de0ed75f-61d2-4ee2-9b9a-4ce79ebb00f1",
+    "level": "log",
+    "timestamp": 1766715331903000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "30bbeb60-5212-4b90-aa2b-303b8784b399",
+    "level": "log",
+    "timestamp": 1766715331753000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "8609f3a2-d0a1-4572-84fc-3b872973e7ed",
+    "level": "error",
+    "timestamp": 1766715304279000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ddd7c3e5-d12b-4ff4-b303-b079806e1009",
+    "level": "info",
+    "timestamp": 1766715304224000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "aa7a96f1-8d67-41a2-9a19-c278bc44a856",
+    "level": "info",
+    "timestamp": 1766715304039000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "69ba92cd-fbbf-4b34-ae85-675fc43dfb1d",
+    "level": "info",
+    "timestamp": 1766715303927000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "4dfbfb0f-d1fb-4d60-af5a-15be6814bcc5",
+    "level": "info",
+    "timestamp": 1766715303927000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6c78e7fb-ffed-4780-9038-d99b56122710",
+    "level": "info",
+    "timestamp": 1766715303924000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "9208e94c-c127-46f2-b2e0-25ac9b3f9784",
+    "level": "log",
+    "timestamp": 1766715303919000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a6ed734b-fc1e-4385-831f-9b4f35866c97",
+    "level": "info",
+    "timestamp": 1766715303759000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "894919ed-44a3-4c92-969f-c1e0426c21a6",
+    "level": "info",
+    "timestamp": 1766715303756000
+  },
+  {
+    "event_message": "booted (time: 50ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "90bdad05-70e6-45db-8bd0-6e28187123ad",
+    "level": "log",
+    "timestamp": 1766715303750000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "cd30e775-c88c-4a77-a310-e7b0c007686c",
+    "level": "error",
+    "timestamp": 1766715257564000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b6724c01-af7d-47cf-97a9-6f07115c0dac",
+    "level": "info",
+    "timestamp": 1766715257415000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "2524b1b0-8da6-42f0-962f-f3a0e6b5b5d5",
+    "level": "info",
+    "timestamp": 1766715257080000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "fb817122-4615-4a8c-a3de-d93d0eb8e623",
+    "level": "info",
+    "timestamp": 1766715256893000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b484b063-860c-4433-a4a0-11d4ffe3d094",
+    "level": "info",
+    "timestamp": 1766715256893000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "59b0becb-6b3c-4bdc-8fdc-0ac0b859b3d8",
+    "level": "info",
+    "timestamp": 1766715256891000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1c23c895-0a80-44a2-b3fd-12fb45367846",
+    "level": "log",
+    "timestamp": 1766715256888000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ca689581-1e39-4005-bf3e-c004af96d092",
+    "level": "info",
+    "timestamp": 1766715256741000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "da1f75ec-471d-449b-b819-262cbf52a9fb",
+    "level": "info",
+    "timestamp": 1766715256739000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "09bdc137-3dd4-4cc6-a79f-2afc45f0e9ba",
+    "level": "log",
+    "timestamp": 1766715256736000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "7477b082-be09-481f-8804-8d7e6f2ee9c5",
+    "level": "log",
+    "timestamp": 1766714968041000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "8586f58e-3f46-4eac-8531-f475b93e2c2d",
+    "level": "log",
+    "timestamp": 1766714937850000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "bc67231f-83ae-4a0f-a55c-4132cc65c8c4",
+    "level": "log",
+    "timestamp": 1766714937688000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "db51a369-0238-4430-b2b3-6973f972aba6",
+    "level": "info",
+    "timestamp": 1766714893018000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "adb23b40-a3b1-4829-bbf7-f09a7da195b8",
+    "level": "info",
+    "timestamp": 1766714893015000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "c0b891a3-7ef1-407c-bf31-206bd41a4897",
+    "level": "log",
+    "timestamp": 1766714893011000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "3e7fc969-9323-4075-85d2-2e2bbf461938",
+    "level": "error",
+    "timestamp": 1766714863359000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e8894bff-5f68-4977-ba3a-71031f4254dd",
+    "level": "info",
+    "timestamp": 1766714863280000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b289cfc9-58a5-4df5-ae30-56ed5f53f3c0",
+    "level": "info",
+    "timestamp": 1766714862969000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "d9477b54-6cc0-485a-8ba6-c9a234f0fcf9",
+    "level": "info",
+    "timestamp": 1766714862840000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "864b1cd7-d268-405e-a421-392607c41116",
+    "level": "info",
+    "timestamp": 1766714862840000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "99d388d5-3059-459b-acb7-8b094c504828",
+    "level": "info",
+    "timestamp": 1766714862838000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "2d3cc043-917b-4573-a91d-4639492e2d6a",
+    "level": "log",
+    "timestamp": 1766714862835000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "1d30fb9b-c6f6-448d-8f45-3369da2c6be6",
+    "level": "info",
+    "timestamp": 1766714862664000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "278c2e7a-d512-4176-a650-0ccade72515c",
+    "level": "info",
+    "timestamp": 1766714862660000
+  },
+  {
+    "event_message": "booted (time: 41ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5f9c1ae8-d3fb-4ae8-a6d3-3990f8fbaa11",
+    "level": "log",
+    "timestamp": 1766714862656000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "135d4fea-d1d4-4923-a05c-aa5d3ddd1998",
+    "level": "log",
+    "timestamp": 1766694005880000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "966b3215-cb25-438c-87ee-76524ee91b69",
+    "level": "log",
+    "timestamp": 1766694005723000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "eea0d58b-948b-46de-ba89-2c193a02c2f5",
+    "level": "log",
+    "timestamp": 1766693987080000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "cda81514-791b-47c3-926b-2b863e00af35",
+    "level": "log",
+    "timestamp": 1766693983364000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "50278409-c4f5-4cd9-ad6b-c4fc07b90e44",
+    "level": "log",
+    "timestamp": 1766693983201000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a4a7ce9c-7cd0-4e1b-927b-054a4439ac40",
+    "level": "error",
+    "timestamp": 1766693931130000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b19d3b4b-ce21-48a3-acfe-1b582f527daa",
+    "level": "info",
+    "timestamp": 1766693931077000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "7d3b8214-ebed-417b-8c6c-fc0c18a713bc",
+    "level": "info",
+    "timestamp": 1766693930980000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "c29d3083-d554-4a42-aafb-db4d62b0729b",
+    "level": "info",
+    "timestamp": 1766693930871000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "90cd5522-ae9f-4e3a-a7b3-4643d74cce80",
+    "level": "info",
+    "timestamp": 1766693930871000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "fcd1b8fc-30a3-4f7c-82e7-826583d2943c",
+    "level": "info",
+    "timestamp": 1766693930869000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "17af5a81-d633-470d-91da-7f806f2b3fee",
+    "level": "log",
+    "timestamp": 1766693930867000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ef6343b4-3d90-4af3-9733-918cdda1cc1d",
+    "level": "info",
+    "timestamp": 1766693930708000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ef960223-5df3-4aeb-a7da-96be7db6fae5",
+    "level": "info",
+    "timestamp": 1766693930706000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "c7fef874-bc02-4099-b562-4d04d3c796c6",
+    "level": "log",
+    "timestamp": 1766693930704000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6fa654cf-e710-45a6-b547-483f163e92b0",
+    "level": "error",
+    "timestamp": 1766693912340000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "7d133c75-d387-4836-bbed-b81d457fef80",
+    "level": "info",
+    "timestamp": 1766693912294000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "05575072-ed8e-412e-88d5-3f2c568054fb",
+    "level": "info",
+    "timestamp": 1766693912188000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "c780156f-e207-4289-9b96-989a8699dd2a",
+    "level": "info",
+    "timestamp": 1766693912072000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a0b7fa65-470d-4053-8c7a-dc8d967cc9e5",
+    "level": "info",
+    "timestamp": 1766693912072000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "58afb549-9bce-4457-8a31-b76699ceaf8a",
+    "level": "info",
+    "timestamp": 1766693912070000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "03bc460a-4533-4141-b260-5bc906e29995",
+    "level": "log",
+    "timestamp": 1766693912067000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6a300bc0-843c-426d-885c-ee150d0ea6df",
+    "level": "error",
+    "timestamp": 1766693908735000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "2699bb40-2cfc-4ff0-badc-275d4195e65c",
+    "level": "info",
+    "timestamp": 1766693908678000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "33b39f6d-f1a9-4e28-a3fe-2b0513e35826",
+    "level": "info",
+    "timestamp": 1766693908538000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "380fa525-427a-4a1d-8385-afb4d0226566",
+    "level": "info",
+    "timestamp": 1766693908356000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "b324ecdb-6f36-41ac-98be-7403793fe74a",
+    "level": "info",
+    "timestamp": 1766693908356000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "f781f7a2-d9f0-42a2-a4d7-c554e45dfb1b",
+    "level": "info",
+    "timestamp": 1766693908354000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6856d835-dc4c-4002-bf95-ceb99e9ee0fb",
+    "level": "log",
+    "timestamp": 1766693908352000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "e19f3d78-61fe-46a0-a353-7f8faa263255",
+    "level": "info",
+    "timestamp": 1766693908188000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "38dbf37c-f186-463d-951e-ffef0b40e170",
+    "level": "info",
+    "timestamp": 1766693908186000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "385f1d21-fa88-4883-b78b-d110c16e5446",
+    "level": "log",
+    "timestamp": 1766693908183000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6bccdbef-f113-49cb-8e0a-864fb68371bc",
+    "level": "log",
+    "timestamp": 1766693597916000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a2a6e00d-5d6b-4e12-8e27-e54132310da4",
+    "level": "log",
+    "timestamp": 1766693597698000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6faf8e49-9f20-4b91-9181-e5657e8ccd2c",
+    "level": "log",
+    "timestamp": 1766693575694000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "24e5e119-33e3-4e63-85b9-19ad50927bcf",
+    "level": "log",
+    "timestamp": 1766693575555000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5c2b8344-7107-440f-bb0d-2a8225cc1d55",
+    "level": "error",
+    "timestamp": 1766693523291000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "883eaebb-a665-4d26-b0df-6aa46049b8e9",
+    "level": "info",
+    "timestamp": 1766693523178000
+  },
+  {
+    "event_message": "[get-devices] Authenticated user: f5384288-837e-41fc-aa08-0020c1bafdec\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "980f4a58-6f91-40cd-97da-2fd764c62af6",
+    "level": "info",
+    "timestamp": 1766693523064000
+  },
+  {
+    "event_message": "[get-devices] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "11bf170f-ffab-42af-b23f-b4016877d770",
+    "level": "info",
+    "timestamp": 1766693522896000
+  },
+  {
+    "event_message": "[get-devices] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "fad3d330-b83c-40e8-867a-cd0e63954cfc",
+    "level": "info",
+    "timestamp": 1766693522896000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "af1fd926-e777-4d77-9094-c2b2e91270b6",
+    "level": "info",
+    "timestamp": 1766693522893000
+  },
+  {
+    "event_message": "booted (time: 44ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "a274aa00-5cc8-4fb2-afba-da766acf5d5a",
+    "level": "log",
+    "timestamp": 1766693522888000
+  },
+  {
+    "event_message": "[get-devices] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "6d9c5042-b6ef-4a93-8117-45c060626f1e",
+    "level": "info",
+    "timestamp": 1766693522684000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "bfdf759c-c76e-4cc7-851e-3cda67bcd8e3",
+    "level": "info",
+    "timestamp": 1766693522682000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ced59625-ac29-4bec-ba33-0a325f99f0e9",
+    "level": "log",
+    "timestamp": 1766693522680000
+  },
+  {
+    "event_message": "[get-devices] Error fetching devices: {\n  code: \"42703\",\n  details: null,\n  hint: null,\n  message: \"column android_devices_grouping.provisioning_status does not exist\"\n}\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "5ea4cee2-fda5-45c6-af4d-b8f730f1ea75",
+    "level": "error",
+    "timestamp": 1766693501308000
+  },
+  {
+    "event_message": "[get-devices] Fetching devices for owner ids: 8b8e8008-c637-4369-bde7-09becfb06a17, d0e4556e-49b6-407d-98b4-dbfdfc51b218\n",
+    "event_type": "Log",
+    "function_id": "01b24503-848c-4f86-ae6a-06054c380d7b",
+    "id": "ced2942e-8888-493e-b6a5-7c0905d8d862",
+    "level": "info",
+    "timestamp": 1766693501230000
+  }
+]

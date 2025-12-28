@@ -1,0 +1,447 @@
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "0c517c21-c713-4b05-b566-adee50323b14",
+    "level": "log",
+    "timestamp": 1765584629877000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "9f8c8ae2-498c-44ce-97d8-e82384c1040c",
+    "level": "log",
+    "timestamp": 1765584627610000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "eeac8a2d-852e-4cb5-8bc3-99416e2ec4af",
+    "level": "log",
+    "timestamp": 1765584627424000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "0185287f-2d4b-476b-8b4b-e230b46d1478",
+    "level": "log",
+    "timestamp": 1765584620333000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f7e61b85-6365-4ed2-9ed2-d84f2a63519d",
+    "level": "log",
+    "timestamp": 1765584620096000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "525f1ace-4372-4171-8732-d48a49d9e98d",
+    "level": "info",
+    "timestamp": 1765584555162000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 28948a96-5931-4c04-a431-4569b12354c0\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "06d2a5db-7235-4a3b-b6a1-4d27760ca6dc",
+    "level": "info",
+    "timestamp": 1765584555108000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c2f9b95c-dafa-489a-b4fc-5835cc9de9ea",
+    "level": "info",
+    "timestamp": 1765584555108000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 404 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /sync/sync</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "33ac0b26-71c6-4dec-9695-580c2be06259",
+    "level": "error",
+    "timestamp": 1765584555037000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "931cc595-ca77-46da-91af-d2bac33c3c2c",
+    "level": "info",
+    "timestamp": 1765584555037000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c32cceb6-beb9-4317-ae09-565abbfd3d5b",
+    "level": "info",
+    "timestamp": 1765584554956000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "0a44cb1d-68d2-4a71-82c2-7c4db8f34810",
+    "level": "info",
+    "timestamp": 1765584554956000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ffcf1a82-8a7c-44b0-94a3-e72b1d9348c1",
+    "level": "info",
+    "timestamp": 1765584554851000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "4d12522c-390a-431e-afb3-9cec44cb6f89",
+    "level": "info",
+    "timestamp": 1765584554848000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ace4be6f-24d2-4704-8157-20a519823417",
+    "level": "log",
+    "timestamp": 1765584554844000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "6d119743-35c9-4030-a0b6-f02dea82d234",
+    "level": "info",
+    "timestamp": 1765584552978000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "9dbbb203-5761-4c38-bc1c-5d01c44ab55e",
+    "level": "info",
+    "timestamp": 1765584552924000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 28948a96-5931-4c04-a431-4569b12354c0\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f0bd4945-3c22-46f5-9ee6-dd4459117039",
+    "level": "info",
+    "timestamp": 1765584552924000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 404 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /sync/sync</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "897497f0-dd02-4ef2-84de-04d54da6dc3a",
+    "level": "error",
+    "timestamp": 1765584552867000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "65403ee1-3498-4349-b553-29e3d1929126",
+    "level": "info",
+    "timestamp": 1765584552867000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "1e95980e-9cc6-4847-815c-91c11d2f6392",
+    "level": "info",
+    "timestamp": 1765584552720000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "55d57319-8687-425f-b3df-9ecfd7144765",
+    "level": "info",
+    "timestamp": 1765584552720000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "66a371fe-048b-49c6-9353-5d3e35e05b1e",
+    "level": "info",
+    "timestamp": 1765584552595000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5a1b0d3f-27c6-40c4-af48-b61d2ab518e2",
+    "level": "info",
+    "timestamp": 1765584552592000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "4366f1b8-f3bc-401b-9819-295e6ff903c1",
+    "level": "log",
+    "timestamp": 1765584552588000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ac41853f-b3e8-46de-8a43-cc85e414d6e4",
+    "level": "info",
+    "timestamp": 1765584552408000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e8628688-463a-4a70-894c-285594d9dc69",
+    "level": "info",
+    "timestamp": 1765584552406000
+  },
+  {
+    "event_message": "booted (time: 27ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c97b6db2-c8f6-472c-9537-37fffb195cd5",
+    "level": "log",
+    "timestamp": 1765584552403000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8cee7c23-de8b-440b-b4b2-1a7fa3821c1b",
+    "level": "info",
+    "timestamp": 1765584545677000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e8ced6b1-1917-45bd-8016-a34e8868abe5",
+    "level": "info",
+    "timestamp": 1765584545628000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 28948a96-5931-4c04-a431-4569b12354c0\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c75af232-0178-4c96-87c7-5ace9baf3377",
+    "level": "info",
+    "timestamp": 1765584545628000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f276d3d3-f3e2-493c-be64-900a21e4a1a7",
+    "level": "info",
+    "timestamp": 1765584545568000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 404 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /sync/sync</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "149f94ae-1d4e-49fa-af27-ecf1c4399eba",
+    "level": "error",
+    "timestamp": 1765584545568000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "b09b5be4-b631-4af6-a4c3-a4413354ff07",
+    "level": "info",
+    "timestamp": 1765584545386000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "363a5aad-6c27-4368-8feb-63d8ae19d763",
+    "level": "info",
+    "timestamp": 1765584545386000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "14454031-b750-4398-91d7-d833ba323c67",
+    "level": "info",
+    "timestamp": 1765584545315000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8ce8cc48-74fc-444f-b25a-ca432a8b7b84",
+    "level": "info",
+    "timestamp": 1765584545312000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "502a844a-a747-43a8-a076-1fd32958badb",
+    "level": "log",
+    "timestamp": 1765584545307000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "de4fd93c-7107-4591-8248-d2f5776e44c0",
+    "level": "info",
+    "timestamp": 1765584545082000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "612c70d2-7cc2-4864-9026-49d4c9b131ae",
+    "level": "info",
+    "timestamp": 1765584545079000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ff15e0a1-b229-4fab-b516-39501c3482be",
+    "level": "log",
+    "timestamp": 1765584545077000
+  }
+]
+
+
+--------------------------------------------------------------------------
+
+root@remote-srv:~# sudo journalctl -u rustdesk-sync-api -f
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Port: 3001
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Host: 127.0.0.1 (localhost only)
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Auth: Enabled
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]: ========================================
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]: Endpoints:
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   GET  /health - Health check (no auth)
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   POST /sync   - Trigger sync (requires auth)
+Dec 13 00:09:05 remote-srv rustdesk-sync-api[101811]: [2025-12-13T00:09:05.552Z] POST /sync/sync from 127.0.0.1
+Dec 13 00:09:12 remote-srv rustdesk-sync-api[101811]: [2025-12-13T00:09:12.856Z] POST /sync/sync from 127.0.0.1
+Dec 13 00:09:15 remote-srv rustdesk-sync-api[101811]: [2025-12-13T00:09:15.028Z] POST /sync/sync from 127.0.0.1
+
+--------------------------------------------------------------------------
+
+root@remote-srv:~# sudo journalctl -u rustdesk-sync-api -n 200 --no-pager
+Dec 12 22:21:56 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]: ========================================
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   RustDesk Sync API
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]: ========================================
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   Status: Running
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   Port: 3001
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   Host: 127.0.0.1 (localhost only)
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   Auth: Enabled
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]: ========================================
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]: Endpoints:
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   GET  /health - Health check (no auth)
+Dec 12 22:21:57 remote-srv rustdesk-sync-api[92479]:   POST /sync   - Trigger sync (requires auth)
+Dec 12 22:21:59 remote-srv rustdesk-sync-api[92479]: [2025-12-12T22:21:59.077Z] POST /sync from 127.0.0.1
+Dec 12 22:21:59 remote-srv rustdesk-sync-api[92479]: [SYNC] Starting sync-devices.sh execution...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [SYNC] Completed successfully (2857ms)
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [SYNC] stdout: [sync-devices] 🚀 Iniciando sincronização...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando sync de devices RustDesk...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] ℹ️  Sem devices no RustDesk
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando matching temporal...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] ℹ️  Sem sessões ativas
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Base MeshCentral: /opt/meshcentral/meshcentral-files//ANDROID
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔄 Sync de devices.json...
+Dec 12 22:22:01 remote-srv rustdesk-sync-api[92479]: [sync-devices] 👤 User admin → /opt/meshcentral/meshcentral-files//ANDROID/Admin
+Dec 12 22:47:19 remote-srv rustdesk-sync-api[92479]: [2025-12-12T22:47:19.063Z] GET /health from 127.0.0.1
+Dec 12 23:05:38 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:05:38.887Z] GET /health from 127.0.0.1
+Dec 12 23:21:24 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:21:24.229Z] POST / from 127.0.0.1
+Dec 12 23:27:19 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:27:19.769Z] POST /api/sync from 127.0.0.1
+Dec 12 23:33:01 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:33:01.129Z] POST /api/sync/ from 127.0.0.1
+Dec 12 23:34:17 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:34:17.794Z] POST /api/sync/ from 127.0.0.1
+Dec 12 23:37:58 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:37:58.780Z] POST /api/sync from 127.0.0.1
+Dec 12 23:41:01 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:41:01.467Z] POST / from 127.0.0.1
+Dec 12 23:43:41 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:43:41.032Z] POST /sync from 127.0.0.1
+Dec 12 23:43:41 remote-srv rustdesk-sync-api[92479]: [SYNC] Starting sync-devices.sh execution...
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]: [SYNC] Completed successfully (2502ms)
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]: [SYNC] stdout: [sync-devices] 🚀 Iniciando sincronização...
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando sync de devices RustDesk...
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📱 Encontrados 2 devices no RustDesk
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]:   [sync-devices] 📱 Device: 1851304672
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]:     [sync-devices] 🔄 Criando entrada para matching temporal...
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]:     [sync-devices] ✅ Device registado para matching
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]:   [sync-devices] 📱 Device: 1670536232
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]:     [sync-devices] 🔄 Criando entrada para matching temporal...
+Dec 12 23:43:43 remote-srv rustdesk-sync-api[92479]:     [sync-devices] ✅ Dev
+Dec 12 23:48:41 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:48:41.998Z] POST /sync from 127.0.0.1
+Dec 12 23:48:41 remote-srv rustdesk-sync-api[92479]: [SYNC] Starting sync-devices.sh execution...
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]: [SYNC] Completed successfully (2549ms)
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]: [SYNC] stdout: [sync-devices] 🚀 Iniciando sincronização...
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando sync de devices RustDesk...
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📱 Encontrados 2 devices no RustDesk
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]:   [sync-devices] 📱 Device: 1851304672
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]:     [sync-devices] 🔄 Criando entrada para matching temporal...
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]:     [sync-devices] ✅ Device registado para matching
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]:   [sync-devices] 📱 Device: 1670536232
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]:     [sync-devices] 🔄 Criando entrada para matching temporal...
+Dec 12 23:48:44 remote-srv rustdesk-sync-api[92479]:     [sync-devices] ✅ Dev
+Dec 12 23:54:39 remote-srv rustdesk-sync-api[92479]: [2025-12-12T23:54:39.497Z] POST /sync from 127.0.0.1
+Dec 12 23:54:39 remote-srv rustdesk-sync-api[92479]: [SYNC] Starting sync-devices.sh execution...
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]: [SYNC] Completed successfully (2550ms)
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]: [SYNC] stdout: [sync-devices] 🚀 Iniciando sincronização...
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]: [sync-devices] 🔍 Iniciando sync de devices RustDesk...
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]: [sync-devices] 📱 Encontrados 2 devices no RustDesk
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]:   [sync-devices] 📱 Device: 1851304672
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]:     [sync-devices] 🔄 Criando entrada para matching temporal...
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]:     [sync-devices] ✅ Device registado para matching
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]:   [sync-devices] 📱 Device: 1670536232
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]:     [sync-devices] 🔄 Criando entrada para matching temporal...
+Dec 12 23:54:42 remote-srv rustdesk-sync-api[92479]:     [sync-devices] ✅ Dev
+Dec 13 00:02:10 remote-srv systemd[1]: Stopping RustDesk Sync API - On-demand device synchronization...
+Dec 13 00:02:10 remote-srv rustdesk-sync-api[92479]: [SHUTDOWN] SIGTERM received, closing server...
+Dec 13 00:02:10 remote-srv systemd[1]: rustdesk-sync-api.service: Deactivated successfully.
+Dec 13 00:02:10 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:02:10 remote-srv systemd[1]: rustdesk-sync-api.service: Consumed 4.303s CPU time.
+Dec 13 00:02:10 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]: ========================================
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   RustDesk Sync API
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]: ========================================
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Status: Running
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Port: 3001
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Host: 127.0.0.1 (localhost only)
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   Auth: Enabled
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]: ========================================
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]: Endpoints:
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   GET  /health - Health check (no auth)
+Dec 13 00:02:11 remote-srv rustdesk-sync-api[101811]:   POST /sync   - Trigger sync (requires auth)
+Dec 13 00:09:05 remote-srv rustdesk-sync-api[101811]: [2025-12-13T00:09:05.552Z] POST /sync/sync from 127.0.0.1
+Dec 13 00:09:12 remote-srv rustdesk-sync-api[101811]: [2025-12-13T00:09:12.856Z] POST /sync/sync from 127.0.0.1
+Dec 13 00:09:15 remote-srv rustdesk-sync-api[101811]: [2025-12-13T00:09:15.028Z] POST /sync/sync from 127.0.0.1
+root@remote-srv:~# 
+
+--------------------------------------------------------------------------
+
+root@remote-srv:~# curl -X POST https://rustdesk.bwb.pt/api/sync \
+  -H "Authorization: Bearer 1acadd36649d6b9569f79ded047c2108ac54cf26a1a53e69f9cfedb7d4bf85fd"
+{"success":true,"message":"Sync completed successfully","duration_ms":3402,"output":"[sync-devices] 🚀 Iniciando sincronização...\n\n[sync-devices] 🔍 Iniciando sync de devices RustDesk...\n[sync-devices] 📂 Lendo devices de: /opt/rustdesk/db_v2.sqlite3\n[sync-devices] 📱 Encontrados 1 devices no RustDesk\n  [sync-devices] 📱 Device: 1648205549\n    [sync-devices] 🔄 Criando entrada para matching temporal...\n    [sync-devices] ✅ Device registado para matching\n[sync-devices] ✅ Sync RustDesk completo\n\n[sync-devices] 🔍 Iniciando matching temporal...\n[sync-devices] ℹ️  Sem sessões ativas\n\n[sync-devices] 📂 Base MeshCentral: /opt/meshcentral/meshcentral-files//ANDROID\n[sync-devices] 🔄 Sync de devices.json...\n[sync-devices] 👤 User admin → /opt/meshcentral/meshcentral-files//ANDROID/Admin\n  [sync-devices] ℹ️  Sem devices.json\n[sync-devices] 👤 User jorge.peixinho@storesace.cv → /opt/meshcentral/meshcentral-files//ANDROID/Jorge\n  [sync-devices] ℹ️  Sem devices.json\n[sync-devices] 👤 User rui.abreu → /opt/meshcentral/meshcentral-files//ANDROID/Rui\n  [sync-devices] ℹ️  Sem devices."}root@remote-srv:~# 

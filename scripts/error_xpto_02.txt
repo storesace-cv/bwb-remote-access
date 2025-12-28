@@ -1,0 +1,131 @@
+root@remote-srv:/opt/rustdesk-frontend/scripts# systemctl status meshcentral-supabase-sync.service
+× meshcentral-supabase-sync.service - MeshCentral → Supabase user sync (DB-native, multi-domain)
+     Loaded: loaded (/etc/systemd/system/meshcentral-supabase-sync.service; disabled; vendor preset: enabled)
+     Active: failed (Result: exit-code) since Fri 2025-12-19 17:50:22 UTC; 44s ago
+TriggeredBy: ● meshcentral-supabase-sync.timer
+    Process: 648209 ExecStart=/opt/rustdesk-frontend/scripts/sync-meshcentral-to-supabase.sh (code=exited, status=1/FAILURE)
+   Main PID: 648209 (code=exited, status=1/FAILURE)
+        CPU: 536ms
+
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Using MeshCentral DB: /opt/meshcentral/meshcentral-data/meshcentral.db
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Target Supabase: https://kqwaibgvmzcqeoctukoy.supabase.co
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Snapshot created at /tmp/meshcentral.db.snapshot
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] Parsed 11 users from MeshCentral DB
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] Marking existing meshcentral users as disabled=true
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] [ERROR] Failed to mark existing meshcentral users as disabled
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] [ERROR] Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in /opt/rustdesk-frontend/.env.local
+Dec 19 17:50:22 remote-srv systemd[1]: meshcentral-supabase-sync.service: Main process exited, code=exited, status=1/FAILURE
+Dec 19 17:50:22 remote-srv systemd[1]: meshcentral-supabase-sync.service: Failed with result 'exit-code'.
+Dec 19 17:50:22 remote-srv systemd[1]: Failed to start MeshCentral → Supabase user sync (DB-native, multi-domain).
+root@remote-srv:/opt/rustdesk-frontend/scripts# journalctl -xeu meshcentral-supabase-sync.service
+░░ The job identifier is 5964527.
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Loading environment from: /opt/rustdesk-frontend/scripts/.env.local
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Starting MeshCentral → Supabase sync (DB-native)
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Using MeshCentral DB: /opt/meshcentral/meshcentral-data/meshcentral.db
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Target Supabase: https://kqwaibgvmzcqeoctukoy.supabase.co
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Snapshot created at /tmp/meshcentral.db.snapshot
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Parsed 11 users from MeshCentral DB
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Marking existing meshcentral users as disabled=true
+Dec 19 17:44:04 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:04Z] [ERROR] Failed to mark existing meshcentral users as disabled
+Dec 19 17:44:04 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:04Z] [ERROR] This may indicate connectivity or permission issues with Supabase
+Dec 19 17:44:04 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:04Z] [ERROR] Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in /opt/rustdesk-frontend/scripts/.env.local
+Dec 19 17:44:04 remote-srv systemd[1]: meshcentral-supabase-sync.service: Main process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ An ExecStart= process belonging to unit meshcentral-supabase-sync.service has exited.
+░░ 
+░░ The process' exit code is 'exited' and its exit status is 1.
+Dec 19 17:44:04 remote-srv systemd[1]: meshcentral-supabase-sync.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ The unit meshcentral-supabase-sync.service has entered the 'failed' state with result 'exit-code'.
+Dec 19 17:44:04 remote-srv systemd[1]: Failed to start MeshCentral → Supabase user sync (DB-native, multi-domain).
+░░ Subject: A start job for unit meshcentral-supabase-sync.service has failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ A start job for unit meshcentral-supabase-sync.service has finished with a failure.
+░░ 
+░░ The job identifier is 5964527 and the job result is failed.
+Dec 19 17:50:21 remote-srv systemd[1]: Starting MeshCentral → Supabase user sync (DB-native, multi-domain)...
+░░ Subject: A start job for unit meshcentral-supabase-sync.service has begun execution
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ A start job for unit meshcentral-supabase-sync.service has begun execution.
+░░ 
+░░ The job identifier is 5970586.
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Loading environment from: /opt/rustdesk-frontend/.env.local
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Starting MeshCentral → Supabase sync (DB-native)
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Using MeshCentral DB: /opt/meshcentral/meshcentral-data/meshcentral.db
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Target Supabase: https://kqwaibgvmzcqeoctukoy.supabase.co
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Snapshot created at /tmp/meshcentral.db.snapshot
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] Parsed 11 users from MeshCentral DB
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] Marking existing meshcentral users as disabled=true
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] [ERROR] Failed to mark existing meshcentral users as disabled
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] [ERROR] Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in /opt/rustdesk-frontend/.env.local
+Dec 19 17:50:22 remote-srv systemd[1]: meshcentral-supabase-sync.service: Main process exited, code=exited, status=1/FAILURE
+░░ Subject: Unit process exited
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ An ExecStart= process belonging to unit meshcentral-supabase-sync.service has exited.
+░░ 
+░░ The process' exit code is 'exited' and its exit status is 1.
+Dec 19 17:50:22 remote-srv systemd[1]: meshcentral-supabase-sync.service: Failed with result 'exit-code'.
+░░ Subject: Unit failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ The unit meshcentral-supabase-sync.service has entered the 'failed' state with result 'exit-code'.
+Dec 19 17:50:22 remote-srv systemd[1]: Failed to start MeshCentral → Supabase user sync (DB-native, multi-domain).
+░░ Subject: A start job for unit meshcentral-supabase-sync.service has failed
+░░ Defined-By: systemd
+░░ Support: http://www.ubuntu.com/support
+░░ 
+░░ A start job for unit meshcentral-supabase-sync.service has finished with a failure.
+░░ 
+░░ The job identifier is 5970586 and the job result is failed.
+lines 200-271/271 (END)
+
+root@remote-srv:/opt/rustdesk-frontend/scripts# 
+
+
+
+
+root@remote-srv:/opt/rustdesk-frontend/scripts# journalctl -u meshcentral-supabase-sync.service -n 30
+Dec 19 17:43:21 remote-srv systemd[1]: meshcentral-supabase-sync.service: Main process exited, code=exited, status=1/FAILURE
+Dec 19 17:43:21 remote-srv systemd[1]: meshcentral-supabase-sync.service: Failed with result 'exit-code'.
+Dec 19 17:43:21 remote-srv systemd[1]: Failed to start MeshCentral → Supabase user sync (DB-native, multi-domain).
+Dec 19 17:44:03 remote-srv systemd[1]: Starting MeshCentral → Supabase user sync (DB-native, multi-domain)...
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Loading environment from: /opt/rustdesk-frontend/scripts/.env.local
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Starting MeshCentral → Supabase sync (DB-native)
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Using MeshCentral DB: /opt/meshcentral/meshcentral-data/meshcentral.db
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Target Supabase: https://kqwaibgvmzcqeoctukoy.supabase.co
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Snapshot created at /tmp/meshcentral.db.snapshot
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Parsed 11 users from MeshCentral DB
+Dec 19 17:44:03 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:03Z] Marking existing meshcentral users as disabled=true
+Dec 19 17:44:04 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:04Z] [ERROR] Failed to mark existing meshcentral users as disabled
+Dec 19 17:44:04 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:04Z] [ERROR] This may indicate connectivity or permission issues with Supabase
+Dec 19 17:44:04 remote-srv sync-meshcentral-to-supabase.sh[647647]: [2025-12-19T17:44:04Z] [ERROR] Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in /opt/rustdesk-frontend/scripts/.env.local
+Dec 19 17:44:04 remote-srv systemd[1]: meshcentral-supabase-sync.service: Main process exited, code=exited, status=1/FAILURE
+Dec 19 17:44:04 remote-srv systemd[1]: meshcentral-supabase-sync.service: Failed with result 'exit-code'.
+Dec 19 17:44:04 remote-srv systemd[1]: Failed to start MeshCentral → Supabase user sync (DB-native, multi-domain).
+Dec 19 17:50:21 remote-srv systemd[1]: Starting MeshCentral → Supabase user sync (DB-native, multi-domain)...
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Loading environment from: /opt/rustdesk-frontend/.env.local
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Starting MeshCentral → Supabase sync (DB-native)
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Using MeshCentral DB: /opt/meshcentral/meshcentral-data/meshcentral.db
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Target Supabase: https://kqwaibgvmzcqeoctukoy.supabase.co
+Dec 19 17:50:21 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:21Z] Snapshot created at /tmp/meshcentral.db.snapshot
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] Parsed 11 users from MeshCentral DB
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] Marking existing meshcentral users as disabled=true
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] [ERROR] Failed to mark existing meshcentral users as disabled
+Dec 19 17:50:22 remote-srv sync-meshcentral-to-supabase.sh[648209]: [2025-12-19T17:50:22Z] [ERROR] Check SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in /opt/rustdesk-frontend/.env.local
+Dec 19 17:50:22 remote-srv systemd[1]: meshcentral-supabase-sync.service: Main process exited, code=exited, status=1/FAILURE
+Dec 19 17:50:22 remote-srv systemd[1]: meshcentral-supabase-sync.service: Failed with result 'exit-code'.
+Dec 19 17:50:22 remote-srv systemd[1]: Failed to start MeshCentral → Supabase user sync (DB-native, multi-domain).
+root@remote-srv:/opt/rustdesk-frontend/scripts# 

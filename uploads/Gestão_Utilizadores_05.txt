@@ -1,0 +1,1299 @@
+admin-update-auth-user
+
+[
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "6c0b8692-c1b2-491d-b870-8b96dd7f7480",
+    "level": "info",
+    "timestamp": 1766286579986000
+  },
+  {
+    "event_message": "booted (time: 37ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "8d963557-c495-4be3-b528-f2e35bd12690",
+    "level": "log",
+    "timestamp": 1766286579982000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "203b1c33-44f6-449f-abbe-4ad60c403e09",
+    "level": "info",
+    "timestamp": 1766286579817000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "a12c90e4-7de9-4784-b452-5dcd17458b20",
+    "level": "log",
+    "timestamp": 1766286579813000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "33c9f292-59f7-49da-b478-2b5864a36d46",
+    "level": "log",
+    "timestamp": 1766286417501000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "13d43af8-047f-4bba-8e10-cae4a56cd262",
+    "level": "log",
+    "timestamp": 1766286417341000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "65335610-8a92-4108-98b1-bffdfbabb427",
+    "level": "log",
+    "timestamp": 1766286401369000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "ecf9011d-d8f0-4a34-866b-2bf4b486b8d1",
+    "level": "log",
+    "timestamp": 1766286401211000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "08b8beab-db39-4e1a-a6a1-330bf09589f1",
+    "level": "info",
+    "timestamp": 1766286342484000
+  },
+  {
+    "event_message": "booted (time: 37ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "e2d37c1d-03ed-4aee-b24c-93806032027e",
+    "level": "log",
+    "timestamp": 1766286342478000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "e300fd0f-080a-4870-8e45-c19fbcae34d8",
+    "level": "info",
+    "timestamp": 1766286342313000
+  },
+  {
+    "event_message": "booted (time: 43ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "3cd7f9cc-a9ff-457a-9d5c-e73bbb365a6d",
+    "level": "log",
+    "timestamp": 1766286342309000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "5ca71cf0-f985-44ec-8073-bf05427ec613",
+    "level": "info",
+    "timestamp": 1766286326358000
+  },
+  {
+    "event_message": "booted (time: 36ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "14a38aff-655e-44c6-8e6c-b7f7167cb225",
+    "level": "log",
+    "timestamp": 1766286326354000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "92c986c6-34e1-4c42-b7c8-4dd4849c7f16",
+    "level": "info",
+    "timestamp": 1766286326193000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "86dec971-0869-4063-a9c5-01457c4012ed",
+    "level": "log",
+    "timestamp": 1766286326190000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "ffd825c9-0c24-4d28-8ecc-5b3644e4a20b",
+    "level": "log",
+    "timestamp": 1766285021047000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "e09bdb76-dd92-4137-b6ee-e4d966535d37",
+    "level": "log",
+    "timestamp": 1766285020894000
+  },
+  {
+    "event_message": "[admin-update-auth-user] Error updating target mesh_users row: {\n  code: \"PGRST204\",\n  details: null,\n  hint: null,\n  message: \"Could not find the 'user_type' column of 'mesh_users' in the schema cache\"\n}\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "d423e3af-6c77-43f2-b016-68ed244fe77c",
+    "level": "error",
+    "timestamp": 1766284946606000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "4ecfcb35-cc1d-47de-bb43-191825a1f7ec",
+    "level": "info",
+    "timestamp": 1766284946036000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "0729c189-7a4f-4fc7-a682-a17cee07b892",
+    "level": "log",
+    "timestamp": 1766284946033000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "65f56a4f-7b65-4505-8315-73d7e63c379f",
+    "level": "info",
+    "timestamp": 1766284945874000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "2106bbf3-ca47-4c19-927d-9f82111972ed",
+    "level": "log",
+    "timestamp": 1766284945870000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "6631b0ad-ca60-4a4e-a278-93cf40a1b48a",
+    "level": "log",
+    "timestamp": 1766284801721000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "0192d017-3a6f-4f3b-9d80-72e45d8ca52e",
+    "level": "log",
+    "timestamp": 1766284801616000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "ae2b12d4-4462-4879-ac18-95dcc64879bd",
+    "level": "log",
+    "timestamp": 1766284775630000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "616781cc-b191-4fae-a029-df511777b875",
+    "level": "log",
+    "timestamp": 1766284775384000
+  },
+  {
+    "event_message": "[admin-update-auth-user] Error updating target mesh_users row: {\n  code: \"PGRST204\",\n  details: null,\n  hint: null,\n  message: \"Could not find the 'user_type' column of 'mesh_users' in the schema cache\"\n}\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "c55dfda7-16d2-4a97-b638-fc7569f03c0f",
+    "level": "error",
+    "timestamp": 1766284726858000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "fbe5b80a-71f8-4307-bcc2-f57100d1ef7b",
+    "level": "info",
+    "timestamp": 1766284726585000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "8ea2e0cc-699c-4b15-b542-9ac9878f6718",
+    "level": "log",
+    "timestamp": 1766284726581000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "1176dc1e-b1c3-4ec8-a368-1f7fe8a93ec9",
+    "level": "info",
+    "timestamp": 1766284726405000
+  },
+  {
+    "event_message": "booted (time: 42ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "dbbbffa2-9e45-49c9-8796-f793ec3553f2",
+    "level": "log",
+    "timestamp": 1766284726400000
+  },
+  {
+    "event_message": "[admin-update-auth-user] Error updating target mesh_users row: {\n  code: \"PGRST204\",\n  details: null,\n  hint: null,\n  message: \"Could not find the 'user_type' column of 'mesh_users' in the schema cache\"\n}\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "7fceac5b-2953-4255-bf47-0046653ffb4c",
+    "level": "error",
+    "timestamp": 1766284700913000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "89805829-3346-42ea-ac87-1e90c863cfde",
+    "level": "info",
+    "timestamp": 1766284700615000
+  },
+  {
+    "event_message": "booted (time: 42ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "b56e3676-e537-4b0c-97ec-afe60cf78db1",
+    "level": "log",
+    "timestamp": 1766284700610000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "b0218f49-74a8-4baf-9e88-93e0079b26bd",
+    "level": "info",
+    "timestamp": 1766284700387000
+  },
+  {
+    "event_message": "booted (time: 57ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "4eba66fd-e2f8-4a04-b8b3-0b9ffe73bab5",
+    "level": "log",
+    "timestamp": 1766284700356000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "58ab21b0-62c9-47ae-a59a-ee773c10ecea",
+    "level": "log",
+    "timestamp": 1766284139217000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "323ae961-4e3d-4614-bc4d-9634fe949f24",
+    "level": "log",
+    "timestamp": 1766284139069000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "08dffb11-8bf0-49e0-8977-77afe47e091f",
+    "level": "log",
+    "timestamp": 1766284131283000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "0876bab2-99b8-4a95-ae65-6d60da6d88c6",
+    "level": "log",
+    "timestamp": 1766284131007000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "8694a6c0-9485-45bd-aa92-a335368b5f26",
+    "level": "info",
+    "timestamp": 1766284064206000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "87beda19-a32b-465f-a904-4a2c730a1f08",
+    "level": "log",
+    "timestamp": 1766284064202000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "e50dae28-c9cd-4355-8e5d-e3b13b4c8f85",
+    "level": "info",
+    "timestamp": 1766284064051000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "abae7e42-8112-40e5-bc57-695d466214f9",
+    "level": "log",
+    "timestamp": 1766284064048000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "2b3f22af-c635-48d8-8a97-19cf9a8e9f65",
+    "level": "info",
+    "timestamp": 1766284056269000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "a397612e-c4e6-4ab8-b28b-fee39c0e721c",
+    "level": "log",
+    "timestamp": 1766284056266000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "9d179150-ce86-40f6-a92c-77dd5dbf5a04",
+    "level": "info",
+    "timestamp": 1766284055984000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "cb615f76-c78e-4825-b02f-95be64946e24",
+    "level": "log",
+    "timestamp": 1766284055979000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "d562cc20-a46d-4a83-93d8-c3719965852a",
+    "level": "log",
+    "timestamp": 1766283829799000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "1066e3d3-4d68-44fb-be2a-1f483a1357cd",
+    "level": "log",
+    "timestamp": 1766283829599000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "a20d8b30-aab1-4895-9f7a-5790572ce870",
+    "level": "log",
+    "timestamp": 1766283821314000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "cc1778ad-55ae-4c4a-94b7-5bdc13ba1b19",
+    "level": "log",
+    "timestamp": 1766283821137000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "284ed8d8-41b3-4b6e-9a8e-2069ed548f5a",
+    "level": "info",
+    "timestamp": 1766283754770000
+  },
+  {
+    "event_message": "booted (time: 42ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "8eb9d659-67f8-4e41-92a5-29eda383861d",
+    "level": "log",
+    "timestamp": 1766283754756000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "707bb4d6-d1b2-4153-967b-ce967de34d1d",
+    "level": "info",
+    "timestamp": 1766283754576000
+  },
+  {
+    "event_message": "booted (time: 40ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "15239174-86c3-4fae-8c26-9d543c840320",
+    "level": "log",
+    "timestamp": 1766283754571000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "bce1f8de-d67c-484e-82e3-30925d45db14",
+    "level": "info",
+    "timestamp": 1766283746297000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "8808c2cc-84a4-45a2-8f12-27cc5667fddc",
+    "level": "log",
+    "timestamp": 1766283746293000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "325a9706-dd4e-49e1-b344-d32625b5fdac",
+    "level": "info",
+    "timestamp": 1766283746135000
+  },
+  {
+    "event_message": "booted (time: 49ms)",
+    "event_type": "Boot",
+    "function_id": "0d60aa3e-3ae1-4a2c-92ea-75316796da16",
+    "id": "00db04be-b0cd-4c92-bbff-01619289c65d",
+    "level": "log",
+    "timestamp": 1766283746115000
+  }
+]
+
+------------------------------------------------
+
+admin-list-auth-users
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "f2ed2903-0544-40d4-bebb-86afc03a785d",
+    "level": "log",
+    "timestamp": 1766286655590000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "ada07e3a-b511-4493-be74-a424c6fde668",
+    "level": "log",
+    "timestamp": 1766286655451000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "c7f8fb96-3711-451a-bb43-fd2eab5623f6",
+    "level": "log",
+    "timestamp": 1766286650330000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "ad3a2b3e-dafd-42fb-9888-4bbb045f5644",
+    "level": "log",
+    "timestamp": 1766286650011000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "424b02f1-5246-4a99-929f-d4d94b4587b5",
+    "level": "log",
+    "timestamp": 1766286649648000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "11d22835-f2ea-456d-a9bb-169fda78792a",
+    "level": "log",
+    "timestamp": 1766286649481000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= de4380ac-1d68-43eb-96d3-51ba6d035e56 mesh found= true mesh_domain_key= zsangola mesh_domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "5950fc7e-888d-42aa-bdac-3bf0318e3673",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 69280e26-e868-478d-8562-7de0c160535e mesh found= true mesh_domain_key= zonetech mesh_domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "47a91205-4ef1-429b-9a3b-d84844d9be39",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] meshMap size: 4 entries: [\n  {\n    auth_user_id: \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n    domain_key: \"zsangola\",\n    domain: \"zsangola\"\n  },\n  {\n    auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n    domain_key: \"zonetech\",\n    domain: \"zonetech\"\n  },\n  {\n    auth_user_id: \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n    domain_key: \"\",\n    domain: \"\"\n  },\n  {\n    auth_user_id: \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\n    domain_key: \"\",\n    domain: \"\"\n  }\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "a071c9d9-db7c-41b4-aa34-a2f44d4984d1",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Sample enriched user: {\"id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"datalink@datalink.pt\",\"email_confirmed_at\":\"2025-12-21T03:09:40.119051Z\",\"phone\":\"\",\"confirmed_at\":\"2025-12-21T03:09:40.119051Z\",\"last_sign_in_at\":\"2025-12-21T02:23:15.094841Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"display_name\":\"zonetech admin\",\"email_verified\":true},\"identities\":null,\"created_at\":\"2025-11-30T19:35:19.834295Z\",\"updated_at\":\"2025-12-21T03:09:40.123549Z\",\"is_anonymous\":false,\"mesh_username\":\"datalink@datalink.pt\",\"mesh_display_name\":\"zonetech admin\",\"mesh_domain_key\":\"zonetech\",\"mesh_domain\":\"zonetech\",\"mesh_user_id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\"}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "aaf9f182-6fd6-41f0-a1d8-13485d762ecc",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "ba7dae8f-8c80-40cf-9c56-70288d624cfd",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Returning enriched users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "c11d3e12-39c2-4f6b-80a5-3f553ddecce9",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= f5384288-837e-41fc-aa08-0020c1bafdec mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "57ec5441-3e88-4249-9733-aa8431c482a7",
+    "level": "info",
+    "timestamp": 1766286580792000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 69280e26-e868-478d-8562-7de0c160535e domain_key= zonetech domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "ce9d04ff-065e-465a-9a7b-88ed3fce722d",
+    "level": "info",
+    "timestamp": 1766286580791000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "e36990e0-0f25-4ff6-9609-0a6466040d78",
+    "level": "info",
+    "timestamp": 1766286580791000
+  },
+  {
+    "event_message": "[admin-list-auth-users] First mesh_user sample: {\n  id: \"00bd0437-aa70-4b24-a0e4-ce7859d916bc\",\n  auth_user_id: \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n  mesh_username: \"assistencia@zsa-softwares.com\",\n  display_name: \"zsangola admin\",\n  domain_key: \"zsangola\",\n  domain: \"zsangola\"\n}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "cbb0378d-9fc7-4b46-95a0-a738a047b06b",
+    "level": "info",
+    "timestamp": 1766286580791000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= f5384288-837e-41fc-aa08-0020c1bafdec domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "6aee8465-197a-47bb-80e5-1e1d32503536",
+    "level": "info",
+    "timestamp": 1766286580791000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= de4380ac-1d68-43eb-96d3-51ba6d035e56 domain_key= zsangola domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "3c7940f7-a5b0-4e26-bb75-a0562f740260",
+    "level": "info",
+    "timestamp": 1766286580791000
+  },
+  {
+    "event_message": "[admin-list-auth-users] mesh_users query result: error= null data= [{\"id\":\"00bd0437-aa70-4b24-a0e4-ce7859d916bc\",\"auth_user_id\":\"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\"mesh_username\":\"assistencia@zsa-softwares.com\",\"display_name\":\"zsangola admin\",\"domain_key\":\"zsangola\",\"domain\":\"zsangola\"},{\"id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\"auth_user_id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"mesh_username\":\"datalink@datalink.pt\",\"display_name\":\"zonetech admin\",\"domain_key\":\"zonetech\",\"domain\":\"zonetech\"},{\"id\":\"8b8e8008-c637-4369-bde7-09becfb06a17\",\"auth_user_id\":\"f5384288-837e-41fc-aa08-0020c1bafdec\",\"mesh_username\":\"jorge.peixinho@storesace.cv\",\"display_name\":\"Jorge Peixinho\",\"domain_key\":\"\",\"domain\":\"\"},{\"id\":\"d0e4556e-49b6-407d-98b4-dbfdfc51b218\",\"auth_user_id\":\"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\"mesh_username\":\"admin\",\"display_name\":\"admin\",\"domain_key\":\"\",\"domain\":\"\"}]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "08689d37-7966-4427-81db-4a2faae38127",
+    "level": "info",
+    "timestamp": 1766286580790000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found mesh_users rows: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "977332a5-5f21-4283-b47b-1a40f8b70a50",
+    "level": "info",
+    "timestamp": 1766286580790000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching mesh_users for auth_ids: [\n  \"69280e26-e868-478d-8562-7de0c160535e\",\n  \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n  \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n  \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\"\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "93bc8298-28c2-4c61-aa7f-00cf7e80eb17",
+    "level": "info",
+    "timestamp": 1766286580744000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found auth users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d5f79f7a-02ff-43f5-9007-add135ceedda",
+    "level": "info",
+    "timestamp": 1766286580743000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching users: page 1 perPage 200\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d0566a4f-c88e-46a6-93db-b5364d62d65e",
+    "level": "info",
+    "timestamp": 1766286580697000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Admin verified: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "9200f9f4-b503-4fb4-b764-28a56f285d89",
+    "level": "info",
+    "timestamp": 1766286580696000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Validating JWT via /auth/v1/user...\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "bab822d9-8ce5-4c6e-bcf6-aea7c7dca924",
+    "level": "info",
+    "timestamp": 1766286580580000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "15327e0b-45f7-4c27-abeb-e7f39e6b1b8a",
+    "level": "info",
+    "timestamp": 1766286580580000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "ad67c7b0-ea19-40a0-92ad-3b57d2fde9ae",
+    "level": "info",
+    "timestamp": 1766286580577000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "54d9f253-5625-4987-8fce-bb58cb2ca6e0",
+    "level": "log",
+    "timestamp": 1766286580573000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "f5469802-441f-457b-81c6-0bf382856b6d",
+    "level": "info",
+    "timestamp": 1766286580429000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "faabe8b0-b43e-4c98-aa60-fa3d77bf5d77",
+    "level": "info",
+    "timestamp": 1766286580427000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "ca89d7f3-dd79-463f-b95e-01cbf4d88b6f",
+    "level": "log",
+    "timestamp": 1766286580423000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= de4380ac-1d68-43eb-96d3-51ba6d035e56 domain_key= zsangola domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "c10e7c05-5372-4e0d-8a74-49a592e0d85a",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= de4380ac-1d68-43eb-96d3-51ba6d035e56 mesh found= true mesh_domain_key= zsangola mesh_domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "569658d9-281d-403d-9dce-df7546e9559f",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= f5384288-837e-41fc-aa08-0020c1bafdec mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "559cace1-2fc6-4e0d-9eb8-25e466fa3aeb",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] meshMap size: 4 entries: [\n  {\n    auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n    domain_key: \"zonetech\",\n    domain: \"zonetech\"\n  },\n  {\n    auth_user_id: \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n    domain_key: \"zsangola\",\n    domain: \"zsangola\"\n  },\n  {\n    auth_user_id: \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n    domain_key: \"\",\n    domain: \"\"\n  },\n  {\n    auth_user_id: \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\n    domain_key: \"\",\n    domain: \"\"\n  }\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "c3c71088-bf0d-4c35-8709-02c2c0959394",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 69280e26-e868-478d-8562-7de0c160535e domain_key= zonetech domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "1224ea3d-63d4-4045-9832-72565425c794",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= f5384288-837e-41fc-aa08-0020c1bafdec domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "5fbfef37-cc26-4754-a65c-9623c1087ac0",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "e333b002-6d8f-4c7d-b3de-b9a911507226",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] First mesh_user sample: {\n  id: \"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\n  auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n  mesh_username: \"datalink@datalink.pt\",\n  display_name: \"zonetech admin\",\n  domain_key: \"zonetech\",\n  domain: \"zonetech\"\n}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "6a722475-5291-4bee-9baf-62eac479ff9d",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Returning enriched users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "2eb4d642-0a45-42fb-bf18-ce45ef4f82ed",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Sample enriched user: {\"id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"datalink@datalink.pt\",\"email_confirmed_at\":\"2025-12-21T03:05:26.50902Z\",\"phone\":\"\",\"confirmed_at\":\"2025-12-21T03:05:26.50902Z\",\"last_sign_in_at\":\"2025-12-21T02:23:15.094841Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"display_name\":\"zonetech admin\",\"email_verified\":true},\"identities\":null,\"created_at\":\"2025-11-30T19:35:19.834295Z\",\"updated_at\":\"2025-12-21T03:05:26.531771Z\",\"is_anonymous\":false,\"mesh_username\":\"datalink@datalink.pt\",\"mesh_display_name\":\"zonetech admin\",\"mesh_domain_key\":\"zonetech\",\"mesh_domain\":\"zonetech\",\"mesh_user_id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\"}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "feaa6fe9-4a93-4560-b7e7-fcc7aea54d78",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "293a97ac-1569-4a46-bb62-6837129bfb4b",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 69280e26-e868-478d-8562-7de0c160535e mesh found= true mesh_domain_key= zonetech mesh_domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "2849cc3c-b69b-497b-920d-636cbf3e7b3d",
+    "level": "info",
+    "timestamp": 1766286575487000
+  },
+  {
+    "event_message": "[admin-list-auth-users] mesh_users query result: error= null data= [{\"id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\"auth_user_id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"mesh_username\":\"datalink@datalink.pt\",\"display_name\":\"zonetech admin\",\"domain_key\":\"zonetech\",\"domain\":\"zonetech\"},{\"id\":\"00bd0437-aa70-4b24-a0e4-ce7859d916bc\",\"auth_user_id\":\"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\"mesh_username\":\"assistencia@zsa-softwares.com\",\"display_name\":\"zsangola admin\",\"domain_key\":\"zsangola\",\"domain\":\"zsangola\"},{\"id\":\"8b8e8008-c637-4369-bde7-09becfb06a17\",\"auth_user_id\":\"f5384288-837e-41fc-aa08-0020c1bafdec\",\"mesh_username\":\"jorge.peixinho@storesace.cv\",\"display_name\":\"Jorge Peixinho\",\"domain_key\":\"\",\"domain\":\"\"},{\"id\":\"d0e4556e-49b6-407d-98b4-dbfdfc51b218\",\"auth_user_id\":\"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\"mesh_username\":\"admin\",\"display_name\":\"admin\",\"domain_key\":\"\",\"domain\":\"\"}]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "5a9793f2-57b7-41dd-ba6e-f53a68f19426",
+    "level": "info",
+    "timestamp": 1766286575486000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found mesh_users rows: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "c911064d-f10d-48fc-910c-3ac6b2dc3819",
+    "level": "info",
+    "timestamp": 1766286575486000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching mesh_users for auth_ids: [\n  \"69280e26-e868-478d-8562-7de0c160535e\",\n  \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n  \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n  \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\"\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "6a4af138-56ac-464f-8588-be179f473478",
+    "level": "info",
+    "timestamp": 1766286575436000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found auth users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "411c28f1-7327-49e3-a3bd-5d6a21d3e425",
+    "level": "info",
+    "timestamp": 1766286575435000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching users: page 1 perPage 200\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "9a2ebfa1-14cc-4b3a-9b10-8e60254fa80d",
+    "level": "info",
+    "timestamp": 1766286575387000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Admin verified: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "6f673f9d-67b8-4bd7-94f7-99a66d1613fc",
+    "level": "info",
+    "timestamp": 1766286575387000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Validating JWT via /auth/v1/user...\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "048bf9e4-04b7-4566-991c-7ce41bc737c1",
+    "level": "info",
+    "timestamp": 1766286575318000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "8ca8312a-158d-45f6-851d-6d0f57c4ce71",
+    "level": "info",
+    "timestamp": 1766286575318000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "fd651c11-957f-4aa6-9be1-dc58f5d6c5d5",
+    "level": "info",
+    "timestamp": 1766286575314000
+  },
+  {
+    "event_message": "booted (time: 37ms)",
+    "event_type": "Boot",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "0b7a0495-c7f4-4ef2-8632-d8e1992cf18a",
+    "level": "log",
+    "timestamp": 1766286575310000
+  },
+  {
+    "event_message": "[admin-list-auth-users] meshMap size: 4 entries: [\n  {\n    auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n    domain_key: \"zonetech\",\n    domain: \"zonetech\"\n  },\n  {\n    auth_user_id: \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n    domain_key: \"zsangola\",\n    domain: \"zsangola\"\n  },\n  {\n    auth_user_id: \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n    domain_key: \"\",\n    domain: \"\"\n  },\n  {\n    auth_user_id: \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\n    domain_key: \"\",\n    domain: \"\"\n  }\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d936c3da-db18-40ca-b87e-e143bf8dbf25",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "00241691-c2f1-4957-8e67-a719b9f825a8",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Sample enriched user: {\"id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"datalink@datalink.pt\",\"email_confirmed_at\":\"2025-12-21T03:05:26.50902Z\",\"phone\":\"\",\"confirmed_at\":\"2025-12-21T03:05:26.50902Z\",\"last_sign_in_at\":\"2025-12-21T02:23:15.094841Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"display_name\":\"zonetech admin\",\"email_verified\":true},\"identities\":null,\"created_at\":\"2025-11-30T19:35:19.834295Z\",\"updated_at\":\"2025-12-21T03:05:26.531771Z\",\"is_anonymous\":false,\"mesh_username\":\"datalink@datalink.pt\",\"mesh_display_name\":\"zonetech admin\",\"mesh_domain_key\":\"zonetech\",\"mesh_domain\":\"zonetech\",\"mesh_user_id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\"}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "93c968b1-5a4f-4a04-b9d5-20e99e71d13c",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] First mesh_user sample: {\n  id: \"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\n  auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n  mesh_username: \"datalink@datalink.pt\",\n  display_name: \"zonetech admin\",\n  domain_key: \"zonetech\",\n  domain: \"zonetech\"\n}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "8fe20a2b-ec0a-4bf8-9ee6-1a3e139b762e",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "858ddb9b-e815-4ab5-8e57-7c4f849b08f4",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= de4380ac-1d68-43eb-96d3-51ba6d035e56 domain_key= zsangola domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d8177fe2-38e5-4945-ac49-e4b7c72205da",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 69280e26-e868-478d-8562-7de0c160535e mesh found= true mesh_domain_key= zonetech mesh_domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "9644cd62-3cea-449a-8cfb-868d8aba0433",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 69280e26-e868-478d-8562-7de0c160535e domain_key= zonetech domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "63e2b6bb-9632-45c3-98ab-c426d7d05e6e",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= f5384288-837e-41fc-aa08-0020c1bafdec domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d9a88158-6546-4212-bdbe-0b0c23b4ac70",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Returning enriched users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "0de278c5-2a1d-4668-9ed9-de758d483c8e",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= de4380ac-1d68-43eb-96d3-51ba6d035e56 mesh found= true mesh_domain_key= zsangola mesh_domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "f809384c-6277-4c72-969a-df52e9fcee6b",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= f5384288-837e-41fc-aa08-0020c1bafdec mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "b9626430-ea07-4ef4-ad63-e247e717622b",
+    "level": "info",
+    "timestamp": 1766286575149000
+  },
+  {
+    "event_message": "[admin-list-auth-users] mesh_users query result: error= null data= [{\"id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\"auth_user_id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"mesh_username\":\"datalink@datalink.pt\",\"display_name\":\"zonetech admin\",\"domain_key\":\"zonetech\",\"domain\":\"zonetech\"},{\"id\":\"00bd0437-aa70-4b24-a0e4-ce7859d916bc\",\"auth_user_id\":\"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\"mesh_username\":\"assistencia@zsa-softwares.com\",\"display_name\":\"zsangola admin\",\"domain_key\":\"zsangola\",\"domain\":\"zsangola\"},{\"id\":\"8b8e8008-c637-4369-bde7-09becfb06a17\",\"auth_user_id\":\"f5384288-837e-41fc-aa08-0020c1bafdec\",\"mesh_username\":\"jorge.peixinho@storesace.cv\",\"display_name\":\"Jorge Peixinho\",\"domain_key\":\"\",\"domain\":\"\"},{\"id\":\"d0e4556e-49b6-407d-98b4-dbfdfc51b218\",\"auth_user_id\":\"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\"mesh_username\":\"admin\",\"display_name\":\"admin\",\"domain_key\":\"\",\"domain\":\"\"}]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "5078f22f-6b3f-43ce-99b2-d2cfba3e82ed",
+    "level": "info",
+    "timestamp": 1766286575148000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found mesh_users rows: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "b9295679-ca3c-4c24-95c2-59c4c7f5b351",
+    "level": "info",
+    "timestamp": 1766286575148000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching mesh_users for auth_ids: [\n  \"69280e26-e868-478d-8562-7de0c160535e\",\n  \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n  \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n  \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\"\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d4c87962-9b97-4306-8a10-f6071c1c7131",
+    "level": "info",
+    "timestamp": 1766286575104000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found auth users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "86c256c6-ee32-47cb-aed3-37245914b606",
+    "level": "info",
+    "timestamp": 1766286575103000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching users: page 1 perPage 200\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "d7209afe-33a6-432d-9bef-5a49b0c21a82",
+    "level": "info",
+    "timestamp": 1766286575056000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Admin verified: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "698b4cd0-42f7-4ca5-9668-77763f1582d8",
+    "level": "info",
+    "timestamp": 1766286575056000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Validating JWT via /auth/v1/user...\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "10c51718-73f0-4306-b596-e72b29fb8bb1",
+    "level": "info",
+    "timestamp": 1766286574985000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "850eec0a-4f3a-4e37-925e-e39f5cc97471",
+    "level": "info",
+    "timestamp": 1766286574984000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "953a9f06-9f3b-40d6-bf43-8397a2241fca",
+    "level": "info",
+    "timestamp": 1766286574982000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "97c8bb0b-ff31-4568-b435-4e1258129537",
+    "level": "log",
+    "timestamp": 1766286574978000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Returning enriched users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "41fa3151-206c-4d33-a994-62e042b086d2",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= de4380ac-1d68-43eb-96d3-51ba6d035e56 mesh found= true mesh_domain_key= zsangola mesh_domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "8fedee0e-8296-4500-b0ae-3bdddc93852c",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Sample enriched user: {\"id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"aud\":\"authenticated\",\"role\":\"authenticated\",\"email\":\"datalink@datalink.pt\",\"email_confirmed_at\":\"2025-12-21T03:05:26.50902Z\",\"phone\":\"\",\"confirmed_at\":\"2025-12-21T03:05:26.50902Z\",\"last_sign_in_at\":\"2025-12-21T02:23:15.094841Z\",\"app_metadata\":{\"provider\":\"email\",\"providers\":[\"email\"]},\"user_metadata\":{\"display_name\":\"zonetech admin\",\"email_verified\":true},\"identities\":null,\"created_at\":\"2025-11-30T19:35:19.834295Z\",\"updated_at\":\"2025-12-21T03:05:26.531771Z\",\"is_anonymous\":false,\"mesh_username\":\"datalink@datalink.pt\",\"mesh_display_name\":\"zonetech admin\",\"mesh_domain_key\":\"zonetech\",\"mesh_domain\":\"zonetech\",\"mesh_user_id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\"}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "0d37392c-5742-401b-8753-aebf421d530a",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "4d697ab9-7273-451c-9203-caf1e90d90c0",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 69280e26-e868-478d-8562-7de0c160535e mesh found= true mesh_domain_key= zonetech mesh_domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "63c4659f-2b38-4a7c-9361-7e4510d9699d",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= 9ebfa3dd-392c-489d-882f-8a1762cb36e8 mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "179835a3-448f-4472-aeec-b9256c42dfe3",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] meshMap size: 4 entries: [\n  {\n    auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n    domain_key: \"zonetech\",\n    domain: \"zonetech\"\n  },\n  {\n    auth_user_id: \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n    domain_key: \"zsangola\",\n    domain: \"zsangola\"\n  },\n  {\n    auth_user_id: \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n    domain_key: \"\",\n    domain: \"\"\n  },\n  {\n    auth_user_id: \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\n    domain_key: \"\",\n    domain: \"\"\n  }\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "b611cdac-4356-4820-9bf1-8af39688ccfc",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= 69280e26-e868-478d-8562-7de0c160535e domain_key= zonetech domain= zonetech\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "e71e6433-d22e-4467-b041-4ab6dc2c1d2d",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Enriching user: id= f5384288-837e-41fc-aa08-0020c1bafdec mesh found= true mesh_domain_key=  mesh_domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "1fd8c980-19c7-454e-bbf4-7b7d8573c124",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] First mesh_user sample: {\n  id: \"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\n  auth_user_id: \"69280e26-e868-478d-8562-7de0c160535e\",\n  mesh_username: \"datalink@datalink.pt\",\n  display_name: \"zonetech admin\",\n  domain_key: \"zonetech\",\n  domain: \"zonetech\"\n}\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "066d5ea9-64f2-4101-baff-d4d4b914fb77",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= de4380ac-1d68-43eb-96d3-51ba6d035e56 domain_key= zsangola domain= zsangola\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "38204d3d-16d2-461b-a759-3bea9d83d516",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Adding to meshMap: auth_user_id= f5384288-837e-41fc-aa08-0020c1bafdec domain_key=  domain= \n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "2c5a3eeb-89e2-4673-bc00-5f648881c28f",
+    "level": "info",
+    "timestamp": 1766286574803000
+  },
+  {
+    "event_message": "[admin-list-auth-users] mesh_users query result: error= null data= [{\"id\":\"c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b\",\"auth_user_id\":\"69280e26-e868-478d-8562-7de0c160535e\",\"mesh_username\":\"datalink@datalink.pt\",\"display_name\":\"zonetech admin\",\"domain_key\":\"zonetech\",\"domain\":\"zonetech\"},{\"id\":\"00bd0437-aa70-4b24-a0e4-ce7859d916bc\",\"auth_user_id\":\"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\"mesh_username\":\"assistencia@zsa-softwares.com\",\"display_name\":\"zsangola admin\",\"domain_key\":\"zsangola\",\"domain\":\"zsangola\"},{\"id\":\"8b8e8008-c637-4369-bde7-09becfb06a17\",\"auth_user_id\":\"f5384288-837e-41fc-aa08-0020c1bafdec\",\"mesh_username\":\"jorge.peixinho@storesace.cv\",\"display_name\":\"Jorge Peixinho\",\"domain_key\":\"\",\"domain\":\"\"},{\"id\":\"d0e4556e-49b6-407d-98b4-dbfdfc51b218\",\"auth_user_id\":\"9ebfa3dd-392c-489d-882f-8a1762cb36e8\",\"mesh_username\":\"admin\",\"display_name\":\"admin\",\"domain_key\":\"\",\"domain\":\"\"}]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "94003fa9-5193-4c10-a4b6-c746f6241ce8",
+    "level": "info",
+    "timestamp": 1766286574802000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found mesh_users rows: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "826cc895-adba-46b7-a53c-67faa7fb03dd",
+    "level": "info",
+    "timestamp": 1766286574802000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching mesh_users for auth_ids: [\n  \"69280e26-e868-478d-8562-7de0c160535e\",\n  \"de4380ac-1d68-43eb-96d3-51ba6d035e56\",\n  \"f5384288-837e-41fc-aa08-0020c1bafdec\",\n  \"9ebfa3dd-392c-489d-882f-8a1762cb36e8\"\n]\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "94f83c71-12e3-4ecc-a11f-6148e53fe81d",
+    "level": "info",
+    "timestamp": 1766286574751000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Found auth users: 4\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "a2a55757-4293-4e9c-b1fd-fd6d35e22c50",
+    "level": "info",
+    "timestamp": 1766286574749000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Fetching users: page 1 perPage 200\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "e46b1f3d-60ca-4c98-a8ab-a0547b441db8",
+    "level": "info",
+    "timestamp": 1766286574701000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Admin verified: 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "94401083-602b-4a2b-b0f6-a49a828d831a",
+    "level": "info",
+    "timestamp": 1766286574700000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Validating JWT via /auth/v1/user...\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "23a4b5c2-d894-4a3e-a25b-7f8f9bd19f81",
+    "level": "info",
+    "timestamp": 1766286574631000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "3e84cf6b-6d2f-4c06-8c65-906a2de670d9",
+    "level": "info",
+    "timestamp": 1766286574631000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "c472b901-061b-4d32-ba89-5d69b911a9cc",
+    "level": "info",
+    "timestamp": 1766286574629000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "244df716-0c58-49eb-8af0-b1107f02054b",
+    "level": "log",
+    "timestamp": 1766286574624000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "2171f04a-1e81-4caa-85ff-bc7aaa5b8b8b",
+    "level": "info",
+    "timestamp": 1766286574468000
+  },
+  {
+    "event_message": "[admin-list-auth-users] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "76d2321d-c04e-4208-8f52-02388f87dbec",
+    "level": "info",
+    "timestamp": 1766286574466000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "76451ace-d725-4d60-be1d-c1ccb53f4322",
+    "id": "04d64ab8-1403-48bf-a998-5dd55737d87f",
+    "level": "info",
+    "timestamp": 1766286574463000
+  }
+]

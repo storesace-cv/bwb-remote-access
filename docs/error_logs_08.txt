@@ -1,0 +1,248 @@
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+-X 'GET' \
+-H 'Pragma: no-cache' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NjkyNzQwLCJpYXQiOjE3NjU2ODkxNDAsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NTY4OTE0MH1dLCJzZXNzaW9uX2lkIjoiY2ZjMDIxMTgtNjVjZS00ZWI2LTkyYjMtYTQ5ZTZlYmE5ZTU5IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.s40AuT7prr3P1X8J-KNnAivg7eVZuti8iJM92kReOzQ' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Cache-Control: no-cache' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s'
+
+------------------------------------
+
+GET /functions/v1/admin-list-mesh-users H3
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5ZWJmYTNkZC0zOTJjLTQ4OWQtODgyZi04YTE3NjJjYjM2ZTgiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NjkyNzQwLCJpYXQiOjE3NjU2ODkxNDAsImVtYWlsIjoic3Vwb3J0ZUBid2IucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NTY4OTE0MH1dLCJzZXNzaW9uX2lkIjoiY2ZjMDIxMTgtNjVjZS00ZWI2LTkyYjMtYTQ5ZTZlYmE5ZTU5IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.s40AuT7prr3P1X8J-KNnAivg7eVZuti8iJM92kReOzQ
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+Referer: https://rustdesk.bwb.pt/
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+
+--------------------------------------
+
+H3 403 
+Content-Encoding: gzip
+Set-Cookie: __cf_bm=wSZ1SdJFBSCtR_Qa2mKAaoz_fVGr3k8u7LhhgoDKjGs-1765689165-1.0.1.1-o7OUnBUsWqEZcjltfw_aDusow0hAXLaG85iadpAwPuO5LY6rAl1YECuVl_XQ4ev52SSWd9MuF6207blXteu7TFESQYKBWEDGi.jbj5oTWTo; path=/; expires=Sun, 14-Dec-25 05:42:45 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+Access-Control-Allow-Methods: GET, OPTIONS
+Access-Control-Allow-Origin: *
+Server-Timing: cfExtPri
+Access-Control-Allow-Headers: authorization, x-client-info, apikey, content-type
+Content-Length: 95
+Vary: Accept-Encoding
+Date: Sun, 14 Dec 2025 05:12:45 GMT
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+sb-request-id: 019b1b46-8635-7ab5-904f-cd9db1091cf3
+Server: cloudflare
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+sb-project-ref: kqwaibgvmzcqeoctukoy
+x-deno-execution-id: 4785c584-4189-4529-98db-802402ebc448
+x-served-by: supabase-edge-runtime
+Alt-Svc: h3=":443"; ma=86400
+Priority: u=3,i
+x-sb-edge-region: eu-west-3
+cf-cache-status: DYNAMIC
+cf-ray: 9adb35437f0bb17c-LIS
+
+---------------------------------------
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "bf7c39a4-c161-4e89-81af-5efe16c29340",
+    "level": "log",
+    "timestamp": 1765689240501000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "517041e6-8396-42a9-ab73-d86ffc529806",
+    "level": "log",
+    "timestamp": 1765689215964000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6f3342af-4455-406d-9451-c4d1783af73c",
+    "level": "error",
+    "timestamp": 1765689165609000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "74c29461-84c3-4549-ac03-4fd1e060829b",
+    "level": "info",
+    "timestamp": 1765689165461000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "67866aa0-6992-4153-9ed4-3c8d8a49d527",
+    "level": "log",
+    "timestamp": 1765689165459000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3dcda9cd-6ef8-467e-bc67-d9145edbbb29",
+    "level": "error",
+    "timestamp": 1765689141174000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "9f30d2ad-b30d-4e65-af05-cc917cde83fd",
+    "level": "info",
+    "timestamp": 1765689140930000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "48fd5f52-9030-4fd1-95ff-42ee084dc806",
+    "level": "log",
+    "timestamp": 1765689140929000
+  }
+]
+
+-------------------------------------------------------------
+
+[
+  {
+    "event_message": "event loop error: ReferenceError: handler is not defined\n    at file:///var/tmp/sb-compile-edge-runtime/register-device/index.ts:328:7",
+    "event_type": "UncaughtException",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "057bb198-3577-4bf8-b8e6-89509adabe81",
+    "level": "error",
+    "timestamp": 1765688028511000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "69c08936-1a56-4173-85a1-423eb30bd0c8",
+    "level": "log",
+    "timestamp": 1765688028509000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "95330908-7796-4b6e-90bc-9625ddbf7635",
+    "level": "log",
+    "timestamp": 1765687519370000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "f81bef83-d31c-494f-ae97-ad6d24b6df8d",
+    "level": "info",
+    "timestamp": 1765687444356000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "1fa028ea-6132-455f-abe4-5b4f763cd474",
+    "level": "log",
+    "timestamp": 1765687444354000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "0fb983c7-872e-44e2-958c-1a2ffb4522c3",
+    "level": "log",
+    "timestamp": 1765686981876000
+  },
+  {
+    "event_message": "[register-device] JWT validated successfully for user 9ebfa3dd-392c-489d-882f-8a1762cb36e8\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "985f912c-6fa8-48e1-ad5f-e6ee60b7514b",
+    "level": "info",
+    "timestamp": 1765686907145000
+  },
+  {
+    "event_message": "[register-device] Validating JWT with Supabase Auth...\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "6b7e9631-8ac0-4464-8a57-dff097775b82",
+    "level": "info",
+    "timestamp": 1765686906865000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "a46f47ca-1708-4fe8-b56b-e8dc8c62eb4d",
+    "level": "info",
+    "timestamp": 1765686906863000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "96eb7830-e07a-4294-9937-d6810592a7c0",
+    "level": "log",
+    "timestamp": 1765686906861000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "a0bb8e03-fccd-49fa-8d47-3fc080d23727",
+    "level": "log",
+    "timestamp": 1765686481431000
+  },
+  {
+    "event_message": "[register-device] sanity-check handler invoked\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "92efa9d6-5fab-47c5-9e7b-2a8f3fa79177",
+    "level": "info",
+    "timestamp": 1765686406416000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "1dad7606-a3f9-456a-885a-613ee79f08b8",
+    "level": "info",
+    "timestamp": 1765686406414000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "3af6979e-edae-4813-b12e-3031fb4709b9",
+    "level": "log",
+    "timestamp": 1765686406413000
+  }
+]
+
+---------------------------------------------------------------------------
+

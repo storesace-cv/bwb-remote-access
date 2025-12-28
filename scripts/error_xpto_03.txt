@@ -1,0 +1,189 @@
+Dec 19 18:01:48 remote-srv systemd[1]: Started RustDesk Web Frontend.
+root@remote-srv:/opt/rustdesk-frontend/scripts# cd /opt/rustdesk-frontend
+bash scripts/diagnose-mesh-sync.sh
+════════════════════════════════════════════════════════════
+  MeshCentral → Supabase Sync - Diagnóstico Completo
+════════════════════════════════════════════════════════════
+
+[1/10] Verificando binários necessários...
+  ✓ bash instalado: GNU bash, version 5.1.16(1)-release (x86_64-pc-linux-gnu)
+  ✓ node instalado: v20.19.6
+  ✓ curl instalado: curl 7.81.0 (x86_64-pc-linux-gnu) libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.19
+  ✓ jq instalado: jq-1.6
+
+[2/10] Verificando .env.local...
+  ✓ Ficheiro existe: /opt/rustdesk-frontend/.env.local
+  ✓ SUPABASE_URL: https://kqwaibgvmzcqeoctukoy.supabase.co...
+  ✓ SUPABASE_SERVICE_ROLE_KEY: sb_secret_gdkCILiT82... (41 chars)
+
+[3/10] Testando conectividade Supabase...
+  ⚠ HTTP 401 (pode indicar problema de permissões)
+  Resposta: {"code":"PGRST301","details":null,"hint":null,"message":"Expected 3 parts in JWT; got 1"}
+
+[4/10] Verificando base de dados MeshCentral...
+  ✓ Ficheiro existe: /opt/meshcentral/meshcentral-data/meshcentral.db
+  Tamanho: 7224018 bytes
+  ✓ Permissões de leitura: OK
+
+[5/10] Criando snapshot da base de dados...
+  ✓ Snapshot criado: /tmp/meshcentral.db.snapshot.diagnostic
+  Tamanho: 7224018 bytes
+
+[6/10] Analisando conteúdo da base de dados...
+  Total de linhas: 3938
+  Linhas com user/: 18
+  Linhas com domain/: 0
+0
+
+[7/10] Testando pipeline Node.js com debug verbose...
+  Exit code: 0
+  Debug output (stderr):
+    [DEBUG] dbPath = /tmp/meshcentral.db.snapshot.diagnostic
+    [DEBUG] File size: 7224018 bytes
+    [DEBUG] Processed 3938 lines
+    [DEBUG] Found 30 user records
+    [DEBUG] Found 0 domain records
+    [DEBUG] lastById.size = 1053
+    [DEBUG] Generated 11 user objects
+    [{"external_user_id":"user//admin","domain_key":"","mesh_username":"admin","domain_dns":null,"domain":"","email":"suporte@storesace.cv","name":"admin","display_name":"admin","disabled":false,"siteadmin":4294967295,"domainadmin":0,"role":"SUPERADMIN","source":"meshcentral"},{"external_user_id":"user//jorge.peixinho","domain_key":"","mesh_username":"jorge.peixinho","domain_dns":null,"domain":"","email":"jorge.peixinho@storesace.cv","name":"jorge.peixinho","display_name":"jorge.peixinho","disabled":false,"siteadmin":4294967295,"domainadmin":0,"role":"SUPERADMIN","source":"meshcentral"},{"external_user_id":"user//rui.abreu","domain_key":"","mesh_username":"rui.abreu","domain_dns":null,"domain":"","email":"datalink@datalink.pt","name":"rui.abreu","display_name":"rui.abreu","disabled":false,"siteadmin":3592,"domainadmin":0,"role":"LIMITED_ADMIN","source":"meshcentral"},{"external_user_id":"user//zs.angola","domain_key":"","mesh_username":"zs.angola","domain_dns":null,"domain":"","email":"amadeu.cristelo@gmail.com","name":"zs.angola","display_name":"zs.angola","disabled":false,"siteadmin":3592,"domainadmin":0,"role":"LIMITED_ADMIN","source":"meshcentral"},{"external_user_id":"user/zonetech/datalink@datalink.pt","domain_key":"zonetech","mesh_username":"datalink@datalink.pt","domain_dns":null,"domain":"zonetech","email":"datalink@datalink.pt","name":"datalink@datalink.pt","display_name":"datalink@datalink.pt","disabled":false,"siteadmin":3850,"domainadmin":0,"role":"LIMITED_ADMIN","source":"meshcentral"},{"external_user_id":"user/zonetech/datalink@gmail.com","domain_key":"zonetech","mesh_username":"datalink@gmail.com","domain_dns":null,"domain":"zonetech","email":"datalink@gmail.com","name":"datalink@gmail.com","display_name":"datalink@gmail.com","disabled":false,"siteadmin":0,"domainadmin":0,"role":"USER","source":"meshcentral"},{"external_user_id":"user/zonetech/teste-user-zsangola@bwb.pt","domain_key":"zonetech","mesh_username":"teste-user-zsangola@bwb.pt","domain_dns":null,"domain":"zonetech","email":"teste-user-zsangola@bwb.pt","name":"teste-user-zsangola@bwb.pt","display_name":"teste-user-zsangola@bwb.pt","disabled":false,"siteadmin":0,"domainadmin":0,"role":"USER","source":"meshcentral"},{"external_user_id":"user/zonetech/zonetech@bwb.pt","domain_key":"zonetech","mesh_username":"zonetech@bwb.pt","domain_dns":null,"domain":"zonetech","email":"zonetech@bwb.pt","name":"zonetech@bwb.pt","display_name":"zonetech@bwb.pt","disabled":false,"siteadmin":4294967295,"domainadmin":4294967295,"role":"SUPERADMIN","source":"meshcentral"},{"external_user_id":"user/zsangola/amadeu.cristelo@gmail.com","domain_key":"zsangola","mesh_username":"amadeu.cristelo@gmail.com","domain_dns":null,"domain":"zsangola","email":"amadeu.cristelo@gmail.com","name":"amadeu.cristelo@gmail.com","display_name":"amadeu.cristelo@gmail.com","disabled":false,"siteadmin":3850,"domainadmin":0,"role":"LIMITED_ADMIN","source":"meshcentral"},{"external_user_id":"user/zsangola/assistencia@zsa-softwares.com","domain_key":"zsangola","mesh_username":"assistencia@zsa-softwares.com","domain_dns":null,"domain":"zsangola","email":"assistencia@zsa-softwares.com","name":"assistencia@zsa-softwares.com","display_name":"assistencia@zsa-softwares.com","disabled":false,"siteadmin":0,"domainadmin":0,"role":"USER","source":"meshcentral"},{"external_user_id":"user/zsangola/zsangola@bwb.pt","domain_key":"zsangola","mesh_username":"zsangola@bwb.pt","domain_dns":null,"domain":"zsangola","email":"zsangola@bwb.pt","name":"zsangola@bwb.pt","display_name":"zsangola@bwb.pt","disabled":false,"siteadmin":4294967295,"domainadmin":4294967295,"role":"SUPERADMIN","source":"meshcentral"}]
+  ✗ JSON output vazio!
+root@remote-srv:/opt/rustdesk-frontend# 
+
+
+
+
+
+
+
+
+---------------------------------------------------------
+
+Resposta curta: não, este diagnóstico AINDA NÃO passou — e os próprios logs provam exactamente onde e porquê.
+
+Vou confirmar ponto a ponto, sem ambiguidades.
+
+⸻
+
+✅ O que PASSOU (está correcto)
+
+[1/10] Binários
+
+✔ OK — versões correctas.
+
+[2/10] .env.local
+
+✔ OK — ficheiro existe
+✔ SUPABASE_SERVICE_ROLE_KEY=sb_secret_… correcto
+
+[4/10] MeshCentral DB
+
+✔ OK — ficheiro existe, permissões OK
+
+[5/10] Snapshot
+
+✔ OK — snapshot criado
+
+[6/10] Conteúdo DB
+
+✔ OK — dados coerentes
+✔ Utilizadores detectados
+
+[7/10] Pipeline Node.js
+
+✔ FUNCIONA
+	•	Processou 3938 linhas
+	•	Gerou 11 user objects
+	•	JSON NÃO está vazio (apesar da mensagem errada no fim)
+
+👉 Nota importante:
+A linha
+✗ JSON output vazio!
+é BUG no script de diagnóstico, porque logo acima mostras um JSON válido com 11 objectos.
+Isto é apenas um if [ -z "$JSON" ] mal feito.
+
+⸻
+
+❌ O que NÃO PASSOU (bloqueador real)
+
+[3/10] Testando conectividade Supabase
+
+HTTP 401
+"PGRST301: Expected 3 parts in JWT; got 1"
+
+👉 Isto confirma sem margem para dúvidas:
+
+O script diagnose-mesh-sync.sh ainda está a usar
+
+Authorization: Bearer sb_secret_...
+
+em vez de apenas
+
+apikey: sb_secret_...
+
+
+
+Ou seja:
+	•	✔ O sync script já foi corrigido para Opção A
+	•	❌ O script de diagnóstico NÃO foi actualizado
+	•	❌ Ele continua a testar Supabase com o modelo JWT legacy
+
+Por isso o diagnóstico falha sempre no passo 3, mesmo que o sync esteja correcto.
+
+⸻
+
+🔎 Prova adicional (irrefutável)
+
+Tu próprio já executaste com sucesso:
+
+curl "$SUPABASE_URL/rest/v1/mesh_users?select=id&limit=1" \
+  -H "apikey: $SUPABASE_SERVICE_ROLE_KEY"
+
+➡️ HTTP 200
+
+Logo:
+	•	Supabase ✅
+	•	Key sb_secret_* ✅
+	•	Endpoint /rest/v1 ✅
+
+O erro não é de permissões, é header errado no diagnóstico.
+
+⸻
+
+🎯 Conclusão técnica clara
+
+Estado actual
+
+Componente	Estado
+MeshCentral DB	✅ OK
+Node pipeline	✅ OK
+JSON users	✅ OK
+Supabase (apikey sb_secret)	✅ OK
+diagnose-mesh-sync.sh	❌ ERRADO
+systemd logs antigos	❌ ainda reflectem runs antigos
+
+
+⸻
+
+🛠️ O que falta fazer (simples)
+
+1️⃣ Corrigir diagnose-mesh-sync.sh
+
+No passo [3/10], remover completamente:
+
+-H "Authorization: Bearer ..."
+
+E deixar apenas:
+
+-H "apikey: $SUPABASE_SERVICE_ROLE_KEY"
+
+Depois disso, o passo [3/10] passará.
+
+⸻
+
+2️⃣ Corrigir a mensagem “JSON output vazio”
+
+Trocar o teste por algo como:
+
+echo "$JSON" | jq -e 'length > 0' >/dev/null
+
+Porque actualmente está a dar falso negativo.

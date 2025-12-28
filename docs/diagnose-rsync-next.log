@@ -1,0 +1,795 @@
+bash-3.2$ ./scripts/diagnose-rsync-next.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RSYNC .next DIAGNOSTIC SCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📦 Step 1: Checking LOCAL .next directory...
+✅ Local .next exists
+   BUILD_ID: _3yfnQijRcaVCR71BupYn
+   File count:      325
+
+📦 Step 2: Checking REMOTE directory state...
+drwxr-xr-x 16 rustdeskweb rustdeskweb 4096 Dec 10 21:30 /opt/rustdesk-frontend/
+
+📦 Step 3: Cleaning old remote .next...
+✅ Old .next removed
+
+📦 Step 4: Creating fresh remote .next directory...
+✅ Fresh .next created
+
+📦 Step 5: Verifying remote .next exists...
+drwxr-xr-x 2 rustdeskweb rustdeskweb 4096 Dec 10 21:37 /opt/rustdesk-frontend/.next
+✅ Remote .next verified
+
+📦 Step 6: Testing rsync transfer...
+   Source: /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/.next/
+   Destination: root@46.101.78.179:/opt/rustdesk-frontend/.next/
+
+Running rsync with -avz --checksum --progress...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[DEBUG] About to run rsync...
+[DEBUG] Command: rsync -avz --checksum --progress '/Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/.next/' 'root@46.101.78.179:/opt/rustdesk-frontend/.next/'
+sending incremental file list
+./
+BUILD_ID
+             21 100%    0.00kB/s    0:00:00 (xfr#1, to-chk=375/377)
+app-path-routes-manifest.json
+            368 100%  359.38kB/s    0:00:00 (xfr#2, to-chk=374/377)
+build-manifest.json
+            494 100%  482.42kB/s    0:00:00 (xfr#3, to-chk=373/377)
+export-marker.json
+            111 100%  108.40kB/s    0:00:00 (xfr#4, to-chk=372/377)
+fallback-build-manifest.json
+            234 100%  228.52kB/s    0:00:00 (xfr#5, to-chk=371/377)
+images-manifest.json
+          1,123 100%    1.07MB/s    0:00:00 (xfr#6, to-chk=370/377)
+next-minimal-server.js.nft.json
+          5,471 100%    5.22MB/s    0:00:00 (xfr#7, to-chk=369/377)
+next-server.js.nft.json
+         40,371 100%   38.50MB/s    0:00:00 (xfr#8, to-chk=368/377)
+package.json
+             20 100%   19.53kB/s    0:00:00 (xfr#9, to-chk=367/377)
+prerender-manifest.json
+          5,851 100%    5.58MB/s    0:00:00 (xfr#10, to-chk=366/377)
+required-server-files.json
+          8,909 100%    8.50MB/s    0:00:00 (xfr#11, to-chk=365/377)
+routes-manifest.json
+          2,517 100%    2.40MB/s    0:00:00 (xfr#12, to-chk=364/377)
+trace
+          7,535 100%    7.19MB/s    0:00:00 (xfr#13, to-chk=363/377)
+trace-build
+          1,050 100%    1.00MB/s    0:00:00 (xfr#14, to-chk=362/377)
+turbopack
+              0 100%    0.00kB/s    0:00:00 (xfr#15, to-chk=361/377)
+build/
+build/package.json
+             20 100%    0.43kB/s    0:00:00 (xfr#16, to-chk=354/377)
+build/postcss.js
+            861 100%   18.68kB/s    0:00:00 (xfr#17, to-chk=353/377)
+build/postcss.js.map
+             53 100%    1.15kB/s    0:00:00 (xfr#18, to-chk=352/377)
+build/chunks/
+build/chunks/[root-of-the-server]__51225daf._.js
+          8,452 100%  183.42kB/s    0:00:00 (xfr#19, to-chk=350/377)
+build/chunks/[root-of-the-server]__51225daf._.js.map
+          9,098 100%  197.44kB/s    0:00:00 (xfr#20, to-chk=349/377)
+build/chunks/[root-of-the-server]__974941ed._.js
+         17,901 100%  388.48kB/s    0:00:00 (xfr#21, to-chk=348/377)
+build/chunks/[root-of-the-server]__974941ed._.js.map
+         23,891 100%  518.47kB/s    0:00:00 (xfr#22, to-chk=347/377)
+build/chunks/[turbopack-node]_transforms_postcss_ts_7180740f._.js
+            599 100%   13.00kB/s    0:00:00 (xfr#23, to-chk=346/377)
+build/chunks/[turbopack-node]_transforms_postcss_ts_7180740f._.js.map
+             53 100%    1.15kB/s    0:00:00 (xfr#24, to-chk=345/377)
+build/chunks/[turbopack]_runtime.js
+         28,881 100%  613.13kB/s    0:00:00 (xfr#25, to-chk=344/377)
+build/chunks/[turbopack]_runtime.js.map
+         49,222 100%    1.02MB/s    0:00:00 (xfr#26, to-chk=343/377)
+build/chunks/node_modules_fe693df6._.js
+        256,154 100%    5.20MB/s    0:00:00 (xfr#27, to-chk=342/377)
+build/chunks/node_modules_fe693df6._.js.map
+        372,684 100%    7.40MB/s    0:00:00 (xfr#28, to-chk=341/377)
+cache/
+cache/.previewinfo
+            262 100%    5.33kB/s    0:00:00 (xfr#29, to-chk=340/377)
+cache/.rscinfo
+            102 100%    2.08kB/s    0:00:00 (xfr#30, to-chk=339/377)
+cache/.tsbuildinfo
+        132,800 100%    2.58MB/s    0:00:00 (xfr#31, to-chk=338/377)
+diagnostics/
+diagnostics/build-diagnostics.json
+             93 100%    1.85kB/s    0:00:00 (xfr#32, to-chk=337/377)
+diagnostics/framework.json
+             37 100%    0.74kB/s    0:00:00 (xfr#33, to-chk=336/377)
+server/
+server/app-paths-manifest.json
+            468 100%    9.33kB/s    0:00:00 (xfr#34, to-chk=335/377)
+server/functions-config-manifest.json
+             61 100%    1.22kB/s    0:00:00 (xfr#35, to-chk=334/377)
+server/instrumentation.js
+            181 100%    3.61kB/s    0:00:00 (xfr#36, to-chk=333/377)
+server/instrumentation.js.map
+             53 100%    1.06kB/s    0:00:00 (xfr#37, to-chk=332/377)
+server/instrumentation.js.nft.json
+            105 100%    2.09kB/s    0:00:00 (xfr#38, to-chk=331/377)
+server/interception-route-rewrite-manifest.js
+             48 100%    0.96kB/s    0:00:00 (xfr#39, to-chk=330/377)
+server/middleware-build-manifest.js
+            596 100%   11.88kB/s    0:00:00 (xfr#40, to-chk=329/377)
+server/middleware-manifest.json
+             83 100%    1.65kB/s    0:00:00 (xfr#41, to-chk=328/377)
+server/next-font-manifest.js
+            135 100%    2.69kB/s    0:00:00 (xfr#42, to-chk=327/377)
+server/next-font-manifest.json
+             94 100%    1.87kB/s    0:00:00 (xfr#43, to-chk=326/377)
+server/pages-manifest.json
+             58 100%    1.16kB/s    0:00:00 (xfr#44, to-chk=325/377)
+server/server-reference-manifest.js
+            138 100%    2.75kB/s    0:00:00 (xfr#45, to-chk=324/377)
+server/server-reference-manifest.json
+             97 100%    1.93kB/s    0:00:00 (xfr#46, to-chk=323/377)
+server/app/
+server/app/_global-error.html
+          5,753 100%  114.66kB/s    0:00:00 (xfr#47, to-chk=317/377)
+server/app/_global-error.meta
+            314 100%    6.26kB/s    0:00:00 (xfr#48, to-chk=316/377)
+server/app/_global-error.rsc
+          3,181 100%   63.40kB/s    0:00:00 (xfr#49, to-chk=315/377)
+server/app/_not-found.html
+          8,209 100%  163.60kB/s    0:00:00 (xfr#50, to-chk=314/377)
+server/app/_not-found.meta
+            335 100%    6.68kB/s    0:00:00 (xfr#51, to-chk=313/377)
+server/app/_not-found.rsc
+          5,123 100%  102.10kB/s    0:00:00 (xfr#52, to-chk=312/377)
+server/app/dashboard.html
+          8,696 100%  173.31kB/s    0:00:00 (xfr#53, to-chk=311/377)
+server/app/dashboard.meta
+            313 100%    6.24kB/s    0:00:00 (xfr#54, to-chk=310/377)
+server/app/dashboard.rsc
+          4,401 100%   87.71kB/s    0:00:00 (xfr#55, to-chk=309/377)
+server/app/favicon.ico.body
+         25,931 100%  516.80kB/s    0:00:00 (xfr#56, to-chk=308/377)
+server/app/favicon.ico.meta
+            211 100%    4.21kB/s    0:00:00 (xfr#57, to-chk=307/377)
+server/app/index.html
+          7,864 100%  156.73kB/s    0:00:00 (xfr#58, to-chk=306/377)
+server/app/index.meta
+            255 100%    5.08kB/s    0:00:00 (xfr#59, to-chk=305/377)
+server/app/index.rsc
+          4,146 100%   80.98kB/s    0:00:00 (xfr#60, to-chk=304/377)
+server/app/page.js
+          1,001 100%   19.55kB/s    0:00:00 (xfr#61, to-chk=303/377)
+server/app/page.js.map
+             53 100%    1.04kB/s    0:00:00 (xfr#62, to-chk=302/377)
+server/app/page.js.nft.json
+          4,623 100%   90.29kB/s    0:00:00 (xfr#63, to-chk=301/377)
+server/app/page_client-reference-manifest.js
+          6,843 100%  133.65kB/s    0:00:00 (xfr#64, to-chk=300/377)
+server/app/_global-error.segments/
+server/app/_global-error.segments/__PAGE__.segment.rsc
+          1,548 100%   30.23kB/s    0:00:00 (xfr#65, to-chk=288/377)
+server/app/_global-error.segments/_full.segment.rsc
+          3,181 100%   62.13kB/s    0:00:00 (xfr#66, to-chk=287/377)
+server/app/_global-error.segments/_head.segment.rsc
+            937 100%   18.30kB/s    0:00:00 (xfr#67, to-chk=286/377)
+server/app/_global-error.segments/_index.segment.rsc
+            432 100%    8.44kB/s    0:00:00 (xfr#68, to-chk=285/377)
+server/app/_global-error.segments/_tree.segment.rsc
+            293 100%    5.72kB/s    0:00:00 (xfr#69, to-chk=284/377)
+server/app/_global-error/
+server/app/_global-error/page.js
+            622 100%   12.15kB/s    0:00:00 (xfr#70, to-chk=283/377)
+server/app/_global-error/page.js.map
+             53 100%    1.04kB/s    0:00:00 (xfr#71, to-chk=282/377)
+server/app/_global-error/page.js.nft.json
+          4,214 100%   82.30kB/s    0:00:00 (xfr#72, to-chk=281/377)
+server/app/_global-error/page_client-reference-manifest.js
+          5,956 100%  116.33kB/s    0:00:00 (xfr#73, to-chk=280/377)
+server/app/_global-error/page/
+server/app/_global-error/page/app-paths-manifest.json
+             56 100%    1.09kB/s    0:00:00 (xfr#74, to-chk=278/377)
+server/app/_global-error/page/build-manifest.json
+            411 100%    8.03kB/s    0:00:00 (xfr#75, to-chk=277/377)
+server/app/_global-error/page/next-font-manifest.json
+             94 100%    1.84kB/s    0:00:00 (xfr#76, to-chk=276/377)
+server/app/_global-error/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#77, to-chk=275/377)
+server/app/_global-error/page/server-reference-manifest.json
+             30 100%    0.59kB/s    0:00:00 (xfr#78, to-chk=274/377)
+server/app/_not-found.segments/
+server/app/_not-found.segments/_full.segment.rsc
+          5,123 100%  100.06kB/s    0:00:00 (xfr#79, to-chk=273/377)
+server/app/_not-found.segments/_head.segment.rsc
+          1,142 100%   22.30kB/s    0:00:00 (xfr#80, to-chk=272/377)
+server/app/_not-found.segments/_index.segment.rsc
+          1,829 100%   35.72kB/s    0:00:00 (xfr#81, to-chk=271/377)
+server/app/_not-found.segments/_not-found.segment.rsc
+            432 100%    8.44kB/s    0:00:00 (xfr#82, to-chk=270/377)
+server/app/_not-found.segments/_tree.segment.rsc
+            483 100%    9.43kB/s    0:00:00 (xfr#83, to-chk=269/377)
+server/app/_not-found.segments/_not-found/
+server/app/_not-found.segments/_not-found/__PAGE__.segment.rsc
+          1,449 100%   28.30kB/s    0:00:00 (xfr#84, to-chk=267/377)
+server/app/_not-found/
+server/app/_not-found/page.js
+            877 100%   17.13kB/s    0:00:00 (xfr#85, to-chk=266/377)
+server/app/_not-found/page.js.map
+             53 100%    1.04kB/s    0:00:00 (xfr#86, to-chk=265/377)
+server/app/_not-found/page.js.nft.json
+          4,454 100%   86.99kB/s    0:00:00 (xfr#87, to-chk=264/377)
+server/app/_not-found/page_client-reference-manifest.js
+          6,074 100%  118.63kB/s    0:00:00 (xfr#88, to-chk=263/377)
+server/app/_not-found/page/
+server/app/_not-found/page/app-paths-manifest.json
+             50 100%    0.98kB/s    0:00:00 (xfr#89, to-chk=261/377)
+server/app/_not-found/page/build-manifest.json
+            411 100%    8.03kB/s    0:00:00 (xfr#90, to-chk=260/377)
+server/app/_not-found/page/next-font-manifest.json
+             94 100%    1.84kB/s    0:00:00 (xfr#91, to-chk=259/377)
+server/app/_not-found/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#92, to-chk=258/377)
+server/app/_not-found/page/server-reference-manifest.json
+             30 100%    0.59kB/s    0:00:00 (xfr#93, to-chk=257/377)
+server/app/api/
+server/app/api/login/
+server/app/api/login/route.js
+            388 100%    7.58kB/s    0:00:00 (xfr#94, to-chk=255/377)
+server/app/api/login/route.js.map
+             53 100%    1.04kB/s    0:00:00 (xfr#95, to-chk=254/377)
+server/app/api/login/route.js.nft.json
+          4,099 100%   80.06kB/s    0:00:00 (xfr#96, to-chk=253/377)
+server/app/api/login/route_client-reference-manifest.js
+            312 100%    6.09kB/s    0:00:00 (xfr#97, to-chk=252/377)
+server/app/api/login/route/
+server/app/api/login/route/app-paths-manifest.json
+             50 100%    0.98kB/s    0:00:00 (xfr#98, to-chk=250/377)
+server/app/api/login/route/build-manifest.json
+            194 100%    3.79kB/s    0:00:00 (xfr#99, to-chk=249/377)
+server/app/api/login/route/server-reference-manifest.json
+             30 100%    0.59kB/s    0:00:00 (xfr#100, to-chk=248/377)
+server/app/auth/
+server/app/auth/confirm-reset.html
+          7,841 100%  150.14kB/s    0:00:00 (xfr#101, to-chk=247/377)
+server/app/auth/confirm-reset.meta
+            389 100%    7.45kB/s    0:00:00 (xfr#102, to-chk=246/377)
+server/app/auth/confirm-reset.rsc
+          4,965 100%   95.07kB/s    0:00:00 (xfr#103, to-chk=245/377)
+server/app/auth/reset-password.html
+          8,526 100%  163.26kB/s    0:00:00 (xfr#104, to-chk=244/377)
+server/app/auth/reset-password.meta
+            394 100%    7.54kB/s    0:00:00 (xfr#105, to-chk=243/377)
+server/app/auth/reset-password.rsc
+          4,967 100%   95.11kB/s    0:00:00 (xfr#106, to-chk=242/377)
+server/app/auth/confirm-reset.segments/
+server/app/auth/confirm-reset.segments/_full.segment.rsc
+          4,965 100%   95.07kB/s    0:00:00 (xfr#107, to-chk=237/377)
+server/app/auth/confirm-reset.segments/_head.segment.rsc
+          1,091 100%   20.89kB/s    0:00:00 (xfr#108, to-chk=236/377)
+server/app/auth/confirm-reset.segments/_index.segment.rsc
+          1,829 100%   35.02kB/s    0:00:00 (xfr#109, to-chk=235/377)
+server/app/auth/confirm-reset.segments/_tree.segment.rsc
+            607 100%   11.62kB/s    0:00:00 (xfr#110, to-chk=234/377)
+server/app/auth/confirm-reset.segments/auth.segment.rsc
+            432 100%    8.27kB/s    0:00:00 (xfr#111, to-chk=233/377)
+server/app/auth/confirm-reset.segments/auth/
+server/app/auth/confirm-reset.segments/auth/confirm-reset.segment.rsc
+            432 100%    8.27kB/s    0:00:00 (xfr#112, to-chk=231/377)
+server/app/auth/confirm-reset.segments/auth/confirm-reset/
+server/app/auth/confirm-reset.segments/auth/confirm-reset/__PAGE__.segment.rsc
+            956 100%   18.31kB/s    0:00:00 (xfr#113, to-chk=229/377)
+server/app/auth/confirm-reset/
+server/app/auth/confirm-reset/page.js
+          1,045 100%   20.01kB/s    0:00:00 (xfr#114, to-chk=228/377)
+server/app/auth/confirm-reset/page.js.map
+             53 100%    1.01kB/s    0:00:00 (xfr#115, to-chk=227/377)
+server/app/auth/confirm-reset/page.js.nft.json
+          5,038 100%   96.47kB/s    0:00:00 (xfr#116, to-chk=226/377)
+server/app/auth/confirm-reset/page_client-reference-manifest.js
+          6,938 100%  132.85kB/s    0:00:00 (xfr#117, to-chk=225/377)
+server/app/auth/confirm-reset/page/
+server/app/auth/confirm-reset/page/app-paths-manifest.json
+             66 100%    1.26kB/s    0:00:00 (xfr#118, to-chk=223/377)
+server/app/auth/confirm-reset/page/build-manifest.json
+            411 100%    7.87kB/s    0:00:00 (xfr#119, to-chk=222/377)
+server/app/auth/confirm-reset/page/next-font-manifest.json
+             94 100%    1.80kB/s    0:00:00 (xfr#120, to-chk=221/377)
+server/app/auth/confirm-reset/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#121, to-chk=220/377)
+server/app/auth/confirm-reset/page/server-reference-manifest.json
+             30 100%    0.57kB/s    0:00:00 (xfr#122, to-chk=219/377)
+server/app/auth/reset-password.segments/
+server/app/auth/reset-password.segments/_full.segment.rsc
+          4,967 100%   95.11kB/s    0:00:00 (xfr#123, to-chk=218/377)
+server/app/auth/reset-password.segments/_head.segment.rsc
+          1,091 100%   20.89kB/s    0:00:00 (xfr#124, to-chk=217/377)
+server/app/auth/reset-password.segments/_index.segment.rsc
+          1,829 100%   35.02kB/s    0:00:00 (xfr#125, to-chk=216/377)
+server/app/auth/reset-password.segments/_tree.segment.rsc
+            609 100%   11.66kB/s    0:00:00 (xfr#126, to-chk=215/377)
+server/app/auth/reset-password.segments/auth.segment.rsc
+            432 100%    8.27kB/s    0:00:00 (xfr#127, to-chk=214/377)
+server/app/auth/reset-password.segments/auth/
+server/app/auth/reset-password.segments/auth/reset-password.segment.rsc
+            432 100%    8.27kB/s    0:00:00 (xfr#128, to-chk=212/377)
+server/app/auth/reset-password.segments/auth/reset-password/
+server/app/auth/reset-password.segments/auth/reset-password/__PAGE__.segment.rsc
+            956 100%   18.31kB/s    0:00:00 (xfr#129, to-chk=210/377)
+server/app/auth/reset-password/
+server/app/auth/reset-password/page.js
+          1,047 100%   20.05kB/s    0:00:00 (xfr#130, to-chk=209/377)
+server/app/auth/reset-password/page.js.map
+             53 100%    1.01kB/s    0:00:00 (xfr#131, to-chk=208/377)
+server/app/auth/reset-password/page.js.nft.json
+          4,985 100%   95.45kB/s    0:00:00 (xfr#132, to-chk=207/377)
+server/app/auth/reset-password/page_client-reference-manifest.js
+          6,891 100%  131.95kB/s    0:00:00 (xfr#133, to-chk=206/377)
+server/app/auth/reset-password/page/
+server/app/auth/reset-password/page/app-paths-manifest.json
+             68 100%    1.28kB/s    0:00:00 (xfr#134, to-chk=204/377)
+server/app/auth/reset-password/page/build-manifest.json
+            411 100%    7.72kB/s    0:00:00 (xfr#135, to-chk=203/377)
+server/app/auth/reset-password/page/next-font-manifest.json
+             94 100%    1.77kB/s    0:00:00 (xfr#136, to-chk=202/377)
+server/app/auth/reset-password/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#137, to-chk=201/377)
+server/app/auth/reset-password/page/server-reference-manifest.json
+             30 100%    0.56kB/s    0:00:00 (xfr#138, to-chk=200/377)
+server/app/dashboard.segments/
+server/app/dashboard.segments/_full.segment.rsc
+          4,401 100%   82.65kB/s    0:00:00 (xfr#139, to-chk=199/377)
+server/app/dashboard.segments/_head.segment.rsc
+          1,091 100%   20.49kB/s    0:00:00 (xfr#140, to-chk=198/377)
+server/app/dashboard.segments/_index.segment.rsc
+          1,829 100%   34.35kB/s    0:00:00 (xfr#141, to-chk=197/377)
+server/app/dashboard.segments/_tree.segment.rsc
+            479 100%    9.00kB/s    0:00:00 (xfr#142, to-chk=196/377)
+server/app/dashboard.segments/dashboard.segment.rsc
+            432 100%    8.11kB/s    0:00:00 (xfr#143, to-chk=195/377)
+server/app/dashboard.segments/dashboard/
+server/app/dashboard.segments/dashboard/__PAGE__.segment.rsc
+            823 100%   15.46kB/s    0:00:00 (xfr#144, to-chk=193/377)
+server/app/dashboard/
+server/app/dashboard/page.js
+          1,024 100%   19.23kB/s    0:00:00 (xfr#145, to-chk=192/377)
+server/app/dashboard/page.js.map
+             53 100%    1.00kB/s    0:00:00 (xfr#146, to-chk=191/377)
+server/app/dashboard/page.js.nft.json
+          4,797 100%   90.09kB/s    0:00:00 (xfr#147, to-chk=190/377)
+server/app/dashboard/page_client-reference-manifest.js
+          6,736 100%  126.50kB/s    0:00:00 (xfr#148, to-chk=189/377)
+server/app/dashboard/profile.html
+          7,714 100%  144.87kB/s    0:00:00 (xfr#149, to-chk=188/377)
+server/app/dashboard/profile.meta
+            394 100%    7.40kB/s    0:00:00 (xfr#150, to-chk=187/377)
+server/app/dashboard/profile.rsc
+          4,963 100%   93.21kB/s    0:00:00 (xfr#151, to-chk=186/377)
+server/app/dashboard/page/
+server/app/dashboard/page/app-paths-manifest.json
+             48 100%    0.90kB/s    0:00:00 (xfr#152, to-chk=182/377)
+server/app/dashboard/page/build-manifest.json
+            411 100%    7.72kB/s    0:00:00 (xfr#153, to-chk=181/377)
+server/app/dashboard/page/next-font-manifest.json
+             94 100%    1.77kB/s    0:00:00 (xfr#154, to-chk=180/377)
+server/app/dashboard/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#155, to-chk=179/377)
+server/app/dashboard/page/server-reference-manifest.json
+             30 100%    0.56kB/s    0:00:00 (xfr#156, to-chk=178/377)
+server/app/dashboard/profile.segments/
+server/app/dashboard/profile.segments/_full.segment.rsc
+          4,963 100%   93.21kB/s    0:00:00 (xfr#157, to-chk=177/377)
+server/app/dashboard/profile.segments/_head.segment.rsc
+          1,091 100%   20.49kB/s    0:00:00 (xfr#158, to-chk=176/377)
+server/app/dashboard/profile.segments/_index.segment.rsc
+          1,829 100%   34.35kB/s    0:00:00 (xfr#159, to-chk=175/377)
+server/app/dashboard/profile.segments/_tree.segment.rsc
+            605 100%   11.36kB/s    0:00:00 (xfr#160, to-chk=174/377)
+server/app/dashboard/profile.segments/dashboard.segment.rsc
+            432 100%    8.11kB/s    0:00:00 (xfr#161, to-chk=173/377)
+server/app/dashboard/profile.segments/dashboard/
+server/app/dashboard/profile.segments/dashboard/profile.segment.rsc
+            432 100%    8.11kB/s    0:00:00 (xfr#162, to-chk=171/377)
+server/app/dashboard/profile.segments/dashboard/profile/
+server/app/dashboard/profile.segments/dashboard/profile/__PAGE__.segment.rsc
+            956 100%   17.95kB/s    0:00:00 (xfr#163, to-chk=169/377)
+server/app/dashboard/profile/
+server/app/dashboard/profile/page.js
+          1,043 100%   19.59kB/s    0:00:00 (xfr#164, to-chk=168/377)
+server/app/dashboard/profile/page.js.map
+             53 100%    1.00kB/s    0:00:00 (xfr#165, to-chk=167/377)
+server/app/dashboard/profile/page.js.nft.json
+          5,037 100%   94.60kB/s    0:00:00 (xfr#166, to-chk=166/377)
+server/app/dashboard/profile/page_client-reference-manifest.js
+          6,932 100%  130.18kB/s    0:00:00 (xfr#167, to-chk=165/377)
+server/app/dashboard/profile/page/
+server/app/dashboard/profile/page/app-paths-manifest.json
+             64 100%    1.20kB/s    0:00:00 (xfr#168, to-chk=163/377)
+server/app/dashboard/profile/page/build-manifest.json
+            411 100%    7.72kB/s    0:00:00 (xfr#169, to-chk=162/377)
+server/app/dashboard/profile/page/next-font-manifest.json
+             94 100%    1.77kB/s    0:00:00 (xfr#170, to-chk=161/377)
+server/app/dashboard/profile/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#171, to-chk=160/377)
+server/app/dashboard/profile/page/server-reference-manifest.json
+             30 100%    0.56kB/s    0:00:00 (xfr#172, to-chk=159/377)
+server/app/favicon.ico/
+server/app/favicon.ico/route.js
+            418 100%    7.85kB/s    0:00:00 (xfr#173, to-chk=158/377)
+server/app/favicon.ico/route.js.map
+             53 100%    1.00kB/s    0:00:00 (xfr#174, to-chk=157/377)
+server/app/favicon.ico/route.js.nft.json
+          3,938 100%   72.56kB/s    0:00:00 (xfr#175, to-chk=156/377)
+server/app/favicon.ico/route/
+server/app/favicon.ico/route/app-paths-manifest.json
+             54 100%    0.99kB/s    0:00:00 (xfr#176, to-chk=154/377)
+server/app/favicon.ico/route/build-manifest.json
+            194 100%    3.57kB/s    0:00:00 (xfr#177, to-chk=153/377)
+server/app/index.segments/
+server/app/index.segments/__PAGE__.segment.rsc
+            956 100%   17.61kB/s    0:00:00 (xfr#178, to-chk=152/377)
+server/app/index.segments/_full.segment.rsc
+          4,146 100%   76.39kB/s    0:00:00 (xfr#179, to-chk=151/377)
+server/app/index.segments/_head.segment.rsc
+          1,091 100%   20.10kB/s    0:00:00 (xfr#180, to-chk=150/377)
+server/app/index.segments/_index.segment.rsc
+          1,829 100%   33.70kB/s    0:00:00 (xfr#181, to-chk=149/377)
+server/app/index.segments/_tree.segment.rsc
+            349 100%    6.43kB/s    0:00:00 (xfr#182, to-chk=148/377)
+server/app/page/
+server/app/page/app-paths-manifest.json
+             28 100%    0.52kB/s    0:00:00 (xfr#183, to-chk=147/377)
+server/app/page/build-manifest.json
+            411 100%    7.57kB/s    0:00:00 (xfr#184, to-chk=146/377)
+server/app/page/next-font-manifest.json
+             94 100%    1.73kB/s    0:00:00 (xfr#185, to-chk=145/377)
+server/app/page/react-loadable-manifest.json
+              2 100%    0.04kB/s    0:00:00 (xfr#186, to-chk=144/377)
+server/app/page/server-reference-manifest.json
+             30 100%    0.55kB/s    0:00:00 (xfr#187, to-chk=143/377)
+server/chunks/
+server/chunks/[root-of-the-server]__5d8c44f1._.js
+        190,335 100%    3.36MB/s    0:00:00 (xfr#188, to-chk=142/377)
+server/chunks/[root-of-the-server]__5d8c44f1._.js.map
+      1,023,886 100%   16.55MB/s    0:00:00 (xfr#189, to-chk=141/377)
+server/chunks/[root-of-the-server]__a6d89067._.js
+          1,055 100%   17.46kB/s    0:00:00 (xfr#190, to-chk=140/377)
+server/chunks/[root-of-the-server]__a6d89067._.js.map
+             51 100%    0.84kB/s    0:00:00 (xfr#191, to-chk=139/377)
+server/chunks/[root-of-the-server]__b2da729a._.js
+        139,752 100%    2.26MB/s    0:00:00 (xfr#192, to-chk=138/377)
+server/chunks/[root-of-the-server]__b2da729a._.js.map
+        617,432 100%    9.50MB/s    0:00:00 (xfr#193, to-chk=137/377)
+server/chunks/[root-of-the-server]__e5a2c9a5._.js
+          1,114 100%   17.55kB/s    0:00:00 (xfr#194, to-chk=136/377)
+server/chunks/[root-of-the-server]__e5a2c9a5._.js.map
+             51 100%    0.80kB/s    0:00:00 (xfr#195, to-chk=135/377)
+server/chunks/[turbopack]_runtime.js
+         28,888 100%  447.79kB/s    0:00:00 (xfr#196, to-chk=134/377)
+server/chunks/[turbopack]_runtime.js.map
+         49,222 100%  762.99kB/s    0:00:00 (xfr#197, to-chk=133/377)
+server/chunks/_next-internal_server_app_api_login_route_actions_a124d239.js
+            122 100%    1.89kB/s    0:00:00 (xfr#198, to-chk=132/377)
+server/chunks/_next-internal_server_app_api_login_route_actions_a124d239.js.map
+             51 100%    0.79kB/s    0:00:00 (xfr#199, to-chk=131/377)
+server/chunks/_next-internal_server_app_favicon_ico_route_actions_353150a5.js
+            125 100%    1.94kB/s    0:00:00 (xfr#200, to-chk=130/377)
+server/chunks/_next-internal_server_app_favicon_ico_route_actions_353150a5.js.map
+             51 100%    0.79kB/s    0:00:00 (xfr#201, to-chk=129/377)
+server/chunks/node_modules_next_dist_esm_build_templates_app-route_f5680d9e.js
+         40,967 100%  635.03kB/s    0:00:00 (xfr#202, to-chk=128/377)
+server/chunks/node_modules_next_dist_esm_build_templates_app-route_f5680d9e.js.map
+         59,297 100%  919.16kB/s    0:00:00 (xfr#203, to-chk=127/377)
+server/chunks/src_instrumentation_ts_18ea1a8f._.js
+            293 100%    4.54kB/s    0:00:00 (xfr#204, to-chk=126/377)
+server/chunks/src_instrumentation_ts_18ea1a8f._.js.map
+            592 100%    9.18kB/s    0:00:00 (xfr#205, to-chk=125/377)
+server/chunks/ssr/
+server/chunks/ssr/[root-of-the-server]__004bff49._.js
+          1,362 100%   21.11kB/s    0:00:00 (xfr#206, to-chk=123/377)
+server/chunks/ssr/[root-of-the-server]__004bff49._.js.map
+            948 100%   14.69kB/s    0:00:00 (xfr#207, to-chk=122/377)
+server/chunks/ssr/[root-of-the-server]__15600e29._.js
+            890 100%   13.80kB/s    0:00:00 (xfr#208, to-chk=121/377)
+server/chunks/ssr/[root-of-the-server]__15600e29._.js.map
+            639 100%    9.91kB/s    0:00:00 (xfr#209, to-chk=120/377)
+server/chunks/ssr/[root-of-the-server]__29857af2._.js
+         10,102 100%  156.59kB/s    0:00:00 (xfr#210, to-chk=119/377)
+server/chunks/ssr/[root-of-the-server]__29857af2._.js.map
+         28,774 100%  439.06kB/s    0:00:00 (xfr#211, to-chk=118/377)
+server/chunks/ssr/[root-of-the-server]__2c0faac5._.js
+          1,640 100%   25.02kB/s    0:00:00 (xfr#212, to-chk=117/377)
+server/chunks/ssr/[root-of-the-server]__2c0faac5._.js.map
+          2,782 100%   42.45kB/s    0:00:00 (xfr#213, to-chk=116/377)
+server/chunks/ssr/[root-of-the-server]__3982f1df._.js
+          2,005 100%   30.59kB/s    0:00:00 (xfr#214, to-chk=115/377)
+server/chunks/ssr/[root-of-the-server]__3982f1df._.js.map
+          5,314 100%   81.09kB/s    0:00:00 (xfr#215, to-chk=114/377)
+server/chunks/ssr/[root-of-the-server]__403e92c1._.js
+        137,317 100%    2.05MB/s    0:00:00 (xfr#216, to-chk=113/377)
+server/chunks/ssr/[root-of-the-server]__403e92c1._.js.map
+        743,132 100%   10.42MB/s    0:00:00 (xfr#217, to-chk=112/377)
+server/chunks/ssr/[root-of-the-server]__48e09bc8._.js
+          3,476 100%   49.92kB/s    0:00:00 (xfr#218, to-chk=111/377)
+server/chunks/ssr/[root-of-the-server]__48e09bc8._.js.map
+          7,837 100%  112.55kB/s    0:00:00 (xfr#219, to-chk=110/377)
+server/chunks/ssr/[root-of-the-server]__4942669b._.js
+          1,326 100%   19.04kB/s    0:00:00 (xfr#220, to-chk=109/377)
+server/chunks/ssr/[root-of-the-server]__4942669b._.js.map
+            921 100%   13.23kB/s    0:00:00 (xfr#221, to-chk=108/377)
+server/chunks/ssr/[root-of-the-server]__62b38b36._.js
+          1,366 100%   19.62kB/s    0:00:00 (xfr#222, to-chk=107/377)
+server/chunks/ssr/[root-of-the-server]__62b38b36._.js.map
+            951 100%   13.66kB/s    0:00:00 (xfr#223, to-chk=106/377)
+server/chunks/ssr/[root-of-the-server]__6a51fd3d._.js
+          6,614 100%   94.99kB/s    0:00:00 (xfr#224, to-chk=105/377)
+server/chunks/ssr/[root-of-the-server]__6a51fd3d._.js.map
+         14,817 100%  212.79kB/s    0:00:00 (xfr#225, to-chk=104/377)
+server/chunks/ssr/[root-of-the-server]__90e06ddd._.js
+          5,340 100%   76.69kB/s    0:00:00 (xfr#226, to-chk=103/377)
+server/chunks/ssr/[root-of-the-server]__90e06ddd._.js.map
+         14,044 100%  201.69kB/s    0:00:00 (xfr#227, to-chk=102/377)
+server/chunks/ssr/[root-of-the-server]__9a587e69._.js
+          1,356 100%   19.47kB/s    0:00:00 (xfr#228, to-chk=101/377)
+server/chunks/ssr/[root-of-the-server]__9a587e69._.js.map
+            945 100%   13.57kB/s    0:00:00 (xfr#229, to-chk=100/377)
+server/chunks/ssr/[root-of-the-server]__a457c799._.js
+          2,319 100%   33.30kB/s    0:00:00 (xfr#230, to-chk=99/377)
+server/chunks/ssr/[root-of-the-server]__a457c799._.js.map
+          6,086 100%   87.40kB/s    0:00:00 (xfr#231, to-chk=98/377)
+server/chunks/ssr/[root-of-the-server]__b9356576._.js
+          1,893 100%   27.19kB/s    0:00:00 (xfr#232, to-chk=97/377)
+server/chunks/ssr/[root-of-the-server]__b9356576._.js.map
+          4,053 100%   58.21kB/s    0:00:00 (xfr#233, to-chk=96/377)
+server/chunks/ssr/[root-of-the-server]__bdeac1dc._.js
+          1,720 100%   24.34kB/s    0:00:00 (xfr#234, to-chk=95/377)
+server/chunks/ssr/[root-of-the-server]__bdeac1dc._.js.map
+          3,838 100%   54.32kB/s    0:00:00 (xfr#235, to-chk=94/377)
+server/chunks/ssr/[root-of-the-server]__e3a192c8._.js
+          6,669 100%   94.39kB/s    0:00:00 (xfr#236, to-chk=93/377)
+server/chunks/ssr/[root-of-the-server]__e3a192c8._.js.map
+         18,548 100%  262.51kB/s    0:00:00 (xfr#237, to-chk=92/377)
+server/chunks/ssr/[root-of-the-server]__f1617e8f._.js
+          9,861 100%  139.56kB/s    0:00:00 (xfr#238, to-chk=91/377)
+server/chunks/ssr/[root-of-the-server]__f1617e8f._.js.map
+         24,422 100%  345.65kB/s    0:00:00 (xfr#239, to-chk=90/377)
+server/chunks/ssr/[root-of-the-server]__f437da88._.js
+          1,286 100%   18.20kB/s    0:00:00 (xfr#240, to-chk=89/377)
+server/chunks/ssr/[root-of-the-server]__f437da88._.js.map
+            891 100%   12.61kB/s    0:00:00 (xfr#241, to-chk=88/377)
+server/chunks/ssr/[turbopack]_runtime.js
+         28,898 100%  409.00kB/s    0:00:00 (xfr#242, to-chk=87/377)
+server/chunks/ssr/[turbopack]_runtime.js.map
+         49,222 100%  696.64kB/s    0:00:00 (xfr#243, to-chk=86/377)
+server/chunks/ssr/_25e6aab8._.js
+         17,287 100%  244.66kB/s    0:00:00 (xfr#244, to-chk=85/377)
+server/chunks/ssr/_25e6aab8._.js.map
+         76,819 100%    1.05MB/s    0:00:00 (xfr#245, to-chk=84/377)
+server/chunks/ssr/_6cf58836._.js
+         17,439 100%  243.29kB/s    0:00:00 (xfr#246, to-chk=83/377)
+server/chunks/ssr/_6cf58836._.js.map
+         77,159 100%    1.05MB/s    0:00:00 (xfr#247, to-chk=82/377)
+server/chunks/ssr/_a102a834._.js
+         17,434 100%  243.22kB/s    0:00:00 (xfr#248, to-chk=81/377)
+server/chunks/ssr/_a102a834._.js.map
+         77,151 100%    1.05MB/s    0:00:00 (xfr#249, to-chk=80/377)
+server/chunks/ssr/_a3b9117b._.js
+         87,753 100%    1.18MB/s    0:00:00 (xfr#250, to-chk=79/377)
+server/chunks/ssr/_a3b9117b._.js.map
+        319,283 100%    4.23MB/s    0:00:00 (xfr#251, to-chk=78/377)
+server/chunks/ssr/_a7b53bca._.js
+         17,365 100%  235.53kB/s    0:00:00 (xfr#252, to-chk=77/377)
+server/chunks/ssr/_a7b53bca._.js.map
+         77,002 100%    1.02MB/s    0:00:00 (xfr#253, to-chk=76/377)
+server/chunks/ssr/_af44818b._.js
+         17,444 100%  236.60kB/s    0:00:00 (xfr#254, to-chk=75/377)
+server/chunks/ssr/_af44818b._.js.map
+         77,165 100%    1.02MB/s    0:00:00 (xfr#255, to-chk=74/377)
+server/chunks/ssr/_b68271af._.js
+        179,888 100%    2.35MB/s    0:00:00 (xfr#256, to-chk=73/377)
+server/chunks/ssr/_b68271af._.js.map
+        985,910 100%   11.90MB/s    0:00:00 (xfr#257, to-chk=72/377)
+server/chunks/ssr/_next-internal_server_app__global-error_page_actions_75761787.js
+            126 100%    1.56kB/s    0:00:00 (xfr#258, to-chk=71/377)
+server/chunks/ssr/_next-internal_server_app__global-error_page_actions_75761787.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#259, to-chk=70/377)
+server/chunks/ssr/_next-internal_server_app__not-found_page_actions_554ec2bf.js
+            123 100%    1.52kB/s    0:00:00 (xfr#260, to-chk=69/377)
+server/chunks/ssr/_next-internal_server_app__not-found_page_actions_554ec2bf.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#261, to-chk=68/377)
+server/chunks/ssr/_next-internal_server_app_auth_confirm-reset_page_actions_d76fc921.js
+            131 100%    1.62kB/s    0:00:00 (xfr#262, to-chk=67/377)
+server/chunks/ssr/_next-internal_server_app_auth_confirm-reset_page_actions_d76fc921.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#263, to-chk=66/377)
+server/chunks/ssr/_next-internal_server_app_auth_reset-password_page_actions_77dd7c88.js
+            132 100%    1.63kB/s    0:00:00 (xfr#264, to-chk=65/377)
+server/chunks/ssr/_next-internal_server_app_auth_reset-password_page_actions_77dd7c88.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#265, to-chk=64/377)
+server/chunks/ssr/_next-internal_server_app_dashboard_page_actions_7f01ccec.js
+            122 100%    1.51kB/s    0:00:00 (xfr#266, to-chk=63/377)
+server/chunks/ssr/_next-internal_server_app_dashboard_page_actions_7f01ccec.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#267, to-chk=62/377)
+server/chunks/ssr/_next-internal_server_app_dashboard_profile_page_actions_d798a242.js
+            130 100%    1.61kB/s    0:00:00 (xfr#268, to-chk=61/377)
+server/chunks/ssr/_next-internal_server_app_dashboard_profile_page_actions_d798a242.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#269, to-chk=60/377)
+server/chunks/ssr/_next-internal_server_app_page_actions_39d4fc33.js
+            112 100%    1.38kB/s    0:00:00 (xfr#270, to-chk=59/377)
+server/chunks/ssr/_next-internal_server_app_page_actions_39d4fc33.js.map
+             51 100%    0.63kB/s    0:00:00 (xfr#271, to-chk=58/377)
+server/chunks/ssr/node_modules_bfae6d98._.js
+         79,208 100%  966.89kB/s    0:00:00 (xfr#272, to-chk=57/377)
+server/chunks/ssr/node_modules_bfae6d98._.js.map
+        560,156 100%    6.36MB/s    0:00:00 (xfr#273, to-chk=56/377)
+server/chunks/ssr/node_modules_e1b0702e._.js
+         79,208 100%  920.85kB/s    0:00:00 (xfr#274, to-chk=55/377)
+server/chunks/ssr/node_modules_e1b0702e._.js.map
+        560,294 100%    6.29MB/s    0:00:00 (xfr#275, to-chk=54/377)
+server/chunks/ssr/node_modules_next_cf02c53c._.js
+         30,416 100%  349.45kB/s    0:00:00 (xfr#276, to-chk=53/377)
+server/chunks/ssr/node_modules_next_cf02c53c._.js.map
+        100,990 100%    1.12MB/s    0:00:00 (xfr#277, to-chk=52/377)
+server/chunks/ssr/node_modules_next_dist_12287b3d._.js
+         16,920 100%  192.13kB/s    0:00:00 (xfr#278, to-chk=51/377)
+server/chunks/ssr/node_modules_next_dist_12287b3d._.js.map
+         75,704 100%  849.77kB/s    0:00:00 (xfr#279, to-chk=50/377)
+server/chunks/ssr/node_modules_next_dist_982e7503._.js
+         66,390 100%  745.22kB/s    0:00:00 (xfr#280, to-chk=49/377)
+server/chunks/ssr/node_modules_next_dist_982e7503._.js.map
+        319,841 100%    3.43MB/s    0:00:00 (xfr#281, to-chk=48/377)
+server/chunks/ssr/node_modules_next_dist_c0f08538._.js
+         46,131 100%  506.18kB/s    0:00:00 (xfr#282, to-chk=47/377)
+server/chunks/ssr/node_modules_next_dist_c0f08538._.js.map
+        309,998 100%    3.25MB/s    0:00:00 (xfr#283, to-chk=46/377)
+server/chunks/ssr/node_modules_next_dist_client_components_9774470f._.js
+          2,494 100%   26.76kB/s    0:00:00 (xfr#284, to-chk=45/377)
+server/chunks/ssr/node_modules_next_dist_client_components_9774470f._.js.map
+          4,304 100%   46.19kB/s    0:00:00 (xfr#285, to-chk=44/377)
+server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_45780354.js
+            625 100%    6.71kB/s    0:00:00 (xfr#286, to-chk=43/377)
+server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_45780354.js.map
+            620 100%    6.65kB/s    0:00:00 (xfr#287, to-chk=42/377)
+server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_ece394eb.js
+            482 100%    5.17kB/s    0:00:00 (xfr#288, to-chk=41/377)
+server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_ece394eb.js.map
+          2,613 100%   28.04kB/s    0:00:00 (xfr#289, to-chk=40/377)
+server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js
+            638 100%    6.85kB/s    0:00:00 (xfr#290, to-chk=39/377)
+server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js.map
+            639 100%    6.86kB/s    0:00:00 (xfr#291, to-chk=38/377)
+server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_68c68167.js
+         17,318 100%  185.85kB/s    0:00:00 (xfr#292, to-chk=37/377)
+server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_68c68167.js.map
+         76,778 100%  823.94kB/s    0:00:00 (xfr#293, to-chk=36/377)
+server/chunks/ssr/src_app_5b2047f8._.js
+            221 100%    2.35kB/s    0:00:00 (xfr#294, to-chk=35/377)
+server/chunks/ssr/src_app_5b2047f8._.js.map
+            297 100%    3.15kB/s    0:00:00 (xfr#295, to-chk=34/377)
+server/chunks/ssr/src_app_layout_tsx_cc8184fa._.js
+            410 100%    4.35kB/s    0:00:00 (xfr#296, to-chk=33/377)
+server/chunks/ssr/src_app_layout_tsx_cc8184fa._.js.map
+            710 100%    7.54kB/s    0:00:00 (xfr#297, to-chk=32/377)
+server/edge/
+server/edge/chunks/
+server/edge/chunks/_6998a599._.js
+            627 100%    6.66kB/s    0:00:00 (xfr#298, to-chk=30/377)
+server/edge/chunks/_6998a599._.js.map
+          1,600 100%   16.98kB/s    0:00:00 (xfr#299, to-chk=29/377)
+server/edge/chunks/edge-wrapper_4ce347a3.js.map
+         58,780 100%  623.94kB/s    0:00:00 (xfr#300, to-chk=28/377)
+server/edge/chunks/turbopack-edge-wrapper_4ce347a3.js
+          9,400 100%   99.78kB/s    0:00:00 (xfr#301, to-chk=27/377)
+server/instrumentation/
+server/instrumentation/middleware-manifest.json
+            253 100%    2.69kB/s    0:00:00 (xfr#302, to-chk=26/377)
+server/pages/
+server/pages/404.html
+          8,209 100%   87.14kB/s    0:00:00 (xfr#303, to-chk=25/377)
+server/pages/500.html
+          5,753 100%   61.07kB/s    0:00:00 (xfr#304, to-chk=24/377)
+static/
+static/_3yfnQijRcaVCR71BupYn/
+static/_3yfnQijRcaVCR71BupYn/_buildManifest.js
+            219 100%    2.32kB/s    0:00:00 (xfr#305, to-chk=20/377)
+static/_3yfnQijRcaVCR71BupYn/_clientMiddlewareManifest.json
+              2 100%    0.02kB/s    0:00:00 (xfr#306, to-chk=19/377)
+static/_3yfnQijRcaVCR71BupYn/_ssgManifest.js
+             80 100%    0.84kB/s    0:00:00 (xfr#307, to-chk=18/377)
+static/chunks/
+static/chunks/04c74078db461ab6.js
+         18,052 100%  189.56kB/s    0:00:00 (xfr#308, to-chk=17/377)
+static/chunks/0ce1b91260867447.js
+         85,397 100%  896.73kB/s    0:00:00 (xfr#309, to-chk=16/377)
+static/chunks/18e13fd735316c71.js
+        210,587 100%    2.11MB/s    0:00:00 (xfr#310, to-chk=15/377)
+static/chunks/247eb132b7f7b574.js
+         27,854 100%  286.33kB/s    0:00:00 (xfr#311, to-chk=14/377)
+static/chunks/873e61ac923dbb42.js
+         13,652 100%  140.34kB/s    0:00:00 (xfr#312, to-chk=13/377)
+static/chunks/95799f7326bfd176.js
+         17,753 100%  182.49kB/s    0:00:00 (xfr#313, to-chk=12/377)
+static/chunks/9bb7428072f0ae62.js
+         14,417 100%  148.20kB/s    0:00:00 (xfr#314, to-chk=11/377)
+static/chunks/a6dad97d9634a72d.js
+        112,594 100%    1.11MB/s    0:00:00 (xfr#315, to-chk=10/377)
+static/chunks/aeca31833b607f97.js
+        215,034 100%    2.07MB/s    0:00:00 (xfr#316, to-chk=9/377)
+static/chunks/c803332e4fa40c29.js
+         15,142 100%  149.36kB/s    0:00:00 (xfr#317, to-chk=8/377)
+static/chunks/cbd55ab9639e1e66.js
+          5,558 100%   54.83kB/s    0:00:00 (xfr#318, to-chk=7/377)
+static/chunks/dfef6f94e1dd53da.css
+         11,671 100%  115.13kB/s    0:00:00 (xfr#319, to-chk=6/377)
+static/chunks/e8e2b7ae95740a88.js
+         98,292 100%  959.88kB/s    0:00:00 (xfr#320, to-chk=5/377)
+static/chunks/ff1a16fafef87110.js
+            282 100%    2.75kB/s    0:00:00 (xfr#321, to-chk=4/377)
+static/chunks/turbopack-183f5d8705210e85.js
+          9,909 100%   96.77kB/s    0:00:00 (xfr#322, to-chk=3/377)
+static/media/
+static/media/favicon.0b3bf435.ico
+         25,931 100%  253.23kB/s    0:00:00 (xfr#323, to-chk=2/377)
+types/
+types/routes.d.ts
+          2,112 100%   20.62kB/s    0:00:00 (xfr#324, to-chk=1/377)
+types/validator.ts
+          4,680 100%   45.70kB/s    0:00:00 (xfr#325, to-chk=0/377)
+
+sent 2,114,352 bytes  received 6,434 bytes  848,314.40 bytes/sec
+total size is 9,938,386  speedup is 4.69
+
+✅ rsync completed
+
+📦 Step 6.1: IMMEDIATE CHECK - Does .next still exist after rsync?
+✅ .next directory still exists
+
+📦 Step 6.2: DIAGNOSTIC - Checking file contents...
+
+Listing /opt/rustdesk-frontend/.next/ (should show files now):
+total 144
+drwxr-xr-x  8         501 staff        4096 Dec  9 17:25 .
+drwxr-xr-x 16 rustdeskweb rustdeskweb  4096 Dec 10 21:37 ..
+-rw-r--r--  1         501 staff          21 Dec 10 20:00 BUILD_ID
+-rw-r--r--  1         501 staff         368 Dec 10 20:00 app-path-routes-manifest.json
+drwxr-xr-x  3         501 staff        4096 Dec 10 20:00 build
+-rw-r--r--  1         501 staff         494 Dec 10 20:00 build-manifest.json
+drwxr-xr-x  2         501 staff        4096 Dec  8 21:21 cache
+drwxr-xr-x  2         501 staff        4096 Dec 10 20:00 diagnostics
+-rw-r--r--  1         501 staff         111 Dec 10 20:00 export-marker.json
+-rw-r--r--  1         501 staff         234 Dec 10 20:00 fallback-build-manifest.json
+-rw-r--r--  1         501 staff        1123 Dec 10 20:00 images-manifest.json
+-rw-rw-r--  1         501 staff        5471 Dec 10 20:00 next-minimal-server.js.nft.json
+-rw-rw-r--  1         501 staff       40371 Dec 10 20:00 next-server.js.nft.json
+-rw-r--r--  1         501 staff          20 Dec 10 20:00 package.json
+-rw-r--r--  1         501 staff        5851 Dec 10 20:00 prerender-manifest.json
+-rw-r--r--  1         501 staff        8909 Dec 10 20:00 required-server-files.json
+-rw-r--r--  1         501 staff        2517 Dec 10 20:00 routes-manifest.json
+drwxr-xr-x  7         501 staff        4096 Dec 10 20:00 server
+drwxr-xr-x  5         501 staff        4096 Dec 10 20:00 static
+
+Counting files in /opt/rustdesk-frontend/.next/:
+   File count: 325
+
+📦 Step 6.3: Fixing ownership after rsync...
+✅ Ownership fixed
+
+📦 Step 7: Verifying files arrived on droplet...
+   Remote file count: 325
+   Local file count:       325
+
+📦 Step 8: Checking BUILD_ID transfer...
+   Local BUILD_ID:  _3yfnQijRcaVCR71BupYn
+   Remote BUILD_ID: _3yfnQijRcaVCR71BupYn
+✅ BUILD_ID match confirmed
+
+📦 Step 9: Checking critical subdirectories...
+✅ All critical subdirectories present
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ SUCCESS: .next directory successfully synced!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Summary:
+  Local files:       325
+  Remote files: 325
+  BUILD_ID:     _3yfnQijRcaVCR71BupYn
+
+bash-3.2$ 

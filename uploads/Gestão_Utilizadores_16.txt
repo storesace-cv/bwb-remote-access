@@ -1,0 +1,3088 @@
+HTTP 502: {"error":"database_error","message":"Failed to fetch mesh users"}
+---------
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=0, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: document' \
+  -H 'sec-fetch-mode: navigate' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-fetch-user: ?1' \
+  -H 'sec-gpc: 1' \
+  -H 'upgrade-insecure-requests: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_globals_91e4631d.css' \
+  -H 'accept: text/css,*/*;q=0.1' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=0' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: style' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_bae88007._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_client_aaee43fe._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_7a8122d0._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_%40swc_helpers_cjs_d80fb378._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/_a0ff3932._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/turbopack-_45210fd5._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_094231d7._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_favicon_ico_mjs_a4dcd48c._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_layout_tsx_78cdd4a3._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_9fc379b3._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_4fa8f821._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_page_tsx_56f87536._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_next_dist_client_components_builtin_global-error_78cdd4a3.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'chrome-extension://ncibgoaomkmdpilpocfeponihegamlic/token-signing-page-script.js' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'Referer;' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_c8c997ce._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_f26f265a._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'wss://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/webpack-hmr?id=ztP_8ts1mxQe-iPcNnkQ6' \
+  -H 'Upgrade: websocket' \
+  -H 'Origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Accept-Language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'Pragma: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'Connection: Upgrade' \
+  -H 'Sec-WebSocket-Key: rq7Qo/3mbRAYFNTHNkgE4g==' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'Sec-WebSocket-Version: 13' \
+  -H 'Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/favicon.ico?favicon.0b3bf435.ico' \
+  -H 'accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: image' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/api/login' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'content-type: application/json' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw '{"email":"datalink@datalink.pt","password":"zs7680"}' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard?_rsc=vusbg' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'next-router-state-tree: %5B%22%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D' \
+  -H 'next-url: /' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'x-nextjs-html-request-id: ztP_8ts1mxQe-iPcNnkQ6' \
+  -H 'x-nextjs-request-id: cd366116' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_d83689c3._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_7f85594b._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_dashboard_page_tsx_56f87536._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/__nextjs_font/geist-latin.woff2' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'cache-control: no-cache' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'pragma: no-cache' \
+  -H 'priority: u=0' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: font' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_d83689c3._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_7f85594b._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_dashboard_page_tsx_56f87536._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/rest/v1/mesh_users?select=user_type&auth_user_id=eq.69280e26-e868-478d-8562-7de0c160535e' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2OTI4MGUyNi1lODY4LTQ3OGQtODU2Mi03ZGUwYzE2MDUzNWUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MzY1ODY5LCJpYXQiOjE3NjYzNjIyNjksImVtYWlsIjoiZGF0YWxpbmtAZGF0YWxpbmsucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImRpc3BsYXlfbmFtZSI6InpvbmV0ZWNoIGFkbWluIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY2MzYyMjY5fV0sInNlc3Npb25faWQiOiI2YjU5ZmIwMy1lMTUxLTQwNTctYTk2NC1lMTQyNTJhNDhjYzciLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.-aYq-d5H4FQ5TkmvtHvYkJ_9oaIN3c5qTvPxoRyu14I' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/get-devices' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2OTI4MGUyNi1lODY4LTQ3OGQtODU2Mi03ZGUwYzE2MDUzNWUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MzY1ODY5LCJpYXQiOjE3NjYzNjIyNjksImVtYWlsIjoiZGF0YWxpbmtAZGF0YWxpbmsucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImRpc3BsYXlfbmFtZSI6InpvbmV0ZWNoIGFkbWluIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY2MzYyMjY5fV0sInNlc3Npb25faWQiOiI2YjU5ZmIwMy1lMTUxLTQwNTctYTk2NC1lMTQyNTJhNDhjYzciLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.-aYq-d5H4FQ5TkmvtHvYkJ_9oaIN3c5qTvPxoRyu14I' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard/collaborators?_rsc=1h1b5' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'next-router-state-tree: %5B%22%22%2C%7B%22children%22%3A%5B%22dashboard%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D' \
+  -H 'next-url: /dashboard' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'rsc: 1' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  -H 'x-nextjs-html-request-id: ztP_8ts1mxQe-iPcNnkQ6' \
+  -H 'x-nextjs-request-id: 487198c8' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_dashboard_collaborators_page_tsx_1136b7f2._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_866a593f._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_dashboard_collaborators_page_tsx_56f87536._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_dashboard_collaborators_page_tsx_1136b7f2._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard/collaborators' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/node_modules_866a593f._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard/collaborators' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/_next/static/chunks/src_app_dashboard_collaborators_page_tsx_56f87536._.js' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard/collaborators' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: script' \
+  -H 'sec-fetch-mode: no-cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/rest/v1/mesh_users?select=user_type,domain&auth_user_id=eq.69280e26-e868-478d-8562-7de0c160535e' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2OTI4MGUyNi1lODY4LTQ3OGQtODU2Mi03ZGUwYzE2MDUzNWUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MzY1ODY5LCJpYXQiOjE3NjYzNjIyNjksImVtYWlsIjoiZGF0YWxpbmtAZGF0YWxpbmsucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImRpc3BsYXlfbmFtZSI6InpvbmV0ZWNoIGFkbWluIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY2MzYyMjY5fV0sInNlc3Npb25faWQiOiI2YjU5ZmIwMy1lMTUxLTQwNTctYTk2NC1lMTQyNTJhNDhjYzciLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.-aYq-d5H4FQ5TkmvtHvYkJ_9oaIN3c5qTvPxoRyu14I' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+  -H 'authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2OTI4MGUyNi1lODY4LTQ3OGQtODU2Mi03ZGUwYzE2MDUzNWUiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MzY1ODY5LCJpYXQiOjE3NjYzNjIyNjksImVtYWlsIjoiZGF0YWxpbmtAZGF0YWxpbmsucHQiLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImRpc3BsYXlfbmFtZSI6InpvbmV0ZWNoIGFkbWluIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzY2MzYyMjY5fV0sInNlc3Npb25faWQiOiI2YjU5ZmIwMy1lMTUxLTQwNTctYTk2NC1lMTQyNTJhNDhjYzciLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.-aYq-d5H4FQ5TkmvtHvYkJ_9oaIN3c5qTvPxoRyu14I' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users' \
+  -X 'OPTIONS' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'access-control-request-headers: apikey,authorization' \
+  -H 'access-control-request-method: GET' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/__nextjs_original-stack-frames' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'content-type: text/plain;charset=UTF-8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard/collaborators' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw '{"frames":[{"file":"file:///app/.next/dev/static/chunks/node_modules_next_dist_7a8122d0._.js","line1":2189,"column1":71,"methodName":"createConsoleError","arguments":[]},{"file":"file:///app/.next/dev/static/chunks/node_modules_next_dist_7a8122d0._.js","line1":2970,"column1":54,"methodName":"handleConsoleError","arguments":[]},{"file":"file:///app/.next/dev/static/chunks/node_modules_next_dist_7a8122d0._.js","line1":3114,"column1":57,"methodName":"console.error","arguments":[]},{"file":"file:///app/.next/dev/static/chunks/src_app_dashboard_collaborators_page_tsx_1136b7f2._.js","line1":149,"column1":29,"methodName":"CollaboratorsPage.useCallback[fetchMeshUsers]","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}' ;
+curl 'https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/__nextjs_original-stack-frames' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
+  -H 'content-type: text/plain;charset=UTF-8' \
+  -b '__next_hmr_refresh_hash__=96' \
+  -H 'origin: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/dashboard/collaborators' \
+  -H 'sec-ch-ua: "Brave";v="143", "Chromium";v="143", "Not A(Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sec-gpc: 1' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \
+  --data-raw '{"frames":[{"file":"file:///app/.next/dev/static/chunks/src_app_dashboard_collaborators_page_tsx_1136b7f2._.js","line1":150,"column1":27,"methodName":"CollaboratorsPage.useCallback[fetchMeshUsers]","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}'
+
+----------
+
+forward-logs-shared.ts:95 [HMR] connected
+Navigated to https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/
+forward-logs-shared.ts:95 [HMR] connected
+page.tsx:73 Fetch finished loading: POST "https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/api/login".
+handleSubmit @ page.tsx:73
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<form>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+LoginPage @ page.tsx:144
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LoginPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+(anonymous) @ react-server-dom-turbopack-client.browser.development.js:4560
+initializeModelChunk @ react-server-dom-turbopack-client.browser.development.js:1812
+resolveModelChunk @ react-server-dom-turbopack-client.browser.development.js:1657
+processFullStringRow @ react-server-dom-turbopack-client.browser.development.js:4390
+processFullBinaryRow @ react-server-dom-turbopack-client.browser.development.js:4250
+processBinaryChunk @ react-server-dom-turbopack-client.browser.development.js:4463
+progress @ react-server-dom-turbopack-client.browser.development.js:4735
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:5000
+module evaluation @ app-index.tsx:211
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:389
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:79
+loadScriptsInSequence @ app-bootstrap.ts:23
+appBootstrap @ app-bootstrap.ts:61
+module evaluation @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1149
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+page.tsx:153  GET https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users 502 (Bad Gateway)
+CollaboratorsPage.useCallback[fetchMeshUsers] @ page.tsx:153
+CollaboratorsPage.useEffect @ page.tsx:215
+react_stack_bottom_frame @ react-dom-client.development.js:28101
+runWithFiberInDEV @ react-dom-client.development.js:984
+commitHookEffectListMount @ react-dom-client.development.js:13690
+commitHookPassiveMountEffects @ react-dom-client.development.js:13777
+commitPassiveMountOnFiber @ react-dom-client.development.js:16731
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16766
+flushPassiveEffects @ react-dom-client.development.js:19857
+(anonymous) @ react-dom-client.development.js:19282
+performWorkUntilDeadline @ scheduler.development.js:45
+<CollaboratorsPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ link.tsx:293
+startTransition @ react.development.js:554
+linkClicked @ link.tsx:292
+onClick @ link.tsx:642
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<a>
+exports.jsx @ react-jsx-runtime.development.js:342
+LinkComponent @ link.tsx:725
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LinkComponent>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+DashboardPage @ page.tsx:918
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<DashboardPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ app-router-instance.ts:379
+startTransition @ react.development.js:554
+push @ app-router-instance.ts:378
+handleSubmit @ page.tsx:120
+await in handleSubmit
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<form>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+LoginPage @ page.tsx:144
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LoginPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+(anonymous) @ react-server-dom-turbopack-client.browser.development.js:4560
+initializeModelChunk @ react-server-dom-turbopack-client.browser.development.js:1812
+resolveModelChunk @ react-server-dom-turbopack-client.browser.development.js:1657
+processFullStringRow @ react-server-dom-turbopack-client.browser.development.js:4390
+processFullBinaryRow @ react-server-dom-turbopack-client.browser.development.js:4250
+processBinaryChunk @ react-server-dom-turbopack-client.browser.development.js:4463
+progress @ react-server-dom-turbopack-client.browser.development.js:4735
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:5000
+module evaluation @ app-index.tsx:211
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:389
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:79
+loadScriptsInSequence @ app-bootstrap.ts:23
+appBootstrap @ app-bootstrap.ts:61
+module evaluation @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1149
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126
+page.tsx:163 🔥 [CRITICAL] Edge Function Response Status: 502
+page.tsx:164 🔥 [CRITICAL] Response OK: false
+installHook.js:1 🔥 [CRITICAL] Error Response Body: {"error":"database_error","message":"Failed to fetch mesh users"}
+overrideMethod @ installHook.js:1
+error @ intercept-console-error.ts:42
+CollaboratorsPage.useCallback[fetchMeshUsers] @ page.tsx:168
+await in CollaboratorsPage.useCallback[fetchMeshUsers]
+CollaboratorsPage.useEffect @ page.tsx:215
+react_stack_bottom_frame @ react-dom-client.development.js:28101
+runWithFiberInDEV @ react-dom-client.development.js:984
+commitHookEffectListMount @ react-dom-client.development.js:13690
+commitHookPassiveMountEffects @ react-dom-client.development.js:13777
+commitPassiveMountOnFiber @ react-dom-client.development.js:16731
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16766
+flushPassiveEffects @ react-dom-client.development.js:19857
+(anonymous) @ react-dom-client.development.js:19282
+performWorkUntilDeadline @ scheduler.development.js:45
+<CollaboratorsPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ link.tsx:293
+startTransition @ react.development.js:554
+linkClicked @ link.tsx:292
+onClick @ link.tsx:642
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<a>
+exports.jsx @ react-jsx-runtime.development.js:342
+LinkComponent @ link.tsx:725
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LinkComponent>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+DashboardPage @ page.tsx:918
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<DashboardPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ app-router-instance.ts:379
+startTransition @ react.development.js:554
+push @ app-router-instance.ts:378
+handleSubmit @ page.tsx:120
+await in handleSubmit
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<form>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+LoginPage @ page.tsx:144
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LoginPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+(anonymous) @ react-server-dom-turbopack-client.browser.development.js:4560
+initializeModelChunk @ react-server-dom-turbopack-client.browser.development.js:1812
+resolveModelChunk @ react-server-dom-turbopack-client.browser.development.js:1657
+processFullStringRow @ react-server-dom-turbopack-client.browser.development.js:4390
+processFullBinaryRow @ react-server-dom-turbopack-client.browser.development.js:4250
+processBinaryChunk @ react-server-dom-turbopack-client.browser.development.js:4463
+progress @ react-server-dom-turbopack-client.browser.development.js:4735
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:5000
+module evaluation @ app-index.tsx:211
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:389
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:79
+loadScriptsInSequence @ app-bootstrap.ts:23
+appBootstrap @ app-bootstrap.ts:61
+module evaluation @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1149
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126
+page.tsx:153 Fetch failed loading: GET "https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-users".
+CollaboratorsPage.useCallback[fetchMeshUsers] @ page.tsx:153
+CollaboratorsPage.useEffect @ page.tsx:215
+react_stack_bottom_frame @ react-dom-client.development.js:28101
+runWithFiberInDEV @ react-dom-client.development.js:984
+commitHookEffectListMount @ react-dom-client.development.js:13690
+commitHookPassiveMountEffects @ react-dom-client.development.js:13777
+commitPassiveMountOnFiber @ react-dom-client.development.js:16731
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16766
+flushPassiveEffects @ react-dom-client.development.js:19857
+(anonymous) @ react-dom-client.development.js:19282
+performWorkUntilDeadline @ scheduler.development.js:45
+<CollaboratorsPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ link.tsx:293
+startTransition @ react.development.js:554
+linkClicked @ link.tsx:292
+onClick @ link.tsx:642
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<a>
+exports.jsx @ react-jsx-runtime.development.js:342
+LinkComponent @ link.tsx:725
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LinkComponent>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+DashboardPage @ page.tsx:918
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<DashboardPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ app-router-instance.ts:379
+startTransition @ react.development.js:554
+push @ app-router-instance.ts:378
+handleSubmit @ page.tsx:120
+await in handleSubmit
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<form>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+LoginPage @ page.tsx:144
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LoginPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+(anonymous) @ react-server-dom-turbopack-client.browser.development.js:4560
+initializeModelChunk @ react-server-dom-turbopack-client.browser.development.js:1812
+resolveModelChunk @ react-server-dom-turbopack-client.browser.development.js:1657
+processFullStringRow @ react-server-dom-turbopack-client.browser.development.js:4390
+processFullBinaryRow @ react-server-dom-turbopack-client.browser.development.js:4250
+processBinaryChunk @ react-server-dom-turbopack-client.browser.development.js:4463
+progress @ react-server-dom-turbopack-client.browser.development.js:4735
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:5000
+module evaluation @ app-index.tsx:211
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:389
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:79
+loadScriptsInSequence @ app-bootstrap.ts:23
+appBootstrap @ app-bootstrap.ts:61
+module evaluation @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1149
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126
+installHook.js:1 🔥 [CRITICAL] Exception caught: Error: HTTP 502: {"error":"database_error","message":"Failed to fetch mesh users"}
+    at CollaboratorsPage.useCallback[fetchMeshUsers] (page.tsx:169:15)
+overrideMethod @ installHook.js:1
+error @ intercept-console-error.ts:42
+CollaboratorsPage.useCallback[fetchMeshUsers] @ page.tsx:205
+await in CollaboratorsPage.useCallback[fetchMeshUsers]
+CollaboratorsPage.useEffect @ page.tsx:215
+react_stack_bottom_frame @ react-dom-client.development.js:28101
+runWithFiberInDEV @ react-dom-client.development.js:984
+commitHookEffectListMount @ react-dom-client.development.js:13690
+commitHookPassiveMountEffects @ react-dom-client.development.js:13777
+commitPassiveMountOnFiber @ react-dom-client.development.js:16731
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16751
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16723
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:17008
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:16676
+commitPassiveMountOnFiber @ react-dom-client.development.js:16766
+flushPassiveEffects @ react-dom-client.development.js:19857
+(anonymous) @ react-dom-client.development.js:19282
+performWorkUntilDeadline @ scheduler.development.js:45
+<CollaboratorsPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ link.tsx:293
+startTransition @ react.development.js:554
+linkClicked @ link.tsx:292
+onClick @ link.tsx:642
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<a>
+exports.jsx @ react-jsx-runtime.development.js:342
+LinkComponent @ link.tsx:725
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LinkComponent>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+DashboardPage @ page.tsx:918
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopSync @ react-dom-client.development.js:18823
+renderRootSync @ react-dom-client.development.js:18804
+performWorkOnRoot @ react-dom-client.development.js:17833
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<DashboardPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromFetch @ react-server-dom-turbopack-client.browser.development.js:4967
+createFromNextFetch @ fetch-server-response.ts:487
+createFetch @ fetch-server-response.ts:373
+fetchServerResponse @ fetch-server-response.ts:195
+navigateDynamicallyWithNoPrefetch @ navigation.ts:473
+navigate @ navigation.ts:206
+navigateReducer @ navigate-reducer.ts:165
+clientReducer @ router-reducer.ts:30
+action @ app-router-instance.ts:227
+runAction @ app-router-instance.ts:107
+dispatchAction @ app-router-instance.ts:184
+dispatch @ app-router-instance.ts:225
+(anonymous) @ use-action-queue.ts:51
+startTransition @ react-dom-client.development.js:9208
+dispatch @ use-action-queue.ts:50
+dispatchAppRouterAction @ use-action-queue.ts:22
+dispatchNavigateAction @ app-router-instance.ts:296
+(anonymous) @ app-router-instance.ts:379
+startTransition @ react.development.js:554
+push @ app-router-instance.ts:378
+handleSubmit @ page.tsx:120
+await in handleSubmit
+executeDispatch @ react-dom-client.development.js:20541
+runWithFiberInDEV @ react-dom-client.development.js:984
+processDispatchQueue @ react-dom-client.development.js:20591
+(anonymous) @ react-dom-client.development.js:21162
+batchedUpdates$1 @ react-dom-client.development.js:3375
+dispatchEventForPluginEventSystem @ react-dom-client.development.js:20745
+dispatchEvent @ react-dom-client.development.js:25671
+dispatchDiscreteEvent @ react-dom-client.development.js:25639
+<form>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:342
+LoginPage @ page.tsx:144
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12134
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+<LoginPage>
+exports.jsx @ react-jsx-runtime.development.js:342
+ClientPageRoot @ client-page.tsx:83
+react_stack_bottom_frame @ react-dom-client.development.js:28016
+renderWithHooksAgain @ react-dom-client.development.js:8082
+renderWithHooks @ react-dom-client.development.js:7994
+updateFunctionComponent @ react-dom-client.development.js:10499
+beginWork @ react-dom-client.development.js:12083
+runWithFiberInDEV @ react-dom-client.development.js:984
+performUnitOfWork @ react-dom-client.development.js:18995
+workLoopConcurrentByScheduler @ react-dom-client.development.js:18989
+renderRootConcurrent @ react-dom-client.development.js:18971
+performWorkOnRoot @ react-dom-client.development.js:17832
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:20382
+performWorkUntilDeadline @ scheduler.development.js:45
+"use client"
+Function.all @ VM158 <anonymous>:1
+initializeElement @ react-server-dom-turbopack-client.browser.development.js:1921
+(anonymous) @ react-server-dom-turbopack-client.browser.development.js:4560
+initializeModelChunk @ react-server-dom-turbopack-client.browser.development.js:1812
+resolveModelChunk @ react-server-dom-turbopack-client.browser.development.js:1657
+processFullStringRow @ react-server-dom-turbopack-client.browser.development.js:4390
+processFullBinaryRow @ react-server-dom-turbopack-client.browser.development.js:4250
+processBinaryChunk @ react-server-dom-turbopack-client.browser.development.js:4463
+progress @ react-server-dom-turbopack-client.browser.development.js:4735
+"use server"
+ResponseInstance @ react-server-dom-turbopack-client.browser.development.js:2744
+createResponseFromOptions @ react-server-dom-turbopack-client.browser.development.js:4596
+exports.createFromReadableStream @ react-server-dom-turbopack-client.browser.development.js:5000
+module evaluation @ app-index.tsx:211
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateModuleFromParent @ dev-base.ts:162
+commonJsRequire @ runtime-utils.ts:389
+(anonymous) @ app-next-turbopack.ts:11
+(anonymous) @ app-bootstrap.ts:79
+loadScriptsInSequence @ app-bootstrap.ts:23
+appBootstrap @ app-bootstrap.ts:61
+module evaluation @ app-next-turbopack.ts:10
+(anonymous) @ dev-base.ts:244
+runModuleExecutionHooks @ dev-base.ts:278
+instantiateModule @ dev-base.ts:238
+getOrInstantiateRuntimeModule @ dev-base.ts:128
+registerChunk @ runtime-backend-dom.ts:57
+await in registerChunk
+registerChunk @ dev-base.ts:1149
+(anonymous) @ dev-backend-dom.ts:126
+(anonymous) @ dev-backend-dom.ts:126
+node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642 Fetch finished loading: POST "https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/__nextjs_original-stack-frames".
+(anonymous) @ stack-frame.ts:97
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+eN @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+eR @ stack-frame.ts:126
+(anonymous) @ get-error-by-type.ts:59
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+nH @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ get-error-by-type.ts:64
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+nH @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ get-error-by-type.ts:79
+lg @ react-dom-client.production.js:8896
+sf @ react-dom-client.production.js:11196
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11199
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11199
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11207
+cj @ react-dom-client.production.js:12984
+(anonymous) @ react-dom-client.production.js:12675
+E @ scheduler.production.js:151
+node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642 Fetch finished loading: POST "https://3000-00e556e4-1309-4eac-a867-9e42d8025b56.softgen.dev/__nextjs_original-stack-frames".
+(anonymous) @ stack-frame.ts:97
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+eN @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+eR @ stack-frame.ts:126
+(anonymous) @ get-error-by-type.ts:59
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+nH @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ get-error-by-type.ts:64
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+nH @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+i @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js:1642
+(anonymous) @ get-error-by-type.ts:79
+lg @ react-dom-client.production.js:8896
+sf @ react-dom-client.production.js:11196
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11199
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11199
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11190
+sd @ react-dom-client.production.js:11163
+sf @ react-dom-client.production.js:11207
+cj @ react-dom-client.production.js:12984
+(anonymous) @ react-dom-client.production.js:12675
+E @ scheduler.production.js:151
+forward-logs.ts:104 [Violation] 'setInterval' handler took 7738ms
+forward-logs.ts:104 [Violation] 'setInterval' handler took 6236ms
+
+
+-------------------
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "b37f5df4-7c62-4f45-9fa7-645c47bba33d",
+    "level": "log",
+    "timestamp": 1766362349420000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "5dd7d257-74e6-4ee1-9871-59a2b8aae765",
+    "level": "log",
+    "timestamp": 1766362349239000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "8617c205-cfe5-4b86-931b-afac6613bff8",
+    "level": "log",
+    "timestamp": 1766362279814000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "0bbf9618-fc81-490c-b0cf-da4911caa073",
+    "level": "log",
+    "timestamp": 1766362279577000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Error fetching mesh_users: 400 {\"code\":\"42703\",\"details\":null,\"hint\":\"Perhaps you meant to reference the column \\\"mesh_users.created_at\\\".\",\"message\":\"column mesh_users.updated_at does not exist\"}\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "e3a9eef0-12fc-4c49-8282-7a6077e63506",
+    "level": "error",
+    "timestamp": 1766362274635000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Caller user_type: agent, domain: zonetech\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6a601234-5da0-415c-8a50-c47c8109391e",
+    "level": "info",
+    "timestamp": 1766362274586000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Filtering by domain: zonetech\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "b74947ba-2381-42fa-9ea1-2ebf521a540c",
+    "level": "info",
+    "timestamp": 1766362274586000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Access granted: user_type=agent\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ed952e87-c391-4b5b-895a-6b69f576a630",
+    "level": "info",
+    "timestamp": 1766362274586000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Caller auth_user_id: 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "70122165-43bc-4942-8ac8-9d784b968e25",
+    "level": "info",
+    "timestamp": 1766362274535000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "9d93694a-66a5-4787-81b4-c24c800754b9",
+    "level": "info",
+    "timestamp": 1766362274390000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "0b8e7cdd-8861-44c0-99e3-7761d51d3ac8",
+    "level": "log",
+    "timestamp": 1766362274389000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "d867fd06-8343-413c-b117-03b04b2ae854",
+    "level": "info",
+    "timestamp": 1766362274224000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3cc2c773-2095-47e4-bdf8-c2c54bdbf1b3",
+    "level": "log",
+    "timestamp": 1766362274223000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Error fetching mesh_users: 400 {\"code\":\"42703\",\"details\":null,\"hint\":\"Perhaps you meant to reference the column \\\"mesh_users.created_at\\\".\",\"message\":\"column mesh_users.updated_at does not exist\"}\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "11ddf083-4a54-4b46-8092-617054f8bf2a",
+    "level": "error",
+    "timestamp": 1766362205015000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Filtering by domain: zonetech\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "84b81233-bc52-4836-b9cb-7b9460105c8b",
+    "level": "info",
+    "timestamp": 1766362204934000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Access granted: user_type=agent\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "23e05721-f50b-4ea9-8b43-42990692ef63",
+    "level": "info",
+    "timestamp": 1766362204934000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Caller user_type: agent, domain: zonetech\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "971bd15b-586a-4980-a5b0-83acdc421e69",
+    "level": "info",
+    "timestamp": 1766362204934000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Caller auth_user_id: 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "63ac7a52-8601-46a6-91b4-4f0486f0af3e",
+    "level": "info",
+    "timestamp": 1766362204887000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "d27772ea-f42d-4f88-b1db-c409dbf97db0",
+    "level": "info",
+    "timestamp": 1766362204789000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "dfc37c07-a5fe-4b9e-9887-2e4e8d73ee60",
+    "level": "log",
+    "timestamp": 1766362204787000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3ff88288-40cc-4456-b48e-f995ff13950f",
+    "level": "info",
+    "timestamp": 1766362204563000
+  },
+  {
+    "event_message": "booted (time: 24ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6e05aa1f-1a2c-4f96-8c26-6a9e7f0a754a",
+    "level": "log",
+    "timestamp": 1766362204560000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "bbfe44aa-98f3-48cb-b612-bd2b2aeb7654",
+    "level": "log",
+    "timestamp": 1766361917573000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6a1e73f9-0c7a-4cdb-a4a9-218c35fc7116",
+    "level": "log",
+    "timestamp": 1766361917409000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6db4851e-b78b-4403-b16c-dabb46773303",
+    "level": "error",
+    "timestamp": 1766361842773000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "2e5c7a6f-c82f-4a49-a42f-645bf71276a3",
+    "level": "info",
+    "timestamp": 1766361842555000
+  },
+  {
+    "event_message": "booted (time: 32ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "d9d6d37f-ad48-418f-b20b-8d95af800019",
+    "level": "log",
+    "timestamp": 1766361842553000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "2a94c550-a50a-4b3c-98da-790b5a2c94e4",
+    "level": "info",
+    "timestamp": 1766361842394000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "36b6805b-f892-4365-bf28-e898ebeea3fb",
+    "level": "log",
+    "timestamp": 1766361842393000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "889f20f0-2567-4a2a-89e2-e7b6eb9b896f",
+    "level": "log",
+    "timestamp": 1766361765658000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "48e0c907-1d16-4ab4-80ce-fb979801dba4",
+    "level": "log",
+    "timestamp": 1766361765494000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "acc43075-e90f-404a-812b-4a2f8db5bf08",
+    "level": "error",
+    "timestamp": 1766361690797000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "1b3769c4-f702-456f-8ec2-654dbbab39bb",
+    "level": "info",
+    "timestamp": 1766361690632000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ece7f278-c78f-4f3d-b598-0577c368e48d",
+    "level": "log",
+    "timestamp": 1766361690630000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ccda85fe-57e8-43e9-839b-cb259300966e",
+    "level": "info",
+    "timestamp": 1766361690477000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "feb25f7e-3158-441e-aeb3-1fdc9e822177",
+    "level": "log",
+    "timestamp": 1766361690475000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "4e1eb7b8-4317-4c08-954f-1302152a04a2",
+    "level": "log",
+    "timestamp": 1766361604568000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "b947edba-cdc3-46c1-8ca5-8fd4d25d988c",
+    "level": "log",
+    "timestamp": 1766361604566000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "13c75e6d-00e5-4cd0-a491-64ec5d4bd14d",
+    "level": "log",
+    "timestamp": 1766361569457000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "4df74762-6899-4f51-8211-1c03a2fb050d",
+    "level": "log",
+    "timestamp": 1766361569293000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "1be7fba2-fb4f-4686-b987-3a2dfa776505",
+    "level": "error",
+    "timestamp": 1766361529659000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "c7750866-b481-4cc4-bbe5-a1f0722763ef",
+    "level": "info",
+    "timestamp": 1766361529531000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "aaf52324-1f62-4e6e-9527-9dcae7172775",
+    "level": "log",
+    "timestamp": 1766361529530000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "7e305b35-7dfe-444f-96eb-2c821d6f73fb",
+    "level": "info",
+    "timestamp": 1766361529398000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "7fd53fe8-00a2-41c6-b080-38dce9683a4f",
+    "level": "log",
+    "timestamp": 1766361529397000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "820e092a-fcb1-472b-9fa6-93ff0cd0decb",
+    "level": "error",
+    "timestamp": 1766361494666000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "573a26a9-9406-44e1-859c-0c0ff56347b6",
+    "level": "info",
+    "timestamp": 1766361494432000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "1ddc75fe-7bb7-4dbd-915d-884e0da51847",
+    "level": "log",
+    "timestamp": 1766361494431000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "63830080-d160-445a-bc6a-3e51ff9a7c03",
+    "level": "info",
+    "timestamp": 1766361494280000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "236ebc09-8973-4511-9a46-64a694a6967e",
+    "level": "log",
+    "timestamp": 1766361494278000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "eff9d93e-52f3-4dba-8970-7ffd84c8bb28",
+    "level": "log",
+    "timestamp": 1766360911389000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "fa23a14c-0641-4f10-b493-488121507661",
+    "level": "log",
+    "timestamp": 1766360911210000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "71a4e051-6bae-41a1-8cd1-ebcb546358ee",
+    "level": "error",
+    "timestamp": 1766360836475000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "70f6bd1c-eb59-46ce-b484-58c743652dd9",
+    "level": "info",
+    "timestamp": 1766360836363000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "12e79e3e-b2a4-431c-acf1-421b39359e65",
+    "level": "log",
+    "timestamp": 1766360836362000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "e396131f-cb6d-4c9f-8505-4bbaf95eff35",
+    "level": "info",
+    "timestamp": 1766360836196000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "727cef85-6a62-47f4-84f9-a47c857d86b1",
+    "level": "log",
+    "timestamp": 1766360836195000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "a7a9c071-0f77-4a7a-ad85-fd3927984478",
+    "level": "log",
+    "timestamp": 1766360639158000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "9c1a94e7-bd36-40a6-b35c-fca15745b602",
+    "level": "log",
+    "timestamp": 1766360639002000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "2b227c14-9baf-4537-bfa6-9be42df92adc",
+    "level": "error",
+    "timestamp": 1766360564242000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ad04cc7f-a070-4658-a8d3-465504e4aca7",
+    "level": "info",
+    "timestamp": 1766360564130000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "259d536e-0a60-4696-9678-ac268c106404",
+    "level": "log",
+    "timestamp": 1766360564128000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "15bc76ae-f854-403e-bd22-cbc00d55743b",
+    "level": "info",
+    "timestamp": 1766360563976000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "4bb1379e-4346-44fe-bf34-db10d36a4d6b",
+    "level": "log",
+    "timestamp": 1766360563974000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "cc8505f7-ca59-4e12-9fc9-49f00a79264b",
+    "level": "log",
+    "timestamp": 1766360507695000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "f1e28d9d-1d0a-4a97-9658-23039e7a81f0",
+    "level": "log",
+    "timestamp": 1766360507536000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "c1291e95-e45d-4df3-8615-6fe727146974",
+    "level": "log",
+    "timestamp": 1766360498457000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "3d08aeb0-7b98-47f2-ad8e-50ff091989d5",
+    "level": "log",
+    "timestamp": 1766360498316000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "31955e38-e453-4d0c-b268-985cc2b559d4",
+    "level": "error",
+    "timestamp": 1766360432830000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "224da589-f06a-44d7-9951-2fc2588024eb",
+    "level": "info",
+    "timestamp": 1766360432667000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "4594631a-eed9-4e53-9cd3-e6e635d2a351",
+    "level": "log",
+    "timestamp": 1766360432665000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "d63e9eab-f5de-4381-81de-0f2c4fe9810a",
+    "level": "info",
+    "timestamp": 1766360432518000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "f7523979-8e5f-4453-b3aa-c34a95092219",
+    "level": "log",
+    "timestamp": 1766360432516000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "5216b194-c091-4c01-b81e-8e99a418f77b",
+    "level": "error",
+    "timestamp": 1766360423512000
+  },
+  {
+    "event_message": "booted (time: 23ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "18a89991-a3f4-436f-9ef2-74a65cf4d0ac",
+    "level": "log",
+    "timestamp": 1766360423435000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "dec110cc-4570-4776-a80e-9576336525c1",
+    "level": "info",
+    "timestamp": 1766360423435000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "627dd383-1911-41dd-8da3-5d2adb0220a5",
+    "level": "info",
+    "timestamp": 1766360423296000
+  },
+  {
+    "event_message": "booted (time: 30ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "b99a5d1d-e43a-48a1-9b46-99acdf08ec10",
+    "level": "log",
+    "timestamp": 1766360423294000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "94d8ea46-11b4-42ea-83e4-a3be69652f1b",
+    "level": "log",
+    "timestamp": 1766360315579000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "56531588-dbb0-4faa-86a0-603194df346a",
+    "level": "log",
+    "timestamp": 1766360315401000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "0d7fcca1-5118-459a-bac1-519135ea3b6d",
+    "level": "error",
+    "timestamp": 1766360240699000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "869ae30a-76c2-4d08-92bb-3b4232d4e0bc",
+    "level": "info",
+    "timestamp": 1766360240561000
+  },
+  {
+    "event_message": "booted (time: 25ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "e005ccdb-e7f2-48eb-afac-30d00294c637",
+    "level": "log",
+    "timestamp": 1766360240560000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "2b4f5f47-d5e8-4b4a-8e74-28399286dbcc",
+    "level": "info",
+    "timestamp": 1766360240398000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "6ebd0953-7c1e-4c01-a05e-7186ea5411fc",
+    "level": "log",
+    "timestamp": 1766360240386000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "63d44703-ca7d-43d2-bf3b-70be0bc58183",
+    "level": "log",
+    "timestamp": 1766360151891000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "f3882492-2140-43c4-bb55-d8ca1d9e4f55",
+    "level": "log",
+    "timestamp": 1766360151730000
+  },
+  {
+    "event_message": "[admin-list-mesh-users] Forbidden: user is not admin 69280e26-e868-478d-8562-7de0c160535e\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "1736ddec-2eb7-4fda-ad79-b9b9fbc80d58",
+    "level": "error",
+    "timestamp": 1766360077037000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "4fc3e550-70b7-4ac3-b959-50aeff045f2c",
+    "level": "info",
+    "timestamp": 1766360076865000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "9853556b-968d-4357-940e-ff392e362342",
+    "level": "log",
+    "timestamp": 1766360076864000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "7b9dcb0f-355a-4a61-bb2b-5138f68520c9",
+    "level": "info",
+    "timestamp": 1766360076711000
+  },
+  {
+    "event_message": "booted (time: 36ms)",
+    "event_type": "Boot",
+    "function_id": "2e5138d2-21e3-4a97-930b-c9fc78e67a7e",
+    "id": "ae74decc-988f-4634-8cbe-65a99de32635",
+    "level": "log",
+    "timestamp": 1766360076709000
+  }
+]

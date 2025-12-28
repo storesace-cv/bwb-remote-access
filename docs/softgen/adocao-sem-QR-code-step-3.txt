@@ -1,0 +1,160 @@
+You have just described the full Android device adoption flow WITHOUT QR code.
+
+Phases 1 and 2 (Handshake + Device Registration) are now considered CORRECT
+and are NOT under discussion.
+
+This prompt defines the FINAL acceptance criteria for PHASE 3 ONLY.
+
+You must validate your current implementation against these criteria
+and apply corrections ONLY where strictly required.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SCOPE & NON-NEGOTIABLE RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Scope limited strictly to :provisionerApp (Android app)
+• Phase 1 and Phase 2 logic MUST NOT be altered
+• Provisioning endpoints, request/response bodies, URLs and DB schema are frozen
+• No new permissions, no endpoint changes, no contract changes
+• minSdk = 21, targetSdk unchanged
+• Android 5 → Android 15 must be supported
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 3 — INSTALLATION & CONFIGURATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You described Phase 3 as:
+
+1. Download RustDesk config
+2. Download RustDesk APK
+3. Install APK
+4. Launch RustDesk
+5. RustDesk receives or reads configuration
+
+The following acceptance criteria clarify WHAT MUST BE TRUE at the end of Phase 3.
+
+──────────────────────────────────────
+AC #1 — Configuration file persistence
+──────────────────────────────────────
+
+The RustDesk configuration file downloaded from `config_url` MUST NOT remain
+only in private app storage.
+
+Explicitly forbidden locations:
+- Context.filesDir
+- Context.cacheDir
+- Any /data/user/0/<package>/… path
+
+The configuration MUST be stored in a location that is:
+
+• Non-private
+• Deterministic
+• Verifiable by QA or support
+
+Allowed storage (choose ONE and implement correctly):
+
+Option A (preferred):
+- Public Downloads directory
+- Example:
+  /sdcard/Download/bwb-rustdesk-config.json
+
+Option B (fallback):
+- App external files directory
+- Example:
+  context.getExternalFilesDir(null)/bwb/rustdesk/config.json
+
+Requirements:
+- The exact filename and location MUST be logged in the provisioning log screen
+- Storage failure must not crash the app; it must log a clear error
+
+QA must be able to verify using:
+- Files app (Downloads), or
+- adb shell ls
+
+──────────────────────────────────────
+AC #2 — Concrete path into RustDesk
+──────────────────────────────────────
+
+There MUST be a concrete, deterministic explanation of
+*how the configuration actually reaches RustDesk*.
+
+You MUST implement ONE of the following flows end-to-end
+and document which one is used.
+
+Flow A — Automatic import via Intent (preferred if supported)
+• Config file is exposed via FileProvider
+• RustDesk is launched with an explicit Intent
+• content:// URI is passed
+• FLAG_GRANT_READ_URI_PERMISSION is used
+• RustDesk auto-imports or opens import UI
+
+Flow B — Automatic import via known RustDesk directory
+• Config is written to a directory RustDesk is known to read from
+• Launching RustDesk applies or offers the config
+
+Flow C — Manual import (only if A and B are not technically possible)
+• Config is still saved according to AC #1
+• App launches RustDesk
+• App logs a clear instruction such as:
+  “Config saved to Downloads as bwb-rustdesk-config.json.
+   If RustDesk does not auto-configure, open:
+   RustDesk → Settings → Import config → select this file.”
+
+──────────────────────────────────────
+AC #3 — Compatibility & safety
+──────────────────────────────────────
+
+• Must work on Android 5–15
+• No legacy WRITE_EXTERNAL_STORAGE permission
+• No new dangerous permissions
+• Scoped storage respected where applicable
+
+──────────────────────────────────────
+AC #4 — Backend integrity
+──────────────────────────────────────
+
+You MUST NOT change:
+• /api/provision/claim
+• /api/provision/start
+• Any request or response payload
+• Any server logic
+• Any database schema
+
+Only local Android behavior may change.
+
+──────────────────────────────────────
+AC #5 — Acceptance condition
+──────────────────────────────────────
+
+You may declare DONE only if:
+
+• After provisioning, the config file exists in the declared non-private location
+• RustDesk is launched
+• RustDesk either:
+  - applies the config automatically, OR
+  - can import it deterministically using the stored file
+• The flow is reproducible on Android 5 through 15
+• No crashes occur
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DOCUMENTATION (minimal)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Update ONLY the relevant SoT file to record:
+• Final config filename
+• Storage location
+• Chosen import flow (A / B / C)
+• How QA verifies success
+
+Do NOT narrate code changes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL STEP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After implementing and verifying all criteria above,
+explicitly declare:
+
+“DONE — Phase 3 configuration delivery is complete and verifiable.”
+
+Do not extend scope beyond this.

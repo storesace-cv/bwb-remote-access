@@ -1,0 +1,48 @@
+[Unit]
+Description=MeshCentral → Supabase user sync (DB-native, multi-domain)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+
+# CRITICAL: Use the actual deployed location
+ExecStart=/opt/rustdesk-frontend/scripts/sync-meshcentral-to-supabase.sh
+
+# Environment
+Environment=NODE_ENV=production
+Environment=DEBUG=0
+
+# Para debug verbose, altere DEBUG para 1:
+# Environment=DEBUG=1
+
+# Timeout: sync should typically complete well under 60s
+TimeoutStartSec=60s
+
+# Sandboxing (light, permite acesso a /opt e /tmp)
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectControlGroups=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+
+# Allow reading MeshCentral DB and writing to /tmp
+ReadWritePaths=/tmp
+ReadOnlyPaths=/opt/meshcentral /opt/rustdesk-frontend
+
+# Logging: captura stdout e stderr
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

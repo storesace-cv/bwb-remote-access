@@ -1,0 +1,282 @@
+curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/register-device' \
+-X 'POST' \
+-H 'Content-Type: application/json' \
+-H 'Pragma: no-cache' \
+-H 'Accept: */*' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzU2MjA2LCJpYXQiOjE3NjU3NTI2MDYsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NTI2MDZ9XSwic2Vzc2lvbl9pZCI6Ijg4M2ZmZDUxLTc1NzYtNGRlYS1hM2MxLTE4ZGI4Y2UwOWY0ZSIsImlzX2Fub255bW91cyI6ZmFsc2V9.uAWO6KbEyOsa7uWiwIPIYr9qdTqUFwS5vsf_SQhqf-A' \
+-H 'Sec-Fetch-Site: cross-site' \
+-H 'Accept-Language: en-GB,en;q=0.9' \
+-H 'Cache-Control: no-cache' \
+-H 'Sec-Fetch-Mode: cors' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Origin: https://rustdesk.bwb.pt' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15' \
+-H 'Referer: https://rustdesk.bwb.pt/' \
+-H 'Content-Length: 140' \
+-H 'Sec-Fetch-Dest: empty' \
+-H 'Priority: u=3, i' \
+-H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s' \
+--data-raw $'{"device_id":"1886522715","friendly_name":"One Plus","notes":"Pessoal | Caso | Telem\xf3vel de testes...","rustdesk_password":"Quer1asEntrar"}'
+
+-------------------------
+
+POST /functions/v1/register-device H3
+Content-Type: application/json
+Pragma: no-cache
+Accept: */*
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InVBSHYvMUtaaUpzQTVIeE8iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2txd2FpYmd2bXpjcWVvY3R1a295LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJmNTM4NDI4OC04MzdlLTQxZmMtYWEwOC0wMDIwYzFiYWZkZWMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY1NzU2MjA2LCJpYXQiOjE3NjU3NTI2MDYsImVtYWlsIjoiam9yZ2UucGVpeGluaG9AYndiLnB0IiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NjU3NTI2MDZ9XSwic2Vzc2lvbl9pZCI6Ijg4M2ZmZDUxLTc1NzYtNGRlYS1hM2MxLTE4ZGI4Y2UwOWY0ZSIsImlzX2Fub255bW91cyI6ZmFsc2V9.uAWO6KbEyOsa7uWiwIPIYr9qdTqUFwS5vsf_SQhqf-A
+Sec-Fetch-Site: cross-site
+Accept-Language: en-GB,en;q=0.9
+Cache-Control: no-cache
+Sec-Fetch-Mode: cors
+Accept-Encoding: gzip, deflate, br
+Origin: https://rustdesk.bwb.pt
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15
+Referer: https://rustdesk.bwb.pt/
+Content-Length: 140
+Sec-Fetch-Dest: empty
+Priority: u=3, i
+apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s
+
+-----------------------------
+
+H3 200 
+Content-Type: application/json
+Server-Timing: cfExtPri
+Content-Encoding: gzip
+Set-Cookie: __cf_bm=lpli1PIomldPyrL9YVlwC08KkYmH7_Kfpg0ZZ0A3Tek-1765752626-1.0.1.1-5d17VTvOpgvYn6tu.HIOqLWtqvTyenYQEN4UagITgPCXBlY9OR3y3zD9cNqHVoh_TDfnXvGZoqw18CLbVxxG1xWy90nYNUGxlk6px818Im3cGKCfEfh502KcqrrCx7fS; path=/; expires=Sun, 14-Dec-25 23:20:26 GMT; domain=.supabase.co; HttpOnly; Secure; SameSite=None
+Date: Sun, 14 Dec 2025 22:50:26 GMT
+Content-Length: 353
+Vary: Accept-Encoding
+sb-request-id: 019b1f0e-db67-7719-9df2-4b537153e881
+Alt-Svc: h3=":443"; ma=86400
+Server: cloudflare
+x-deno-execution-id: c198a1cf-a0a9-4a02-9e7c-433bc4d0ed9f
+Priority: u=3,i
+cf-cache-status: DYNAMIC
+x-sb-edge-region: eu-west-3
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+sb-project-ref: kqwaibgvmzcqeoctukoy
+cf-ray: 9ae14298990e6390-LIS
+x-served-by: supabase-edge-runtime
+
+---------------------------------
+
+[
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "ef5632cc-1c0c-4ccf-9ea2-80b067df4d82",
+    "level": "log",
+    "timestamp": 1765752769230000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "a18157ca-a6e0-46d6-ba88-11967cb7f90b",
+    "level": "log",
+    "timestamp": 1765752769058000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "8f376a75-f2ec-4c23-8470-e936c37f078d",
+    "level": "log",
+    "timestamp": 1765752701183000
+  },
+  {
+    "event_message": "[register-device] Upserting device: 1886522715, owner: 8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "99413a35-5789-4f41-a1af-6351ef176fe4",
+    "level": "info",
+    "timestamp": 1765752694608000
+  },
+  {
+    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "12fc81c3-d661-4c0f-b5ae-4237b77fd889",
+    "level": "info",
+    "timestamp": 1765752694511000
+  },
+  {
+    "event_message": "[register-device] User JWT detected, validating...\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "9074e605-5e8d-4a4b-bcff-2cf48609fa99",
+    "level": "info",
+    "timestamp": 1765752694215000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "23b3654c-fdb1-4c6a-9b3e-bfaa85d21c31",
+    "level": "info",
+    "timestamp": 1765752694211000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "c0d598d8-ed85-46c4-be73-15517a660549",
+    "level": "log",
+    "timestamp": 1765752694209000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "dce387fd-a7a9-42c4-9702-9ae6d41b1f35",
+    "level": "info",
+    "timestamp": 1765752694040000
+  },
+  {
+    "event_message": "booted (time: 31ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "59343d6f-0c8d-4aba-8bb9-755f7df3909b",
+    "level": "log",
+    "timestamp": 1765752694038000
+  },
+  {
+    "event_message": "[register-device] Upserting device: 1886522715, owner: 8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "c2c62d4f-31ca-4b5c-9d81-3e390a20e3d6",
+    "level": "info",
+    "timestamp": 1765752626371000
+  },
+  {
+    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "7caf351a-2d1b-4a46-afd9-a7ef254f9f15",
+    "level": "info",
+    "timestamp": 1765752626324000
+  },
+  {
+    "event_message": "[register-device] User JWT detected, validating...\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "96bac7fd-88fc-4c64-b988-a834a23e6fd0",
+    "level": "info",
+    "timestamp": 1765752626162000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "1550ca12-b6ff-4e76-b348-3af43d0f1947",
+    "level": "info",
+    "timestamp": 1765752626159000
+  },
+  {
+    "event_message": "booted (time: 34ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "83b767da-264d-4e68-9bdb-5d765c9fed73",
+    "level": "log",
+    "timestamp": 1765752626157000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "7b88d45d-0c06-4cca-9099-3e4986c721fe",
+    "level": "log",
+    "timestamp": 1765752321362000
+  },
+  {
+    "event_message": "[register-device] Upserting device: 1886522715, owner: 8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "5864fa8a-93d3-4f34-957d-999ff0b57904",
+    "level": "info",
+    "timestamp": 1765752246603000
+  },
+  {
+    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "dcc4e03b-f3fc-4691-8df0-a23573d8090c",
+    "level": "info",
+    "timestamp": 1765752246555000
+  },
+  {
+    "event_message": "[register-device] User JWT detected, validating...\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "31369414-1fe0-4f0d-8c61-530966b97c83",
+    "level": "info",
+    "timestamp": 1765752246347000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "019e0a1d-ab85-4bfe-8cd1-989dd6b26600",
+    "level": "info",
+    "timestamp": 1765752246344000
+  },
+  {
+    "event_message": "booted (time: 22ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "16045b27-0e96-4d82-a827-112e3925ac36",
+    "level": "log",
+    "timestamp": 1765752246343000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "18131928-e659-4cb5-983b-8ceafb6dcaf9",
+    "level": "log",
+    "timestamp": 1765750861403000
+  },
+  {
+    "event_message": "[register-device] Upserting device: 1886522715, owner: 8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "e4f9d434-f448-410f-b289-f38c239ee417",
+    "level": "info",
+    "timestamp": 1765750786631000
+  },
+  {
+    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "fcce4b6f-1741-4b0d-a20a-32efad212b42",
+    "level": "info",
+    "timestamp": 1765750786581000
+  },
+  {
+    "event_message": "[register-device] User JWT detected, validating...\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "d88cc045-640b-4315-99f8-1df1eca37828",
+    "level": "info",
+    "timestamp": 1765750786391000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "3e1e0eb6-ed0b-4cee-8b84-01f1feda2117",
+    "level": "info",
+    "timestamp": 1765750786388000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
+    "id": "9c06ceb6-2fd3-4a82-a8f1-9e636fa897bc",
+    "level": "log",
+    "timestamp": 1765750786384000
+  }
+]

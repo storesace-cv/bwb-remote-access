@@ -1,0 +1,730 @@
+[
+  {
+    "event_message": "[check-registration-status] Error updating device: {\n  code: \"23503\",\n  details: 'Key (owner)=(8b8e8008-c637-4369-bde7-09becfb06a17) is not present in table \"users\".',\n  hint: null,\n  message: 'insert or update on table \"android_devices\" violates foreign key constraint \"android_devices_owner_fkey\"'\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5fb12de1-83ac-48c8-a9ee-7ef9d133f70b",
+    "level": "error",
+    "timestamp": 1765657884843000
+  },
+  {
+    "event_message": "[check-registration-status] Matched device: 1858682034\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "400c2509-238b-4d62-bd99-15a9637bc7f4",
+    "level": "info",
+    "timestamp": 1765657884752000
+  },
+  {
+    "event_message": "[check-registration-status] Found 1 orphan devices\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "3b0b0671-2305-4a24-8675-3a7b99ba80a4",
+    "level": "info",
+    "timestamp": 1765657884752000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 3278c322-7fb3-4105-b2d2-665482a68797\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "6de818aa-2779-45f9-9ddf-d2012b381458",
+    "level": "info",
+    "timestamp": 1765657884708000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "477cc870-c003-4253-8293-f7e28736d929",
+    "level": "info",
+    "timestamp": 1765657884708000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 400 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "233babf9-e50c-4ce2-97bd-a326df6f541a",
+    "level": "error",
+    "timestamp": 1765657884659000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "b43edb09-0b62-4e38-9b7b-78792e5230e1",
+    "level": "info",
+    "timestamp": 1765657884659000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "308771ee-37a6-44e1-ba8c-1eba48380bfe",
+    "level": "info",
+    "timestamp": 1765657884579000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API at: https://rustdesk.bwb.pt/api/sync\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "433bc3c9-4bbd-483e-95b1-fdbcbddf28d7",
+    "level": "info",
+    "timestamp": 1765657884579000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "824b5e90-c555-4e6a-846f-3c09cbfcd113",
+    "level": "info",
+    "timestamp": 1765657884465000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "1712ab73-5881-4387-957e-355b9cbc6af3",
+    "level": "info",
+    "timestamp": 1765657884463000
+  },
+  {
+    "event_message": "booted (time: 27ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "670725a5-71d4-4b3a-9443-1c66b03e83c1",
+    "level": "log",
+    "timestamp": 1765657884460000
+  },
+  {
+    "event_message": "[check-registration-status] Error updating device: {\n  code: \"23503\",\n  details: 'Key (owner)=(8b8e8008-c637-4369-bde7-09becfb06a17) is not present in table \"users\".',\n  hint: null,\n  message: 'insert or update on table \"android_devices\" violates foreign key constraint \"android_devices_owner_fkey\"'\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8455ecfe-5b6f-4c06-a078-1b2f8a1f67d2",
+    "level": "error",
+    "timestamp": 1765657881620000
+  },
+  {
+    "event_message": "[check-registration-status] Found 1 orphan devices\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "33c9c071-e611-4366-8a62-22975eef9876",
+    "level": "info",
+    "timestamp": 1765657881532000
+  },
+  {
+    "event_message": "[check-registration-status] Matched device: 1858682034\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "042fb930-ecb9-481c-87f8-524f5ee1c0cd",
+    "level": "info",
+    "timestamp": 1765657881532000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "69520f6a-0575-4e75-9cc4-d4c38e16af3a",
+    "level": "log",
+    "timestamp": 1765657881515000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 3278c322-7fb3-4105-b2d2-665482a68797\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "dc37344c-ccd0-4aeb-80f2-1931a75bec10",
+    "level": "info",
+    "timestamp": 1765657881486000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "671c4b0c-15ec-47e9-962c-24fc5c6b93f5",
+    "level": "info",
+    "timestamp": 1765657881486000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 400 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "03935496-841d-4eed-8566-90abe9ec3576",
+    "level": "error",
+    "timestamp": 1765657881431000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d7c64555-22a0-430c-a0bb-576a74637627",
+    "level": "info",
+    "timestamp": 1765657881431000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "86be44cc-71e3-4e17-a44e-39f520b706cd",
+    "level": "log",
+    "timestamp": 1765657881339000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "172f7fdb-1309-42f9-8bea-b34016255154",
+    "level": "info",
+    "timestamp": 1765657880820000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API at: https://rustdesk.bwb.pt/api/sync\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "9e4a0b6f-ebfb-4cfa-a2d0-47f6d9aa9540",
+    "level": "info",
+    "timestamp": 1765657880820000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5889605f-afa2-4d89-84b5-059549153da3",
+    "level": "info",
+    "timestamp": 1765657880693000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d609dd63-9b6c-4bf6-abf4-6e7a9d5087dd",
+    "level": "info",
+    "timestamp": 1765657880691000
+  },
+  {
+    "event_message": "booted (time: 28ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "695f6981-700a-4cbd-9f28-85eaf0f0c76d",
+    "level": "log",
+    "timestamp": 1765657880688000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "639653ed-72b3-4d42-a695-8b9633bd16de",
+    "level": "info",
+    "timestamp": 1765657880398000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e703a0fc-7bd9-42e3-8a42-527dc68c07a1",
+    "level": "info",
+    "timestamp": 1765657880395000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "549fd298-3c82-42e6-85ca-c6e795cf1b09",
+    "level": "log",
+    "timestamp": 1765657880390000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "423eaeef-2c40-49d1-af10-52d432f697fe",
+    "level": "log",
+    "timestamp": 1765657848380000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a9de3063-6b83-4fa4-ae6d-d6ae0dce3ab9",
+    "level": "log",
+    "timestamp": 1765657848205000
+  },
+  {
+    "event_message": "[check-registration-status] Error updating device: {\n  code: \"23503\",\n  details: 'Key (owner)=(8b8e8008-c637-4369-bde7-09becfb06a17) is not present in table \"users\".',\n  hint: null,\n  message: 'insert or update on table \"android_devices\" violates foreign key constraint \"android_devices_owner_fkey\"'\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "1c0d21d8-3d52-456d-bd6c-97264ad8d3e6",
+    "level": "error",
+    "timestamp": 1765657808151000
+  },
+  {
+    "event_message": "[check-registration-status] Matched device: 1858682034\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "2ac43625-fda9-45f7-8822-ede82fd6354d",
+    "level": "info",
+    "timestamp": 1765657808045000
+  },
+  {
+    "event_message": "[check-registration-status] Found 1 orphan devices\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7f11fc88-db65-447e-9e5b-33a605de3b55",
+    "level": "info",
+    "timestamp": 1765657808045000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 3278c322-7fb3-4105-b2d2-665482a68797\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "9fc8fdf6-5926-4005-b87c-2f060fc19623",
+    "level": "info",
+    "timestamp": 1765657807989000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5eb690d9-dd02-42c7-b5f8-17c6538862a4",
+    "level": "info",
+    "timestamp": 1765657807989000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "0ff24418-b0d4-4eb2-9348-b00cd102e1bd",
+    "level": "info",
+    "timestamp": 1765657807928000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 400 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c64c91f0-ba22-41f1-8c25-5c7d7b9fd33e",
+    "level": "error",
+    "timestamp": 1765657807928000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f959975d-47d8-4d4c-8f15-f63fb3023fed",
+    "level": "info",
+    "timestamp": 1765657806597000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API at: https://rustdesk.bwb.pt/api/sync\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "bbc5216a-ee7c-4543-a8f5-8abb4b50bb66",
+    "level": "info",
+    "timestamp": 1765657806597000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7da8ed9b-44f5-45c7-ad6b-c77fabb80f44",
+    "level": "info",
+    "timestamp": 1765657806504000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "12b3c56a-0217-40b9-b480-bbca22721c7e",
+    "level": "info",
+    "timestamp": 1765657806499000
+  },
+  {
+    "event_message": "booted (time: 41ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ef00fd9b-8ceb-46a7-96a9-013d0dcd426f",
+    "level": "log",
+    "timestamp": 1765657806495000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "1d752d3c-cbc5-442e-858b-dddb76998884",
+    "level": "info",
+    "timestamp": 1765657806319000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "fa7f3b66-e113-4d7b-aaac-5165e2c01bce",
+    "level": "info",
+    "timestamp": 1765657806316000
+  },
+  {
+    "event_message": "booted (time: 29ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "eb2a81da-8113-4451-a2ef-81e17abd7871",
+    "level": "log",
+    "timestamp": 1765657806313000
+  },
+  {
+    "event_message": "[check-registration-status] Error updating device: {\n  code: \"23503\",\n  details: 'Key (owner)=(8b8e8008-c637-4369-bde7-09becfb06a17) is not present in table \"users\".',\n  hint: null,\n  message: 'insert or update on table \"android_devices\" violates foreign key constraint \"android_devices_owner_fkey\"'\n}\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ef08b688-82c7-414b-9322-57c801355aea",
+    "level": "error",
+    "timestamp": 1765657773898000
+  },
+  {
+    "event_message": "[check-registration-status] Matched device: 1858682034\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "dc30803c-02d2-4752-999e-d6c1d02fa2ce",
+    "level": "info",
+    "timestamp": 1765657773789000
+  },
+  {
+    "event_message": "[check-registration-status] Found 1 orphan devices\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "be824fff-e1fc-4796-893e-b452f4f877d9",
+    "level": "info",
+    "timestamp": 1765657773789000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session 3278c322-7fb3-4105-b2d2-665482a68797\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "742d2f66-6654-4f6b-b803-2a4db2ffc71d",
+    "level": "info",
+    "timestamp": 1765657773739000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f9ffd9cc-5fcc-49ce-9de9-7f12df6dadc4",
+    "level": "info",
+    "timestamp": 1765657773739000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e2b4f8d9-d2ad-42b5-9466-242765cf496b",
+    "level": "info",
+    "timestamp": 1765657773680000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 400 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d692c41e-e64f-42ed-88f1-459b4872f3a2",
+    "level": "error",
+    "timestamp": 1765657773680000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API at: https://rustdesk.bwb.pt/api/sync\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f2b03798-2393-47b9-bd5e-05d266755af4",
+    "level": "info",
+    "timestamp": 1765657773452000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "28594518-9bcd-4bbe-9040-0a3867d99eb2",
+    "level": "info",
+    "timestamp": 1765657773452000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "e4ac6b0c-120f-4d91-8b05-668ab7826fc1",
+    "level": "info",
+    "timestamp": 1765657773367000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "1ff295b0-24fb-4936-b8ef-fd6a9cd16f7c",
+    "level": "info",
+    "timestamp": 1765657773364000
+  },
+  {
+    "event_message": "booted (time: 45ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c02f288e-4ea5-4201-b774-019ad5794cac",
+    "level": "log",
+    "timestamp": 1765657773359000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a0268acf-1125-4cfb-bcb1-23721fdadbd2",
+    "level": "info",
+    "timestamp": 1765657773185000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "39db8d18-2f99-4d5d-a92c-0a68c3f175c8",
+    "level": "info",
+    "timestamp": 1765657773182000
+  },
+  {
+    "event_message": "booted (time: 38ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "53a4a8aa-72cd-4f1d-9601-7f04c1dd894e",
+    "level": "log",
+    "timestamp": 1765657773178000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d337bb1d-a1ea-4813-8afd-1e56df618707",
+    "level": "log",
+    "timestamp": 1765657704359000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "cea84373-6da4-427d-9ce3-87d3679a1427",
+    "level": "log",
+    "timestamp": 1765657704155000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "2c211e35-3b11-460f-88ea-84e31a82cc05",
+    "level": "log",
+    "timestamp": 1765657699092000
+  },
+  {
+    "event_message": "shutdown",
+    "event_type": "Shutdown",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8d83fcdb-1e8e-4db8-aafa-042664dc21b4",
+    "level": "log",
+    "timestamp": 1765657698880000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7f8441c8-ea5d-4c64-9334-498847018cc3",
+    "level": "info",
+    "timestamp": 1765657630052000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session d02b552d-959e-4c23-aefa-fabef1bb79e0\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "6cea3ba9-0403-41a9-8931-fe3e45ff9adb",
+    "level": "info",
+    "timestamp": 1765657630009000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7261937e-083f-409d-87ce-b22e1688bea5",
+    "level": "info",
+    "timestamp": 1765657630009000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "78d1448b-4e2e-4100-bda2-e8548cc2f48a",
+    "level": "info",
+    "timestamp": 1765657629956000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 400 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "c4c081ac-56f3-4587-9c2e-b8d44581672d",
+    "level": "error",
+    "timestamp": 1765657629956000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "d998ddcf-ba02-4469-92cf-94a06d608b34",
+    "level": "info",
+    "timestamp": 1765657629447000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API at: https://rustdesk.bwb.pt/api/sync\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "7a3ba4ce-0b5b-440b-aa6c-3cce07f25083",
+    "level": "info",
+    "timestamp": 1765657629447000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "b138aa8d-660b-4de3-9cec-013c5f35a59d",
+    "level": "info",
+    "timestamp": 1765657629333000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "8f8d05a4-8aa2-4882-92ee-02f4cc0f0bc7",
+    "level": "info",
+    "timestamp": 1765657629330000
+  },
+  {
+    "event_message": "booted (time: 40ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "47dd39e0-2352-4466-9d3d-6459fb439527",
+    "level": "log",
+    "timestamp": 1765657629325000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "25967bef-d8e4-4ca2-85bb-a572c9f038d2",
+    "level": "info",
+    "timestamp": 1765657629131000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "59bc5c3a-384e-4ebd-9f0e-bcd1e2a95707",
+    "level": "info",
+    "timestamp": 1765657629128000
+  },
+  {
+    "event_message": "booted (time: 44ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "2d365df4-3393-4643-968b-c1f03752a1fd",
+    "level": "log",
+    "timestamp": 1765657629123000
+  },
+  {
+    "event_message": "[check-registration-status] No orphan devices found after session click\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "5ccfd490-69dc-4b2e-84d4-593f0f23f0dd",
+    "level": "info",
+    "timestamp": 1765657625080000
+  },
+  {
+    "event_message": "[check-registration-status] Starting temporal matching for session d02b552d-959e-4c23-aefa-fabef1bb79e0\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "ff9cf9a4-9345-486f-b8de-fca1a8c62a30",
+    "level": "info",
+    "timestamp": 1765657625036000
+  },
+  {
+    "event_message": "[check-registration-status] Attempting temporal matching...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "3721bb1f-ea97-4d7b-83cd-ef6a8de3ddd0",
+    "level": "info",
+    "timestamp": 1765657625035000
+  },
+  {
+    "event_message": "[check-registration-status] Sync API error: 400 - <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Bad Request</pre>\n</body>\n</html>\n\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "6b894d50-5b37-4b9c-b870-2caceb1ec1f7",
+    "level": "error",
+    "timestamp": 1765657624710000
+  },
+  {
+    "event_message": "[check-registration-status] Sync triggered, checking devices...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "036e8ca6-1d19-4c8a-a17e-fa9501e94b88",
+    "level": "info",
+    "timestamp": 1765657624710000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering sync API at: https://rustdesk.bwb.pt/api/sync\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "f9b2caf9-6c07-4cb0-b1fc-0668119509cd",
+    "level": "info",
+    "timestamp": 1765657624197000
+  },
+  {
+    "event_message": "[check-registration-status] Triggering on-demand sync...\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "3f0ed76e-1607-41eb-9228-61e8cffb5914",
+    "level": "info",
+    "timestamp": 1765657624197000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: GET\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a1cf6899-b722-4d06-bcdb-40231b7f96b5",
+    "level": "info",
+    "timestamp": 1765657624079000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "a3abf1b2-1e95-48f5-a23a-a8468aa009f5",
+    "level": "info",
+    "timestamp": 1765657624076000
+  },
+  {
+    "event_message": "booted (time: 39ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "37364131-276b-4198-bec1-b5d841db76e6",
+    "level": "log",
+    "timestamp": 1765657624072000
+  },
+  {
+    "event_message": "[check-registration-status] Request received: OPTIONS\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "6781e4bc-c0b1-40cd-acf9-4c5102976bd3",
+    "level": "info",
+    "timestamp": 1765657623847000
+  },
+  {
+    "event_message": "Listening on http://localhost:9999/\n",
+    "event_type": "Log",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "75638df6-edaf-4671-99a3-2e818df48725",
+    "level": "info",
+    "timestamp": 1765657623844000
+  },
+  {
+    "event_message": "booted (time: 48ms)",
+    "event_type": "Boot",
+    "function_id": "e20365b9-f427-45fc-acd4-ebf1d739d4b1",
+    "id": "b0e83095-d267-4f12-a12f-12c5fe60f60c",
+    "level": "log",
+    "timestamp": 1765657623839000
+  }
+]

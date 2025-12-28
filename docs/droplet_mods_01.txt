@@ -1,0 +1,222 @@
+Droplet Security Hardening & Runtime Changes
+
+Context for Softgen.ai Execution
+
+Target system: Ubuntu 22.04 LTS (DigitalOcean droplet)
+Stack:
+	•	RustDesk Web Frontend (Next.js, Node.js)
+	•	RustDesk Sync API (Node.js :3001)
+	•	Nginx (reverse proxy + TLS via Certbot)
+	•	SQLite (RustDesk DB)
+	•	Supabase (REST API sync)
+
+This document describes all relevant changes performed on the droplet, the security incident observed, and mandatory precautions Softgen.ai must respect when executing future steps (especially Step-4: local → droplet sync).
+
+⸻
+
+1. Security Incident Summary (Root Cause)
+
+A malicious payload was executed from inside the rustdesk-frontend systemd service context.
+
+Evidence (journalctl):
+	•	The service attempted to download and execute:
+
+http://94.154.35.154/weball.sh
+/tmp/x.sh
+*.uhavenobotsxd (multi-arch payloads)
+
+
+	•	This is a known botnet / crypto-miner dropper pattern.
+	•	Execution failed due to missing execute permissions, but network access + command execution was attempted.
+
+Important conclusion:
+
+The infection vector was not nginx, not certbot, and not cron.
+It was code executed within the Node.js process started by systemd.
+
+⸻
+
+2. Immediate Remediation Actions Performed
+
+2.1 Process & Filesystem Cleanup
+	•	Removed known malicious directories:
+
+/opt/rustdesk-frontend/moneroocean
+/opt/rustdesk-frontend/.javs
+/opt/rustdesk-frontend/.sshds
+
+
+	•	Confirmed no running processes related to:
+
+xmrig | monero | uhavenobotsxd | weball | sshds | javs
+
+
+
+2.2 Network Egress Blocking (Critical)
+
+Outbound traffic to the attacker IP was blocked at kernel level:
+
+iptables -A OUTPUT -d 94.154.35.154 -j DROP
+iptables -A OUTPUT -d 94.154.35.154 -j REJECT
+iptables-save > /etc/iptables/rules.v4
+
+This prevents any future callback, even if malicious code reappears.
+
+⸻
+
+3. systemd Service Hardening (Frontend)
+
+3.1 ExecStart Clarification
+
+The service now explicitly runs:
+
+npm start
+→ next start -p 3000
+
+No shell wrappers, no dynamic execution.
+
+3.2 Runtime User Isolation
+
+The service runs under a non-root user (rustdeskweb).
+
+Softgen.ai must NEVER introduce:
+
+	•	sudo inside application code
+	•	child_process.exec(...)
+	•	spawn(...)
+	•	wget, curl, or shell execution from Node
+
+⸻
+
+4. Nginx Configuration – Canonical State
+
+4.1 Single Active Virtual Host
+
+Only one enabled site exists for RustDesk:
+
+/etc/nginx/sites-enabled/rustdesk.bwb.pt.conf
+→ symlink to /etc/nginx/sites-available/rustdesk.bwb.pt.conf
+
+There are two server {} blocks inside the same file:
+	•	Port 80 → HTTPS redirect
+	•	Port 443 → main site
+
+This is expected and correct.
+
+4.2 File Integrity Lock
+
+The canonical config file is locked:
+
+chattr +i /etc/nginx/sites-available/rustdesk.bwb.pt.conf
+
+This prevents:
+	•	accidental overwrites
+	•	certbot/nginx auto-regeneration
+	•	silent duplication
+
+Softgen.ai must not attempt to modify nginx configs unless explicitly instructed.
+
+⸻
+
+5. Port Exposure Rules (Very Important)
+
+5.1 Next.js (Port 3000)
+	•	Must be accessible ONLY via localhost
+	•	Enforced by iptables:
+
+iptables -I INPUT -p tcp --dport 3000 ! -s 127.0.0.1 -j DROP
+
+5.2 Sync API (Port 3001)
+	•	Same rule applies: no public exposure
+	•	Nginx proxies /api/sync → 127.0.0.1:3001
+
+Softgen.ai must never expose Node ports directly to the public network.
+
+⸻
+
+6. Cron & Sync Script Changes
+
+6.1 Active Cron Job
+
+Only one active cron entry is allowed:
+
+* * * * * /opt/rustdesk-integration/scripts/sync-devices.sh >> /opt/rustdesk-integration/logs/sync.log 2>&1
+
+All alternative cron entries are commented out.
+
+6.2 Sync Script Hardening
+
+The script was rewritten with:
+	•	set -euo pipefail
+	•	Explicit dependency checks (jq, curl, sqlite3)
+	•	No shell eval
+	•	No dynamic execution
+	•	REST-only Supabase access (no Edge Functions)
+
+It:
+	•	Reads RustDesk SQLite DB
+	•	Upserts orphan devices
+	•	Never executes external binaries
+	•	Never writes to /tmp except implicitly via curl buffers
+
+⸻
+
+7. Step-4 (Local → Droplet Sync) – Mandatory Rules
+
+When executing Step-4, Softgen.ai MUST:
+
+7.1 Never Copy:
+	•	.env files unless explicitly requested
+	•	node_modules/
+	•	.next/
+	•	.cache/
+	•	any hidden directories not tracked by git
+
+7.2 Always Use:
+	•	rsync --checksum --archive --delete
+	•	.gitignore respected
+	•	explicit allow-list of folders:
+
+app/
+src/
+pages/
+public/
+scripts/
+package.json
+package-lock.json
+
+
+
+7.3 After Copy, Always:
+	1.	Reinstall dependencies on the droplet
+	2.	Run npm audit
+	3.	Restart systemd service
+	4.	Check journalctl -u rustdesk-frontend
+
+⸻
+
+8. Coding Rules to Prevent Reinfection (Non-Negotiable)
+
+Softgen.ai MUST NOT generate or introduce:
+	•	child_process.exec
+	•	spawn, fork, execFile
+	•	eval, Function()
+	•	Base64-decoded runtime payloads
+	•	Obfuscated JS
+	•	Network calls to unknown IPs
+	•	Dynamic shell commands
+
+All network access must be:
+	•	HTTPS
+	•	Domain-based
+	•	Explicitly documented
+
+⸻
+
+9. Final Statement for Softgen.ai
+
+The droplet is now in a known-good, hardened state.
+
+Any future instability, reinfection, or unexpected network traffic must be treated as a regression introduced by new code or deployment steps.
+
+Softgen.ai is expected to respect the operational boundaries described above and flag any requirement that violates them before execution.

@@ -1,0 +1,30 @@
+{
+  "meshFilesRoot": "/opt/meshcentral/meshcentral-files",
+  "rootFolder": "ANDROID",
+  "users": [
+    {
+      "meshUser": "admin",
+      "folderName": "Admin",
+      "httpUser": "admin",
+      "httpPass": "Admin123!"
+    },
+    {
+      "meshUser": "jorge.peixinho@storesace.cv",
+      "folderName": "Jorge",
+      "httpUser": "jorge",
+      "httpPass": "jorge-qr-123"
+    },
+    {
+      "meshUser": "rui.abreu",
+      "folderName": "Rui",
+      "httpUser": "rui",
+      "httpPass": "rui-qr-123"
+    },
+    {
+      "meshUser": "zs.angola",
+      "folderName": "zsangola",
+      "httpUser": "zsangola",
+      "httpPass": "zs-qr-123"
+    }
+  ]
+}

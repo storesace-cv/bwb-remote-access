@@ -1,0 +1,147 @@
+bash-3.2$ ./scripts/Step-2-build-local.sh 
+╔════════════════════════════════════════════════════════════╗
+║           Step 2: Build Local - Next.js                   ║
+╚════════════════════════════════════════════════════════════╝
+
+📦 Versão: 20251212.1155
+🕐 Atualizado: 2025-12-12 11:55 UTC
+
+[Step-2] Root do repositório: /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration
+[Step-2] A carregar variáveis de /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/.env.local
+[Step-2] NEXT_PUBLIC_SUPABASE_URL=https://kqwaibgvmzcqeoctukoy.supabase.co
+[Step-2] NEXT_PUBLIC_SUPABASE_ANON_KEY definido (não mostrado por segurança)
+[Step-2] Validar que todos os diretórios de source necessários existem...
+[Step-2] ✓ Todos os diretórios necessários estão presentes
+[Step-2] 🧹 A limpar artefactos de execuções anteriores...
+[Step-2]   - A matar processos Node.js/Next.js...
+[Step-2]   - A limpar cache do npm
+[Step-2] ✓ Limpeza concluída
+[Step-2] 📦 A instalar dependências...
+[Step-2]   - A usar npm ci (instalação limpa)
+
+added 503 packages, and audited 504 packages in 9s
+
+171 packages are looking for funding
+  run `npm fund` for details
+
+1 critical severity vulnerability
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+[Step-2] ✓ Dependências instaladas
+[Step-2] 🏗️  A executar build de produção...
+[Step-2]   npm run build
+
+> rustdesk-mesh-integration@0.1.0 build
+> next build
+
+   ▲ Next.js 16.0.6 (Turbopack)
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 12.0s
+ ✓ Finished TypeScript in 4.9s    
+ ✓ Collecting page data using 9 workers in 546.2ms    
+ ✓ Generating static pages using 9 workers (23/23) in 728.3ms
+ ✓ Finalizing page optimization in 11.7ms    
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/devices/refresh
+├ ƒ /api/login
+├ ƒ /api/provision/bundle
+├ ƒ /api/provision/claim
+├ ƒ /api/provision/codes
+├ ƒ /api/provision/config
+├ ƒ /api/provision/register
+├ ƒ /api/provision/revoke
+├ ƒ /api/provision/start
+├ ○ /auth/confirm-reset
+├ ○ /auth/reset-password
+├ ○ /dashboard
+├ ○ /dashboard/collaborators
+├ ○ /dashboard/deployments
+├ ○ /dashboard/groups
+├ ○ /dashboard/permissions
+├ ○ /dashboard/profile
+├ ○ /dashboard/users
+├ ○ /i/[code]
+└ ○ /provisioning
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+[Step-2] 🔍 A validar build...
+[Step-2] ✓ BUILD_ID gerado: zYxtpKnYJoCFF8S7_whEf
+[Step-2] ✓ Estrutura de build validada
+
+╔════════════════════════════════════════════════════════════╗
+║              Build Concluído com Sucesso!                  ║
+╚════════════════════════════════════════════════════════════╝
+
+✅ Build ID: zYxtpKnYJoCFF8S7_whEf
+✅ Artefactos gerados em: .next/
+✅ Dependências instaladas: node_modules/
+
+📋 Próximos passos:
+   1️⃣  Testar localmente:  ./scripts/Step-3-test-local.sh
+   2️⃣  Deploy ao droplet:  ./scripts/Step-4-deploy-tested-build.sh
+
+--------------------------------------------------------------------------------
+
+Navigated to https://rustdesk.bwb.pt/
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+Fetch finished loading: GET "<URL>".
+51f7a75ae860f2c8.js:1 Fetch finished loading: POST "https://rustdesk.bwb.pt/api/login".
+y @ 51f7a75ae860f2c8.js:1
+sX @ 8caed091165340c7.js:1
+(anonymous) @ 8caed091165340c7.js:1
+tI @ 8caed091165340c7.js:1
+s3 @ 8caed091165340c7.js:1
+fC @ 8caed091165340c7.js:1
+fN @ 8caed091165340c7.js:1
+VM5958 c19784e45113e15b.js:1 🔥 [CRITICAL] DEBUG Query URL (collaborators): https://kqwaibgvmzcqeoctukoy.supabase.co/rest/v1/mesh_users?select=*&deleted_at=is.null&order=domain.asc,mesh_username.asc&domain=eq.zonetech
+VM5958 c19784e45113e15b.js:1 🔥 [CRITICAL] Response Status: 200
+VM5958 c19784e45113e15b.js:1 🔥 [CRITICAL] Response OK: true
+VM5958 c19784e45113e15b.js:1 🔥 [CRITICAL] RAW API Response: [{…}]0: {id: 'c4a3b4ba-b1e4-488d-9ce4-8a44a6f8954b', mesh_username: 'datalink@datalink.pt', display_name: 'zonetech agent', created_at: '2025-12-20T17:53:20.724501+00:00', auth_user_id: '69280e26-e868-478d-8562-7de0c160535e', …}length: 1[[Prototype]]: Array(0)at: ƒ at()concat: ƒ concat()constructor: ƒ Array()copyWithin: ƒ copyWithin()entries: ƒ entries()every: ƒ every()fill: ƒ fill()filter: ƒ filter()find: ƒ find()findIndex: ƒ findIndex()findLast: ƒ findLast()findLastIndex: ƒ findLastIndex()flat: ƒ flat()flatMap: ƒ flatMap()forEach: ƒ forEach()includes: ƒ includes()indexOf: ƒ indexOf()join: ƒ join()keys: ƒ keys()lastIndexOf: ƒ lastIndexOf()length: 0map: ƒ map()pop: ƒ pop()push: ƒ push()reduce: ƒ reduce()reduceRight: ƒ reduceRight()reverse: ƒ reverse()shift: ƒ shift()slice: ƒ slice()some: ƒ some()sort: ƒ sort()splice: ƒ splice()toLocaleString: ƒ toLocaleString()toReversed: ƒ toReversed()toSorted: ƒ toSorted()toSpliced: ƒ toSpliced()toString: ƒ toString()unshift: ƒ unshift()values: ƒ values()with: ƒ with()Symbol(Symbol.iterator): ƒ values()Symbol(Symbol.unscopables): {at: true, copyWithin: true, entries: true, fill: true, find: true, …}[[Prototype]]: Object
+VM5958 c19784e45113e15b.js:1 🔥 [CRITICAL] Total records returned: 1
+VM5958 c19784e45113e15b.js:1 🔥 [CRITICAL] After client filtering: 0
+
+
+-------------------------------------------------------------------------------
+

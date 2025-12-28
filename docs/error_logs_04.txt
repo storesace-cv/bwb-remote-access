@@ -1,0 +1,584 @@
+bash-3.2$ ssh root@46.101.78.179 "journalctl -u rustdesk-sync-api -f"
+Dec 13 00:45:40 remote-srv rustdesk-sync-api[106462]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:45:40 remote-srv rustdesk-sync-api[106462]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:45:40 remote-srv rustdesk-sync-api[106462]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:45:40 remote-srv rustdesk-sync-api[106462]: }
+Dec 13 00:45:40 remote-srv rustdesk-sync-api[106462]: Node.js v20.19.6
+Dec 13 00:45:40 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:45:40 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:45:45 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 3.
+Dec 13 00:45:45 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:45:45 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]: node:internal/modules/cjs/loader:1210
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:   throw err;
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:   ^
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]: Error: Cannot find module 'express'
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]: Require stack:
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]: }
+Dec 13 00:45:45 remote-srv rustdesk-sync-api[106520]: Node.js v20.19.6
+Dec 13 00:45:45 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:45:45 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:45:50 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 4.
+Dec 13 00:45:50 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:45:50 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]: node:internal/modules/cjs/loader:1210
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:   throw err;
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:   ^
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]: Error: Cannot find module 'express'
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]: Require stack:
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]: }
+Dec 13 00:45:50 remote-srv rustdesk-sync-api[106527]: Node.js v20.19.6
+Dec 13 00:45:50 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:45:50 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:45:56 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 5.
+Dec 13 00:45:56 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:45:56 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]: node:internal/modules/cjs/loader:1210
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:   throw err;
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:   ^
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]: Error: Cannot find module 'express'
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]: Require stack:
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]: }
+Dec 13 00:45:56 remote-srv rustdesk-sync-api[106534]: Node.js v20.19.6
+Dec 13 00:45:56 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:45:56 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:01 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 6.
+Dec 13 00:46:01 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:01 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:   throw err;
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:   ^
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]: Error: Cannot find module 'express'
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]: Require stack:
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]: }
+Dec 13 00:46:01 remote-srv rustdesk-sync-api[106545]: Node.js v20.19.6
+Dec 13 00:46:01 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:01 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:06 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 7.
+Dec 13 00:46:06 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:06 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:   throw err;
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:   ^
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]: Error: Cannot find module 'express'
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]: Require stack:
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]: }
+Dec 13 00:46:06 remote-srv rustdesk-sync-api[106612]: Node.js v20.19.6
+Dec 13 00:46:06 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:06 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:11 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 8.
+Dec 13 00:46:11 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:11 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:   throw err;
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:   ^
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]: Error: Cannot find module 'express'
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]: Require stack:
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]: }
+Dec 13 00:46:11 remote-srv rustdesk-sync-api[106619]: Node.js v20.19.6
+Dec 13 00:46:11 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:11 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:17 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 9.
+Dec 13 00:46:17 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:17 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:   throw err;
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:   ^
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]: Error: Cannot find module 'express'
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]: Require stack:
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]: }
+Dec 13 00:46:17 remote-srv rustdesk-sync-api[106626]: Node.js v20.19.6
+Dec 13 00:46:17 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:17 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:22 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 10.
+Dec 13 00:46:22 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:22 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:   throw err;
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:   ^
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]: Error: Cannot find module 'express'
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]: Require stack:
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]: }
+Dec 13 00:46:22 remote-srv rustdesk-sync-api[106633]: Node.js v20.19.6
+Dec 13 00:46:22 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:22 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:27 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 11.
+Dec 13 00:46:27 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:27 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:   throw err;
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:   ^
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]: Error: Cannot find module 'express'
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]: Require stack:
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]: }
+Dec 13 00:46:27 remote-srv rustdesk-sync-api[106640]: Node.js v20.19.6
+Dec 13 00:46:27 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:27 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:32 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 12.
+Dec 13 00:46:32 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:32 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:   throw err;
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:   ^
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]: Error: Cannot find module 'express'
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]: Require stack:
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]: }
+Dec 13 00:46:32 remote-srv rustdesk-sync-api[106647]: Node.js v20.19.6
+Dec 13 00:46:32 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:32 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:38 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 13.
+Dec 13 00:46:38 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:38 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:   throw err;
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:   ^
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]: Error: Cannot find module 'express'
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]: Require stack:
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]: }
+Dec 13 00:46:38 remote-srv rustdesk-sync-api[106659]: Node.js v20.19.6
+Dec 13 00:46:38 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:38 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:43 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 14.
+Dec 13 00:46:43 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:43 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:   throw err;
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:   ^
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]: Error: Cannot find module 'express'
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]: Require stack:
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]: }
+Dec 13 00:46:43 remote-srv rustdesk-sync-api[106666]: Node.js v20.19.6
+Dec 13 00:46:43 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:43 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:48 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 15.
+Dec 13 00:46:48 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:48 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:   throw err;
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:   ^
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]: Error: Cannot find module 'express'
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]: Require stack:
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]: }
+Dec 13 00:46:48 remote-srv rustdesk-sync-api[106673]: Node.js v20.19.6
+Dec 13 00:46:48 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:48 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:53 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 16.
+Dec 13 00:46:53 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:53 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:   throw err;
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:   ^
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]: Error: Cannot find module 'express'
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]: Require stack:
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]: }
+Dec 13 00:46:53 remote-srv rustdesk-sync-api[106680]: Node.js v20.19.6
+Dec 13 00:46:53 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:53 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:46:59 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 17.
+Dec 13 00:46:59 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:59 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]: node:internal/modules/cjs/loader:1210
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:   throw err;
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:   ^
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]: Error: Cannot find module 'express'
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]: Require stack:
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]: }
+Dec 13 00:46:59 remote-srv rustdesk-sync-api[106687]: Node.js v20.19.6
+Dec 13 00:46:59 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:46:59 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:04 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 18.
+Dec 13 00:47:04 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:04 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:   throw err;
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:   ^
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]: Error: Cannot find module 'express'
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]: Require stack:
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]: }
+Dec 13 00:47:04 remote-srv rustdesk-sync-api[106758]: Node.js v20.19.6
+Dec 13 00:47:04 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:04 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:09 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 19.
+Dec 13 00:47:09 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:09 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:   throw err;
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:   ^
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]: Error: Cannot find module 'express'
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]: Require stack:
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]: }
+Dec 13 00:47:09 remote-srv rustdesk-sync-api[106765]: Node.js v20.19.6
+Dec 13 00:47:09 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:09 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:14 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 20.
+Dec 13 00:47:14 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:14 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:   throw err;
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:   ^
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]: Error: Cannot find module 'express'
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]: Require stack:
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]: }
+Dec 13 00:47:14 remote-srv rustdesk-sync-api[106772]: Node.js v20.19.6
+Dec 13 00:47:14 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:14 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:20 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 21.
+Dec 13 00:47:20 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:20 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:   throw err;
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:   ^
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]: Error: Cannot find module 'express'
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]: Require stack:
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]: }
+Dec 13 00:47:20 remote-srv rustdesk-sync-api[106779]: Node.js v20.19.6
+Dec 13 00:47:20 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:20 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:25 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 22.
+Dec 13 00:47:25 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:25 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:   throw err;
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:   ^
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]: Error: Cannot find module 'express'
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]: Require stack:
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]: }
+Dec 13 00:47:25 remote-srv rustdesk-sync-api[106786]: Node.js v20.19.6
+Dec 13 00:47:25 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:25 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:30 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 23.
+Dec 13 00:47:30 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:30 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:   throw err;
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:   ^
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]: Error: Cannot find module 'express'
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]: Require stack:
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]: }
+Dec 13 00:47:30 remote-srv rustdesk-sync-api[106793]: Node.js v20.19.6
+Dec 13 00:47:30 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:30 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:35 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 24.
+Dec 13 00:47:35 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:35 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:   throw err;
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:   ^
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]: Error: Cannot find module 'express'
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]: Require stack:
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]: }
+Dec 13 00:47:35 remote-srv rustdesk-sync-api[106800]: Node.js v20.19.6
+Dec 13 00:47:35 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:35 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+Dec 13 00:47:41 remote-srv systemd[1]: rustdesk-sync-api.service: Scheduled restart job, restart counter is at 25.
+Dec 13 00:47:41 remote-srv systemd[1]: Stopped RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:41 remote-srv systemd[1]: Started RustDesk Sync API - On-demand device synchronization.
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]: node:internal/modules/cjs/loader:1210
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:   throw err;
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:   ^
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]: Error: Cannot find module 'express'
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]: Require stack:
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]: - /opt/rustdesk-frontend/server/sync-api.js
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module._load (node:internal/modules/cjs/loader:1038:27)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module.require (node:internal/modules/cjs/loader:1289:19)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at require (node:internal/modules/helpers:182:18)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Object.<anonymous> (/opt/rustdesk-frontend/server/sync-api.js:15:17)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module._compile (node:internal/modules/cjs/loader:1521:14)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module.load (node:internal/modules/cjs/loader:1266:32)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Module._load (node:internal/modules/cjs/loader:1091:12)
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:   code: 'MODULE_NOT_FOUND',
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]:   requireStack: [ '/opt/rustdesk-frontend/server/sync-api.js' ]
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]: }
+Dec 13 00:47:41 remote-srv rustdesk-sync-api[106807]: Node.js v20.19.6
+Dec 13 00:47:41 remote-srv systemd[1]: rustdesk-sync-api.service: Main process exited, code=exited, status=1/FAILURE
+Dec 13 00:47:41 remote-srv systemd[1]: rustdesk-sync-api.service: Failed with result 'exit-code'.
+D

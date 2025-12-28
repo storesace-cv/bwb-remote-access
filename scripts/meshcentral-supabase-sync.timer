@@ -1,0 +1,12 @@
+[Unit]
+Description=Run MeshCentral → Supabase user sync every 60 seconds
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=60s
+RandomizedDelaySec=0
+Unit=meshcentral-supabase-sync.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

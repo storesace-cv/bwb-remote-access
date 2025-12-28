@@ -1,0 +1,19 @@
+{
+  "name": "rustdesk-sync-api",
+  "version": "1.0.0",
+  "description": "Local API for on-demand RustDesk device synchronization",
+  "main": "sync-api.js",
+  "scripts": {
+    "start": "node sync-api.js",
+    "dev": "nodemon sync-api.js"
+  },
+  "keywords": ["rustdesk", "sync", "api"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

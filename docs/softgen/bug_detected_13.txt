@@ -1,0 +1,61 @@
+bash-3.2$ ./scripts/Step-2-build-local.sh
+╔════════════════════════════════════════════════════════════╗
+║           Step 2: Build Local - Next.js                   ║
+╚════════════════════════════════════════════════════════════╝
+
+📦 Versão: 20251212.1155
+🕐 Atualizado: 2025-12-12 11:55 UTC
+
+[Step-2] Root do repositório: /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration
+[Step-2] A carregar variáveis de /Users/jorgepeixinho/Documents/NetxCloud/projectos/bwb/desenvolvimento/my-softgen-rustdesk-mesh-integration/.env.local
+[Step-2] NEXT_PUBLIC_SUPABASE_URL=https://kqwaibgvmzcqeoctukoy.supabase.co
+[Step-2] NEXT_PUBLIC_SUPABASE_ANON_KEY definido (não mostrado por segurança)
+[Step-2] Validar que todos os diretórios de source necessários existem...
+[Step-2] ✓ Todos os diretórios necessários estão presentes
+[Step-2] 🧹 A limpar artefactos de execuções anteriores...
+[Step-2]   - A matar processos Node.js/Next.js...
+[Step-2]   - A remover .next/
+[Step-2]   - A remover node_modules/ (isto pode demorar alguns minutos)...
+[Step-2]     ℹ️  Para pular esta etapa: export SKIP_NODE_MODULES_CLEAN=1
+[Step-2]     ✓ node_modules removido
+[Step-2]   - A limpar cache do npm
+[Step-2] ✓ Limpeza concluída
+[Step-2] 📦 A instalar dependências...
+[Step-2]   - A usar npm ci (instalação limpa)
+
+added 503 packages, and audited 504 packages in 9s
+
+171 packages are looking for funding
+  run `npm fund` for details
+
+1 critical severity vulnerability
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+[Step-2] ✓ Dependências instaladas
+[Step-2] 🏗️  A executar build de produção...
+[Step-2]   npm run build
+
+> rustdesk-mesh-integration@0.1.0 build
+> next build
+
+   ▲ Next.js 16.0.6 (Turbopack)
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 11.7s
+   Running TypeScript  ..Failed to compile.
+
+./supabase 2/functions/admin-create-auth-user/index.ts:2:23
+Type error: Cannot find module 'https://deno.land/std@0.168.0/http/server.ts' or its corresponding type declarations.
+
+  1 | // Version: 2025-12-22T05:00:00Z - Create Supabase Auth user and link to mesh_users
+> 2 | import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+    |                       ^
+  3 | import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.1";
+  4 |
+  5 | const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+Next.js build worker exited with code: 1 and signal: null
+bash-3.2$ 

@@ -1,0 +1,126 @@
+Abaixo vai um método final completo (copy + FileProvider + Intent) pronto a colar, mais os 2 ficheiros mínimos que tens de ter (Manifest + res/xml/file_paths.xml). Isto resolve o file://... exposed beyond app em Android 7–15 e continua compatível com Android 5–6.
+
+⸻
+
+1) Método final (colar num utilitário Kotlin)
+
+Cria (ou cola) num ficheiro tipo ApkInstaller.kt:
+
+package pt.bwb.android_provisioner.app.util
+
+import android.content.Context
+import android.content.Intent
+import android.os.Environment
+import androidx.core.content.FileProvider
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+
+object ApkInstaller {
+
+    /**
+     * Instala um APK a partir de um path em storage partilhado (ex: /storage/emulated/0/Download/xxx.apk),
+     * evitando FileUriExposedException:
+     *  - copia o APK para o external files dir da app
+     *  - cria content:// URI via FileProvider
+     *  - lança o installer do sistema
+     *
+     * Retorna o File final (dst) para logging.
+     */
+    @JvmStatic
+    fun installDownloadedApk(context: Context, downloadedApkPath: String): File {
+        val src = File(downloadedApkPath)
+        require(src.exists()) { "APK source not found: $downloadedApkPath" }
+        require(src.isFile) { "APK source is not a file: $downloadedApkPath" }
+
+        // Destino: pasta controlada pela app (não precisa de permissões)
+        val dstDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            ?: throw IllegalStateException("getExternalFilesDir(DIRECTORY_DOWNLOADS) returned null")
+
+        // Nome fixo para facilitar re-instalação/overwrite
+        val dst = File(dstDir, "rustdesk.apk")
+
+        // Copy (overwrite)
+        copyFile(src, dst)
+
+        // content:// URI via FileProvider
+        val apkUri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            dst
+        )
+
+        // Lançar instalador do sistema
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(apkUri, "application/vnd.android.package-archive")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        context.startActivity(intent)
+        return dst
+    }
+
+    private fun copyFile(src: File, dst: File) {
+        // garante pasta
+        dst.parentFile?.mkdirs()
+
+        FileInputStream(src).use { input ->
+            FileOutputStream(dst, false).use { output ->
+                val buf = ByteArray(DEFAULT_BUFFER_SIZE)
+                while (true) {
+                    val r = input.read(buf)
+                    if (r <= 0) break
+                    output.write(buf, 0, r)
+                }
+                output.flush()
+            }
+        }
+    }
+}
+
+Como chamar (exemplo)
+
+Quando o download terminar e tiveres o path real do ficheiro:
+
+ApkInstaller.installDownloadedApk(this, "/storage/emulated/0/Download/rustdesk-arm64-v8a.apk")
+
+
+⸻
+
+2) AndroidManifest.xml (provider obrigatório)
+
+Dentro de <application ...>:
+
+<provider
+    android:name="androidx.core.content.FileProvider"
+    android:authorities="${applicationId}.fileprovider"
+    android:exported="false"
+    android:grantUriPermissions="true">
+    <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+</provider>
+
+
+⸻
+
+3) res/xml/file_paths.xml (criar este ficheiro)
+
+Criar: app/src/main/res/xml/file_paths.xml (ajusta o módulo se não for app)
+
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Permite partilhar ficheiros dentro de getExternalFilesDir(DIRECTORY_DOWNLOADS) -->
+    <external-files-path
+        name="downloads"
+        path="Download/" />
+</paths>
+
+
+⸻
+
+Notas práticas (para não voltares a cair nisto)
+	•	Este método não instala “silenciosamente” (isso só com device owner/MDM/root). Ele abre o instalador do sistema como deve ser.
+	•	Não dependes de permissões de storage.
+	•	O FileProvider é obrigatório em Android 7+ para partilhar ficheiros com outras apps via Intent.

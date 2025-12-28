@@ -1,0 +1,147 @@
+root@remote-srv:~# sudo systemctl status rustdesk-frontend
+sudo journalctl -u rustdesk-frontend -n 100 --no-pager
+● rustdesk-frontend.service - RustDesk Web Frontend
+     Loaded: loaded (/etc/systemd/system/rustdesk-frontend.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2025-12-15 02:56:40 UTC; 9h ago
+       Docs: https://github.com/YOUR_REPO/rustdesk-mesh-integration
+   Main PID: 656467 (npm start)
+      Tasks: 24 (limit: 2307)
+     Memory: 129.5M
+        CPU: 3.796s
+     CGroup: /system.slice/rustdesk-frontend.service
+             ├─656467 "npm start" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+             ├─656478 sh -c "next start -p 3000"
+             └─656479 "next-server (v16.0.6)" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:  ⨯ Error: NEXT_REDIRECT
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:   digest: 'NEXT_PUBLIC_SUPABASE_URL=https://kqwaibgvmzcqeoctukoy.supabase.co\n' +
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:     'NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1>
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:     'NEXT_PUBLIC_SITE_URL=https://rustdesk.bwb.pt\n'
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]: }
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]:  ⨯ Error: NEXT_REDIRECT
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]:   digest: '789c8d56598fe23810fe2b91f765572217840091565a1ad23d6148c2e4e88179b11c63c04daeb1138e1ecd7f1f39d007f4a17d8a5daefaeafacace2f5021b62615b000ab79b5247cab24fb44292bd>
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]: }
+lines 1-23/23 (END)
+Dec 15 02:55:58 remote-srv rustdesk-frontend[655713]: > next start -p 3000
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]:    ▲ Next.js 16.0.6
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]:    - Local:         http://localhost:3000
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]:    - Network:       http://46.101.78.179:3000
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]:  ✓ Starting...
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]:  ⚠ Installing TypeScript as it was not found while loading "next.config.ts".
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]: Installing devDependencies (npm):
+Dec 15 02:55:59 remote-srv rustdesk-frontend[655727]: - typescript
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]: added 356 packages, and audited 425 packages in 30s
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]: 151 packages are looking for funding
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]:   run `npm fund` for details
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]: 1 critical severity vulnerability
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]: To address all issues, run:
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]:   npm audit fix --force
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655789]: Run `npm audit` for details.
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:  ⨯ Failed to load next.config.ts, see more info here https://nextjs.org/docs/messages/next-config-error
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]: Error: Failed to transpile "next.config.ts".
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:     at ignore-listed frames {
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   [cause]: Error: Cannot find module 'typescript'
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   Require stack:
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   - /opt/rustdesk-frontend/node_modules/next/dist/build/next-config-ts/transpile-config.js
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   - /opt/rustdesk-frontend/node_modules/next/dist/server/config.js
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   - /opt/rustdesk-frontend/node_modules/next/dist/cli/next-test.js
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   - /opt/rustdesk-frontend/node_modules/next/dist/bin/next
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:       at ignore-listed frames {
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:     code: 'MODULE_NOT_FOUND',
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:     requireStack: [
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:       '/opt/rustdesk-frontend/node_modules/next/dist/build/next-config-ts/transpile-config.js',
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:       '/opt/rustdesk-frontend/node_modules/next/dist/server/config.js',
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:       '/opt/rustdesk-frontend/node_modules/next/dist/cli/next-test.js',
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:       '/opt/rustdesk-frontend/node_modules/next/dist/bin/next'
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:     ]
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]:   }
+Dec 15 02:56:30 remote-srv rustdesk-frontend[655727]: }
+Dec 15 02:56:30 remote-srv systemd[1]: rustdesk-frontend.service: Main process exited, code=exited, status=1/FAILURE
+Dec 15 02:56:30 remote-srv systemd[1]: rustdesk-frontend.service: Failed with result 'exit-code'.
+Dec 15 02:56:30 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 10.841s CPU time.
+Dec 15 02:56:40 remote-srv systemd[1]: rustdesk-frontend.service: Scheduled restart job, restart counter is at 1.
+Dec 15 02:56:40 remote-srv systemd[1]: Stopped RustDesk Web Frontend.
+Dec 15 02:56:40 remote-srv systemd[1]: rustdesk-frontend.service: Consumed 10.841s CPU time.
+Dec 15 02:56:40 remote-srv systemd[1]: Started RustDesk Web Frontend.
+Dec 15 02:56:41 remote-srv rustdesk-frontend[656467]: > rustdesk-mesh-integration@0.1.0 start
+Dec 15 02:56:41 remote-srv rustdesk-frontend[656467]: > next start -p 3000
+Dec 15 02:56:42 remote-srv rustdesk-frontend[656479]:    ▲ Next.js 16.0.6
+Dec 15 02:56:42 remote-srv rustdesk-frontend[656479]:    - Local:         http://localhost:3000
+Dec 15 02:56:42 remote-srv rustdesk-frontend[656479]:    - Network:       http://46.101.78.179:3000
+Dec 15 02:56:42 remote-srv rustdesk-frontend[656479]:  ✓ Starting...
+Dec 15 02:56:43 remote-srv rustdesk-frontend[656479]: [instrumentation] Edge runtime active — skipping node-specific bootstrap tasks.
+Dec 15 02:56:43 remote-srv rustdesk-frontend[656479]:  ✓ Ready in 2.2s
+Dec 15 03:02:09 remote-srv rustdesk-frontend[656479]: [debugLogger] Could not initialize debug log at /var/log/rustdesk-mesh/app-debug.log: ENOENT: no such file or directory, mkdir '/var/log/rustdesk-mesh'
+Dec 15 03:02:09 remote-srv rustdesk-frontend[656479]: [debugLogger] Falling back to /opt/rustdesk-frontend/logs/app-debug.log after failure with /var/log/rustdesk-mesh/app-debug.log
+Dec 15 03:32:38 remote-srv rustdesk-frontend[656479]:  ⨯ Error: x
+Dec 15 03:32:38 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 03:32:38 remote-srv rustdesk-frontend[656479]:   digest: 'dnVsbgo='
+Dec 15 03:32:38 remote-srv rustdesk-frontend[656479]: }
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:  ⨯ Error: NEXT_REDIRECT
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:   digest: 'uid=996(rustdeskweb) gid=996(rustdeskweb) groups=996(rustdeskweb)\n'
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]: }
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:  ⨯ Error: NEXT_REDIRECT
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:   digest: 'total 368\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x  16 rustdeskweb rustdeskweb   4096 Dec 15 02:55 .\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   8 root        root          4096 Dec 14 23:55 ..\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   3 rustdeskweb rustdeskweb   4096 Dec 11 08:48 .config\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb    350 Dec  8 21:20 .env.local\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   3 rustdeskweb rustdeskweb   4096 Dec 11 08:48 .javs\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   8 rustdeskweb rustdeskweb   4096 Dec 15 02:54 .next\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxrwxr-x   4 rustdeskweb rustdeskweb   4096 Dec 10 21:44 .npm\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxrwxr-x   5 rustdeskweb rustdeskweb   4096 Dec 11 19:37 .pm2\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb    382 Dec 11 20:45 .profile\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 11 18:16 .sshds\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rwxr-xr-x   1 rustdeskweb rustdeskweb     43 Dec 11 08:48 .xprofile\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 11 08:48 bin\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb   2052 Dec 15 02:56 deployment-history.log\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb    258 Dec  8 21:04 ecosystem.config.js\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 10 23:55 logs\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 11 20:45 moneroocean\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb    129 Dec 12 21:51 next.config.ts\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb   4053 Dec 13 17:44 node\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxrwxr-x 342 rustdeskweb rustdeskweb  16384 Dec 15 02:56 node_modules\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb 257391 Dec 15 02:56 package-lock.json\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb    861 Dec 15 02:56 package.json\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 15 02:03 public\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 15 02:52 scripts\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   2 rustdeskweb rustdeskweb   4096 Dec 13 20:03 server\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     'drwxr-xr-x   6 rustdeskweb rustdeskweb   4096 Dec 15 02:44 src\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rwxr-xr-x   1 rustdeskweb rustdeskweb   1050 Dec 12 21:51 start.sh\n' +
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]:     '-rw-r--r--   1 rustdeskweb rustdeskweb    845 Dec 12 21:51 tsconfig.json\n'
+Dec 15 06:00:02 remote-srv rustdesk-frontend[656479]: }
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:  ⨯ Error: NEXT_REDIRECT
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:   digest: 'NEXT_PUBLIC_SUPABASE_URL=https://kqwaibgvmzcqeoctukoy.supabase.co\n' +
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:     'NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxd2FpYmd2bXpjcWVvY3R1a295Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1MjQxOTMsImV4cCI6MjA4MDEwMDE5M30.8C3b_iSn4EXKSkmef40XzF7Y4Uqy7i-OLfXNsRiGC3s\n' +
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]:     'NEXT_PUBLIC_SITE_URL=https://rustdesk.bwb.pt\n'
+Dec 15 06:00:03 remote-srv rustdesk-frontend[656479]: }
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]:  ⨯ Error: NEXT_REDIRECT
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]:     at ignore-listed frames {
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]:   digest: '789c8d56598fe23810fe2b91f765572217840091565a1ad23d6148c2e4e88179b11c63c04daeb1138e1ecd7f1f39d007f4a17d8a5daefaeafacace2f5021b62615b000ab79b5247cab24fb44292bd00235270cd225b0404d97ff0e06e6df4f3a7b92fc23addf15b2a22ef91b3968812d613949212329419c000b4c695e1f2446b2a22232673ba9abe85d459375d390d724278c62e92fbd67c87152e7552d85ee4cba6554f28a9da41b525bb3da5d4b37a5381a496daddd950e7d139ac6d5e7ce8bd5c613680192ef60752c8573d78e8653d0029b825710178c705815154a810574d002b8ac61562c89d88f7d3920eb3a45ece960f3082cd0360686a21b9a00411ca2dda17d3666283b81c12c11a281d9393bdf21c681f50bc4a11dbc2af99e24a005f23283b8c857740d9bcaa335c94563f23253754de92b6d292f9644ddb535451f28a69436053c9886b42fd896970813aeae50cac9194da8437220b844d5065840ad3953139aabe200b4c017dfb585b8282bf5291679c58abc22f912b4c0cc0f2260818ea66967c412e12d5a13f8c08bfc434bf5aca5345a6f123b2d3fb656f23263f8d22e2d304a61c9c88a1e3e8b385c8491ed8ea13db74770e68c8105ccae69983dd002237fea8baa8b5ca6fe9d376c92bfecc1c48f036f38856114d8431758a06fe946a733e86997f1bc445273767924963bc2386d2a746adca5064678433ecfff0a52f4717d2c9f5a98d2a469a1a0689d12ae0a8a5c0a8a2591d7c7f2b9db62a33c70d1d461f4e563e717284a4273ab517c47fc8ee8ffc5f65f5e6638a52aab73996346cbead9484429bf4089a6abfc6affbc7d396816a7ed6999a32673d0028e77ef8f8691e37bb06103eea05ed2c7baa9919ea11b665f1bb47b49778506ba99744dc101cf1fdbef0ccb6bfae72823afb82367846f649a5764cd50451bd24f87de1db0c04889a35bb97fb64fe98ae0234e093c252ea69b1c2a89578855925c4ae7510bbfd8d3a98841f84f10df5cf97fe197a6e88af6069dec4e5747837bc9a5755a24287d99419125a9b0faced0d19c56e7ae7dce5659689ed825ccaf6f9c7729d154b6cc649cd2332fbf8f3f9bec37297c30835986f2e5abd44537a1eddd030b94ac58d6f8dc1fc7732238fadca73d76a2e6cad8518164cf2318c45ee4341787c8a8091cc2e6641638f7c3c8867ee0dc391eb0c0a6aa4a4b3db1563c33d6ab7bf479b04b561c8ec002af71fc911d86f6f81c75c56af2e47d16df4c9d110ce3d9f06618da300ea66747dc52d5edcf3da2c97a973de29fa4c055bd2d8e0aaf4b94204e145c7c8432f47c0f7eb517c002e438d9247798fa74e2c48f8eee51873b79d0c523c774b6e5fc7e341928e4382971c7154a8fcbf9cd6691dd3efe0885e224fd411dd3c9aac3b27d5b2eb2653b99970ff8fbfd6ed10974d41e741dbaa7381bf01fa1d0bbad93b641a7a349b9987fa3fe83ddf11ebee9eec3b7831fb9dcc9ee0de1d87d181aeed8debb63bbeb7634a53fea249086b961cfbf86db8cac0c6dfe78db5b18f1cf638fcafe7435f77840ef461d7e9db2135d17eded6f4f108711741d0f86d170f455bc019d7edfd4fa4f58637b36f517aeed45a72b05b440140737feeca4ad83df2f8f3dc4452d26d1305a8072b8d989a93c3dd1bfff0039a624b3'
+Dec 15 06:09:39 remote-srv rustdesk-frontend[656479]: }
+root@remote-srv:~# 
+
+-----------------------------------
+
+root@remote-srv:~# # Ver env no processo actual
+ps aux | grep rustdesk-frontend
+# Depois, dentro de uma shell com o mesmo utilizador:
+env | grep SUPABASE
+rustdes+   52207 36.3 14.6 336744 295584 ?       SNsl Dec14 675:55 /opt/rustdesk-frontend/.sshds/sshds --config=/opt/rustdesk-frontend/.sshds/config_background.json
+rustdes+   52209 29.8 13.8 323400 278516 ?       Sl   Dec14 555:32 /opt/rustdesk-frontend/.javs/javs/javs --daemonized
+rustdes+   52224 20.5 13.5 727072 271804 ?       SNsl Dec14 383:12 /opt/rustdesk-frontend/moneroocean/xmrig --config=/opt/rustdesk-frontend/moneroocean/config_background.json
+root      972960  0.0  0.0   2892  1000 ?        Ss   12:08   0:00 /bin/sh -c /opt/rustdesk-frontend/scripts/sync-devices.sh >> /var/log/rustdesk-sync.log 2>&1
+root      972962  0.0  0.1   8028  3660 ?        S    12:08   0:00 bash /opt/rustdesk-frontend/scripts/sync-devices.sh
+root      972963  0.0  0.0   2892   984 ?        Ss   12:08   0:00 /bin/sh -c sleep 30; /opt/rustdesk-frontend/scripts/sync-devices.sh >> /var/log/rustdesk-sync.log 2>&1
+root      973005  0.0  0.1   8028  2172 ?        S    12:08   0:00 bash /opt/rustdesk-frontend/scripts/sync-devices.sh
+root      973015  0.0  0.1   8028  2112 ?        S    12:08   0:00 bash /opt/rustdesk-frontend/scripts/sync-devices.sh
+root      973025  0.0  0.1   7012  2176 pts/0    S+   12:08   0:00 grep --color=auto rustdesk-frontend
+root@remote-srv:~# 
+
+-------------------------------------
+
