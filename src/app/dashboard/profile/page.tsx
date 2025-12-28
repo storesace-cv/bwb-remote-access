@@ -57,6 +57,9 @@ export default function ProfilePage() {
   const [osPreference, setOsPreference] = useState<OsPreference | null>(null);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
+  // Auth0 admin access state
+  const [auth0Info, setAuth0Info] = useState<Auth0SessionInfo | null>(null);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const token = window.localStorage.getItem("rustdesk_jwt");
