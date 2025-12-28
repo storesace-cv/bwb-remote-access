@@ -68,6 +68,8 @@ export function isMeshCentralDbAvailable(): boolean {
     return false;
   }
   try {
+    // Use dynamic import for fs module
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const fs = require("fs");
     return fs.existsSync(MESHCENTRAL_DB_PATH);
   } catch {
