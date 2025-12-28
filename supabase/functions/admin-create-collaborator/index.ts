@@ -1,4 +1,3 @@
-<![CDATA[
 // Version: 2025-12-22T19:54:00Z - Fixed auth pattern to match admin-list-groups (service role key)
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -348,4 +347,3 @@ async function handler(req: Request): Promise<Response> {
 }
 
 serve(handler);
-]]></![CDATA[>
