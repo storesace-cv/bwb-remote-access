@@ -10,6 +10,15 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 type OsPreference = "windows" | "macos";
 
+// Auth0 session info for admin button
+interface Auth0SessionInfo {
+  authenticated: boolean;
+  canManageUsers: boolean;
+  roleLabel?: string | null;
+  email?: string;
+  org?: string;
+}
+
 interface MeshUser {
   id: string;
   mesh_username: string;
