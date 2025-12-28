@@ -1,12 +1,23 @@
+// Sprint 1: Security Hardening - Centralized auth + structured logging
+export const config = { verify_jwt: false };
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import {
+  validateJwt,
+  validateDeviceId,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "DELETE, OPTIONS",
 };
 
@@ -32,80 +43,75 @@ interface AndroidDevice {
   } | null;
 }
 
-const supabaseAdmin = createClient(
-  SUPABASE_URL,
-  SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
-
-function getAuthUserId(authHeader: string | null): string | null {
-  if (!authHeader) return null;
-  const match = authHeader.match(/^Bearer\s+(.+)$/i);
-  if (!match) return null;
-  const token = match[1];
-
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const payloadBase64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const payloadJson = atob(payloadBase64);
-    const payload = JSON.parse(payloadJson) as { sub?: string };
-    return payload.sub ?? null;
-  } catch {
-    return null;
-  }
-}
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+});
 
 serve(async (req) => {
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("remove-device", correlationId);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   if (req.method !== "DELETE") {
-    return new Response(
-      JSON.stringify({ error: "method_not_allowed", message: "Only DELETE method is allowed" }),
-      { status: 405, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    logger.warn("Method not allowed", { method: req.method });
+    return jsonResponse(
+      { error: "method_not_allowed", message: "Only DELETE method is allowed" },
+      405,
+      corsHeaders,
     );
   }
 
+  // Validate JWT using centralized auth
   const authHeader = req.headers.get("Authorization");
-  const authUserId = getAuthUserId(authHeader);
+  const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
 
-  console.log("[remove-device] Request received from auth_user_id:", authUserId ?? "anonymous");
+  if (!authResult.ok) {
+    return authErrorResponse(authResult, corsHeaders);
+  }
 
+  const authUserId = authResult.context.authUserId;
   if (!authUserId) {
-    return new Response(
-      JSON.stringify({ error: "unauthorized", message: "Missing or invalid Authorization header" }),
-      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    logger.warn("No user ID in token");
+    return jsonResponse(
+      { error: "unauthorized", message: "Missing or invalid Authorization header" },
+      401,
+      corsHeaders,
     );
   }
+
+  logger.info("Request received", { method: req.method }, authUserId);
 
   let body: RemoveDeviceBody;
   try {
     body = await req.json();
   } catch {
-    return new Response(
-      JSON.stringify({ error: "invalid_json", message: "Request body must be valid JSON" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    logger.warn("Invalid JSON body", undefined, authUserId);
+    return jsonResponse(
+      { error: "invalid_json", message: "Request body must be valid JSON" },
+      400,
+      corsHeaders,
     );
   }
 
-  const deviceIdRaw = typeof body.device_id === "string" ? body.device_id.trim() : "";
-  const deviceId = deviceIdRaw.replace(/\s+/g, "");
-
-  if (!deviceId || deviceId.length === 0) {
-    return new Response(
-      JSON.stringify({ error: "missing_device_id", message: "device_id is required" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+  // Validate device_id using centralized validation
+  const deviceIdValidation = validateDeviceId(body.device_id);
+  if (!deviceIdValidation.valid) {
+    logger.warn("Invalid device_id", { error: deviceIdValidation.error }, authUserId);
+    return jsonResponse(
+      { error: "invalid_device_id", message: deviceIdValidation.error! },
+      400,
+      corsHeaders,
     );
   }
+  const deviceId = deviceIdValidation.value;
 
-  console.log("[remove-device] Attempting to delete device:", deviceId);
+  logger.info("Attempting to delete device", { deviceId }, authUserId);
 
   try {
     const { data: caller, error: callerError } = await supabaseAdmin
@@ -115,26 +121,28 @@ serve(async (req) => {
       .maybeSingle();
 
     if (callerError) {
-      console.error("[remove-device] Error fetching caller mesh_user:", callerError);
-      return new Response(
-        JSON.stringify({ error: "database_error", message: "Failed to verify user permissions" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.error("Error fetching caller mesh_user", { error: callerError.message }, authUserId);
+      return jsonResponse(
+        { error: "database_error", message: "Failed to verify user permissions" },
+        500,
+        corsHeaders,
       );
     }
 
     if (!caller) {
-      console.log("[remove-device] No mesh_user found for auth_user_id:", authUserId);
-      return new Response(
-        JSON.stringify({ error: "forbidden", message: "User not found in mesh_users" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("No mesh_user found", undefined, authUserId);
+      return jsonResponse(
+        { error: "forbidden", message: "User not found in mesh_users" },
+        403,
+        corsHeaders,
       );
     }
 
-    console.log("[remove-device] Caller info:", {
+    logger.info("Caller info", {
       user_type: caller.user_type,
       domain: caller.domain,
       agent_id: caller.agent_id,
-    });
+    }, authUserId);
 
     const { data: device, error: deviceError } = await supabaseAdmin
       .from("android_devices")
@@ -152,59 +160,61 @@ serve(async (req) => {
       .maybeSingle();
 
     if (deviceError) {
-      console.error("[remove-device] Error fetching device:", deviceError);
-      return new Response(
-        JSON.stringify({ error: "database_error", message: "Failed to query device" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.error("Error fetching device", { error: deviceError.message }, authUserId);
+      return jsonResponse(
+        { error: "database_error", message: "Failed to query device" },
+        500,
+        corsHeaders,
       );
     }
 
     if (!device) {
-      console.log("[remove-device] Device not found:", deviceId);
-      return new Response(
-        JSON.stringify({ error: "not_found", message: "Device not found" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("Device not found", { deviceId }, authUserId);
+      return jsonResponse(
+        { error: "not_found", message: "Device not found" },
+        404,
+        corsHeaders,
       );
     }
 
     const typedDevice = device as AndroidDevice;
 
     if (typedDevice.deleted_at !== null) {
-      console.log("[remove-device] Device already deleted:", deviceId);
-      return new Response(
-        JSON.stringify({ error: "already_deleted", message: "Device is already deleted" }),
-        { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("Device already deleted", { deviceId }, authUserId);
+      return jsonResponse(
+        { error: "already_deleted", message: "Device is already deleted" },
+        410,
+        corsHeaders,
       );
     }
 
     const deviceDomain = typedDevice.mesh_users?.domain ?? null;
 
-    console.log("[remove-device] Device info:", {
+    logger.info("Device info", {
       device_id: typedDevice.device_id,
       agent_id: typedDevice.agent_id,
       owner: typedDevice.owner,
       device_domain: deviceDomain,
-    });
+    }, authUserId);
 
     let canDelete = false;
     let denialReason = "";
-
     const callerType = caller.user_type as string;
 
     if (callerType === "siteadmin") {
       canDelete = true;
-      console.log("[remove-device] Permission granted: siteadmin can delete all devices");
+      logger.info("Permission granted: siteadmin", undefined, authUserId);
     } else if (callerType === "minisiteadmin") {
       if (deviceDomain === caller.domain) {
         canDelete = true;
-        console.log("[remove-device] Permission granted: minisiteadmin can delete devices in their domain");
+        logger.info("Permission granted: minisiteadmin in domain", undefined, authUserId);
       } else {
         denialReason = `Device belongs to domain '${deviceDomain}', you can only delete devices in your domain '${caller.domain}'`;
       }
     } else if (callerType === "agent") {
       if (typedDevice.agent_id === caller.agent_id) {
         canDelete = true;
-        console.log("[remove-device] Permission granted: agent can delete devices in their tenant");
+        logger.info("Permission granted: agent in tenant", undefined, authUserId);
       } else {
         denialReason = "Device does not belong to your tenant";
       }
@@ -213,13 +223,11 @@ serve(async (req) => {
     }
 
     if (!canDelete) {
-      console.log("[remove-device] Permission denied:", denialReason);
-      return new Response(
-        JSON.stringify({ 
-          error: "forbidden", 
-          message: denialReason || "You do not have permission to delete this device" 
-        }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("Permission denied", { reason: denialReason }, authUserId);
+      return jsonResponse(
+        { error: "forbidden", message: denialReason || "You do not have permission to delete this device" },
+        403,
+        corsHeaders,
       );
     }
 
@@ -241,40 +249,40 @@ serve(async (req) => {
       .maybeSingle();
 
     if (updateError) {
-      console.error("[remove-device] Update error:", updateError);
-      return new Response(
-        JSON.stringify({ error: "database_error", message: "Failed to delete device" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.error("Update error", { error: updateError.message }, authUserId);
+      return jsonResponse(
+        { error: "database_error", message: "Failed to delete device" },
+        500,
+        corsHeaders,
       );
     }
 
     if (!deletedDevice) {
-      console.log("[remove-device] No device was deleted (concurrent modification?)");
-      return new Response(
-        JSON.stringify({ error: "not_found", message: "Device not found or already deleted" }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("No device deleted (concurrent modification?)", { deviceId }, authUserId);
+      return jsonResponse(
+        { error: "not_found", message: "Device not found or already deleted" },
+        404,
+        corsHeaders,
       );
     }
 
-    console.log("[remove-device] Device deleted successfully:", {
+    logger.info("Device deleted successfully", {
       id: deletedDevice.id,
       device_id: deletedDevice.device_id,
       deleted_by_user_type: callerType,
-    });
+    }, authUserId);
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        device: deletedDevice,
-      }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    return jsonResponse(
+      { success: true, device: deletedDevice },
+      200,
+      corsHeaders,
     );
   } catch (err) {
-    console.error("[remove-device] Unexpected error:", err);
-    const message = err instanceof Error ? err.message : String(err);
-    return new Response(
-      JSON.stringify({ error: "internal_error", message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    logger.error("Unexpected error", { error: err instanceof Error ? err.message : String(err) }, authUserId);
+    return jsonResponse(
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
+      500,
+      corsHeaders,
     );
   }
 });
