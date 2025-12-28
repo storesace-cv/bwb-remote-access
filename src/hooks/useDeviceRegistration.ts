@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { callEdgeFunction, fetchQrImage, getStoredToken } from "@/lib/apiClient";
 import type { RegistrationSessionDTO } from "@/types/DeviceDTO";
-import { logError } from "@/lib/debugLogger";
+import { logError, logInfo } from "@/lib/debugLogger";
 
 interface RegistrationState {
   showModal: boolean;
@@ -30,6 +30,10 @@ interface UseDeviceRegistrationResult extends RegistrationState {
   setHybridDeviceIdInput: (value: string) => void;
   submitHybridDeviceId: () => Promise<void>;
 }
+
+// RustDesk ID validation constants
+const MIN_RUSTDESK_ID_LENGTH = 6;
+const MAX_RUSTDESK_ID_LENGTH = 12;
 
 export function useDeviceRegistration(
   onDeviceRegistered?: () => void
@@ -230,39 +234,79 @@ export function useDeviceRegistration(
   }, [state.session, cleanupCountdown, onDeviceRegistered]);
 
   const setHybridDeviceIdInput = useCallback((value: string) => {
-    setState((prev) => ({ ...prev, hybridDeviceIdInput: value }));
+    // Only allow digits, already filtered in component but double-check here
+    const sanitized = value.replace(/\D/g, "");
+    setState((prev) => ({
+      ...prev,
+      hybridDeviceIdInput: sanitized,
+      // Clear previous messages when user types
+      hybridSubmitError: null,
+      hybridSubmitSuccess: null,
+    }));
   }, []);
 
+  /**
+   * Submit the RustDesk ID for deterministic device adoption.
+   * This sends the device_id (rustdesk_id) to the backend along with
+   * the current user's identity (derived from JWT).
+   */
   const submitHybridDeviceId = useCallback(async () => {
     const jwt = getStoredToken();
     if (!jwt) {
       setState((prev) => ({
         ...prev,
-        hybridSubmitError: "Invalid session. Please log in again.",
+        hybridSubmitError: "Sessão inválida. Por favor, inicie sessão novamente.",
         hybridSubmitSuccess: null,
       }));
       return;
     }
 
+    // Sanitize: remove all whitespace
     const sanitized = state.hybridDeviceIdInput.replace(/\s+/g, "");
 
+    // Validation: must not be empty
     if (!sanitized) {
       setState((prev) => ({
         ...prev,
-        hybridSubmitError: "Please enter the RustDesk ID.",
+        hybridSubmitError: "Por favor, introduza o RustDesk ID.",
         hybridSubmitSuccess: null,
       }));
       return;
     }
 
+    // Validation: must be digits only
     if (!/^\d+$/.test(sanitized)) {
       setState((prev) => ({
         ...prev,
-        hybridSubmitError: "RustDesk ID must contain only digits.",
+        hybridSubmitError: "O RustDesk ID deve conter apenas dígitos.",
         hybridSubmitSuccess: null,
       }));
       return;
     }
+
+    // Validation: length must be between 6-12 digits
+    if (sanitized.length < MIN_RUSTDESK_ID_LENGTH) {
+      setState((prev) => ({
+        ...prev,
+        hybridSubmitError: `O RustDesk ID deve ter pelo menos ${MIN_RUSTDESK_ID_LENGTH} dígitos.`,
+        hybridSubmitSuccess: null,
+      }));
+      return;
+    }
+
+    if (sanitized.length > MAX_RUSTDESK_ID_LENGTH) {
+      setState((prev) => ({
+        ...prev,
+        hybridSubmitError: `O RustDesk ID deve ter no máximo ${MAX_RUSTDESK_ID_LENGTH} dígitos.`,
+        hybridSubmitSuccess: null,
+      }));
+      return;
+    }
+
+    logInfo("useDeviceRegistration", "Submitting hybrid RustDesk ID", {
+      device_id: sanitized,
+      length: sanitized.length,
+    });
 
     setState((prev) => ({
       ...prev,
@@ -272,7 +316,22 @@ export function useDeviceRegistration(
     }));
 
     try {
-      const result = await callEdgeFunction("register-device", {
+      // Call register-device with the rustdesk_id (device_id)
+      // The backend will:
+      // 1. Validate the device_id format (digits only, 6-12 length)
+      // 2. Resolve the current user from JWT
+      // 3. Create or update the device with deterministic ownership
+      // 4. Use upsert for idempotency (same device_id = same record)
+      const result = await callEdgeFunction<{
+        success: boolean;
+        device?: {
+          id: string;
+          device_id: string;
+          owner: string;
+        };
+        error?: string;
+        message?: string;
+      }>("register-device", {
         method: "POST",
         body: {
           device_id: sanitized,
@@ -282,28 +341,50 @@ export function useDeviceRegistration(
       });
 
       if (!result.ok) {
+        // Map backend errors to user-friendly Portuguese messages
+        let errorMessage = result.error?.message || "Erro ao registar dispositivo.";
+        
+        if (result.error?.code === "invalid_device_id") {
+          errorMessage = "Formato de RustDesk ID inválido. Deve conter apenas dígitos (6-12).";
+        } else if (result.error?.code === "mesh_user_not_found") {
+          errorMessage = "Utilizador não encontrado. Por favor, inicie sessão novamente.";
+        } else if (result.error?.code === "unauthorized") {
+          errorMessage = "Sessão expirada. Por favor, inicie sessão novamente.";
+        }
+
         setState((prev) => ({
           ...prev,
-          hybridSubmitError: result.error?.message || "Failed to register device.",
+          hybridSubmitError: errorMessage,
           hybridSubmitSuccess: null,
           hybridSubmitLoading: false,
         }));
         return;
       }
 
-      onDeviceRegistered?.();
+      logInfo("useDeviceRegistration", "Device registered successfully", {
+        device_id: result.data?.device?.device_id,
+      });
 
+      // Update UI to show success
       setState((prev) => ({
         ...prev,
         hybridSubmitError: null,
-        hybridSubmitSuccess: "Device registered successfully. List updated.",
+        hybridSubmitSuccess: `Dispositivo ${sanitized} registado com sucesso!`,
         hybridSubmitLoading: false,
+        status: "completed",
+        matchedDevice: { device_id: sanitized },
       }));
+
+      // Notify parent to refresh device list
+      setTimeout(() => {
+        onDeviceRegistered?.();
+      }, 500);
+
     } catch (error) {
       logError("useDeviceRegistration", "Hybrid submission failed", { error });
       setState((prev) => ({
         ...prev,
-        hybridSubmitError: "An error occurred. Please try again.",
+        hybridSubmitError: "Ocorreu um erro de rede. Por favor, tente novamente.",
         hybridSubmitSuccess: null,
         hybridSubmitLoading: false,
       }));
