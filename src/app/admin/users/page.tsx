@@ -62,7 +62,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         ? [claims.org as ValidDomain] 
         : []);
 
-  // Fetch users from mirror
+  // Fetch users from mirror (including deleted for admin view)
   let users: Awaited<ReturnType<typeof listMirrorUsers>>["users"] = [];
   let total = 0;
   let fetchError: string | null = null;
@@ -72,6 +72,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       domain: filterDomain,
       limit: 50,
       offset: 0,
+      includeDeleted: true, // Show deactivated users too
     });
     users = result.users;
     total = result.total;
@@ -89,6 +90,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     is_superadmin_meshcentral: u.is_superadmin_meshcentral,
     is_superadmin_rustdesk: u.is_superadmin_rustdesk,
     created_at: u.created_at,
+    deleted_at: u.deleted_at,
     domains: u.domains.map((d) => ({
       domain: d.domain,
       role: d.role,
