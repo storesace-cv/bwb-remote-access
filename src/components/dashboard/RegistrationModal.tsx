@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useCallback } from "react";
 
 interface RegistrationModalProps {
   showModal: boolean;
@@ -44,6 +45,29 @@ export function RegistrationModal({
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+
+  // Clipboard paste handler
+  const handlePasteFromClipboard = useCallback(async () => {
+    try {
+      // Check if clipboard API is available
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        // Fallback: show error
+        console.warn("Clipboard API not available");
+        return;
+      }
+
+      const text = await navigator.clipboard.readText();
+      // Clean the pasted text - remove whitespace and keep only digits
+      const cleanedText = text.replace(/\s+/g, "").replace(/\D/g, "");
+      
+      if (cleanedText) {
+        onHybridInputChange(cleanedText);
+      }
+    } catch (err) {
+      // User denied clipboard access or other error
+      console.warn("Failed to read clipboard:", err);
+    }
+  }, [onHybridInputChange]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -90,12 +114,13 @@ export function RegistrationModal({
           </div>
         ) : (
           <>
+            {/* QR Code Section */}
             <div className="flex flex-col items-center">
               {qrLoading ? (
                 <div className="w-48 h-48 flex items-center justify-center bg-slate-800 rounded-lg">
                   <div className="h-8 w-8 rounded-full border-2 border-slate-600 border-t-emerald-500 animate-spin" />
                 </div>
-              ) : qrError ? (
+              ) : qrError && !hybridSubmitSuccess ? (
                 <div className="w-48 h-48 flex items-center justify-center bg-red-950/30 rounded-lg border border-red-800">
                   <p className="text-xs text-red-400 text-center px-4">{qrError}</p>
                 </div>
@@ -129,32 +154,83 @@ export function RegistrationModal({
               </p>
             </div>
 
-            {/* Hybrid fallback form */}
+            {/* ================================================================
+                HYBRID QR-CODE ADOPTION SECTION
+                ================================================================ */}
             <div className="mt-6 pt-6 border-t border-slate-700">
-              <p className="text-xs text-slate-400 text-center mb-3">
-                Ou introduza o ID RustDesk manualmente:
-              </p>
-              <div className="flex gap-2">
+              <div className="mb-4">
+                <p className="text-sm text-slate-300 text-center font-medium mb-1">
+                  📋 Introduza o RustDesk ID do dispositivo:
+                </p>
+                <p className="text-xs text-slate-500 text-center">
+                  O ID aparece no canto superior esquerdo da app RustDesk (ex: 123456789)
+                </p>
+              </div>
+
+              {/* RustDesk ID Input Row */}
+              <div className="flex gap-2 mb-3">
                 <input
                   type="text"
                   value={hybridDeviceIdInput}
-                  onChange={(e) => onHybridInputChange(e.target.value)}
-                  placeholder="ID RustDesk (ex: 123456789)"
-                  className="flex-1 px-3 py-2 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  onChange={(e) => {
+                    // Only allow digits
+                    const value = e.target.value.replace(/\D/g, "");
+                    onHybridInputChange(value);
+                  }}
+                  placeholder="RustDesk ID (ex: 123456789)"
+                  maxLength={12}
+                  className="flex-1 px-3 py-2.5 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
                 />
                 <button
-                  onClick={onHybridSubmit}
-                  disabled={hybridSubmitLoading}
-                  className="px-4 py-2 text-sm bg-sky-600 hover:bg-sky-500 disabled:opacity-50 rounded-lg text-white transition"
+                  type="button"
+                  onClick={handlePasteFromClipboard}
+                  className="px-3 py-2.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg text-white transition whitespace-nowrap"
+                  title="Colar RustDesk ID da área de transferência"
                 >
-                  {hybridSubmitLoading ? "..." : "Associar"}
+                  📋 PASTE RD ID
                 </button>
               </div>
+
+              {/* Submit Button */}
+              <button
+                type="button"
+                onClick={onHybridSubmit}
+                disabled={hybridSubmitLoading || !hybridDeviceIdInput.trim()}
+                className="w-full px-4 py-3 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white transition flex items-center justify-center gap-2"
+              >
+                {hybridSubmitLoading ? (
+                  <>
+                    <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    A REGISTAR...
+                  </>
+                ) : (
+                  <>📤 ENVIAR RUSTDESK ID</>
+                )}
+              </button>
+
+              {/* Error/Success Messages */}
               {hybridSubmitError && (
-                <p className="text-xs text-red-400 mt-2">{hybridSubmitError}</p>
+                <div className="mt-3 p-2 bg-red-950/40 border border-red-800 rounded-lg">
+                  <p className="text-xs text-red-400 text-center">{hybridSubmitError}</p>
+                </div>
               )}
               {hybridSubmitSuccess && (
-                <p className="text-xs text-emerald-400 mt-2">{hybridSubmitSuccess}</p>
+                <div className="mt-3 p-2 bg-emerald-950/40 border border-emerald-800 rounded-lg">
+                  <p className="text-xs text-emerald-400 text-center">{hybridSubmitSuccess}</p>
+                </div>
+              )}
+
+              {/* Validation hint */}
+              {hybridDeviceIdInput && (
+                <p className="text-xs text-slate-500 text-center mt-2">
+                  {hybridDeviceIdInput.length < 6 ? (
+                    <span className="text-amber-400">⚠️ O ID deve ter pelo menos 6 dígitos</span>
+                  ) : hybridDeviceIdInput.length > 12 ? (
+                    <span className="text-amber-400">⚠️ O ID deve ter no máximo 12 dígitos</span>
+                  ) : (
+                    <span className="text-emerald-400">✓ Formato válido ({hybridDeviceIdInput.length} dígitos)</span>
+                  )}
+                </p>
               )}
             </div>
           </>
