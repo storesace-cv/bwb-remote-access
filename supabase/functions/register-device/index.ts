@@ -1,12 +1,27 @@
+// Sprint 1: Security Hardening - Centralized auth + input validation + structured logging
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import {
+  validateJwt,
+  validateDeviceId,
+  validateMeshUsername,
+  validateNotes,
+  validateFriendlyName,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
+
+export const config = { verify_jwt: false };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 interface RegisterDeviceBody {
@@ -19,6 +34,16 @@ interface RegisterDeviceBody {
   mesh_username?: unknown;
   last_seen?: unknown;
   subgroup_id?: unknown;
+}
+
+interface MeshUser {
+  id: string;
+  mesh_username: string | null;
+  display_name: string | null;
+  auth_user_id: string | null;
+  domain: string;
+  domain_key: string | null;
+  agent_id: string | null;
 }
 
 interface AndroidDevice {
@@ -36,55 +61,12 @@ interface AndroidDevice {
   updated_at: string;
 }
 
-interface MeshUser {
-  id: string;
-  mesh_username: string | null;
-  display_name: string | null;
-  auth_user_id: string | null;
-  domain: string;
-  domain_key: string | null;
-  agent_id: string | null;
-}
-
-interface MeshGroup {
-  id: string;
-  name: string;
-  description: string | null;
-  parent_group_id: string | null;
-}
-
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
   },
 });
-
-function getAuthUserId(authHeader: string | null): string | null {
-  if (!authHeader) return null;
-  const match = authHeader.match(/^Bearer\s+(.+)$/i);
-  if (!match) return null;
-  const token = match[1];
-
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const payloadBase64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const payloadJson = atob(payloadBase64);
-    const payload = JSON.parse(payloadJson) as { sub?: string };
-    return payload.sub ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function isServiceRoleRequest(authHeader: string | null): boolean {
-  if (!authHeader) return false;
-  const match = authHeader.match(/^Bearer\s+(.+)$/i);
-  if (!match) return false;
-  const token = match[1];
-  return token === SUPABASE_SERVICE_ROLE_KEY;
-}
 
 async function getMeshUserByAuthUserId(authUserId: string): Promise<MeshUser | null> {
   const { data, error } = await supabaseAdmin
@@ -94,7 +76,6 @@ async function getMeshUserByAuthUserId(authUserId: string): Promise<MeshUser | n
     .maybeSingle();
 
   if (error) {
-    console.error("[register-device] Error fetching mesh_user by auth_user_id:", error);
     return null;
   }
 
@@ -109,7 +90,6 @@ async function getMeshUserByMeshUsername(meshUsername: string): Promise<MeshUser
     .maybeSingle();
 
   if (error) {
-    console.error("[register-device] Error fetching mesh_user by mesh_username:", error);
     return null;
   }
 
@@ -117,8 +97,6 @@ async function getMeshUserByMeshUsername(meshUsername: string): Promise<MeshUser
 }
 
 async function getGroupName(groupId: string): Promise<string | null> {
-  console.log("[register-device] Fetching group name for group_id:", groupId);
-
   const { data, error } = await supabaseAdmin
     .from("mesh_groups")
     .select("name")
@@ -126,7 +104,6 @@ async function getGroupName(groupId: string): Promise<string | null> {
     .maybeSingle();
 
   if (error) {
-    console.error("[register-device] Error fetching group name:", error);
     return null;
   }
 
@@ -138,19 +115,12 @@ async function buildNotesField(
   subgroupId: string | null,
   observations: string | null,
 ): Promise<string | null> {
-  console.log("[register-device] Building notes field from:", {
-    groupId,
-    subgroupId,
-    observations,
-  });
-
   const parts: string[] = [];
 
   if (groupId) {
     const groupName = await getGroupName(groupId);
     if (groupName) {
       parts.push(groupName);
-      console.log("[register-device] Added group name to notes:", groupName);
     }
   }
 
@@ -158,154 +128,203 @@ async function buildNotesField(
     const subgroupName = await getGroupName(subgroupId);
     if (subgroupName) {
       parts.push(subgroupName);
-      console.log("[register-device] Added subgroup name to notes:", subgroupName);
     }
   }
 
   if (observations) {
     parts.push(observations);
-    console.log("[register-device] Added observations to notes");
   }
 
-  const result = parts.length > 0 ? parts.join(" | ") : null;
-  console.log("[register-device] Final notes field:", result);
-
-  return result;
+  return parts.length > 0 ? parts.join(" | ") : null;
 }
 
 serve(async (req) => {
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("register-device", correlationId);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const authHeader = req.headers.get("Authorization");
-  const authUserId = getAuthUserId(authHeader);
-  const serviceRole = isServiceRoleRequest(authHeader);
+  logger.info("Request received", { method: req.method });
 
-  console.log("[register-device] Request received:", {
-    mode: authUserId ? "user_jwt" : serviceRole ? "service_role" : "anonymous",
-    authUserId: authUserId ?? null,
-  });
-
-  if (!authUserId && !serviceRole) {
-    return new Response(
-      JSON.stringify({
-        error: "unauthorized",
-        message: "Missing or invalid Authorization header",
-      }),
-      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  // Validate environment
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    logger.error("Missing Supabase configuration");
+    return jsonResponse(
+      { error: "config_error", message: "Missing Supabase configuration" },
+      500,
+      corsHeaders,
     );
   }
 
+  // Validate JWT using centralized auth
+  const authHeader = req.headers.get("Authorization");
+  const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+  if (!authResult.ok) {
+    return authErrorResponse(authResult, corsHeaders);
+  }
+
+  const { authUserId, isServiceRole } = authResult.context;
+
+  // Parse request body
   let body: RegisterDeviceBody;
   try {
     body = await req.json();
   } catch {
-    return new Response(
-      JSON.stringify({ error: "invalid_json", message: "Request body must be valid JSON" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    logger.warn("Invalid JSON body");
+    return jsonResponse(
+      { error: "invalid_json", message: "Request body must be valid JSON" },
+      400,
+      corsHeaders,
     );
   }
 
-  const deviceIdRaw = typeof body.device_id === "string" ? body.device_id.trim() : "";
-  const deviceId = deviceIdRaw.replace(/\s+/g, "");
+  // =========================================================================
+  // STRICT INPUT VALIDATION
+  // =========================================================================
 
-  if (!deviceId || deviceId.length === 0) {
-    return new Response(
-      JSON.stringify({ error: "missing_device_id", message: "device_id is required" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  // Validate device_id (REQUIRED: digits only, 6-12 length)
+  const deviceIdValidation = validateDeviceId(body.device_id);
+  if (!deviceIdValidation.valid) {
+    logger.warn("Invalid device_id", { error: deviceIdValidation.error });
+    return jsonResponse(
+      { error: "invalid_device_id", message: deviceIdValidation.error! },
+      400,
+      corsHeaders,
     );
   }
+  const deviceId = deviceIdValidation.value;
 
-  const friendlyNameRaw = typeof body.friendly_name === "string" ? body.friendly_name.trim() : "";
-  const friendlyNameParam = friendlyNameRaw.length > 0 ? friendlyNameRaw : null;
+  // Validate friendly_name (optional, max 255 chars)
+  const friendlyNameValidation = validateFriendlyName(body.friendly_name);
+  if (!friendlyNameValidation.valid) {
+    logger.warn("Invalid friendly_name", { error: friendlyNameValidation.error });
+    return jsonResponse(
+      { error: "invalid_friendly_name", message: friendlyNameValidation.error! },
+      400,
+      corsHeaders,
+    );
+  }
+  const friendlyNameParam = friendlyNameValidation.value;
 
+  // Validate notes (optional, max 1000 chars)
+  const notesValidation = validateNotes(body.notes);
+  if (!notesValidation.valid) {
+    logger.warn("Invalid notes", { error: notesValidation.error });
+    return jsonResponse(
+      { error: "invalid_notes", message: notesValidation.error! },
+      400,
+      corsHeaders,
+    );
+  }
+  const notesRaw = body.notes;
+
+  // Validate observations (same rules as notes)
+  const observationsValidation = validateNotes(body.observations);
+  if (!observationsValidation.valid) {
+    logger.warn("Invalid observations", { error: observationsValidation.error });
+    return jsonResponse(
+      { error: "invalid_observations", message: observationsValidation.error! },
+      400,
+      corsHeaders,
+    );
+  }
+  const observationsParam = observationsValidation.value;
+
+  // Validate mesh_username for service role requests
+  let meshUsernameParam: string | null = null;
+  if (isServiceRole) {
+    if (body.mesh_username !== undefined && body.mesh_username !== null) {
+      const meshUsernameValidation = validateMeshUsername(body.mesh_username);
+      if (!meshUsernameValidation.valid) {
+        logger.warn("Invalid mesh_username", { error: meshUsernameValidation.error });
+        return jsonResponse(
+          { error: "invalid_mesh_username", message: meshUsernameValidation.error! },
+          400,
+          corsHeaders,
+        );
+      }
+      meshUsernameParam = meshUsernameValidation.value;
+    }
+  }
+
+  // Extract other parameters (less critical - using existing logic)
   const groupIdRaw = typeof body.group_id === "string" ? body.group_id.trim() : "";
   const groupIdParam = groupIdRaw.length > 0 ? groupIdRaw : null;
 
-  const subgroupIdRaw =
-    typeof body.subgroup_id === "string" ? body.subgroup_id.trim() : "";
+  const subgroupIdRaw = typeof body.subgroup_id === "string" ? body.subgroup_id.trim() : "";
   const subgroupIdParam = subgroupIdRaw.length > 0 ? subgroupIdRaw : null;
 
-  const observationsRaw = typeof body.observations === "string" ? body.observations.trim() : "";
-  const observationsParam = observationsRaw.length > 0 ? observationsRaw : null;
-
-  const notesRaw = body.notes;
-
-  const rustdeskPasswordRaw =
-    typeof body.rustdesk_password === "string" ? body.rustdesk_password.trim() : "";
-  const rustdeskPasswordParam =
-    rustdeskPasswordRaw.length > 0 ? rustdeskPasswordRaw : null;
-
-  const meshUsernameRaw =
-    typeof body.mesh_username === "string" ? body.mesh_username.trim() : "";
-  const meshUsernameParam = meshUsernameRaw.length > 0 ? meshUsernameRaw : null;
+  const rustdeskPasswordRaw = typeof body.rustdesk_password === "string" ? body.rustdesk_password.trim() : "";
+  const rustdeskPasswordParam = rustdeskPasswordRaw.length > 0 ? rustdeskPasswordRaw : null;
 
   const lastSeenRaw = typeof body.last_seen === "string" ? body.last_seen.trim() : "";
   const requestedLastSeen = lastSeenRaw.length > 0 ? lastSeenRaw : null;
 
-  console.log("[register-device] Extracted params:", {
+  logger.info("Input validation passed", {
     deviceId,
-    friendlyNameParam,
-    groupIdParam,
-    subgroupIdParam,
-    observationsParam,
-    rustdeskPasswordParam,
-    meshUsernameParam,
-    hasNotesRaw: typeof notesRaw === "string",
+    hasFriendlyName: !!friendlyNameParam,
+    hasGroupId: !!groupIdParam,
+    hasNotes: typeof notesRaw === "string",
   });
+
+  // =========================================================================
+  // RESOLVE CALLER
+  // =========================================================================
 
   let caller: MeshUser | null = null;
 
   if (authUserId) {
     caller = await getMeshUserByAuthUserId(authUserId);
     if (!caller) {
-      return new Response(
-        JSON.stringify({
-          error: "mesh_user_not_found",
-          message: "No mesh_user found for this auth user",
-        }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      logger.warn("No mesh_user found for auth_user_id", undefined, authUserId);
+      return jsonResponse(
+        { error: "mesh_user_not_found", message: "No mesh_user found for this auth user" },
+        404,
+        corsHeaders,
       );
     }
-  } else if (serviceRole) {
+  } else if (isServiceRole) {
     if (!meshUsernameParam) {
-      return new Response(
-        JSON.stringify({
-          error: "mesh_username_required",
-          message: "mesh_username is required when using service role authorization",
-        }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      logger.warn("mesh_username required for service role");
+      return jsonResponse(
+        { error: "mesh_username_required", message: "mesh_username is required when using service role authorization" },
+        400,
+        corsHeaders,
       );
     }
 
     caller = await getMeshUserByMeshUsername(meshUsernameParam);
     if (!caller) {
-      return new Response(
-        JSON.stringify({
-          error: "mesh_user_not_found",
-          message: "No mesh_user found for the provided mesh_username",
-        }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      logger.warn("No mesh_user found for mesh_username", { mesh_username: meshUsernameParam });
+      return jsonResponse(
+        { error: "mesh_user_not_found", message: "No mesh_user found for the provided mesh_username" },
+        404,
+        corsHeaders,
       );
     }
   }
 
   if (!caller) {
-    return new Response(
-      JSON.stringify({
-        error: "mesh_user_not_found",
-        message: "Unable to resolve mesh user for this request",
-      }),
-      { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    logger.error("Unable to resolve mesh user");
+    return jsonResponse(
+      { error: "mesh_user_not_found", message: "Unable to resolve mesh user for this request" },
+      404,
+      corsHeaders,
     );
   }
 
-  console.log("[register-device] Caller mesh_user:", {
-    id: caller.id,
+  logger.info("Caller resolved", {
+    callerId: caller.id,
     mesh_username: caller.mesh_username,
     domain: caller.domain,
-  });
+  }, authUserId);
+
+  // =========================================================================
+  // FETCH EXISTING DEVICE
+  // =========================================================================
 
   const { data: existingDeviceRows, error: deviceQueryError } = await supabaseAdmin
     .from("android_devices")
@@ -315,31 +334,22 @@ serve(async (req) => {
     .limit(1);
 
   if (deviceQueryError) {
-    console.error("[register-device] Error querying android_devices:", deviceQueryError);
-    return new Response(
-      JSON.stringify({ error: "database_error", message: "Failed to query existing device" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    logger.error("Error querying android_devices", { error: deviceQueryError.message });
+    return jsonResponse(
+      { error: "database_error", message: "Failed to query existing device" },
+      500,
+      corsHeaders,
     );
   }
 
-  const existingDevice =
-    existingDeviceRows && existingDeviceRows.length > 0
-      ? (existingDeviceRows[0] as AndroidDevice)
-      : null;
+  const existingDevice = existingDeviceRows && existingDeviceRows.length > 0
+    ? (existingDeviceRows[0] as AndroidDevice)
+    : null;
 
-  console.log(
-    "[register-device] Existing device:",
-    existingDevice
-      ? {
-          id: existingDevice.id,
-          owner: existingDevice.owner,
-          mesh_username: existingDevice.mesh_username,
-          group_id: existingDevice.group_id,
-          friendly_name: existingDevice.friendly_name,
-          notes: existingDevice.notes,
-        }
-      : "none",
-  );
+  logger.info("Existing device query", {
+    found: !!existingDevice,
+    existingOwner: existingDevice?.owner ?? null,
+  });
 
   const existingOwner = existingDevice?.owner ?? null;
   const existingMeshUsername = existingDevice?.mesh_username ?? null;
@@ -348,60 +358,52 @@ serve(async (req) => {
   const existingNotes = existingDevice?.notes ?? null;
   const existingRustdeskPassword = existingDevice?.rustdesk_password ?? null;
 
+  // =========================================================================
+  // DETERMINE FINAL VALUES
+  // =========================================================================
+
   let ownerForUpsert: string;
   let finalMeshUsername: string | null;
 
   if (existingOwner) {
     ownerForUpsert = existingOwner;
     finalMeshUsername = existingMeshUsername;
-    console.log(
-      "[register-device] Device already has owner, keeping existing owner:",
-      ownerForUpsert,
-    );
+    logger.info("Device already has owner, keeping existing", { owner: ownerForUpsert });
   } else {
     ownerForUpsert = caller.id;
     finalMeshUsername = caller.mesh_username;
-    console.log(
-      "[register-device] Device has no owner, assigning to caller:",
-      ownerForUpsert,
-    );
+    logger.info("Device has no owner, assigning to caller", { owner: ownerForUpsert });
   }
 
   let finalNotes: string | null;
   if (typeof notesRaw === "string") {
     finalNotes = notesRaw;
-    console.log("[register-device] Using notes from payload (legacy format)");
   } else if (notesRaw === null) {
     finalNotes = null;
-    console.log("[register-device] Notes explicitly set to null");
   } else if (groupIdParam !== null || subgroupIdParam !== null || observationsParam !== null) {
-    console.log("[register-device] Building notes from group_id, subgroup_id and observations");
     finalNotes = await buildNotesField(groupIdParam, subgroupIdParam, observationsParam);
   } else {
     finalNotes = existingNotes ?? null;
-    console.log("[register-device] Using existing notes or null");
   }
 
   const finalFriendlyName = friendlyNameParam ?? existingFriendlyName ?? null;
-  const finalGroupId =
-    subgroupIdParam ?? groupIdParam ?? existingGroupId ?? null;
-  const finalRustdeskPassword =
-    rustdeskPasswordParam ?? existingRustdeskPassword ?? null;
+  const finalGroupId = subgroupIdParam ?? groupIdParam ?? existingGroupId ?? null;
+  const finalRustdeskPassword = rustdeskPasswordParam ?? existingRustdeskPassword ?? null;
 
   const nowIso = new Date().toISOString();
   const existingLastSeen = existingDevice?.last_seen_at ?? null;
   const finalLastSeen = requestedLastSeen ?? existingLastSeen ?? nowIso;
 
-  console.log("[register-device] Final values for upsert:", {
+  logger.info("Final values computed", {
     deviceId,
     owner: ownerForUpsert,
-    mesh_username: finalMeshUsername,
-    group_id: finalGroupId,
-    friendly_name: finalFriendlyName,
-    notes: finalNotes,
-    rustdesk_password: finalRustdeskPassword ? "***" : null,
-    last_seen_at: finalLastSeen,
+    hasNotes: !!finalNotes,
+    hasGroupId: !!finalGroupId,
   });
+
+  // =========================================================================
+  // UPSERT DEVICE
+  // =========================================================================
 
   const upsertRow: Record<string, unknown> = {
     device_id: deviceId,
@@ -424,26 +426,22 @@ serve(async (req) => {
     .single();
 
   if (upsertError) {
-    console.error("[register-device] Upsert error:", upsertError);
-    return new Response(
-      JSON.stringify({ error: "upsert_failed", message: upsertError.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    logger.error("Upsert failed", { error: upsertError.message });
+    return jsonResponse(
+      { error: "upsert_failed", message: upsertError.message },
+      500,
+      corsHeaders,
     );
   }
 
-  console.log("[register-device] Device upserted successfully:", {
+  logger.info("Device upserted successfully", {
     id: (upsertedDevice as AndroidDevice).id,
     device_id: (upsertedDevice as AndroidDevice).device_id,
-    owner: (upsertedDevice as AndroidDevice).owner,
-    group_id: (upsertedDevice as AndroidDevice).group_id,
-    notes: (upsertedDevice as AndroidDevice).notes,
-  });
+  }, authUserId);
 
-  return new Response(
-    JSON.stringify({
-      success: true,
-      device: upsertedDevice,
-    }),
-    { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+  return jsonResponse(
+    { success: true, device: upsertedDevice },
+    200,
+    corsHeaders,
   );
 });
