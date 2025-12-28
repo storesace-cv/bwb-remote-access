@@ -27,22 +27,21 @@ let _auth0Client: Auth0Client | null = null;
 /**
  * Gets the Auth0Client instance (lazy initialization).
  * Creates the client on first access to avoid build-time initialization.
+ * 
+ * @returns Auth0Client instance
  */
-function getAuth0Client(): Auth0Client {
+export function getAuth0(): Auth0Client {
   if (!_auth0Client) {
     _auth0Client = new Auth0Client();
   }
   return _auth0Client;
 }
 
-/**
- * Auth0 client proxy object.
- * Provides the same interface as Auth0Client but with lazy initialization.
- * All methods delegate to the lazily-initialized Auth0Client instance.
- */
+// Re-export for backwards compatibility (deprecated - use getAuth0() instead)
+// This creates a Proxy that delegates all calls to the lazy-initialized client
 export const auth0: Auth0Client = new Proxy({} as Auth0Client, {
   get(_target, prop) {
-    const client = getAuth0Client();
+    const client = getAuth0();
     const value = client[prop as keyof Auth0Client];
     if (typeof value === "function") {
       return value.bind(client);
