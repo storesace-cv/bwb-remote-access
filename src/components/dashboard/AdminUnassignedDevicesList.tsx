@@ -1,12 +1,9 @@
 "use client";
 
 import type { GroupableDevice } from "@/lib/grouping";
-import type { MeshUserDTO } from "@/types/MeshUserDTO";
 
 interface AdminUnassignedDevicesListProps {
   devices: GroupableDevice[];
-  meshUsers: MeshUserDTO[];
-  meshUsersLoading: boolean;
   adminActionLoading: boolean;
   adminActionError: string | null;
   onReassign: (device: GroupableDevice) => void;
@@ -15,8 +12,6 @@ interface AdminUnassignedDevicesListProps {
 
 export function AdminUnassignedDevicesList({
   devices,
-  meshUsers,
-  meshUsersLoading,
   adminActionLoading,
   adminActionError,
   onReassign,

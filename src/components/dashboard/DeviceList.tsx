@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import type { GroupableDevice } from "@/lib/grouping";
 import { groupDevices } from "@/lib/grouping";
-import { DeviceCard } from "./DeviceCard";
 import { EmptyState } from "./EmptyState";
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -14,10 +13,8 @@ interface DeviceListProps {
   errorMsg: string | null;
   refreshing: boolean;
   onRefresh: () => void;
-  onAdopt?: (device: GroupableDevice) => void;
   onEdit?: (device: GroupableDevice) => void;
   onDelete?: (device: GroupableDevice) => void;
-  isAdmin?: boolean;
 }
 
 export function DeviceList({
@@ -26,10 +23,8 @@ export function DeviceList({
   errorMsg,
   refreshing,
   onRefresh,
-  onAdopt,
   onEdit,
   onDelete,
-  isAdmin = false,
 }: DeviceListProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);

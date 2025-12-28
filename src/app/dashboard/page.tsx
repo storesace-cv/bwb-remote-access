@@ -42,7 +42,7 @@ export default function DashboardPage() {
   }, [router]);
 
   // Hooks
-  const { authUserId, isAdmin, isAgent, userDomain, userDisplayName, meshUsers, meshUsersLoading, loadMeshUsers, checkUserType, reassignDevice } = useMeshUsers();
+  const { isAdmin, isAgent, userDomain, userDisplayName, meshUsers, meshUsersLoading, loadMeshUsers, checkUserType, reassignDevice } = useMeshUsers();
   const { devices, groups, loading, groupsLoading, refreshing, errorMsg, refreshError, fetchDevices, fetchGroups, refreshStatus, deleteDevice, adminDeleteDevice, filterStatus, setFilterStatus, searchQuery, setSearchQuery, sortBy, setSortBy, adoptedDevices, unadoptedDevices } = useDevices();
   const registration = useDeviceRegistration(() => { void fetchDevices(); });
 
@@ -148,7 +148,7 @@ export default function DashboardPage() {
 
         {!isAdmin && <UnadoptedDevicesList devices={unadoptedDevices} onAdopt={openAdoptModal} />}
 
-        {isAdmin && <AdminUnassignedDevicesList devices={adminUnassignedDevices} meshUsers={meshUserDTOs} meshUsersLoading={meshUsersLoading} adminActionLoading={adminActionLoading} adminActionError={adminActionError} onReassign={openAdminReassignModal} onDelete={handleAdminDeleteDevice} />}
+        {isAdmin && <AdminUnassignedDevicesList devices={adminUnassignedDevices} adminActionLoading={adminActionLoading} adminActionError={adminActionError} onReassign={openAdminReassignModal} onDelete={handleAdminDeleteDevice} />}
 
         {(!isAdmin || adoptedDevices.length > 0) && (
           <DeviceList devices={adoptedDevices} loading={loading} errorMsg={errorMsg} refreshing={refreshing} onRefresh={refreshStatus} onEdit={openAdoptModal} onDelete={deleteDevice} />

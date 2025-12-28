@@ -8,7 +8,6 @@ interface DeviceCardProps {
   onEdit?: (device: GroupableDevice) => void;
   onDelete?: (device: GroupableDevice) => void;
   onConnect?: (device: GroupableDevice) => void;
-  isAdmin?: boolean;
   isAdopted?: boolean;
   showOriginTag?: boolean;
 }
@@ -19,7 +18,6 @@ export function DeviceCard({
   onEdit,
   onDelete,
   onConnect,
-  isAdmin = false,
   isAdopted = false,
   showOriginTag = true,
 }: DeviceCardProps) {
