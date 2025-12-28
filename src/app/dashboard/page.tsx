@@ -148,7 +148,7 @@ export default function DashboardPage() {
 
         {!isAdmin && <UnadoptedDevicesList devices={unadoptedDevices} onAdopt={openAdoptModal} />}
 
-        {isAdmin && <AdminUnassignedDevicesList devices={adminUnassignedDevices} meshUsers={meshUserDTOs} meshUsersLoading={meshUsersLoading} adminActionLoading={adminActionLoading} adminActionError={adminActionError} onReassign={openAdminReassignModal} onDelete={handleAdminDeleteDevice} />}
+        {isAdmin && <AdminUnassignedDevicesList devices={adminUnassignedDevices} adminActionLoading={adminActionLoading} adminActionError={adminActionError} onReassign={openAdminReassignModal} onDelete={handleAdminDeleteDevice} />}
 
         {(!isAdmin || adoptedDevices.length > 0) && (
           <DeviceList devices={adoptedDevices} loading={loading} errorMsg={errorMsg} refreshing={refreshing} onRefresh={refreshStatus} onEdit={openAdoptModal} onDelete={deleteDevice} />

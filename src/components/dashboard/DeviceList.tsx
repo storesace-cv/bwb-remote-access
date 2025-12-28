@@ -13,10 +13,8 @@ interface DeviceListProps {
   errorMsg: string | null;
   refreshing: boolean;
   onRefresh: () => void;
-  onAdopt?: (device: GroupableDevice) => void;
   onEdit?: (device: GroupableDevice) => void;
   onDelete?: (device: GroupableDevice) => void;
-  isAdmin?: boolean;
 }
 
 export function DeviceList({
@@ -25,15 +23,9 @@ export function DeviceList({
   errorMsg,
   refreshing,
   onRefresh,
-  onAdopt: _onAdopt,
   onEdit,
   onDelete,
-  isAdmin: _isAdmin = false,
 }: DeviceListProps) {
-  // onAdopt and isAdmin are part of the interface for consistency with other lists
-  // but adopted devices use onEdit instead. Reserved for potential future use.
-  void _onAdopt;
-  void _isAdmin;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
