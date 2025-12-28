@@ -1,26 +1,21 @@
-// Version: 2025-12-22T00:32:00Z - Added minisiteadmin support
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY =
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-
-function jsonResponse(
-  body: Record<string, unknown>,
-  status = 200,
-): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 async function fetchSupabaseJson(
   path: string,
@@ -39,84 +34,49 @@ async function fetchSupabaseJson(
 }
 
 async function handler(req: Request): Promise<Response> {
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("admin-list-mesh-users", correlationId);
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   if (req.method !== "GET") {
-    return jsonResponse({ error: "method_not_allowed" }, 405);
+    logger.warn("Method not allowed", { method: req.method });
+    return jsonResponse({ error: "method_not_allowed" }, 405, corsHeaders);
   }
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    console.error("[admin-list-mesh-users] Missing Supabase env vars");
+    logger.error("Missing Supabase configuration");
     return jsonResponse(
-      {
-        error: "config_error",
-        message: "Missing Supabase configuration",
-      },
+      { error: "config_error", message: "Missing Supabase configuration" },
       500,
+      corsHeaders,
     );
   }
 
   try {
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("[admin-list-mesh-users] Missing Authorization header");
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Missing or invalid Authorization header",
-        },
-        401,
-      );
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
     }
 
-    const jwt = authHeader.substring(7);
-
-    // Validate JWT using service role key to bypass RLS
-    const authCheck = await fetchSupabaseJson(
-      `/auth/v1/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-        },
-      },
-    );
-
-    if (!authCheck.ok) {
-      console.error(
-        "[admin-list-mesh-users] JWT validation failed:",
-        authCheck.status,
-        authCheck.text,
-      );
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid or expired token",
-        },
-        401,
-      );
-    }
-
-    const user = authCheck.data as { id?: string } | null;
-    const authUserId = user?.id;
-
+    const authUserId = authResult.context.authUserId;
     if (!authUserId) {
-      console.log("[admin-list-mesh-users] No user ID in token");
+      logger.warn("No user ID in token");
       return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid user",
-        },
+        { error: "unauthorized", message: "Invalid user" },
         401,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-list-mesh-users] Caller auth_user_id: ${authUserId}`);
+    logger.info("User authenticated", undefined, authUserId);
 
-    // Get caller's mesh_user record to check user_type and domain
-    // Use service_role to bypass RLS
+    // Get caller's mesh_user record
     const callerCheck = await fetchSupabaseJson(
       `/rest/v1/mesh_users?select=user_type,domain&auth_user_id=eq.${authUserId}`,
       {
@@ -129,29 +89,21 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!callerCheck.ok) {
-      console.error(
-        "[admin-list-mesh-users] Failed to get caller info:",
-        callerCheck.status,
-        callerCheck.text,
-      );
+      logger.error("Failed to get caller info", { status: callerCheck.status }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Failed to verify user permissions",
-        },
+        { error: "forbidden", message: "Failed to verify user permissions" },
         403,
+        corsHeaders,
       );
     }
 
     const callerData = Array.isArray(callerCheck.data) ? callerCheck.data : [];
     if (callerData.length === 0) {
-      console.log("[admin-list-mesh-users] No mesh_user record found for auth_user_id:", authUserId);
+      logger.warn("No mesh_user record found", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "User not found in mesh_users table",
-        },
+        { error: "forbidden", message: "User not found in mesh_users table" },
         403,
+        corsHeaders,
       );
     }
 
@@ -159,79 +111,62 @@ async function handler(req: Request): Promise<Response> {
     const userType = callerRecord.user_type;
     const userDomain = callerRecord.domain ?? null;
 
-    console.log(`[admin-list-mesh-users] Caller user_type: ${userType}, domain: ${userDomain}`);
+    logger.info("Caller info", { user_type: userType, domain: userDomain }, authUserId);
 
-    // Check if user is siteadmin, minisiteadmin, or agent
+    // Check permissions
     const isSiteadmin = userType === "siteadmin";
     const isMinisiteadmin = userType === "minisiteadmin";
     const isAgent = userType === "agent";
 
     if (!isSiteadmin && !isMinisiteadmin && !isAgent) {
-      console.log(`[admin-list-mesh-users] Access denied: user_type=${userType}`);
+      logger.warn("Access denied", { user_type: userType }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Only siteadmins, minisiteadmins, and agents can access this endpoint",
-        },
+        { error: "forbidden", message: "Only siteadmins, minisiteadmins, and agents can access this endpoint" },
         403,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-list-mesh-users] Access granted: user_type=${userType}`);
+    logger.info("Access granted", { user_type: userType }, authUserId);
 
     // Build query based on role
-    // Use service_role to bypass RLS completely
     let queryUrl = `/rest/v1/mesh_users?select=id,mesh_username,display_name,domain,user_type,auth_user_id,email,created_at&order=domain.asc.nullsfirst,mesh_username.asc`;
 
-    // Role-based filtering:
-    // - Siteadmins see all domains (no filter)
-    // - Minisiteadmins see only their domain
-    // - Agents see only their domain
     if (isMinisiteadmin && userDomain) {
-      console.log(`[admin-list-mesh-users] Minisiteadmin filtering by domain: ${userDomain}`);
+      logger.info("Filtering by domain", { domain: userDomain }, authUserId);
       queryUrl += `&domain=eq.${encodeURIComponent(userDomain)}`;
     } else if (isAgent && userDomain) {
-      console.log(`[admin-list-mesh-users] Agent filtering by domain: ${userDomain}`);
+      logger.info("Filtering by domain", { domain: userDomain }, authUserId);
       queryUrl += `&domain=eq.${encodeURIComponent(userDomain)}`;
     }
-    // Siteadmins see all domains (no filter applied)
 
-    const meshQuery = await fetchSupabaseJson(
-      queryUrl,
-      {
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          Accept: "application/json",
-        },
+    const meshQuery = await fetchSupabaseJson(queryUrl, {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        Accept: "application/json",
       },
-    );
+    });
 
     if (!meshQuery.ok) {
-      console.error(
-        "[admin-list-mesh-users] Error fetching mesh_users:",
-        meshQuery.status,
-        meshQuery.text,
-      );
+      logger.error("Error fetching mesh_users", { status: meshQuery.status }, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Failed to fetch mesh users",
-        },
+        { error: "database_error", message: "Failed to fetch mesh users" },
         502,
+        corsHeaders,
       );
     }
 
     const rows = Array.isArray(meshQuery.data) ? meshQuery.data : [];
-    console.log(`[admin-list-mesh-users] Returning ${rows.length} users`);
+    logger.info("Returning users", { count: rows.length }, authUserId);
 
-    return jsonResponse({ users: rows } as Record<string, unknown>, 200);
+    return jsonResponse({ users: rows } as Record<string, unknown>, 200, corsHeaders);
   } catch (err) {
-    console.error("[admin-list-mesh-users] Unhandled error:", err);
-    const message = err instanceof Error ? err.message : String(err);
+    logger.error("Unhandled error", { error: err instanceof Error ? err.message : String(err) });
     return jsonResponse(
-      { error: "internal_error", message },
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
       500,
+      corsHeaders,
     );
   }
 }
