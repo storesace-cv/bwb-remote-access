@@ -1,9 +1,22 @@
-// Version: 2025-12-22T05:00:00Z - Create Supabase Auth user and link to mesh_users
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.1";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+const corsHeaders = {
+  ...defaultCorsHeaders,
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
 interface AdminCreateUserBody {
   email?: string;
@@ -16,52 +29,33 @@ interface AdminCreateUserBody {
 }
 
 serve(async (req: Request) => {
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers":
-      "authorization, x-client-info, apikey, content-type",
-  };
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("admin-create-auth-user", correlationId);
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: "Authorization header is required" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
+    }
+
+    const callerId = authResult.context.authUserId;
+    if (!callerId) {
+      logger.warn("No user ID in token");
+      return jsonResponse(
+        { error: "unauthorized", message: "Invalid user" },
+        401,
+        corsHeaders,
       );
     }
 
-    // CRITICAL: Validate JWT using service role key (consistent pattern)
-    const jwt = authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
-
-    const authCheckResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-      },
-    });
-
-    if (!authCheckResponse.ok) {
-      console.error("[admin-create-auth-user] JWT validation failed:", authCheckResponse.status);
-      return new Response(
-        JSON.stringify({ error: "Invalid or expired token" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const authUser = (await authCheckResponse.json()) as { id?: string } | null;
-    if (!authUser?.id) {
-      return new Response(
-        JSON.stringify({ error: "Invalid user" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    console.log("[admin-create-auth-user] Caller validated:", authUser.id);
+    logger.info("Caller validated", undefined, callerId);
 
     const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
       auth: {
@@ -71,24 +65,26 @@ serve(async (req: Request) => {
     });
 
     const body = (await req.json()) as AdminCreateUserBody;
-    const { 
-      email, 
-      password, 
-      display_name, 
-      mesh_username, 
+    const {
+      email,
+      password,
+      display_name,
+      mesh_username,
       mesh_user_id,
       email_confirm = false,
-      user_type = "colaborador" // ✅ DEFAULT: colaborador (lowercase)
+      user_type = "colaborador",
     } = body;
 
     if (!email || !password || !mesh_user_id) {
-      return new Response(
-        JSON.stringify({ 
-          error: "email, password e mesh_user_id são obrigatórios" 
-        }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("Missing required fields", { hasEmail: !!email, hasPassword: !!password, hasMeshUserId: !!mesh_user_id }, callerId);
+      return jsonResponse(
+        { error: "email, password e mesh_user_id são obrigatórios" },
+        400,
+        corsHeaders,
       );
     }
+
+    logger.info("Creating auth user", { email: email.charAt(0) + "***@" + email.split("@")[1] }, callerId);
 
     const { data: createdUser, error: createError } =
       await adminClient.auth.admin.createUser({
@@ -101,16 +97,16 @@ serve(async (req: Request) => {
       });
 
     if (createError || !createdUser.user) {
-      console.error("Error creating user:", createError);
-      return new Response(
-        JSON.stringify({
-          error: createError?.message || "Erro ao criar utilizador",
-        }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.error("Error creating user", { error: createError?.message }, callerId);
+      return jsonResponse(
+        { error: createError?.message || "Erro ao criar utilizador" },
+        500,
+        corsHeaders,
       );
     }
 
     const authUserId = createdUser.user.id;
+    logger.info("Auth user created", { authUserId }, callerId);
 
     const { data: meshExisting, error: meshExistingError } = await adminClient
       .from("mesh_users")
@@ -119,35 +115,36 @@ serve(async (req: Request) => {
       .maybeSingle();
 
     if (meshExistingError) {
-      console.error("Error checking mesh_users:", meshExistingError);
-      return new Response(
-        JSON.stringify({ error: meshExistingError.message }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.error("Error checking mesh_users", { error: meshExistingError.message }, callerId);
+      return jsonResponse(
+        { error: meshExistingError.message },
+        500,
+        corsHeaders,
       );
     }
 
     if (!meshExisting) {
-      return new Response(
-        JSON.stringify({ 
-          error: `mesh_user_id ${mesh_user_id} não encontrado em mesh_users` 
-        }),
-        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("Mesh user not found", { mesh_user_id }, callerId);
+      return jsonResponse(
+        { error: `mesh_user_id ${mesh_user_id} não encontrado em mesh_users` },
+        404,
+        corsHeaders,
       );
     }
 
     if (meshExisting.auth_user_id && meshExisting.auth_user_id !== authUserId) {
-      return new Response(
-        JSON.stringify({ 
-          error: `mesh_user_id ${mesh_user_id} já está associado a outro utilizador` 
-        }),
-        { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      logger.warn("Mesh user already linked", { mesh_user_id, existing_auth_user_id: meshExisting.auth_user_id }, callerId);
+      return jsonResponse(
+        { error: `mesh_user_id ${mesh_user_id} já está associado a outro utilizador` },
+        409,
+        corsHeaders,
       );
     }
 
     const updatePayload: Record<string, unknown> = {
       auth_user_id: authUserId,
       email,
-      user_type, // ✅ Normalized: agent | colaborador | inactivo | candidato
+      user_type,
     };
 
     if (display_name) {
@@ -160,33 +157,35 @@ serve(async (req: Request) => {
       .eq("id", mesh_user_id);
 
     if (updateError) {
-      console.error("Error updating mesh_users:", updateError);
-      
+      logger.error("Error updating mesh_users", { error: updateError.message }, callerId);
+
+      // Rollback: delete the auth user
       await adminClient.auth.admin.deleteUser(authUserId);
 
-      return new Response(
-        JSON.stringify({
-          error: `Erro ao atualizar mesh_users: ${updateError.message}`,
-        }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      return jsonResponse(
+        { error: `Erro ao atualizar mesh_users: ${updateError.message}` },
+        500,
+        corsHeaders,
       );
     }
 
-    return new Response(
-      JSON.stringify({
+    logger.info("User created and linked successfully", { authUserId, mesh_user_id }, callerId);
+
+    return jsonResponse(
+      {
         message: "Utilizador criado e associado com sucesso",
         user_id: authUserId,
         mesh_user_id,
-      }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      },
+      200,
+      corsHeaders,
     );
   } catch (error) {
-    console.error("Unexpected error:", error);
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "Erro inesperado",
-      }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    logger.error("Unexpected error", { error: error instanceof Error ? error.message : String(error) });
+    return jsonResponse(
+      { error: error instanceof Error ? error.message : "Erro inesperado" },
+      500,
+      corsHeaders,
     );
   }
 });
