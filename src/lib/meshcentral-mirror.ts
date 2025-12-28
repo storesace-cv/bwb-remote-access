@@ -5,7 +5,7 @@
  */
 import "server-only";
 import { getSupabaseAdmin } from "./supabase-admin";
-import { readInventory, type MeshDeviceGroup, type MeshDevice, type SyncCounters } from "./meshcentral-db";
+import { readInventory, type SyncCounters } from "./meshcentral-db";
 
 type ValidDomain = "mesh" | "zonetech" | "zsangola";
 
