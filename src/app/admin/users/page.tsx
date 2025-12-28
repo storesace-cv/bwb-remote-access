@@ -177,7 +177,6 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
             initialTotal={total}
             allowedDomains={allowedDomains}
             filterDomain={filterDomain}
-            isSuperAdmin={isSuperAdmin}
           />
         )}
 
