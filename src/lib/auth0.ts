@@ -36,9 +36,9 @@ function getAuth0Client(): Auth0Client {
     // Dynamic require to avoid build-time evaluation of Auth0Client constructor
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Auth0Client: Auth0ClientClass } = require("@auth0/nextjs-auth0/server");
-    _auth0Client = new Auth0ClientClass();
+    _auth0Client = new Auth0ClientClass() as Auth0Client;
   }
-  return _auth0Client;
+  return _auth0Client!;
 }
 
 /**
@@ -54,16 +54,22 @@ export const auth0 = {
   getSession(req?: unknown) {
     const client = getAuth0Client();
     if (req !== undefined) {
-      return client.getSession(req as Parameters<Auth0Client["getSession"]>[0]);
+      // Pages Router / middleware usage with request object
+      return (client.getSession as (req: unknown) => ReturnType<Auth0Client["getSession"]>)(req);
     }
+    // App Router usage without arguments
     return client.getSession();
   },
 
   /**
    * Gets the access token.
    */
-  getAccessToken(options?: Parameters<Auth0Client["getAccessToken"]>[0]) {
-    return getAuth0Client().getAccessToken(options);
+  getAccessToken(options?: unknown) {
+    const client = getAuth0Client();
+    if (options !== undefined) {
+      return (client.getAccessToken as (opts: unknown) => ReturnType<Auth0Client["getAccessToken"]>)(options);
+    }
+    return client.getAccessToken();
   },
 
   /**
