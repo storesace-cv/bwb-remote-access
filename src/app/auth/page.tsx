@@ -9,7 +9,7 @@
  * It does NOT replace the existing login flow.
  */
 
-import { getSession } from "@auth0/nextjs-auth0";
+import { auth0 } from "@/lib/auth0";
 import Link from "next/link";
 
 // Custom claims namespace
@@ -32,7 +32,7 @@ function extractClaims(user: Record<string, unknown>): Auth0Claims {
 }
 
 export default async function Auth0TestPage() {
-  const session = await getSession();
+  const session = await auth0.getSession();
   const user = session?.user;
 
   return (
