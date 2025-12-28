@@ -17,6 +17,8 @@ interface Auth0SessionInfo {
   roleLabel?: string | null;
   email?: string;
   org?: string;
+  globalRoles?: string[];
+  orgRoles?: Record<string, string[]>;
 }
 
 interface MeshUser {
