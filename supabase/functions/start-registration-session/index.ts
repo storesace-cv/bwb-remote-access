@@ -1,17 +1,27 @@
-// Edge Function para iniciar sessão de registro de dispositivo
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 export const config = { verify_jwt: false };
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 async function handler(req: Request): Promise<Response> {
-  console.log(`[start-registration-session] Request received: ${req.method}`);
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("start-registration-session", correlationId);
+
+  logger.info("Request received", { method: req.method });
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -19,101 +29,65 @@ async function handler(req: Request): Promise<Response> {
 
   try {
     if (req.method !== "POST") {
-      return new Response(
-        JSON.stringify({ error: "method_not_allowed" }),
-        {
-          status: 405,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      logger.warn("Method not allowed", { method: req.method });
+      return jsonResponse({ error: "method_not_allowed" }, 405, corsHeaders);
     }
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      console.error("[start-registration-session] Missing environment variables");
-      return new Response(
-        JSON.stringify({
-          error: "config_error",
-          message: "Missing Supabase configuration",
-        }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      logger.error("Missing Supabase configuration");
+      return jsonResponse(
+        { error: "config_error", message: "Missing Supabase configuration" },
+        500,
+        corsHeaders,
       );
     }
 
-    // Validar JWT
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.error("[start-registration-session] Missing Authorization header");
-      return new Response(
-        JSON.stringify({ error: "unauthorized", message: "Missing token" }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
+    }
+
+    const userId = authResult.context.authUserId;
+    if (!userId) {
+      logger.warn("No user ID in token");
+      return jsonResponse(
+        { error: "unauthorized", message: "Invalid user" },
+        401,
+        corsHeaders,
       );
     }
 
-    const jwt = authHeader.substring(7);
-
-    // Validar JWT com Supabase Auth
-    const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-      },
-    });
-
-    if (!authResponse.ok) {
-      console.error("[start-registration-session] JWT validation failed:", authResponse.status);
-      return new Response(
-        JSON.stringify({
-          error: "unauthorized",
-          message: "Invalid or expired token",
-        }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    const user = await authResponse.json();
-    const userId = user.id;
-    console.log(`[start-registration-session] User authenticated: ${userId}`);
+    logger.info("User authenticated", undefined, userId);
 
     const ADMIN_AUTH_USER_ID =
       Deno.env.get("ADMIN_AUTH_USER_ID") ??
       "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
 
     if (userId === ADMIN_AUTH_USER_ID) {
-      console.error(
-        "[start-registration-session] Canonical admin is not allowed to start registration sessions",
-      );
-      return new Response(
-        JSON.stringify({
-          error: "forbidden",
-          message:
-            "A conta de administração não pode iniciar sessões de registo de dispositivos. Usa uma conta de técnico/loja.",
-        }),
+      logger.warn("Canonical admin cannot start registration sessions", undefined, userId);
+      return jsonResponse(
         {
-          status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          error: "forbidden",
+          message: "A conta de administração não pode iniciar sessões de registo de dispositivos. Usa uma conta de técnico/loja.",
         },
+        403,
+        corsHeaders,
       );
     }
 
-    // Capturar informações do request
-    const ip_address = req.headers.get("x-forwarded-for") || 
-                      req.headers.get("x-real-ip") || 
-                      "unknown";
+    // Capture request info
+    const ip_address = req.headers.get("x-forwarded-for") ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
     const user_agent = req.headers.get("user-agent") || "unknown";
 
-    // Tentar obter geolocation do body (se cliente enviou)
+    // Try to get geolocation from body
     let geolocation = null;
     try {
       const body = await req.json();
@@ -121,30 +95,29 @@ async function handler(req: Request): Promise<Response> {
         geolocation = body.geolocation;
       }
     } catch {
-      // Body vazio ou inválido, sem problema
+      // Empty or invalid body, no problem
     }
 
-    // Criar cliente Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Expirar sessões antigas do usuário antes de criar nova
+    // Expire old sessions
     const { error: expireError } = await supabase
       .from("device_registration_sessions")
-      .update({ 
+      .update({
         status: "expired",
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .eq("user_id", userId)
       .eq("status", "awaiting_device")
       .lt("expires_at", new Date().toISOString());
 
     if (expireError) {
-      console.warn("[start-registration-session] Error expiring old sessions:", expireError);
+      logger.warn("Error expiring old sessions", { error: expireError.message }, userId);
     }
 
-    // Criar nova sessão
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutos
-    
+    // Create new session
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
     const { data: session, error: insertError } = await supabase
       .from("device_registration_sessions")
       .insert({
@@ -160,43 +133,32 @@ async function handler(req: Request): Promise<Response> {
       .single();
 
     if (insertError) {
-      console.error("[start-registration-session] Error creating session:", insertError);
-      return new Response(
-        JSON.stringify({
-          error: "database_error",
-          message: insertError.message,
-        }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      logger.error("Error creating session", { error: insertError.message }, userId);
+      return jsonResponse(
+        { error: "database_error", message: insertError.message },
+        500,
+        corsHeaders,
       );
     }
 
-    console.log(`[start-registration-session] Session created: ${session.id}`);
+    logger.info("Session created", { sessionId: session.id }, userId);
 
-    return new Response(
-      JSON.stringify({
+    return jsonResponse(
+      {
         success: true,
         session_id: session.id,
         expires_at: session.expires_at,
         expires_in_seconds: 300,
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      },
+      200,
+      corsHeaders,
     );
   } catch (err) {
-    console.error("[start-registration-session] Unhandled error:", err);
-    const message = err instanceof Error ? err.message : String(err);
-
-    return new Response(
-      JSON.stringify({ error: "internal_error", message }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+    logger.error("Unhandled error", { error: err instanceof Error ? err.message : String(err) });
+    return jsonResponse(
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
+      500,
+      corsHeaders,
     );
   }
 }
