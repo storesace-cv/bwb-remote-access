@@ -1,39 +1,41 @@
-// Edge Function para verificar status de sessão de registro
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 export const config = { verify_jwt: false };
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 
-// Função para fazer matching temporal (SEM acesso ao SQLite)
+// Temporal matching function
 async function performTemporalMatching(
-  supabase: any,
+  supabase: ReturnType<typeof createClient>,
   sessionId: string,
   userId: string,
-  sessionClickedAt: string
+  sessionClickedAt: string,
+  logger: ReturnType<typeof createLogger>,
 ): Promise<{ device_id: string; friendly_name?: string } | null> {
   try {
-    console.log(`[check-registration-status] Starting temporal matching for session ${sessionId}`);
-    console.log(`[check-registration-status] Session clicked_at: ${sessionClickedAt}`);
-    
-    // Janela temporal: de clicked_at até clicked_at + 8 minutos
+    logger.info("Starting temporal matching", { sessionId });
+
     const clickedDate = new Date(sessionClickedAt);
     const windowStart = clickedDate;
     const windowEnd = new Date(clickedDate.getTime() + 8 * 60 * 1000);
     const windowStartISO = windowStart.toISOString();
     const windowEndISO = windowEnd.toISOString();
-    
-    console.log(
-      `[check-registration-status] Looking for devices with last_seen_at between ${windowStartISO} and ${windowEndISO}`,
-    );
-    
-    // Buscar dispositivos órfãos vistos na janela [clicked_at, clicked_at + 8min]
-    // Usa last_seen_at em vez de created_at para detectar conexões recentes
+
+    logger.info("Looking for orphan devices", { windowStart: windowStartISO, windowEnd: windowEndISO });
+
     const { data: orphanDevices, error: orphanError } = await supabase
       .from("android_devices")
       .select("device_id, friendly_name, last_seen_at, created_at")
@@ -42,45 +44,35 @@ async function performTemporalMatching(
       .gte("last_seen_at", windowStartISO)
       .lte("last_seen_at", windowEndISO)
       .order("last_seen_at", { ascending: false });
-    
+
     if (orphanError) {
-      console.error("[check-registration-status] Error fetching orphans:", orphanError);
+      logger.error("Error fetching orphans", { error: orphanError.message });
       return null;
     }
-    
+
     if (!orphanDevices || orphanDevices.length === 0) {
-      console.log("[check-registration-status] No orphan devices found in time window");
-      console.log(
-        `[check-registration-status] Window: ${windowStartISO} to ${windowEndISO}`,
-      );
+      logger.info("No orphan devices found in time window");
       return null;
     }
-    
-    console.log(`[check-registration-status] Found ${orphanDevices.length} orphan devices:`);
-    orphanDevices.forEach(d => {
-      console.log(`  - ${d.device_id}: last_seen=${d.last_seen_at}, created=${d.created_at}`);
-    });
-    
-    // Pegar o dispositivo mais recente (primeiro da lista já ordenada por last_seen_at DESC)
+
+    logger.info("Found orphan devices", { count: orphanDevices.length });
+
     const matchedDevice = orphanDevices[0];
-    
-    console.log(`[check-registration-status] Matched device: ${matchedDevice.device_id}`);
-    
-    // Buscar mesh_user
+    logger.info("Matched device", { device_id: matchedDevice.device_id });
+
     const { data: meshUser } = await supabase
       .from("mesh_users")
       .select("id, mesh_username")
       .eq("auth_user_id", userId)
       .maybeSingle();
-    
+
     if (!meshUser) {
-      console.error("[check-registration-status] Mesh user not found for:", userId);
+      logger.error("Mesh user not found", undefined, userId);
       return null;
     }
-    
-    console.log(`[check-registration-status] Assigning device to mesh_user: ${meshUser.id}`);
-    
-    // Atualizar device com owner
+
+    logger.info("Assigning device to mesh_user", { meshUserId: meshUser.id }, userId);
+
     const { error: updateError } = await supabase
       .from("android_devices")
       .update({
@@ -88,15 +80,14 @@ async function performTemporalMatching(
         mesh_username: meshUser.mesh_username,
       })
       .eq("device_id", matchedDevice.device_id);
-    
+
     if (updateError) {
-      console.error("[check-registration-status] Error updating device:", updateError);
+      logger.error("Error updating device", { error: updateError.message });
       return null;
     }
-    
-    console.log(`[check-registration-status] Device ${matchedDevice.device_id} assigned to user ${userId}`);
-    
-    // Marcar sessão como completed
+
+    logger.info("Device assigned successfully", { device_id: matchedDevice.device_id }, userId);
+
     const now = new Date().toISOString();
     await supabase
       .from("device_registration_sessions")
@@ -107,19 +98,22 @@ async function performTemporalMatching(
         updated_at: now,
       })
       .eq("id", sessionId);
-    
+
     return {
       device_id: matchedDevice.device_id,
       friendly_name: matchedDevice.friendly_name,
     };
   } catch (err) {
-    console.error("[check-registration-status] Error in temporal matching:", err);
+    logger.error("Error in temporal matching", { error: err instanceof Error ? err.message : String(err) });
     return null;
   }
 }
 
 async function handler(req: Request): Promise<Response> {
-  console.log(`[check-registration-status] Request received: ${req.method}`);
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("check-registration-status", correlationId);
+
+  logger.info("Request received", { method: req.method });
 
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -127,90 +121,58 @@ async function handler(req: Request): Promise<Response> {
 
   try {
     if (req.method !== "GET") {
-      return new Response(
-        JSON.stringify({ error: "method_not_allowed" }),
-        {
-          status: 405,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      logger.warn("Method not allowed", { method: req.method });
+      return jsonResponse({ error: "method_not_allowed" }, 405, corsHeaders);
     }
 
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      console.error("[check-registration-status] Missing environment variables");
-      return new Response(
-        JSON.stringify({
-          error: "config_error",
-          message: "Missing Supabase configuration",
-        }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      logger.error("Missing Supabase configuration");
+      return jsonResponse(
+        { error: "config_error", message: "Missing Supabase configuration" },
+        500,
+        corsHeaders,
       );
     }
 
-    // Validar JWT
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.error("[check-registration-status] Missing Authorization header");
-      return new Response(
-        JSON.stringify({ error: "unauthorized", message: "Missing token" }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
+    }
+
+    const userId = authResult.context.authUserId;
+    if (!userId) {
+      logger.warn("No user ID in token");
+      return jsonResponse(
+        { error: "unauthorized", message: "Invalid user" },
+        401,
+        corsHeaders,
       );
     }
 
-    const jwt = authHeader.substring(7);
+    logger.info("User authenticated", undefined, userId);
 
-    // Validar JWT com Supabase Auth
-    const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-      },
-    });
-
-    if (!authResponse.ok) {
-      console.error("[check-registration-status] JWT validation failed:", authResponse.status);
-      return new Response(
-        JSON.stringify({
-          error: "unauthorized",
-          message: "Invalid or expired token",
-        }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    const user = await authResponse.json();
-    const userId = user.id;
-
-    // Pegar session_id da URL
+    // Get session_id from URL
     const url = new URL(req.url);
     const sessionId = url.searchParams.get("session_id");
 
     if (!sessionId) {
-      return new Response(
-        JSON.stringify({ error: "invalid_request", message: "session_id is required" }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      logger.warn("Missing session_id", undefined, userId);
+      return jsonResponse(
+        { error: "invalid_request", message: "session_id is required" },
+        400,
+        corsHeaders,
       );
     }
 
-    // Criar cliente Supabase
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Buscar sessão
+    // Fetch session
     const { data: session, error: fetchError } = await supabase
       .from("device_registration_sessions")
       .select("*")
@@ -219,58 +181,53 @@ async function handler(req: Request): Promise<Response> {
       .single();
 
     if (fetchError || !session) {
-      console.error("[check-registration-status] Session not found:", fetchError);
-      return new Response(
-        JSON.stringify({
-          error: "not_found",
-          message: "Session not found",
-        }),
-        {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
+      logger.warn("Session not found", { sessionId }, userId);
+      return jsonResponse(
+        { error: "not_found", message: "Session not found" },
+        404,
+        corsHeaders,
       );
     }
 
-    // Verificar se expirou
+    // Check expiration
     const now = new Date();
     const expiresAt = new Date(session.expires_at);
     const isExpired = now > expiresAt;
 
-    // Se expirou e status ainda é awaiting, atualizar
+    // Update expired sessions
     if (isExpired && session.status === "awaiting_device") {
       await supabase
         .from("device_registration_sessions")
-        .update({ 
+        .update({
           status: "expired",
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
         })
         .eq("id", sessionId);
 
       session.status = "expired";
+      logger.info("Session expired", { sessionId }, userId);
     }
 
-    // Se ainda está awaiting, tentar matching temporal
+    // Attempt temporal matching if still awaiting
     let deviceInfo = null;
     if (session.status === "awaiting_device" && !isExpired) {
-      console.log("[check-registration-status] Attempting temporal matching...");
-      
+      logger.info("Attempting temporal matching", { sessionId }, userId);
+
       const matchResult = await performTemporalMatching(
         supabase,
         sessionId,
         userId,
-        session.clicked_at
+        session.clicked_at,
+        logger,
       );
-      
+
       if (matchResult) {
         deviceInfo = matchResult;
         session.status = "completed";
         session.matched_device_id = matchResult.device_id;
         session.matched_at = new Date().toISOString();
       }
-    }
-    // Se completou, buscar informações do device
-    else if (session.status === "completed" && session.matched_device_id) {
+    } else if (session.status === "completed" && session.matched_device_id) {
       const { data: device } = await supabase
         .from("android_devices")
         .select("device_id, friendly_name, notes")
@@ -282,33 +239,28 @@ async function handler(req: Request): Promise<Response> {
       }
     }
 
-    // Calcular tempo restante
     const timeRemaining = isExpired ? 0 : Math.max(0, Math.floor((expiresAt.getTime() - now.getTime()) / 1000));
 
-    return new Response(
-      JSON.stringify({
+    logger.info("Returning status", { status: session.status, timeRemaining }, userId);
+
+    return jsonResponse(
+      {
         success: true,
         status: session.status,
         expires_at: session.expires_at,
         time_remaining_seconds: timeRemaining,
         device_info: deviceInfo,
         matched_at: session.matched_at,
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      },
+      200,
+      corsHeaders,
     );
   } catch (err) {
-    console.error("[check-registration-status] Unhandled error:", err);
-    const message = err instanceof Error ? err.message : String(err);
-
-    return new Response(
-      JSON.stringify({ error: "internal_error", message }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+    logger.error("Unhandled error", { error: err instanceof Error ? err.message : String(err) });
+    return jsonResponse(
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
+      500,
+      corsHeaders,
     );
   }
 }
