@@ -219,3 +219,85 @@ export async function listMirrorUsers(options: {
 
   return { users, total: count || 0 };
 }
+
+/**
+ * Creates or updates a user in the mirror directly (for admin-created users).
+ * This is used when creating users via Auth0 Management API.
+ * 
+ * @param params - User creation parameters
+ * @returns The created/updated user record
+ */
+export async function upsertMirrorUser(params: {
+  auth0UserId: string;
+  email: string;
+  displayName?: string | null;
+  isSuperAdminMeshCentral?: boolean;
+  isSuperAdminRustDesk?: boolean;
+  domain?: ValidDomain;
+  role?: ValidRole;
+}): Promise<AppUser> {
+  const supabase = getSupabaseAdmin();
+
+  // Prepare user data
+  const userData = {
+    auth0_user_id: params.auth0UserId,
+    email: params.email,
+    display_name: params.displayName || params.email.split("@")[0],
+    is_superadmin_meshcentral: params.isSuperAdminMeshCentral || false,
+    is_superadmin_rustdesk: params.isSuperAdminRustDesk || false,
+    updated_at: new Date().toISOString(),
+    deleted_at: null,
+  };
+
+  // Upsert user
+  const { data: user, error: userError } = await supabase
+    .from("app_users")
+    .upsert(userData, {
+      onConflict: "auth0_user_id",
+      ignoreDuplicates: false,
+    })
+    .select()
+    .single();
+
+  if (userError) {
+    console.error("Error upserting app_user:", userError);
+    throw new Error(`Failed to create/update mirror user: ${userError.message}`);
+  }
+
+  // Add domain role if specified
+  if (params.domain && params.role) {
+    await upsertUserDomainRole(user.id, params.domain, params.role);
+  }
+
+  return user as AppUser;
+}
+
+/**
+ * Adds or updates a domain role for a user.
+ */
+export async function upsertUserDomainRole(
+  userId: string,
+  domain: ValidDomain,
+  role: ValidRole
+): Promise<void> {
+  const supabase = getSupabaseAdmin();
+
+  // For DOMAIN_ADMIN, also add AGENT role
+  const rolesToAdd: ValidRole[] = role === "DOMAIN_ADMIN" 
+    ? ["DOMAIN_ADMIN", "AGENT"] 
+    : [role];
+
+  for (const r of rolesToAdd) {
+    const { error } = await supabase
+      .from("app_user_domains")
+      .upsert(
+        { user_id: userId, domain, role: r },
+        { onConflict: "user_id,domain,role", ignoreDuplicates: true }
+      );
+
+    if (error && !error.message.includes("duplicate")) {
+      console.error(`Error adding domain role ${domain}:${r}:`, error);
+    }
+  }
+}
+
