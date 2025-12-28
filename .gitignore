@@ -56,3 +56,19 @@ next-env.d.ts
 dist/
 .cache/
 .turbo/
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
+-e 
+# Environment files
+*.env
+*.env.*
