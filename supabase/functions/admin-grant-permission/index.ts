@@ -1,32 +1,27 @@
-// Version: 2025-12-22T22:45:00Z - Fixed CDATA wrapper issue + auth pattern
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY =
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 interface GrantPermissionRequest {
   collaborator_id: string;
   group_id: string;
   permission?: "view" | "manage";
   notes?: string;
-}
-
-function jsonResponse(
-  body: Record<string, unknown>,
-  status = 200,
-): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
 }
 
 async function fetchSupabaseJson(
@@ -46,83 +41,50 @@ async function fetchSupabaseJson(
 }
 
 async function handler(req: Request): Promise<Response> {
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("admin-grant-permission", correlationId);
+
   if (req.method === "OPTIONS") {
-    console.log("[admin-grant-permission] OPTIONS preflight request");
+    logger.info("OPTIONS preflight request");
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
     if (req.method !== "POST") {
-      console.log(`[admin-grant-permission] Invalid method: ${req.method}`);
-      return jsonResponse({ error: "method_not_allowed" }, 405);
+      logger.warn("Invalid method", { method: req.method });
+      return jsonResponse({ error: "method_not_allowed" }, 405, corsHeaders);
     }
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      console.error("[admin-grant-permission] Missing Supabase env vars");
+      logger.error("Missing Supabase configuration");
       return jsonResponse(
-        {
-          error: "config_error",
-          message: "Missing Supabase configuration",
-        },
+        { error: "config_error", message: "Missing Supabase configuration" },
         500,
+        corsHeaders,
       );
     }
 
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("[admin-grant-permission] Missing Authorization header");
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Missing or invalid Authorization header",
-        },
-        401,
-      );
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
     }
 
-    const jwt = authHeader.substring(7);
-
-    const authCheck = await fetchSupabaseJson(
-      `/auth/v1/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-        },
-      },
-    );
-
-    if (!authCheck.ok) {
-      console.error(
-        "[admin-grant-permission] JWT validation failed:",
-        authCheck.status,
-        authCheck.text,
-      );
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid or expired token",
-        },
-        401,
-      );
-    }
-
-    const user = authCheck.data as { id?: string } | null;
-    const authUserId = user?.id;
-
+    const authUserId = authResult.context.authUserId;
     if (!authUserId) {
-      console.log("[admin-grant-permission] No user ID in token");
+      logger.warn("No user ID in token");
       return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid user",
-        },
+        { error: "unauthorized", message: "Invalid user" },
         401,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-grant-permission] Caller auth_user_id: ${authUserId}`);
+    logger.info("User authenticated", undefined, authUserId);
 
+    // Get caller's mesh_user record
     const callerCheck = await fetchSupabaseJson(
       `/rest/v1/mesh_users?select=id,user_type,domain,agent_id&auth_user_id=eq.${authUserId}`,
       {
@@ -135,29 +97,21 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!callerCheck.ok) {
-      console.error(
-        "[admin-grant-permission] Failed to get caller info:",
-        callerCheck.status,
-        callerCheck.text,
-      );
+      logger.error("Failed to get caller info", { status: callerCheck.status }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Failed to verify user permissions",
-        },
+        { error: "forbidden", message: "Failed to verify user permissions" },
         403,
+        corsHeaders,
       );
     }
 
     const callerData = Array.isArray(callerCheck.data) ? callerCheck.data : [];
     if (callerData.length === 0) {
-      console.log("[admin-grant-permission] No mesh_user record found for auth_user_id:", authUserId);
+      logger.warn("No mesh_user record found", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "User not found in mesh_users table",
-        },
+        { error: "forbidden", message: "User not found in mesh_users table" },
         403,
+        corsHeaders,
       );
     }
 
@@ -167,48 +121,45 @@ async function handler(req: Request): Promise<Response> {
     const domain = callerRecord.domain;
     const agentId = callerRecord.agent_id ?? null;
 
-    console.log(`[admin-grant-permission] Caller user_type: ${userType}, domain: ${domain}`);
+    logger.info("Caller info", { user_type: userType, domain, agent_id: agentId }, authUserId);
 
     const isAgent = userType === "agent";
     const isMinisiteadmin = userType === "minisiteadmin";
     const isSiteadmin = userType === "siteadmin";
 
     if (!isAgent && !isMinisiteadmin && !isSiteadmin) {
-      console.log(`[admin-grant-permission] Access denied: user_type=${userType}`);
+      logger.warn("Access denied", { user_type: userType }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Only agents, minisiteadmins, and siteadmins can grant permissions",
-        },
+        { error: "forbidden", message: "Only agents, minisiteadmins, and siteadmins can grant permissions" },
         403,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-grant-permission] Access granted: user_type=${userType}`);
+    logger.info("Access granted", { user_type: userType }, authUserId);
 
     const body = await req.json() as GrantPermissionRequest;
 
     if (!body.collaborator_id || !body.group_id) {
+      logger.warn("Missing required fields", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "bad_request",
-          message: "collaborator_id and group_id are required",
-        },
+        { error: "bad_request", message: "collaborator_id and group_id are required" },
         400,
+        corsHeaders,
       );
     }
 
     const permission = body.permission || "view";
     if (!["view", "manage"].includes(permission)) {
+      logger.warn("Invalid permission", { permission }, authUserId);
       return jsonResponse(
-        {
-          error: "bad_request",
-          message: "permission must be 'view' or 'manage'",
-        },
+        { error: "bad_request", message: "permission must be 'view' or 'manage'" },
         400,
+        corsHeaders,
       );
     }
 
+    // Verify collaborator
     const collabCheck = await fetchSupabaseJson(
       `/rest/v1/mesh_users?select=id,user_type,parent_agent_id,agent_id,domain&id=eq.${body.collaborator_id}`,
       {
@@ -221,51 +172,43 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!collabCheck.ok) {
-      console.error("[admin-grant-permission] Error checking collaborator:", collabCheck.status, collabCheck.text);
+      logger.error("Error checking collaborator", { status: collabCheck.status }, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Failed to verify collaborator",
-        },
+        { error: "database_error", message: "Failed to verify collaborator" },
         502,
+        corsHeaders,
       );
     }
 
     const collabData = Array.isArray(collabCheck.data) ? collabCheck.data : [];
     if (collabData.length === 0) {
+      logger.warn("Collaborator not found", { collaborator_id: body.collaborator_id }, authUserId);
       return jsonResponse(
-        {
-          error: "not_found",
-          message: "Collaborator not found",
-        },
+        { error: "not_found", message: "Collaborator not found" },
         404,
+        corsHeaders,
       );
     }
 
     const collaborator = collabData[0] as { parent_agent_id: string | null; domain: string };
 
-    if (isAgent) {
-      if (collaborator.parent_agent_id !== callerId) {
-        return jsonResponse(
-          {
-            error: "forbidden",
-            message: "Collaborator does not belong to your tenant",
-          },
-          403,
-        );
-      }
-    } else if (isMinisiteadmin) {
-      if (collaborator.domain !== domain) {
-        return jsonResponse(
-          {
-            error: "forbidden",
-            message: "Collaborator does not belong to your domain",
-          },
-          403,
-        );
-      }
+    if (isAgent && collaborator.parent_agent_id !== callerId) {
+      logger.warn("Collaborator not in tenant", undefined, authUserId);
+      return jsonResponse(
+        { error: "forbidden", message: "Collaborator does not belong to your tenant" },
+        403,
+        corsHeaders,
+      );
+    } else if (isMinisiteadmin && collaborator.domain !== domain) {
+      logger.warn("Collaborator not in domain", undefined, authUserId);
+      return jsonResponse(
+        { error: "forbidden", message: "Collaborator does not belong to your domain" },
+        403,
+        corsHeaders,
+      );
     }
 
+    // Verify group
     const groupCheck = await fetchSupabaseJson(
       `/rest/v1/mesh_groups?select=id,agent_id,name,path&id=eq.${body.group_id}&deleted_at=is.null`,
       {
@@ -278,39 +221,36 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!groupCheck.ok) {
-      console.error("[admin-grant-permission] Error checking group:", groupCheck.status, groupCheck.text);
+      logger.error("Error checking group", { status: groupCheck.status }, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Failed to verify group",
-        },
+        { error: "database_error", message: "Failed to verify group" },
         502,
+        corsHeaders,
       );
     }
 
     const groupData = Array.isArray(groupCheck.data) ? groupCheck.data : [];
     if (groupData.length === 0) {
+      logger.warn("Group not found", { group_id: body.group_id }, authUserId);
       return jsonResponse(
-        {
-          error: "not_found",
-          message: "Group not found",
-        },
+        { error: "not_found", message: "Group not found" },
         404,
+        corsHeaders,
       );
     }
 
     const group = groupData[0] as { agent_id: string; name: string; path: string };
 
     if (group.agent_id !== agentId) {
+      logger.warn("Group not in tenant", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Group does not belong to your tenant",
-        },
+        { error: "forbidden", message: "Group does not belong to your tenant" },
         403,
+        corsHeaders,
       );
     }
 
+    // Check for existing permission
     const existingQuery = await fetchSupabaseJson(
       `/rest/v1/mesh_group_permissions?select=id,revoked_at&collaborator_id=eq.${body.collaborator_id}&group_id=eq.${body.group_id}&revoked_at=is.null`,
       {
@@ -323,15 +263,15 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (existingQuery.ok && Array.isArray(existingQuery.data) && existingQuery.data.length > 0) {
+      logger.warn("Permission already exists", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "conflict",
-          message: "Active permission already exists for this collaborator and group",
-        },
+        { error: "conflict", message: "Active permission already exists for this collaborator and group" },
         409,
+        corsHeaders,
       );
     }
 
+    // Create permission
     const insertPayload = {
       agent_id: agentId,
       collaborator_id: body.collaborator_id,
@@ -357,25 +297,21 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!grantQuery.ok) {
-      console.error("[admin-grant-permission] Failed to grant permission:", grantQuery.status, grantQuery.text);
+      logger.error("Failed to grant permission", { status: grantQuery.status }, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Failed to grant permission",
-          details: grantQuery.text,
-        },
+        { error: "database_error", message: "Failed to grant permission", details: grantQuery.text },
         502,
+        corsHeaders,
       );
     }
 
     const permissions = Array.isArray(grantQuery.data) ? grantQuery.data : [];
     if (permissions.length === 0) {
+      logger.error("Permission granted but not returned", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "database_error",
-          message: "Permission granted but not returned",
-        },
+        { error: "database_error", message: "Permission granted but not returned" },
         502,
+        corsHeaders,
       );
     }
 
@@ -388,7 +324,7 @@ async function handler(req: Request): Promise<Response> {
       granted_by: string;
     };
 
-    console.log(`[admin-grant-permission] Successfully granted permission: ${permissionRecord.id}`);
+    logger.info("Permission granted", { permission_id: permissionRecord.id }, authUserId);
 
     return jsonResponse(
       {
@@ -405,13 +341,14 @@ async function handler(req: Request): Promise<Response> {
         },
       } as Record<string, unknown>,
       201,
+      corsHeaders,
     );
   } catch (err) {
-    console.error("[admin-grant-permission] Unhandled error:", err);
-    const message = err instanceof Error ? err.message : String(err);
+    logger.error("Unhandled error", { error: err instanceof Error ? err.message : String(err) });
     return jsonResponse(
-      { error: "internal_error", message },
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
       500,
+      corsHeaders,
     );
   }
 }
