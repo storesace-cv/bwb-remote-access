@@ -53,8 +53,17 @@ export function useDevices(): UseDevicesResult {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("date_desc");
 
+  /**
+   * A device is considered "adopted" when:
+   * 1. It has an owner assigned (owner !== null)
+   * 2. It has a group assigned (group_id !== null)
+   * 
+   * Devices registered via QR/hybrid flow start with an owner but NO group.
+   * The user must explicitly adopt them by selecting a group.
+   * Only after adoption (group selected) do they appear in "Dispositivos Adoptados".
+   */
   const isDeviceAdopted = useCallback((device: GroupableDevice): boolean => {
-    return device.owner !== null && device.notes !== null && device.notes.trim().length > 0;
+    return device.owner !== null && device.group_id !== null;
   }, []);
 
   const fetchDevices = useCallback(async (): Promise<void> => {
