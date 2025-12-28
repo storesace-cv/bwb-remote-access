@@ -483,7 +483,7 @@ Quando chamado, esta função:
 
 **Exemplo (cURL):**
 ```bash
-curl -X GET "https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/check-registration-status?session_id=770e8400-e29b-41d4-a716-446655440002" \
+curl -X GET "https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/check-registration-status?session_id=codebase-check-21" \
   -H "Authorization: Bearer <JWT_TOKEN>" \
   -H "apikey: <SUPABASE_ANON_KEY>"
 ```

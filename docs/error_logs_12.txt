@@ -96,7 +96,7 @@ x-served-by: supabase-edge-runtime
     "timestamp": 1765752694608000
   },
   {
-    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_message": "[register-device] Device registered to auth_user_id=codebase-check-21, mesh_user_id=codebase-check-21\n",
     "event_type": "Log",
     "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
     "id": "12fc81c3-d661-4c0f-b5ae-4237b77fd889",
@@ -152,7 +152,7 @@ x-served-by: supabase-edge-runtime
     "timestamp": 1765752626371000
   },
   {
-    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_message": "[register-device] Device registered to auth_user_id=codebase-check-21, mesh_user_id=codebase-check-21\n",
     "event_type": "Log",
     "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
     "id": "7caf351a-2d1b-4a46-afd9-a7ef254f9f15",
@@ -200,7 +200,7 @@ x-served-by: supabase-edge-runtime
     "timestamp": 1765752246603000
   },
   {
-    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_message": "[register-device] Device registered to auth_user_id=codebase-check-21, mesh_user_id=codebase-check-21\n",
     "event_type": "Log",
     "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
     "id": "dcc4e03b-f3fc-4691-8df0-a23573d8090c",
@@ -248,7 +248,7 @@ x-served-by: supabase-edge-runtime
     "timestamp": 1765750786631000
   },
   {
-    "event_message": "[register-device] Device registered to auth_user_id=f5384288-837e-41fc-aa08-0020c1bafdec, mesh_user_id=8b8e8008-c637-4369-bde7-09becfb06a17\n",
+    "event_message": "[register-device] Device registered to auth_user_id=codebase-check-21, mesh_user_id=codebase-check-21\n",
     "event_type": "Log",
     "function_id": "0e7e8735-a14c-490b-ab2b-f95899b49990",
     "id": "fcce4b6f-1741-4b0d-a20a-32efad212b42",

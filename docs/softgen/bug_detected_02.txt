@@ -1018,7 +1018,7 @@ curl 'https://kqwaibgvmzcqeoctukoy.supabase.co/functions/v1/admin-list-mesh-user
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: cross-site' \
   -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' ;
-curl 'https://rustdesk.bwb.pt/dashboard/permissions?user=1cf3ae97-6cee-411e-9801-9de3bbbfc836&_rsc=1cox6' \
+curl 'https://rustdesk.bwb.pt/dashboard/permissions?user=codebase-check-21&_rsc=1cox6' \
   -H 'accept: */*' \
   -H 'accept-language: en-GB,en-US;q=0.9,en;q=0.8' \
   -H 'next-router-prefetch: 1' \

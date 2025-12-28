@@ -94,7 +94,7 @@ curl -X POST https://rustdesk.bwb.pt/api/provision/start \
 ```json
 {
   "provision_id": "5f11f4a0-909d-4b2e-9a3d-6af385b8c4f5",
-  "config_url": "https://rustdesk.bwb.pt/api/provision/config?provision_id=5f11f4a0-909d-4b2e-9a3d-6af385b8c4f5",
+  "config_url": "https://rustdesk.bwb.pt/api/provision/config?provision_id=codebase-check-21",
   "apk_url": "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=arm64-v8a"
 }
 ```
