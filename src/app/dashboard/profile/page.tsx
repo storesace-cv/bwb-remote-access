@@ -70,6 +70,23 @@ export default function ProfilePage() {
     setJwt(token);
   }, [router]);
 
+  // Fetch Auth0 session info for admin button
+  useEffect(() => {
+    async function checkAuth0Session() {
+      try {
+        const res = await fetch("/api/auth0/me");
+        if (res.ok) {
+          const data = await res.json();
+          setAuth0Info(data);
+        }
+      } catch {
+        // Auth0 not configured or error - ignore
+        setAuth0Info({ authenticated: false, canManageUsers: false });
+      }
+    }
+    checkAuth0Session();
+  }, []);
+
   useEffect(() => {
     if (!jwt) return;
 
