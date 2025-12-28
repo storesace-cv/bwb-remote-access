@@ -10,6 +10,17 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 type OsPreference = "windows" | "macos";
 
+// Auth0 session info for admin button
+interface Auth0SessionInfo {
+  authenticated: boolean;
+  canManageUsers: boolean;
+  roleLabel?: string | null;
+  email?: string;
+  org?: string;
+  globalRoles?: string[];
+  orgRoles?: Record<string, string[]>;
+}
+
 interface MeshUser {
   id: string;
   mesh_username: string;
@@ -48,6 +59,9 @@ export default function ProfilePage() {
   const [osPreference, setOsPreference] = useState<OsPreference | null>(null);
   const [copyMessage, setCopyMessage] = useState<string | null>(null);
 
+  // Auth0 admin access state
+  const [auth0Info, setAuth0Info] = useState<Auth0SessionInfo | null>(null);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const token = window.localStorage.getItem("rustdesk_jwt");
@@ -57,6 +71,23 @@ export default function ProfilePage() {
     }
     setJwt(token);
   }, [router]);
+
+  // Fetch Auth0 session info for admin button
+  useEffect(() => {
+    async function checkAuth0Session() {
+      try {
+        const res = await fetch("/api/auth0/me");
+        if (res.ok) {
+          const data = await res.json();
+          setAuth0Info(data);
+        }
+      } catch {
+        // Auth0 not configured or error - ignore
+        setAuth0Info({ authenticated: false, canManageUsers: false });
+      }
+    }
+    checkAuth0Session();
+  }, []);
 
   useEffect(() => {
     if (!jwt) return;
@@ -348,6 +379,79 @@ export default function ProfilePage() {
                     {meshUser.auth_user_id}
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Admin Section - Only visible if Auth0 session has admin access */}
+        {auth0Info?.authenticated && auth0Info?.canManageUsers && (
+          <section className="bg-slate-900/70 border border-amber-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2">
+              <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              Área de Administração
+            </h2>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <p className="text-sm text-slate-300 mb-1">
+                    Tens acesso de administrador como{" "}
+                    <span className="text-amber-400 font-medium">{auth0Info.roleLabel}</span>
+                  </p>
+                  {auth0Info.org && (
+                    <p className="text-xs text-slate-500">
+                      Organização: {auth0Info.org}
+                    </p>
+                  )}
+                </div>
+                <Link
+                  href="/admin/users"
+                  className="px-5 py-2.5 text-sm font-medium rounded-lg bg-amber-600 hover:bg-amber-500 transition text-white flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  Gestão de Utilizadores
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* MeshCentral Devices Section - Visible for users with org roles */}
+        {auth0Info?.authenticated && (auth0Info?.canManageUsers || (auth0Info?.org && auth0Info?.orgRoles && Object.keys(auth0Info.orgRoles).length > 0)) && (
+          <section className="bg-slate-900/70 border border-cyan-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2">
+              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+              Dispositivos MeshCentral
+            </h2>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <p className="text-sm text-slate-300 mb-1">
+                    Acede aos dispositivos geridos via MeshCentral
+                  </p>
+                  {auth0Info.org && (
+                    <p className="text-xs text-slate-500">
+                      Domínio: {auth0Info.org}
+                    </p>
+                  )}
+                </div>
+                <Link
+                  href="/mesh/devices"
+                  className="px-5 py-2.5 text-sm font-medium rounded-lg bg-cyan-600 hover:bg-cyan-500 transition text-white flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                  </svg>
+                  Dispositivos (MeshCentral)
+                </Link>
               </div>
             </div>
           </section>
