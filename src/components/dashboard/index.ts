@@ -8,3 +8,6 @@ export { UnadoptedDevicesList } from "./UnadoptedDevicesList";
 export { AdminUnassignedDevicesList } from "./AdminUnassignedDevicesList";
 export { AdoptModal } from "./AdoptModal";
 export { AdminReassignModal } from "./AdminReassignModal";
+export { DashboardHeader } from "./DashboardHeader";
+export { AgentPanel } from "./AgentPanel";
+export { AddDevicePanel } from "./AddDevicePanel";
