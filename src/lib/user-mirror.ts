@@ -301,3 +301,180 @@ export async function upsertUserDomainRole(
   }
 }
 
+/**
+ * Sets the user role for a specific domain.
+ * Removes old roles for that domain and sets the new one.
+ */
+export async function setUserDomainRole(
+  userId: string,
+  domain: ValidDomain,
+  role: ValidRole
+): Promise<void> {
+  const supabase = getSupabaseAdmin();
+
+  // First, delete all existing roles for this user in this domain
+  const { error: deleteError } = await supabase
+    .from("app_user_domains")
+    .delete()
+    .eq("user_id", userId)
+    .eq("domain", domain);
+
+  if (deleteError) {
+    console.error(`Error deleting domain roles for ${domain}:`, deleteError);
+  }
+
+  // Then add the new role(s)
+  await upsertUserDomainRole(userId, domain, role);
+}
+
+/**
+ * Gets a mirror user by Auth0 user ID.
+ */
+export async function getMirrorUserByAuth0Id(auth0UserId: string): Promise<(AppUser & { domains: AppUserDomain[] }) | null> {
+  const supabase = getSupabaseAdmin();
+
+  const { data, error } = await supabase
+    .from("app_users")
+    .select("*, app_user_domains(*)")
+    .eq("auth0_user_id", auth0UserId)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null; // Not found
+    console.error("Error getting mirror user:", error);
+    throw new Error(`Failed to get mirror user: ${error.message}`);
+  }
+
+  return {
+    ...data,
+    domains: data.app_user_domains || [],
+  } as AppUser & { domains: AppUserDomain[] };
+}
+
+/**
+ * Gets a mirror user by internal ID.
+ */
+export async function getMirrorUserById(userId: string): Promise<(AppUser & { domains: AppUserDomain[] }) | null> {
+  const supabase = getSupabaseAdmin();
+
+  const { data, error } = await supabase
+    .from("app_users")
+    .select("*, app_user_domains(*)")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null; // Not found
+    console.error("Error getting mirror user:", error);
+    throw new Error(`Failed to get mirror user: ${error.message}`);
+  }
+
+  return {
+    ...data,
+    domains: data.app_user_domains || [],
+  } as AppUser & { domains: AppUserDomain[] };
+}
+
+/**
+ * Sets the deleted_at (soft delete) for a user.
+ */
+export async function setMirrorUserDeleted(
+  userId: string,
+  deleted: boolean
+): Promise<AppUser> {
+  const supabase = getSupabaseAdmin();
+
+  const { data, error } = await supabase
+    .from("app_users")
+    .update({
+      deleted_at: deleted ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error setting user deleted status:", error);
+    throw new Error(`Failed to update user: ${error.message}`);
+  }
+
+  return data as AppUser;
+}
+
+/**
+ * Full resync of a user from Auth0 data.
+ * Updates all fields including superadmin flags and domain roles.
+ */
+export async function resyncMirrorUser(params: {
+  auth0UserId: string;
+  email: string;
+  displayName?: string | null;
+  isSuperAdminMeshCentral: boolean;
+  isSuperAdminRustDesk: boolean;
+  orgRoles: Record<string, string[]>;
+  blocked: boolean;
+}): Promise<AppUser & { domains: AppUserDomain[] }> {
+  const supabase = getSupabaseAdmin();
+
+  // Upsert user data
+  const userData = {
+    auth0_user_id: params.auth0UserId,
+    email: params.email,
+    display_name: params.displayName || params.email.split("@")[0],
+    is_superadmin_meshcentral: params.isSuperAdminMeshCentral,
+    is_superadmin_rustdesk: params.isSuperAdminRustDesk,
+    updated_at: new Date().toISOString(),
+    deleted_at: params.blocked ? new Date().toISOString() : null,
+  };
+
+  const { data: user, error: userError } = await supabase
+    .from("app_users")
+    .upsert(userData, {
+      onConflict: "auth0_user_id",
+      ignoreDuplicates: false,
+    })
+    .select()
+    .single();
+
+  if (userError) {
+    console.error("Error upserting app_user:", userError);
+    throw new Error(`Failed to resync user: ${userError.message}`);
+  }
+
+  // Delete all existing domain roles
+  await supabase
+    .from("app_user_domains")
+    .delete()
+    .eq("user_id", user.id);
+
+  // Re-create domain roles from org_roles
+  const domainRoles: { user_id: string; domain: ValidDomain; role: ValidRole }[] = [];
+  
+  for (const [domain, roles] of Object.entries(params.orgRoles)) {
+    if (!VALID_DOMAINS.includes(domain as ValidDomain)) continue;
+    
+    for (const role of roles) {
+      if (!VALID_ROLES.includes(role as ValidRole)) continue;
+      domainRoles.push({
+        user_id: user.id,
+        domain: domain as ValidDomain,
+        role: role as ValidRole,
+      });
+    }
+  }
+
+  if (domainRoles.length > 0) {
+    const { error: insertError } = await supabase
+      .from("app_user_domains")
+      .insert(domainRoles);
+
+    if (insertError) {
+      console.error("Error inserting domain roles:", insertError);
+    }
+  }
+
+  // Fetch updated user with domains
+  return getMirrorUserByAuth0Id(params.auth0UserId) as Promise<AppUser & { domains: AppUserDomain[] }>;
+}
+
