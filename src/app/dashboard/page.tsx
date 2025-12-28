@@ -73,8 +73,12 @@ export default function DashboardPage() {
   // Handlers
   const handleLogout = useCallback(() => { clearToken(); router.push("/"); }, [router]);
 
+  /**
+   * A device is "adopted" when it has both an owner AND a group assigned.
+   * Newly registered devices (QR/hybrid) have owner but no group yet.
+   */
   const isDeviceAdopted = useCallback((device: GroupableDevice): boolean => {
-    return device.owner !== null && device.notes !== null && device.notes.trim().length > 0;
+    return device.owner !== null && device.group_id !== null;
   }, []);
 
   const openAdoptModal = useCallback((device: GroupableDevice) => {
