@@ -9,13 +9,11 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/require-admin";
 import {
   isSuperAdminAny,
-  isDomainAdminForCurrentOrg,
   getAdminRoleLabel,
 } from "@/lib/rbac";
 import { listMirrorUsers } from "@/lib/user-mirror";
 import { syncUserToMirror } from "@/lib/user-mirror";
 import { auth0 } from "@/lib/auth0";
-import { getClaimsFromAuth0Session } from "@/lib/rbac";
 
 type ValidDomain = "mesh" | "zonetech" | "zsangola";
 const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
@@ -30,7 +28,6 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
 
   const roleLabel = getAdminRoleLabel(claims);
   const isSuperAdmin = isSuperAdminAny(claims);
-  const isDomainAdmin = isDomainAdminForCurrentOrg(claims);
 
   // Sync current user to mirror on page load
   if (sub) {
