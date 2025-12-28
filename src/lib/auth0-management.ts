@@ -228,3 +228,55 @@ export async function addUserToOrganization(
     throw new Error(`Failed to add user to organization: ${error.message || response.status}`);
   }
 }
+
+/**
+ * Gets an Auth0 user by ID.
+ */
+export async function getAuth0UserById(userId: string): Promise<Auth0User> {
+  const response = await mgmtFetch(`/api/v2/users/${encodeURIComponent(userId)}`);
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: response.statusText }));
+    throw new Error(`Failed to get Auth0 user: ${error.message || response.status}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Generic PATCH for Auth0 user.
+ */
+export async function patchAuth0User(
+  userId: string,
+  patch: Record<string, unknown>
+): Promise<Auth0User> {
+  const response = await mgmtFetch(`/api/v2/users/${encodeURIComponent(userId)}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: response.statusText }));
+    throw new Error(`Failed to patch Auth0 user: ${error.message || response.status}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Sets the blocked status for an Auth0 user.
+ */
+export async function setAuth0UserBlocked(
+  userId: string,
+  blocked: boolean
+): Promise<Auth0User> {
+  return patchAuth0User(userId, { blocked });
+}
+
+/**
+ * Extended Auth0User type with blocked field
+ */
+export interface Auth0UserWithBlocked extends Auth0User {
+  blocked?: boolean;
+}
+
