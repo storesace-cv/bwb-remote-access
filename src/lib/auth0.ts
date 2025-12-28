@@ -27,12 +27,14 @@ let _auth0Client: Auth0Client | null = null;
 /**
  * Gets the Auth0Client instance (lazy initialization).
  * Creates the client on first access to avoid build-time initialization.
+ * Uses dynamic require to prevent build-time class instantiation.
  * 
  * @returns Auth0Client instance
  */
-export function getAuth0(): Auth0Client {
+function getAuth0Client(): Auth0Client {
   if (!_auth0Client) {
-    // Dynamic import to avoid build-time evaluation
+    // Dynamic require to avoid build-time evaluation of Auth0Client constructor
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Auth0Client: Auth0ClientClass } = require("@auth0/nextjs-auth0/server");
     _auth0Client = new Auth0ClientClass();
   }
@@ -42,18 +44,35 @@ export function getAuth0(): Auth0Client {
 /**
  * Auth0 client accessor object.
  * Provides a compatible interface while ensuring lazy initialization.
+ * All method calls are delegated to the lazily-initialized Auth0Client.
  */
 export const auth0 = {
-  get client(): Auth0Client {
-    return getAuth0();
+  /**
+   * Gets the session data for the current request.
+   * Can be called with no arguments in App Router (Server Components, Route Handlers).
+   */
+  getSession(req?: unknown) {
+    const client = getAuth0Client();
+    if (req !== undefined) {
+      return client.getSession(req as Parameters<Auth0Client["getSession"]>[0]);
+    }
+    return client.getSession();
   },
-  getSession(...args: Parameters<Auth0Client["getSession"]>) {
-    return getAuth0().getSession(...args);
+
+  /**
+   * Gets the access token.
+   */
+  getAccessToken(options?: Parameters<Auth0Client["getAccessToken"]>[0]) {
+    return getAuth0Client().getAccessToken(options);
   },
-  getAccessToken(...args: Parameters<Auth0Client["getAccessToken"]>) {
-    return getAuth0().getAccessToken(...args);
-  },
+
+  /**
+   * Middleware handler for Auth0 routes.
+   */
   middleware(req: Parameters<Auth0Client["middleware"]>[0]) {
-    return getAuth0().middleware(req);
+    return getAuth0Client().middleware(req);
   },
 };
+
+// Export getAuth0Client for direct access if needed
+export { getAuth0Client as getAuth0 };
