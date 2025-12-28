@@ -1,9 +1,14 @@
-// Make this function public (no platform-level JWT required)
+// Sprint 1: Security Hardening - Structured logging (no JWT validation for login - it issues tokens)
 export const config = { verify_jwt: false };
 
+import {
+  createLogger,
+  generateCorrelationId,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
+
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY =
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const LOGIN_TIMEOUT_MS = Number(Deno.env.get("LOGIN_TIMEOUT_MS")) || 15000;
 const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "")
   .split(",")
@@ -50,17 +55,23 @@ addEventListener("fetch", (event) => {
 });
 
 async function handleRequest(req: Request) {
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("login", correlationId);
+
   try {
     const corsHeaders = buildCorsHeaders(req);
     if (!corsHeaders) {
+      logger.warn("Forbidden origin", { origin: req.headers.get("origin") });
       return new Response(null, { status: 403, headers: FORBIDDEN_CORS_HEADERS });
     }
 
     if (req.method === "OPTIONS") {
+      logger.info("OPTIONS preflight request");
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
     if (req.method !== "POST") {
+      logger.warn("Method not allowed", { method: req.method });
       return jsonResponse({ error: "method_not_allowed" }, 405, req, corsHeaders);
     }
 
@@ -68,7 +79,7 @@ async function handleRequest(req: Request) {
     try {
       payload = await req.json();
     } catch (e) {
-      console.error("[login] invalid json body:", String(e));
+      logger.warn("Invalid JSON body");
       return jsonResponse({ error: "invalid_json", message: String(e) }, 400, req, corsHeaders);
     }
 
@@ -83,7 +94,9 @@ async function handleRequest(req: Request) {
 
     const email = typeof rawEmail === "string" ? rawEmail : "";
     const password = typeof rawPassword === "string" ? rawPassword : "";
+
     if (!email || !password) {
+      logger.warn("Missing fields");
       return jsonResponse(
         { error: "missing_fields", message: "Email and password required" },
         400,
@@ -92,16 +105,18 @@ async function handleRequest(req: Request) {
       );
     }
 
+    // Mask email for logging (security)
+    const maskedEmail = email.charAt(0) + "***@" + email.split("@")[1];
+    logger.info("Login attempt", { email: maskedEmail });
+
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       const missing = [] as string[];
       if (!SUPABASE_URL) missing.push("SUPABASE_URL");
       if (!SUPABASE_SERVICE_ROLE_KEY) missing.push("SUPABASE_SERVICE_ROLE_KEY");
 
+      logger.error("Missing configuration", { missing });
       return jsonResponse(
-        {
-          error: "config_error",
-          message: `Missing env: ${missing.join(", ")}`,
-        },
+        { error: "config_error", message: `Missing env: ${missing.join(", ")}` },
         500,
         req,
         corsHeaders,
@@ -138,13 +153,11 @@ async function handleRequest(req: Request) {
       const message = err instanceof Error ? err.message : String(err);
       const isAbort = err instanceof DOMException && err.name === "AbortError";
 
-      console.error("[login] auth token request failed", message);
+      logger.error("Auth token request failed", { error: message, timeout: isAbort });
       return jsonResponse(
         {
           error: isAbort ? "upstream_timeout" : "token_request_failed",
-          message: isAbort
-            ? "Login upstream timed out"
-            : "Failed to contact auth service",
+          message: isAbort ? "Login upstream timed out" : "Failed to contact auth service",
         },
         isAbort ? 504 : 502,
         req,
@@ -159,7 +172,7 @@ async function handleRequest(req: Request) {
     try {
       json = JSON.parse(text);
     } catch (err) {
-      console.error("[login] failed to parse token response", err);
+      logger.warn("Failed to parse token response");
     }
 
     if (!tokenResp.ok) {
@@ -170,10 +183,11 @@ async function handleRequest(req: Request) {
       const errorMsgField =
         json && typeof json.msg === "string" ? json.msg : null;
       const errorMessage = errorDescription || errorMsgField || text;
+
+      logger.warn("Login failed", { status: tokenResp.status, email: maskedEmail });
       return jsonResponse(
         {
-          error:
-            json && typeof json.error === "string" ? json.error : "invalid_login",
+          error: json && typeof json.error === "string" ? json.error : "invalid_login",
           message: errorMessage || "Invalid login credentials",
         },
         tokenResp.status,
@@ -185,20 +199,19 @@ async function handleRequest(req: Request) {
     const accessToken =
       json && typeof json.access_token === "string" ? json.access_token : null;
     if (!accessToken) {
+      logger.error("Token endpoint did not return access_token");
       return jsonResponse(
-        {
-          error: "login_failed",
-          message: "Token endpoint did not return access_token",
-        },
+        { error: "login_failed", message: "Token endpoint did not return access_token" },
         502,
         req,
         corsHeaders,
       );
     }
 
+    logger.info("Login successful", { email: maskedEmail });
     return jsonResponse({ token: accessToken }, 200, req, corsHeaders);
   } catch (err) {
-    console.error("[login] handler error:", err);
+    logger.error("Handler error", { error: err instanceof Error ? err.message : String(err) });
     return jsonResponse(
       { error: "internal_error", message: String(err) },
       500,
