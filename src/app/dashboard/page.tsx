@@ -42,7 +42,7 @@ export default function DashboardPage() {
   }, [router]);
 
   // Hooks
-  const { authUserId, isAdmin, isAgent, userDomain, userDisplayName, meshUsers, meshUsersLoading, loadMeshUsers, checkUserType, reassignDevice } = useMeshUsers();
+  const { isAdmin, isAgent, userDomain, userDisplayName, meshUsers, meshUsersLoading, loadMeshUsers, checkUserType, reassignDevice } = useMeshUsers();
   const { devices, groups, loading, groupsLoading, refreshing, errorMsg, refreshError, fetchDevices, fetchGroups, refreshStatus, deleteDevice, adminDeleteDevice, filterStatus, setFilterStatus, searchQuery, setSearchQuery, sortBy, setSortBy, adoptedDevices, unadoptedDevices } = useDevices();
   const registration = useDeviceRegistration(() => { void fetchDevices(); });
 

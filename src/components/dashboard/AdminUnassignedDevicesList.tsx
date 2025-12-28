@@ -15,13 +15,16 @@ interface AdminUnassignedDevicesListProps {
 
 export function AdminUnassignedDevicesList({
   devices,
-  meshUsers,
-  meshUsersLoading,
+  meshUsers: _meshUsers,
+  meshUsersLoading: _meshUsersLoading,
   adminActionLoading,
   adminActionError,
   onReassign,
   onDelete,
 }: AdminUnassignedDevicesListProps) {
+  // meshUsers and meshUsersLoading are passed for future use (user selector in reassign flow)
+  void _meshUsers;
+  void _meshUsersLoading;
   if (devices.length === 0) return null;
 
   return (

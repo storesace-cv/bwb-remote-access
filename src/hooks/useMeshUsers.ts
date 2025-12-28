@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { callEdgeFunction, callRestApi, getStoredToken, decodeJwtSubject, clearToken } from "@/lib/apiClient";
-import type { MeshUserDTO, UserProfileDTO } from "@/types/MeshUserDTO";
+import { callEdgeFunction, callRestApi, getStoredToken, decodeJwtSubject } from "@/lib/apiClient";
+import type { MeshUserDTO } from "@/types/MeshUserDTO";
 
 const CANONICAL_ADMIN_ID = "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
-const SECONDARY_ADMIN_ID = "f5384288-837e-41fc-aa08-0020c1bafdec";
 
 interface UseMeshUsersResult {
   // User profile

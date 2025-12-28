@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { callEdgeFunction, callRestApi, getStoredToken, decodeJwtSubject, clearToken } from "@/lib/apiClient";
+import { useState, useCallback } from "react";
+import { callEdgeFunction, getStoredToken } from "@/lib/apiClient";
 import type { GroupableDevice } from "@/lib/grouping";
 import type { DeviceGroupDTO, FilterStatus, SortOption } from "@/types/DeviceDTO";
-
-const CANONICAL_ADMIN_ID = "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
 
 interface UseDevicesResult {
   // Data

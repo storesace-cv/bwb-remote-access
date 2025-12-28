@@ -19,10 +19,12 @@ export function DeviceCard({
   onEdit,
   onDelete,
   onConnect,
-  isAdmin = false,
+  isAdmin: _isAdmin = false,
   isAdopted = false,
   showOriginTag = true,
 }: DeviceCardProps) {
+  // isAdmin prop reserved for future admin-specific actions (e.g., force delete)
+  void _isAdmin;
   const fromProvisioningCode = !!device.from_provisioning_code;
   const tagLabel = fromProvisioningCode ? "PM" : "QR";
   const tagClassName = fromProvisioningCode

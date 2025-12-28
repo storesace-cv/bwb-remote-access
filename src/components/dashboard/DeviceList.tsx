@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import type { GroupableDevice } from "@/lib/grouping";
 import { groupDevices } from "@/lib/grouping";
-import { DeviceCard } from "./DeviceCard";
 import { EmptyState } from "./EmptyState";
 
 const DEFAULT_PAGE_SIZE = 20;
@@ -26,11 +25,15 @@ export function DeviceList({
   errorMsg,
   refreshing,
   onRefresh,
-  onAdopt,
+  onAdopt: _onAdopt,
   onEdit,
   onDelete,
-  isAdmin = false,
+  isAdmin: _isAdmin = false,
 }: DeviceListProps) {
+  // onAdopt and isAdmin are part of the interface for consistency with other lists
+  // but adopted devices use onEdit instead. Reserved for potential future use.
+  void _onAdopt;
+  void _isAdmin;
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
