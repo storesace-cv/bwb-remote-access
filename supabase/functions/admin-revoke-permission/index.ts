@@ -1,31 +1,26 @@
-// Version: 2025-12-22T22:45:00Z - Fixed CDATA wrapper issue + auth pattern
+// Sprint 1: Security Hardening - Centralized auth + structured logging
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import {
+  validateJwt,
+  createLogger,
+  generateCorrelationId,
+  jsonResponse,
+  authErrorResponse,
+  defaultCorsHeaders,
+} from "../_shared/auth.ts";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  ...defaultCorsHeaders,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const SUPABASE_SERVICE_ROLE_KEY =
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 interface RevokePermissionRequest {
   permission_id?: string;
   collaborator_id?: string;
   group_id?: string;
-}
-
-function jsonResponse(
-  body: Record<string, unknown>,
-  status = 200,
-): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
 }
 
 async function fetchSupabaseJson(
@@ -45,83 +40,50 @@ async function fetchSupabaseJson(
 }
 
 async function handler(req: Request): Promise<Response> {
+  const correlationId = generateCorrelationId();
+  const logger = createLogger("admin-revoke-permission", correlationId);
+
   if (req.method === "OPTIONS") {
-    console.log("[admin-revoke-permission] OPTIONS preflight request");
+    logger.info("OPTIONS preflight request");
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
     if (req.method !== "POST") {
-      console.log(`[admin-revoke-permission] Invalid method: ${req.method}`);
-      return jsonResponse({ error: "method_not_allowed" }, 405);
+      logger.warn("Invalid method", { method: req.method });
+      return jsonResponse({ error: "method_not_allowed" }, 405, corsHeaders);
     }
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      console.error("[admin-revoke-permission] Missing Supabase env vars");
+      logger.error("Missing Supabase configuration");
       return jsonResponse(
-        {
-          error: "config_error",
-          message: "Missing Supabase configuration",
-        },
+        { error: "config_error", message: "Missing Supabase configuration" },
         500,
+        corsHeaders,
       );
     }
 
+    // Validate JWT using centralized auth
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("[admin-revoke-permission] Missing Authorization header");
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Missing or invalid Authorization header",
-        },
-        401,
-      );
+    const authResult = await validateJwt(authHeader, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, logger);
+
+    if (!authResult.ok) {
+      return authErrorResponse(authResult, corsHeaders);
     }
 
-    const jwt = authHeader.substring(7);
-
-    const authCheck = await fetchSupabaseJson(
-      `/auth/v1/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-        },
-      },
-    );
-
-    if (!authCheck.ok) {
-      console.error(
-        "[admin-revoke-permission] JWT validation failed:",
-        authCheck.status,
-        authCheck.text,
-      );
-      return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid or expired token",
-        },
-        401,
-      );
-    }
-
-    const user = authCheck.data as { id?: string } | null;
-    const authUserId = user?.id;
-
+    const authUserId = authResult.context.authUserId;
     if (!authUserId) {
-      console.log("[admin-revoke-permission] No user ID in token");
+      logger.warn("No user ID in token");
       return jsonResponse(
-        {
-          error: "unauthorized",
-          message: "Invalid user",
-        },
+        { error: "unauthorized", message: "Invalid user" },
         401,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-revoke-permission] Caller auth_user_id: ${authUserId}`);
+    logger.info("User authenticated", undefined, authUserId);
 
+    // Get caller's mesh_user record
     const callerCheck = await fetchSupabaseJson(
       `/rest/v1/mesh_users?select=id,user_type,domain,agent_id&auth_user_id=eq.${authUserId}`,
       {
@@ -134,29 +96,21 @@ async function handler(req: Request): Promise<Response> {
     );
 
     if (!callerCheck.ok) {
-      console.error(
-        "[admin-revoke-permission] Failed to get caller info:",
-        callerCheck.status,
-        callerCheck.text,
-      );
+      logger.error("Failed to get caller info", { status: callerCheck.status }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Failed to verify user permissions",
-        },
+        { error: "forbidden", message: "Failed to verify user permissions" },
         403,
+        corsHeaders,
       );
     }
 
     const callerData = Array.isArray(callerCheck.data) ? callerCheck.data : [];
     if (callerData.length === 0) {
-      console.log("[admin-revoke-permission] No mesh_user record found for auth_user_id:", authUserId);
+      logger.warn("No mesh_user record found", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "User not found in mesh_users table",
-        },
+        { error: "forbidden", message: "User not found in mesh_users table" },
         403,
+        corsHeaders,
       );
     }
 
@@ -164,20 +118,18 @@ async function handler(req: Request): Promise<Response> {
     const callerId = callerRecord.id;
     const userType = callerRecord.user_type;
 
-    console.log(`[admin-revoke-permission] Caller user_type: ${userType}`);
+    logger.info("Caller info", { user_type: userType }, authUserId);
 
     if (!["agent", "minisiteadmin", "siteadmin"].includes(userType ?? "")) {
-      console.log(`[admin-revoke-permission] Access denied: user_type=${userType}`);
+      logger.warn("Access denied", { user_type: userType }, authUserId);
       return jsonResponse(
-        {
-          error: "forbidden",
-          message: "Only agents, minisiteadmins, and siteadmins can revoke permissions",
-        },
+        { error: "forbidden", message: "Only agents, minisiteadmins, and siteadmins can revoke permissions" },
         403,
+        corsHeaders,
       );
     }
 
-    console.log(`[admin-revoke-permission] Access granted: user_type=${userType}`);
+    logger.info("Access granted", { user_type: userType }, authUserId);
 
     const body = await req.json() as RevokePermissionRequest;
 
@@ -204,36 +156,29 @@ async function handler(req: Request): Promise<Response> {
       );
 
       if (!revokeQuery.ok) {
-        console.error("[admin-revoke-permission] Failed to revoke permission:", revokeQuery.status, revokeQuery.text);
+        logger.error("Failed to revoke permission", { status: revokeQuery.status }, authUserId);
         return jsonResponse(
-          {
-            error: "database_error",
-            message: "Failed to revoke permission",
-            details: revokeQuery.text,
-          },
+          { error: "database_error", message: "Failed to revoke permission", details: revokeQuery.text },
           502,
+          corsHeaders,
         );
       }
 
       const revokedPerms = Array.isArray(revokeQuery.data) ? revokeQuery.data : [];
       if (revokedPerms.length === 0) {
+        logger.warn("Permission not found or already revoked", { permission_id: body.permission_id }, authUserId);
         return jsonResponse(
-          {
-            error: "not_found",
-            message: "Permission not found or already revoked",
-          },
+          { error: "not_found", message: "Permission not found or already revoked" },
           404,
+          corsHeaders,
         );
       }
 
-      console.log(`[admin-revoke-permission] Successfully revoked permission: ${body.permission_id}`);
+      logger.info("Permission revoked", { permission_id: body.permission_id }, authUserId);
       return jsonResponse(
-        {
-          success: true,
-          message: "Permission revoked successfully",
-          permission_id: body.permission_id,
-        } as Record<string, unknown>,
+        { success: true, message: "Permission revoked successfully", permission_id: body.permission_id } as Record<string, unknown>,
         200,
+        corsHeaders,
       );
     } else if (body.collaborator_id && body.group_id) {
       const now = new Date().toISOString();
@@ -258,29 +203,25 @@ async function handler(req: Request): Promise<Response> {
       );
 
       if (!revokeQuery.ok) {
-        console.error("[admin-revoke-permission] Failed to revoke permission:", revokeQuery.status, revokeQuery.text);
+        logger.error("Failed to revoke permission", { status: revokeQuery.status }, authUserId);
         return jsonResponse(
-          {
-            error: "database_error",
-            message: "Failed to revoke permission",
-            details: revokeQuery.text,
-          },
+          { error: "database_error", message: "Failed to revoke permission", details: revokeQuery.text },
           502,
+          corsHeaders,
         );
       }
 
       const revokedPerms = Array.isArray(revokeQuery.data) ? revokeQuery.data : [];
       if (revokedPerms.length === 0) {
+        logger.warn("Permission not found or already revoked", undefined, authUserId);
         return jsonResponse(
-          {
-            error: "not_found",
-            message: "Permission not found or already revoked",
-          },
+          { error: "not_found", message: "Permission not found or already revoked" },
           404,
+          corsHeaders,
         );
       }
 
-      console.log(`[admin-revoke-permission] Successfully revoked permission for collaborator: ${body.collaborator_id}, group: ${body.group_id}`);
+      logger.info("Permission revoked", { collaborator_id: body.collaborator_id, group_id: body.group_id }, authUserId);
       return jsonResponse(
         {
           success: true,
@@ -289,22 +230,22 @@ async function handler(req: Request): Promise<Response> {
           group_id: body.group_id,
         } as Record<string, unknown>,
         200,
+        corsHeaders,
       );
     } else {
+      logger.warn("Missing required fields", undefined, authUserId);
       return jsonResponse(
-        {
-          error: "bad_request",
-          message: "Either permission_id OR (collaborator_id + group_id) required",
-        },
+        { error: "bad_request", message: "Either permission_id OR (collaborator_id + group_id) required" },
         400,
+        corsHeaders,
       );
     }
   } catch (err) {
-    console.error("[admin-revoke-permission] Unhandled error:", err);
-    const message = err instanceof Error ? err.message : String(err);
+    logger.error("Unhandled error", { error: err instanceof Error ? err.message : String(err) });
     return jsonResponse(
-      { error: "internal_error", message },
+      { error: "internal_error", message: err instanceof Error ? err.message : String(err) },
       500,
+      corsHeaders,
     );
   }
 }
