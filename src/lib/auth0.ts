@@ -40,14 +40,13 @@ function getAuth0Client(): Auth0Client {
  * Provides the same interface as Auth0Client but with lazy initialization.
  * All methods delegate to the lazily-initialized Auth0Client instance.
  */
-export const auth0 = {
-  getSession: (...args: Parameters<Auth0Client["getSession"]>) => {
-    return getAuth0Client().getSession(...args);
+export const auth0: Auth0Client = new Proxy({} as Auth0Client, {
+  get(_target, prop) {
+    const client = getAuth0Client();
+    const value = client[prop as keyof Auth0Client];
+    if (typeof value === "function") {
+      return value.bind(client);
+    }
+    return value;
   },
-  getAccessToken: (...args: Parameters<Auth0Client["getAccessToken"]>) => {
-    return getAuth0Client().getAccessToken(...args);
-  },
-  middleware: (...args: Parameters<Auth0Client["middleware"]>) => {
-    return getAuth0Client().middleware(...args);
-  },
-};
+});
