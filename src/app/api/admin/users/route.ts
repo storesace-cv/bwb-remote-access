@@ -8,6 +8,7 @@
  *   - domain: Filter by domain (mesh|zonetech|zsangola)
  *   - limit: Max results (default 50, max 100)
  *   - offset: Pagination offset (default 0)
+ *   - includeDeleted: Include deactivated users (default false)
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest) {
     const requestedDomain = searchParams.get("domain") as ValidDomain | null;
     const limit = Math.min(parseInt(searchParams.get("limit") || "50", 10), 100);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
+    const includeDeleted = searchParams.get("includeDeleted") === "true";
 
     // Determine which domain to filter by
     let filterDomain: ValidDomain | null = null;
@@ -66,7 +68,7 @@ export async function GET(req: NextRequest) {
       domain: filterDomain,
       limit,
       offset,
-      includeDeleted: false,
+      includeDeleted,
     });
 
     // Transform for response
@@ -79,6 +81,7 @@ export async function GET(req: NextRequest) {
       isSuperAdminRustDesk: user.is_superadmin_rustdesk,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
+      deletedAt: user.deleted_at,
       domains: user.domains.map((d) => ({
         domain: d.domain,
         role: d.role,
