@@ -199,38 +199,37 @@ def test_protected_routes_redirect_to_auth_login() -> TestResult:
             f"Request failed: {e}"
         )
 
-def test_auth0_logout_endpoint() -> TestResult:
-    """Test 5: Auth0 logout endpoint should be accessible"""
-    print("🧪 Test 5: Auth0 logout endpoint accessibility")
+def test_auth0_me_endpoint_no_nextresponse_next() -> TestResult:
+    """Test 5: No NextResponse.next() in route handlers - /api/auth0/me should work"""
+    print("🧪 Test 5: /api/auth0/me should work (no NextResponse.next() error)")
     
-    endpoint = f"{API_BASE_URL}/api/auth/logout"
+    endpoint = f"{API_BASE_URL}/api/auth0/me"
     
     try:
-        response = requests.get(endpoint, timeout=10, allow_redirects=False)
+        response = requests.get(endpoint, timeout=10)
+        response_data = response.json()
         
-        # Auth0 logout might return 500 if not configured, which is expected in test environment
-        expected_statuses = [200, 302, 307, 401, 403, 500]
-        passed = response.status_code in expected_statuses
+        expected_status = 200
+        passed = (
+            response.status_code == expected_status and
+            response_data.get("authenticated") == False and
+            "NextResponse.next()" not in response.text
+        )
         
-        # If it's 500, it's likely due to missing Auth0 config, which is expected
-        if response.status_code == 500:
-            passed = True
-            details = f"Status: {response.status_code} (Expected - Auth0 not configured in test environment)"
-        else:
-            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
+        details = f"Response: {json.dumps(response_data, indent=2)}"
         
         return TestResult(
-            "Auth0 logout endpoint accessibility",
-            "Accessible or 500 (config missing)",
+            "/api/auth0/me works (no NextResponse.next() error)",
+            expected_status,
             response.status_code,
-            {},
+            response_data,
             passed,
             details
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Auth0 logout endpoint accessibility",
-            302,
+            "/api/auth0/me works (no NextResponse.next() error)",
+            200,
             0,
             {},
             False,
