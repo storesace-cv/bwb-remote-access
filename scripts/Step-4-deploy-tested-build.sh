@@ -159,8 +159,16 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" \
   "$REMOTE_TARGET:$REMOTE_DIR/scripts/"
 
 # 8.1) Sync API server (server/sync-api.js)
-echo "📦 A enviar server/ (Sync API)..."
-rsync $RSYNC_OPTS -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/server/" "$REMOTE_TARGET:$REMOTE_DIR/server/"
+echo "📦 A preparar deploy de server/ (Sync API)..."
+
+# Cleanup remoto: remover node_modules drift e corrigir permissões
+echo "🧹 A limpar server/node_modules e corrigir permissões no droplet..."
+ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo rm -rf $REMOTE_DIR/server/node_modules 2>/dev/null || true"
+ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo chown -R rustdeskweb:rustdeskweb $REMOTE_DIR/server 2>/dev/null || true"
+
+# Rsync de server/ excluindo node_modules e .env
+echo "📦 A enviar server/ (excluindo node_modules e .env)..."
+rsync $RSYNC_OPTS --exclude 'node_modules/' --exclude '.env' -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/server/" "$REMOTE_TARGET:$REMOTE_DIR/server/"
 
 # 8.2) Deploy stamp file (traceability)
 echo "📝 A gerar DEPLOYED_VERSION.txt..."
@@ -183,6 +191,14 @@ echo "$DEPLOY_STAMP_CONTENT" > "$REPO_ROOT/DEPLOYED_VERSION.txt"
 rsync -avz -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/DEPLOYED_VERSION.txt" "$REMOTE_TARGET:$REMOTE_DIR/DEPLOYED_VERSION.txt"
 rm -f "$REPO_ROOT/DEPLOYED_VERSION.txt"
 echo "✅ DEPLOYED_VERSION.txt criado no droplet"
+
+# 8.3) Reiniciar e validar rustdesk-sync-api.service
+echo "🔄 A reiniciar rustdesk-sync-api.service..."
+ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo systemctl restart rustdesk-sync-api.service"
+echo "✅ rustdesk-sync-api.service reiniciado"
+
+echo "🔍 A verificar estado do serviço..."
+ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo systemctl status rustdesk-sync-api.service --no-pager -l | head -20" || true
 
 # 9) Systemd service/timer units para sync automático
 echo "📦 A enviar systemd units (meshcentral-supabase-sync.{service,timer})..."
