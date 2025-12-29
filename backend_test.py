@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """
-Backend API Test Suite for MeshCentral Remote Session API (STEP 6.2)
+Backend API Test Suite for Auth0-Only Authentication Enforcement
 
-Tests the POST /api/mesh/open-session endpoint implementation.
-This is a Next.js API route that requires Auth0 authentication.
+Tests the Auth0-only authentication enforcement and legacy login deprecation.
+This is a Next.js application with Auth0 authentication.
 
 Test Scenarios:
-1. 401 Unauthorized - No Auth0 Session
-2. 400 Bad Request - Invalid Body
-3. 400 Bad Request - Invalid Domain
-4. 503 Service Unavailable - MeshCentral Not Configured
+1. Legacy Login API - 410 Gone
+2. Auth0 Endpoints Available
+3. Build Verification
 """
 
 import requests
@@ -19,7 +18,6 @@ from typing import Dict, Any, Optional
 
 # API Configuration
 API_BASE_URL = "http://localhost:3000"
-API_ENDPOINT = f"{API_BASE_URL}/api/mesh/open-session"
 
 class TestResult:
     def __init__(self, test_name: str, expected_status: int, actual_status: int, 
