@@ -87,7 +87,7 @@ REMOTE_TARGET="${DEPLOY_USER}@${DEPLOY_HOST}"
 
 if [[ -n "$DEPLOY_SSH_ALIAS" ]]; then
   echo "🔐 A testar alias SSH '${DEPLOY_SSH_ALIAS}' (se existir em ~/.ssh/config)..."
-  if ssh $SSH_COMMON_OPTS -o BatchMode=yes -o ConnectTimeout=5 "$DEPLOY_SSH_ALIAS" "echo alias-ok >/dev/null" 2>/dev/null; then
+  if ssh $SSH_COMMON_OPTS "$DEPLOY_SSH_ALIAS" "echo alias-ok >/dev/null" 2>/dev/null; then
     echo "✅ Alias '${DEPLOY_SSH_ALIAS}' detectado; será usado como destino remoto."
     REMOTE_TARGET="$DEPLOY_SSH_ALIAS"
   else
@@ -99,15 +99,14 @@ echo ""
 echo "📍 Destino efectivo: $REMOTE_TARGET:$REMOTE_DIR"
 echo ""
 
-# 3) Confirmar conectividade SSH (sem depender de ssh-agent)
+# 3) Confirmar conectividade SSH
 echo "🔐 A testar SSH para $REMOTE_TARGET..."
-if ! ssh $SSH_COMMON_OPTS -o ConnectTimeout=10 "$REMOTE_TARGET" "echo 'SSH OK' >/dev/null"; then
-  echo "❌ ERRO: Não foi possível estabelecer SSH com $REMOTE_TARGET usando a chave:"
-  echo "   $SSH_KEY_PATH"
+if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "echo 'SSH OK' >/dev/null"; then
+  echo "❌ ERRO: Não foi possível estabelecer SSH com $REMOTE_TARGET"
   echo ""
   echo "   Verifica:"
   echo "     - ~/.ssh/config (Host ${DEPLOY_SSH_ALIAS})"
-  echo "     - authorized_keys em ${REMOTE_DIR}/.ssh/authorized_keys"
+  echo "     - ssh-agent tem a chave correcta carregada"
   exit 1
 fi
 echo "✅ SSH OK"
