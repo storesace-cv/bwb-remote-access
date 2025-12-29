@@ -37,7 +37,7 @@ export default async function AuthPage() {
 
   // If not logged in, redirect to Auth0 login
   if (!user) {
-    redirect("/api/auth/login");
+    redirect("/auth/login");
   }
 
   const claims = extractClaims(user as Record<string, unknown>);
@@ -87,7 +87,7 @@ export default async function AuthPage() {
           </Link>
           
           <a
-            href="/api/auth/logout"
+            href="/auth/logout"
             className="w-full text-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
           >
             Terminar Sessão
