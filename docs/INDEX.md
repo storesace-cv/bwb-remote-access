@@ -49,6 +49,7 @@ Documentação técnica detalhada em **[docs/sot/](sot/README.md)**
 | Documento | Descrição | Para quem? |
 |-----------|-----------|------------|
 | [sot/security-and-permissions.md](sot/security-and-permissions.md) | Modelo de segurança e permissões | Security Engineers, DevOps |
+| **[SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md)** | **⚠️ CRITICAL: Regras de Auth0 e Middleware (OBRIGATÓRIO)** | **ALL Developers** |
 
 ### 🔄 Sync Engine
 
@@ -79,10 +80,11 @@ Documentação técnica detalhada em **[docs/sot/](sot/README.md)**
 ### Para Novos Desenvolvedores
 
 1. Ler [README.md](../README.md) - Overview do projeto
-2. Ler [ARCHITECTURE.md](ARCHITECTURE.md) - Entender a arquitetura
-3. Ler [sot/data-models.md](sot/data-models.md) - Entender a base de dados
-4. Ler [API_REFERENCE.md](API_REFERENCE.md) - Conhecer as APIs
-5. Seguir [DEPLOYMENT.md](DEPLOYMENT.md) - Setup local
+2. **⚠️ Ler [SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) - REGRAS CRÍTICAS DE AUTH**
+3. Ler [ARCHITECTURE.md](ARCHITECTURE.md) - Entender a arquitetura
+4. Ler [sot/data-models.md](sot/data-models.md) - Entender a base de dados
+5. Ler [API_REFERENCE.md](API_REFERENCE.md) - Conhecer as APIs
+6. Seguir [DEPLOYMENT.md](DEPLOYMENT.md) - Setup local
 
 ### Para Novos Utilizadores
 
@@ -110,7 +112,10 @@ docs/
 ├── TROUBLESHOOTING.md             # Troubleshooting
 ├── DEPLOYMENT.md                  # Deployment guide
 │
-└── sot/                           # Source of Truth
+├── SoT/                           # Source of Truth (CANONICAL)
+│   └── AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  # ⚠️ CRITICAL - Auth0 & Middleware rules
+│
+└── sot/                           # Source of Truth (legacy)
     ├── README.md                  # Índice SoT
     ├── architecture.md            # Arquitetura detalhada
     ├── data-models.md             # Modelos de dados
