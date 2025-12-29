@@ -152,23 +152,27 @@ Before merging any PR, verify:
 
 ```bash
 # Run all SoT validation commands
-# Example from AUTH_AND_MIDDLEWARE_ARCHITECTURE.md:
+# From AUTH_AND_MIDDLEWARE_ARCHITECTURE.md:
 
-# 1. NextResponse.next() only in middleware.ts
-grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v middleware.ts
+# 1. proxy.ts exists at root (Next.js 16 requirement)
+test -f proxy.ts && echo "PASS" || echo "FAIL"
+
+# 2. src/proxy.ts does NOT exist
+test -f src/proxy.ts && echo "FAIL" || echo "PASS"
+
+# 3. middleware.ts does NOT exist (deprecated in Next.js 16)
+test -f middleware.ts && echo "FAIL" || echo "PASS"
+
+# 4. src/app/auth/ does NOT exist
+test -d src/app/auth && echo "FAIL" || echo "PASS"
+
+# 5. NextResponse.next() only in proxy.ts
+grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "proxy.ts"
 # Expected: (empty)
 
-# 2. No auth0.middleware() in route handlers
-grep -rn "auth0.middleware" src/app/ --include="*.ts"
-# Expected: (empty)
-
-# 3. No src/app/auth/ directory
-test -d src/app/auth && echo "FAIL: src/app/auth/ exists" || echo "PASS"
-# Expected: PASS
-
-# 4. middleware.ts exists at root
-test -f middleware.ts && echo "PASS" || echo "FAIL: middleware.ts missing"
-# Expected: PASS
+# 6. RUNTIME: /auth/login must NOT return 404
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/auth/login
+# Expected: 200 or 302 (NOT 404)
 ```
 
 ### 6.2 Violation Handling
