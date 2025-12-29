@@ -49,6 +49,7 @@ Documentação técnica detalhada em **[docs/sot/](sot/README.md)**
 | Documento | Descrição | Para quem? |
 |-----------|-----------|------------|
 | [sot/security-and-permissions.md](sot/security-and-permissions.md) | Modelo de segurança e permissões | Security Engineers, DevOps |
+| **[SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md)** | **⚠️ CRITICAL: Regras de Auth0 e Middleware (OBRIGATÓRIO)** | **ALL Developers** |
 
 ### 🔄 Sync Engine
 
