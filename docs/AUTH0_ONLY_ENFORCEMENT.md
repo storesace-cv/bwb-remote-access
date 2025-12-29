@@ -162,14 +162,12 @@ MESHCENTRAL_LOGIN_TOKEN_KEY=<hex_string_from_meshcentral>
 
 | File | Change |
 |------|--------|
-| `/src/proxy.ts` | NEW - Auth0 enforcement (Next.js 16 proxy convention) |
-| `/src/middleware.ts` | DELETED - Replaced by proxy.ts |
+| `/middleware.ts` | ROOT-level middleware (ONLY place for NextResponse.next()) |
+| `/src/proxy.ts` | DELETED |
+| `/src/app/api/auth/` | DELETED (entire directory) |
+| `/src/app/auth/` | RENAMED to `/src/app/auth-status/` |
 | `/src/app/page.tsx` | Auth0-only landing |
 | `/src/app/api/login/route.ts` | Returns 410 Gone |
-| `/src/app/dashboard/page.tsx` | Auth0 Server Component |
-| `/src/app/dashboard/DashboardClient.tsx` | NEW - Client interactions |
-| `/src/app/dashboard/profile/page.tsx` | Auth0 profile display |
-| `/src/app/auth/page.tsx` | Auth0 session viewer |
 
 ## Status: AUTH0-ONLY READY
 
