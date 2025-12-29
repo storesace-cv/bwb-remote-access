@@ -61,7 +61,7 @@ The following table is the **authoritative registry** of all Source of Truth doc
 
 | SoT Name | Path | Scope | Status | Notes |
 |----------|------|-------|--------|-------|
-| **Authentication & Middleware Architecture** | [`/docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md`](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) | Next.js middleware, routing, Auth0 integration | **Active (Canonical)** | Defines the ONLY allowed architecture for authentication and middleware usage |
+| **Authentication & Middleware Architecture** | [`/docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md`](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) | Next.js 16 proxy, routing, Auth0 integration | **Active (Canonical)** | Defines the ONLY allowed architecture for authentication. **Boundary file must be `/proxy.ts` at root (not middleware.ts).** |
 
 ### Registry Rules
 
