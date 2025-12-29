@@ -1,64 +1,59 @@
 /**
- * Next.js Middleware - Auth0 Authentication Enforcer
+ * Next.js 16 Proxy - Auth0 Authentication Boundary
  * 
- * ARCHITECTURE NOTE:
- * This is the ONLY file where NextResponse.next() may be used.
- * Route handlers (app/.../route.ts) must NEVER call middleware functions.
+ * SOURCE OF TRUTH: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
  * 
- * Responsibilities:
- * 1. Auth0 routes (/auth/*) - delegated to Auth0 SDK via auth0.middleware()
- * 2. Public routes - allowed without authentication
- * 3. Protected routes - require Auth0 session, redirect to /auth/login if missing
- * 4. Legacy routes - redirect to new paths or return 410 Gone
+ * ARCHITECTURE RULES (NON-NEGOTIABLE):
+ * 1. This file MUST be at the project ROOT as `proxy.ts`
+ * 2. The exported function MUST be named `proxy` (not `middleware`)
+ * 3. Auth0 routes (/auth/*) are delegated to `auth0.middleware(request)`
+ * 4. No src/app/auth/ directory may exist
+ * 5. NextResponse.next() is ONLY allowed in this file
  * 
- * Auth0 Routes (nextjs-auth0 v4):
+ * Auth0 SDK Routes (auto-mounted):
  *   /auth/login     → Redirects to Auth0 Universal Login
- *   /auth/logout    → Logs out and clears session
+ *   /auth/logout    → Clears session and logs out
  *   /auth/callback  → Handles OAuth callback
  *   /auth/me        → Returns session info (JSON)
  *   /auth/profile   → Returns user profile
+ *   /auth/access-token → Returns access token
+ *   /auth/backchannel-logout → Handles backchannel logout
  */
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { auth0 } from "./src/lib/auth0";
 
 // ============================================================================
 // ROUTE CLASSIFICATION
 // ============================================================================
 
-// Auth0 SDK routes - handled by auth0.middleware()
+// Auth0 SDK routes - MUST be delegated to auth0.middleware()
 const AUTH0_ROUTES_PREFIX = "/auth";
 
 // Public paths - no authentication required
 const PUBLIC_PATHS = [
-  "/_next",             // Next.js internals
+  "/_next",
   "/favicon.ico",
-  "/rustdesk-logo.svg",
-  "/file.svg",
-  "/globe.svg",
-  "/next.svg",
-  "/vercel.svg",
-  "/window.svg",
-  "/api/auth0/me",      // Auth0 session check endpoint (public for status checks)
+  "/api/auth0/me",      // Public session check endpoint
 ];
 
-// Legacy routes - redirect or block
-const LEGACY_AUTH_ROUTES = [
-  "/api/auth/login",
-  "/api/auth/logout",
-  "/api/auth/callback",
-  "/api/auth/me",
-];
+// Legacy routes to redirect
+const LEGACY_AUTH_REDIRECTS: Record<string, string> = {
+  "/api/auth/login": "/auth/login",
+  "/api/auth/logout": "/auth/logout",
+  "/api/auth/callback": "/auth/callback",
+  "/api/auth/me": "/auth/me",
+};
 
 // Deprecated routes - return 410 Gone
-const DEPRECATED_ROUTES = [
-  "/api/login",
-];
+const DEPRECATED_ROUTES = ["/api/login"];
 
 // Static asset extensions
 const STATIC_EXTENSIONS = [
   ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico",
   ".css", ".js", ".woff", ".woff2", ".ttf", ".eot",
+  ".map", ".webp",
 ];
 
 // ============================================================================
@@ -73,80 +68,65 @@ function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((path) => pathname.startsWith(path));
 }
 
-function isLegacyAuthRoute(pathname: string): boolean {
-  return LEGACY_AUTH_ROUTES.some((path) => pathname.startsWith(path));
+function isStaticAsset(pathname: string): boolean {
+  return STATIC_EXTENSIONS.some((ext) => pathname.endsWith(ext));
+}
+
+function getLegacyRedirect(pathname: string): string | null {
+  return LEGACY_AUTH_REDIRECTS[pathname] || null;
 }
 
 function isDeprecatedRoute(pathname: string): boolean {
   return DEPRECATED_ROUTES.includes(pathname);
 }
 
-function isStaticAsset(pathname: string): boolean {
-  return STATIC_EXTENSIONS.some((ext) => pathname.endsWith(ext));
-}
-
 // ============================================================================
-// MIDDLEWARE FUNCTION
+// PROXY FUNCTION (Next.js 16 Required Name)
 // ============================================================================
 
 /**
- * Next.js Middleware Entry Point
+ * Next.js 16 Proxy Entry Point
  * 
- * This function is the ONLY place where NextResponse.next() is valid.
- * All authentication logic flows through here.
+ * This function:
+ * 1. Delegates /auth/* routes to Auth0 SDK
+ * 2. Handles legacy route redirects
+ * 3. Enforces authentication on protected routes
+ * 4. Returns NextResponse.next() for allowed requests
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
-
-  // Add debug logging
-  console.log(`[MIDDLEWARE] Processing: ${pathname}`);
 
   // -------------------------------------------------------------------------
   // 1. DEPRECATED ROUTES → 410 Gone
   // -------------------------------------------------------------------------
   if (isDeprecatedRoute(pathname)) {
-    console.log(`[MIDDLEWARE] Deprecated route: ${pathname}`);
     return NextResponse.json(
-      {
-        error: "Gone",
-        message: "This endpoint has been deprecated. Use /auth/login for authentication.",
-      },
+      { error: "Gone", message: "Use /auth/login for authentication." },
       { status: 410 }
     );
   }
 
   // -------------------------------------------------------------------------
-  // 2. LEGACY AUTH ROUTES → Redirect to new /auth/* paths
+  // 2. LEGACY AUTH ROUTES → Redirect to /auth/*
   // -------------------------------------------------------------------------
-  if (isLegacyAuthRoute(pathname)) {
-    const newPath = pathname.replace("/api/auth/", "/auth/");
-    console.log(`[MIDDLEWARE] Legacy auth route redirect: ${pathname} → ${newPath}`);
-    return NextResponse.redirect(new URL(newPath, request.url));
+  const legacyRedirect = getLegacyRedirect(pathname);
+  if (legacyRedirect) {
+    return NextResponse.redirect(new URL(legacyRedirect, request.url));
   }
 
   // -------------------------------------------------------------------------
-  // 3. AUTH0 ROUTES → Delegate to Auth0 SDK
+  // 3. AUTH0 ROUTES → Delegate to Auth0 SDK (CRITICAL)
   // -------------------------------------------------------------------------
   if (isAuth0Route(pathname)) {
-    console.log(`[MIDDLEWARE] Auth0 route: ${pathname}`);
-    try {
-      // Lazy-load auth0 to avoid build-time initialization issues
-      const { auth0 } = await import("./src/lib/auth0");
-      return auth0.middleware(request);
-    } catch (error) {
-      console.error(`[MIDDLEWARE] Auth0 error: ${error}`);
-      return NextResponse.json(
-        { error: "Auth0 configuration error" },
-        { status: 500 }
-      );
-    }
+    // The Auth0 SDK handles all /auth/* routes:
+    // /auth/login, /auth/logout, /auth/callback, /auth/me, /auth/profile, etc.
+    return auth0.middleware(request);
   }
 
   // -------------------------------------------------------------------------
   // 4. PUBLIC PATHS → Allow without authentication
   // -------------------------------------------------------------------------
   if (isPublicPath(pathname)) {
-    console.log(`[MIDDLEWARE] Public path: ${pathname}`);
     return NextResponse.next();
   }
 
@@ -154,7 +134,6 @@ export async function middleware(request: NextRequest) {
   // 5. STATIC ASSETS → Allow without authentication
   // -------------------------------------------------------------------------
   if (isStaticAsset(pathname)) {
-    console.log(`[MIDDLEWARE] Static asset: ${pathname}`);
     return NextResponse.next();
   }
 
@@ -167,17 +146,15 @@ export async function middleware(request: NextRequest) {
     // No session - redirect to Auth0 login
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("returnTo", pathname);
-    console.log(`[MIDDLEWARE] Protected route redirect: ${pathname} → ${loginUrl.toString()}`);
     return NextResponse.redirect(loginUrl);
   }
 
   // Session exists - allow request
-  console.log(`[MIDDLEWARE] Authenticated access: ${pathname}`);
   return NextResponse.next();
 }
 
 // ============================================================================
-// MIDDLEWARE CONFIGURATION
+// PROXY CONFIGURATION (Next.js 16 Required)
 // ============================================================================
 
 export const config = {
@@ -187,8 +164,7 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization)
      * - favicon.ico
-     * - public folder assets
      */
-    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
