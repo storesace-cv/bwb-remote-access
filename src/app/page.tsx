@@ -57,7 +57,7 @@ export default async function HomePage() {
           {/* Auth0 Login Button */}
           <div className="space-y-4">
             <Link
-              href="/api/auth/login"
+              href="/auth/login"
               className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-center"
             >
               <svg

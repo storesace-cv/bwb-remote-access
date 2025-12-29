@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """
-Backend API Test Suite for Auth0-Only Authentication Enforcement
+Backend API Test Suite for Auth0 NextResponse.next() Fix Verification
 
-Tests the Auth0-only authentication enforcement and legacy login deprecation.
-This is a Next.js application with Auth0 authentication.
+Tests the Auth0 authentication flow after fixing NextResponse.next() misuse.
+The /api/auth/[...auth0]/route.ts file was deleted because it incorrectly used 
+auth0.middleware() which returns NextResponse.next() internally.
+
+Auth0 routes are now at /auth/* (not /api/auth/*) as required by nextjs-auth0 v4.
 
 Test Scenarios:
-1. Legacy Login API - 410 Gone
-2. Auth0 Endpoints Available
-3. Build Verification
+1. Legacy /api/auth/login should redirect to /auth/login
+2. New /auth/login should work (Auth0 SDK handles it)
+3. Legacy /api/login still returns 410 Gone
+4. Protected routes redirect to /auth/login (not /api/auth/login)
+5. No NextResponse.next() in route handlers
 """
 
 import requests
@@ -29,14 +34,93 @@ class TestResult:
         self.passed = passed
         self.details = details
 
-def test_legacy_login_410_gone() -> TestResult:
-    """Test 1: Legacy login should return 410 Gone"""
-    print("🧪 Test 1: Legacy Login API - 410 Gone")
+def test_legacy_api_auth_login_redirect() -> TestResult:
+    """Test 1: Legacy /api/auth/login should redirect to /auth/login"""
+    print("🧪 Test 1: Legacy /api/auth/login should redirect to /auth/login")
+    
+    endpoint = f"{API_BASE_URL}/api/auth/login"
+    
+    try:
+        response = requests.get(
+            endpoint,
+            timeout=10,
+            allow_redirects=False
+        )
+        
+        expected_status = 307
+        location_header = response.headers.get('location', '')
+        passed = (
+            response.status_code == expected_status and
+            '/auth/login' in location_header
+        )
+        
+        details = f"Status: {response.status_code}, Location: {location_header}"
+        
+        return TestResult(
+            "Legacy /api/auth/login redirects to /auth/login",
+            expected_status,
+            response.status_code,
+            {"location": location_header},
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Legacy /api/auth/login redirects to /auth/login",
+            307,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_new_auth_login_works() -> TestResult:
+    """Test 2: New /auth/login should work (Auth0 SDK handles it)"""
+    print("🧪 Test 2: New /auth/login should work (Auth0 SDK handles it)")
+    
+    endpoint = f"{API_BASE_URL}/auth/login"
+    
+    try:
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
+        
+        # Auth0 login should either redirect to Auth0 (302) or return 500 if not configured
+        expected_statuses = [302, 500]
+        passed = response.status_code in expected_statuses
+        
+        if response.status_code == 500:
+            details = f"Status: {response.status_code} (Expected - Auth0 not configured in test environment)"
+        elif response.status_code == 302:
+            location = response.headers.get('location', '')
+            details = f"Status: {response.status_code} (Redirect to Auth0), Location: {location}"
+        else:
+            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
+        
+        return TestResult(
+            "New /auth/login works (Auth0 SDK)",
+            "302 or 500",
+            response.status_code,
+            {"location": response.headers.get('location', '')},
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "New /auth/login works (Auth0 SDK)",
+            302,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_legacy_api_login_410_gone() -> TestResult:
+    """Test 3: Legacy /api/login still returns 410 Gone"""
+    print("🧪 Test 3: Legacy /api/login still returns 410 Gone")
     
     endpoint = f"{API_BASE_URL}/api/login"
     data = {
-        "email": "test@test.com",
-        "password": "test123"
+        "email": "user@example.com",
+        "password": "password123"
     }
     
     try:
@@ -47,7 +131,6 @@ def test_legacy_login_410_gone() -> TestResult:
             timeout=10
         )
         
-        # Try to parse JSON, but handle non-JSON responses
         try:
             response_data = response.json()
         except:
@@ -62,7 +145,7 @@ def test_legacy_login_410_gone() -> TestResult:
         details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
         
         return TestResult(
-            "Legacy Login API - 410 Gone",
+            "Legacy /api/login returns 410 Gone",
             expected_status,
             response.status_code,
             response_data,
@@ -71,7 +154,7 @@ def test_legacy_login_410_gone() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Legacy Login API - 410 Gone",
+            "Legacy /api/login returns 410 Gone",
             410,
             0,
             {},
@@ -79,9 +162,46 @@ def test_legacy_login_410_gone() -> TestResult:
             f"Request failed: {e}"
         )
 
-def test_auth0_me_endpoint() -> TestResult:
-    """Test 2: Auth0 me endpoint should return unauthenticated status"""
-    print("🧪 Test 2: Auth0 /me endpoint")
+def test_protected_routes_redirect_to_auth_login() -> TestResult:
+    """Test 4: Protected routes redirect to /auth/login (not /api/auth/login)"""
+    print("🧪 Test 4: Protected routes redirect to /auth/login (not /api/auth/login)")
+    
+    endpoint = f"{API_BASE_URL}/dashboard"
+    
+    try:
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
+        
+        expected_status = 307
+        location_header = response.headers.get('location', '')
+        passed = (
+            response.status_code == expected_status and
+            '/auth/login' in location_header and
+            'returnTo=%2Fdashboard' in location_header
+        )
+        
+        details = f"Status: {response.status_code}, Location: {location_header}"
+        
+        return TestResult(
+            "Protected routes redirect to /auth/login",
+            expected_status,
+            response.status_code,
+            {"location": location_header},
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Protected routes redirect to /auth/login",
+            307,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_auth0_me_endpoint_no_nextresponse_next() -> TestResult:
+    """Test 5: No NextResponse.next() in route handlers - /api/auth0/me should work"""
+    print("🧪 Test 5: /api/auth0/me should work (no NextResponse.next() error)")
     
     endpoint = f"{API_BASE_URL}/api/auth0/me"
     
@@ -92,13 +212,14 @@ def test_auth0_me_endpoint() -> TestResult:
         expected_status = 200
         passed = (
             response.status_code == expected_status and
-            response_data.get("authenticated") == False
+            response_data.get("authenticated") == False and
+            "NextResponse.next()" not in response.text
         )
         
         details = f"Response: {json.dumps(response_data, indent=2)}"
         
         return TestResult(
-            "Auth0 /me endpoint",
+            "/api/auth0/me works (no NextResponse.next() error)",
             expected_status,
             response.status_code,
             response_data,
@@ -107,139 +228,8 @@ def test_auth0_me_endpoint() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Auth0 /me endpoint",
+            "/api/auth0/me works (no NextResponse.next() error)",
             200,
-            0,
-            {},
-            False,
-            f"Request failed: {e}"
-        )
-
-def test_mesh_open_session_requires_auth() -> TestResult:
-    """Test 3: MeshCentral open-session should require auth"""
-    print("🧪 Test 3: MeshCentral open-session requires auth")
-    
-    endpoint = f"{API_BASE_URL}/api/mesh/open-session"
-    data = {
-        "nodeId": "node/mesh/test",
-        "domain": "mesh"
-    }
-    
-    try:
-        response = requests.post(
-            endpoint,
-            json=data,
-            headers={"Content-Type": "application/json"},
-            timeout=10,
-            allow_redirects=False
-        )
-        
-        # Try to parse JSON, but handle non-JSON responses (like redirects)
-        try:
-            response_data = response.json()
-        except:
-            response_data = {"raw_response": response.text}
-        
-        # Check if it's a redirect to auth or returns 401
-        passed = (
-            response.status_code == 401 or
-            (response.status_code in [302, 307] and "/api/auth/login" in (response.headers.get('location', '') + response.text)) or
-            (response_data.get("success") == False and response_data.get("error") == "Unauthorized")
-        )
-        
-        if response.status_code in [302, 307]:
-            details = f"Status: {response.status_code} (Redirect to auth - CORRECT), Location: {response.headers.get('location', 'N/A')}"
-        else:
-            details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
-        
-        return TestResult(
-            "MeshCentral open-session requires auth",
-            "401 or redirect to auth",
-            response.status_code,
-            response_data,
-            passed,
-            details
-        )
-    except requests.exceptions.RequestException as e:
-        return TestResult(
-            "MeshCentral open-session requires auth",
-            401,
-            0,
-            {},
-            False,
-            f"Request failed: {e}"
-        )
-
-def test_auth0_login_redirect() -> TestResult:
-    """Test 4: Auth0 login endpoint should be accessible"""
-    print("🧪 Test 4: Auth0 login endpoint accessibility")
-    
-    endpoint = f"{API_BASE_URL}/api/auth/login"
-    
-    try:
-        response = requests.get(endpoint, timeout=10, allow_redirects=False)
-        
-        # Auth0 login might return 500 if not configured, which is expected in test environment
-        expected_statuses = [200, 302, 307, 401, 403, 500]
-        passed = response.status_code in expected_statuses
-        
-        # If it's 500, it's likely due to missing Auth0 config, which is expected
-        if response.status_code == 500:
-            passed = True
-            details = f"Status: {response.status_code} (Expected - Auth0 not configured in test environment)"
-        else:
-            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
-        
-        return TestResult(
-            "Auth0 login endpoint accessibility",
-            "Accessible or 500 (config missing)",
-            response.status_code,
-            {},
-            passed,
-            details
-        )
-    except requests.exceptions.RequestException as e:
-        return TestResult(
-            "Auth0 login endpoint accessibility",
-            302,
-            0,
-            {},
-            False,
-            f"Request failed: {e}"
-        )
-
-def test_auth0_logout_endpoint() -> TestResult:
-    """Test 5: Auth0 logout endpoint should be accessible"""
-    print("🧪 Test 5: Auth0 logout endpoint accessibility")
-    
-    endpoint = f"{API_BASE_URL}/api/auth/logout"
-    
-    try:
-        response = requests.get(endpoint, timeout=10, allow_redirects=False)
-        
-        # Auth0 logout might return 500 if not configured, which is expected in test environment
-        expected_statuses = [200, 302, 307, 401, 403, 500]
-        passed = response.status_code in expected_statuses
-        
-        # If it's 500, it's likely due to missing Auth0 config, which is expected
-        if response.status_code == 500:
-            passed = True
-            details = f"Status: {response.status_code} (Expected - Auth0 not configured in test environment)"
-        else:
-            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
-        
-        return TestResult(
-            "Auth0 logout endpoint accessibility",
-            "Accessible or 500 (config missing)",
-            response.status_code,
-            {},
-            passed,
-            details
-        )
-    except requests.exceptions.RequestException as e:
-        return TestResult(
-            "Auth0 logout endpoint accessibility",
-            302,
             0,
             {},
             False,
@@ -248,16 +238,16 @@ def test_auth0_logout_endpoint() -> TestResult:
 
 def run_all_tests() -> None:
     """Run all test scenarios and report results"""
-    print("🚀 Starting Auth0-Only Authentication Enforcement Tests")
+    print("🚀 Starting Auth0 NextResponse.next() Fix Verification Tests")
     print(f"📍 Testing application: {API_BASE_URL}")
     print("=" * 60)
     
     tests = [
-        test_legacy_login_410_gone,
-        test_auth0_me_endpoint,
-        test_mesh_open_session_requires_auth,
-        test_auth0_login_redirect,
-        test_auth0_logout_endpoint,
+        test_legacy_api_auth_login_redirect,
+        test_new_auth_login_works,
+        test_legacy_api_login_410_gone,
+        test_protected_routes_redirect_to_auth_login,
+        test_auth0_me_endpoint_no_nextresponse_next,
     ]
     
     results = []
@@ -294,7 +284,7 @@ def run_all_tests() -> None:
     print(f"❌ Failed: {total_count - passed_count}/{total_count}")
     
     if passed_count == total_count:
-        print("\n🎉 All tests passed! Auth0-only authentication enforcement is working correctly.")
+        print("\n🎉 All tests passed! Auth0 NextResponse.next() fix is working correctly.")
     else:
         print("\n⚠️  Some tests failed. Check the details above.")
         
@@ -304,10 +294,11 @@ def run_all_tests() -> None:
                 print(f"   • {result.test_name}: {result.details}")
     
     print("\n📝 Key Findings:")
-    print("   • Legacy login API properly deprecated (410 Gone)")
-    print("   • Auth0 authentication endpoints accessible")
-    print("   • Protected endpoints require authentication")
-    print("   • Error responses follow expected format")
+    print("   • Legacy /api/auth/login redirects to /auth/login")
+    print("   • New /auth/login works (Auth0 SDK handles it)")
+    print("   • Legacy /api/login still returns 410 Gone")
+    print("   • Protected routes redirect to /auth/login (not /api/auth/login)")
+    print("   • No NextResponse.next() errors in route handlers")
     
     return results
 

@@ -36,7 +36,7 @@ export default function DashboardClient({
       window.localStorage.removeItem("rustdesk_jwt");
     }
     // Redirect to Auth0 logout
-    router.push("/api/auth/logout");
+    router.push("/auth/logout");
   }, [router]);
 
   return (

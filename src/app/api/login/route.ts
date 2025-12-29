@@ -2,7 +2,7 @@
  * Legacy Login Route - DEPRECATED
  * 
  * This endpoint has been deprecated in favor of Auth0 authentication.
- * All authentication must now go through /api/auth/login (Auth0).
+ * All authentication must now go through /auth/login (Auth0).
  * 
  * Returns 410 Gone to indicate the endpoint is no longer available.
  */
@@ -27,7 +27,7 @@ export async function POST() {
     {
       error: "Gone",
       message: "Local email/password authentication has been deprecated. Please use Auth0 authentication.",
-      redirect: "/api/auth/login",
+      redirect: "/auth/login",
       documentation: "All users must now authenticate via Auth0 Single Sign-On.",
     },
     { status: 410, headers: CORS_HEADERS }
@@ -39,7 +39,7 @@ export async function GET() {
     {
       error: "Gone",
       message: "Local email/password authentication has been deprecated. Please use Auth0 authentication.",
-      redirect: "/api/auth/login",
+      redirect: "/auth/login",
     },
     { status: 410, headers: CORS_HEADERS }
   );

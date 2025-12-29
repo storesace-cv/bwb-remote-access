@@ -8,7 +8,7 @@ The RustDesk Web application has been migrated to **Auth0-only authentication**.
 
 ### 1. Proxy (`/app/src/proxy.ts`)
 - Created proxy that enforces Auth0 authentication on all routes
-- **PUBLIC routes** (no auth): `/api/auth/*`, `/_next/*`, static assets
+- **PUBLIC routes** (no auth): `/auth/*`, `/_next/*`, static assets
 - **BLOCKED routes** (410 Gone): `/api/login` (legacy Supabase auth)
 - **PROTECTED routes**: Everything else - redirects to Auth0 if no session
 
@@ -22,7 +22,7 @@ The RustDesk Web application has been migrated to **Auth0-only authentication**.
 
 ### 3. Legacy Login API (`/app/src/app/api/login/route.ts`)
 - Now returns **410 Gone** with deprecation message
-- Directs users to use `/api/auth/login` instead
+- Directs users to use `/auth/login` instead
 
 ### 4. Dashboard (`/app/src/app/dashboard/page.tsx`)
 - Converted to Server Component for Auth0 session handling
@@ -53,7 +53,7 @@ User visits https://rustdesk.bwb.pt/
     │         │
     ▼         │
 Redirect to   │
-/api/auth/    │
+/auth/        │
 login         │
     │         │
     ▼         │
