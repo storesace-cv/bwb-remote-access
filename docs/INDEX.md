@@ -112,7 +112,10 @@ docs/
 ├── TROUBLESHOOTING.md             # Troubleshooting
 ├── DEPLOYMENT.md                  # Deployment guide
 │
-└── sot/                           # Source of Truth
+├── SoT/                           # Source of Truth (CANONICAL)
+│   └── AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  # ⚠️ CRITICAL - Auth0 & Middleware rules
+│
+└── sot/                           # Source of Truth (legacy)
     ├── README.md                  # Índice SoT
     ├── architecture.md            # Arquitetura detalhada
     ├── data-models.md             # Modelos de dados
