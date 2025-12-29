@@ -161,10 +161,16 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" \
 # 8.1) Sync API server (server/sync-api.js)
 echo "📦 A preparar deploy de server/ (Sync API)..."
 
-# Cleanup remoto: remover node_modules drift e corrigir permissões
+# Cleanup remoto: remover node_modules drift e corrigir permissões (NOPASSWD sudo)
 echo "🧹 A limpar server/node_modules e corrigir permissões no droplet..."
-ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo rm -rf $REMOTE_DIR/server/node_modules 2>/dev/null || true"
-ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo chown -R rustdeskweb:rustdeskweb $REMOTE_DIR/server 2>/dev/null || true"
+if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n rm -rf /opt/rustdesk-frontend/server/node_modules || true"; then
+  echo "❌ ERRO: sudo -n rm -rf falhou (verificar sudoers NOPASSWD)"
+  exit 1
+fi
+if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n chown -R rustdeskweb.rustdeskweb /opt/rustdesk-frontend/server"; then
+  echo "❌ ERRO: sudo -n chown falhou (verificar sudoers NOPASSWD)"
+  exit 1
+fi
 
 # Rsync de server/ excluindo node_modules e .env
 echo "📦 A enviar server/ (excluindo node_modules e .env)..."
@@ -192,13 +198,20 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/DEPLOYED_VERSION.txt" "$REMOTE_
 rm -f "$REPO_ROOT/DEPLOYED_VERSION.txt"
 echo "✅ DEPLOYED_VERSION.txt criado no droplet"
 
-# 8.3) Reiniciar e validar rustdesk-sync-api.service
+# 8.3) Reiniciar e validar rustdesk-sync-api.service (NOPASSWD sudo)
 echo "🔄 A reiniciar rustdesk-sync-api.service..."
-ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo systemctl restart rustdesk-sync-api.service"
+if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n systemctl restart rustdesk-sync-api.service"; then
+  echo "❌ ERRO: sudo -n systemctl restart falhou (verificar sudoers NOPASSWD)"
+  exit 1
+fi
 echo "✅ rustdesk-sync-api.service reiniciado"
 
 echo "🔍 A verificar estado do serviço..."
-ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo systemctl status rustdesk-sync-api.service --no-pager -l | head -20" || true
+if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n systemctl is-active rustdesk-sync-api.service"; then
+  echo "❌ ERRO: rustdesk-sync-api.service não está active"
+  exit 1
+fi
+echo "✅ rustdesk-sync-api.service está active"
 
 # 9) Systemd service/timer units para sync automático
 echo "📦 A enviar systemd units (meshcentral-supabase-sync.{service,timer})..."
