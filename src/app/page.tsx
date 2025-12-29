@@ -1,203 +1,164 @@
-"use client";
+/**
+ * Root Landing Page - Auth0 Only
+ * 
+ * This page is the entry point for all users.
+ * - If not logged in via Auth0: Shows login button (redirects to Auth0)
+ * - If logged in via Auth0: Redirects to dashboard
+ * 
+ * NO local email/password authentication is provided.
+ * Auth0 is the ONLY authentication authority.
+ */
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { auth0 } from "@/lib/auth0";
 import Link from "next/link";
-import { supabase } from "@/integrations/supabase/client";
 
-const APP_VERSION =
-  process.env.NEXT_PUBLIC_APP_VERSION ?? "1.0.0";
-const APP_BUILD =
-  process.env.NEXT_PUBLIC_APP_BUILD ||
-  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
-  process.env.NEXT_PUBLIC_GIT_COMMIT_SHA ||
-  "dev";
+const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "2.0.0";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const buildLabel = useMemo(() => APP_BUILD.slice(0, 7), []);
+export default async function HomePage() {
+  // Check Auth0 session
+  const session = await auth0.getSession();
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const hash = window.location.hash;
-    if (!hash || hash.length <= 1) return;
-
-    const params = new URLSearchParams(hash.slice(1));
-    const type = params.get("type");
-
-    if (type !== "recovery") return;
-
-    (async () => {
-      try {
-        await supabase.auth.getSession();
-      } catch (err) {
-        console.error(
-          "Erro ao inicializar sessão de recuperação Supabase:",
-          err
-        );
-      } finally {
-        window.history.replaceState(null, "", window.location.pathname);
-        router.replace("/auth/confirm-reset");
-      }
-    })();
-  }, [router]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const existing = window.localStorage.getItem("rustdesk_jwt");
-    if (existing && existing.trim().length > 0) {
-      router.push("/dashboard");
-    }
-  }, [router]);
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const trimmedEmail = email.trim();
-      const trimmedPassword = password.trim();
-
-      if (!trimmedEmail || !trimmedPassword) {
-        setError("Correio electrónico e palavra‑passe são obrigatórios.");
-        setLoading(false);
-        return;
-      }
-
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: trimmedEmail,
-          password: trimmedPassword,
-        }),
-      });
-
-      let data: { token?: string; message?: string; error?: string };
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
-
-      if (!res.ok) {
-        const errorMessage =
-          data.message ||
-          data.error ||
-          (res.status === 401
-            ? "Credenciais inválidas ou utilizador não existe."
-            : res.status === 504
-            ? "Tempo limite excedido. Tenta de novo."
-            : "Falha no início de sessão. Tenta de novo.");
-
-        setError(errorMessage);
-        setLoading(false);
-        return;
-      }
-
-      if (
-        !data.token ||
-        typeof data.token !== "string" ||
-        data.token.trim().length === 0
-      ) {
-        setError("Resposta sem token válido.");
-        setLoading(false);
-        return;
-      }
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("rustdesk_jwt", data.token);
-      }
-
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      console.error("Login error:", err);
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Não foi possível estabelecer comunicação com o servidor. Tenta de novo.";
-      setError(message);
-      setLoading(false);
-    }
+  // If already logged in, redirect to dashboard
+  if (session?.user) {
+    redirect("/dashboard/profile");
   }
 
+  // Not logged in - show Auth0 login page
   return (
     <main className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="w-full max-w-md space-y-6">
         <div className="w-full bg-slate-900/70 border border-slate-700 rounded-2xl p-8 shadow-xl backdrop-blur-sm">
-          <h1 className="text-2xl font-semibold mb-6 text-center text-white">
-            BWB | Suporte Android
-          </h1>
-
-          <p className="text-xs text-slate-400 text-center mb-6">
-            Versão {APP_VERSION} · Compilação {buildLabel}
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm mb-1 text-slate-200">
-                Correio electrónico
-              </label>
-              <input
-                className="w-full rounded-md bg-slate-800 border border-slate-700 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-slate-500"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="username"
-                disabled={loading}
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1 text-slate-200">
-                Palavra‑passe
-              </label>
-              <input
-                className="w-full rounded-md bg-slate-800 border border-slate-700 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-emerald-500 text-white placeholder-slate-500"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                disabled={loading}
-              />
-            </div>
-
-            {error && (
-              <div className="text-sm text-red-400 bg-red-950/40 border border-red-900 rounded-md px-3 py-2">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 disabled:cursor-not-allowed px-3 py-2 text-sm font-medium transition text-white"
-            >
-              {loading ? "A entrar..." : "Entrar"}
-            </button>
-
-            <div className="mt-4 text-center">
-              <Link
-                href="/auth/reset-password"
-                className="inline-block px-4 py-2 text-sm text-slate-300 hover:text-emerald-400 transition font-medium"
+          {/* Logo/Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600/20 rounded-full mb-4">
+              <svg
+                className="w-8 h-8 text-emerald-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                🔑 Esqueceste‑te da palavra‑passe?
-              </Link>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-semibold text-white">
+              BWB | Suporte Android
+            </h1>
+            <p className="text-sm text-slate-400 mt-2">
+              Gestão de Dispositivos & Controlo Remoto
+            </p>
+          </div>
+
+          {/* Auth0 Login Button */}
+          <div className="space-y-4">
+            <Link
+              href="/api/auth/login"
+              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-center"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                />
+              </svg>
+              Entrar com Auth0
+            </Link>
+
+            <p className="text-xs text-slate-500 text-center">
+              Autenticação segura via Auth0
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="my-6 border-t border-slate-700"></div>
+
+          {/* Info Section */}
+          <div className="space-y-3">
+            <div className="flex items-start gap-3 text-sm">
+              <svg
+                className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
+              </svg>
+              <div>
+                <p className="text-slate-300">Autenticação Centralizada</p>
+                <p className="text-slate-500 text-xs">
+                  Single Sign-On com gestão de identidade Auth0
+                </p>
+              </div>
             </div>
 
-            <div className="mt-2 text-right">
-              <p className="text-xs text-slate-500">
-                © jorge peixinho - Business with Brains
-              </p>
+            <div className="flex items-start gap-3 text-sm">
+              <svg
+                className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+              <div>
+                <p className="text-slate-300">Controlo por Domínio</p>
+                <p className="text-slate-500 text-xs">
+                  Acesso restrito à organização atribuída
+                </p>
+              </div>
             </div>
-          </form>
+
+            <div className="flex items-start gap-3 text-sm">
+              <svg
+                className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                />
+              </svg>
+              <div>
+                <p className="text-slate-300">MeshCentral Integrado</p>
+                <p className="text-slate-500 text-xs">
+                  Sessões remotas sem login adicional
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-6 pt-4 border-t border-slate-700 text-center">
+            <p className="text-xs text-slate-500">
+              Versão {APP_VERSION} · © Jorge Peixinho - Business with Brains
+            </p>
+          </div>
         </div>
       </div>
     </main>
