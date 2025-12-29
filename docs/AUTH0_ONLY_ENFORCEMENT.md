@@ -6,11 +6,14 @@ The RustDesk Web application has been migrated to **Auth0-only authentication**.
 
 ## Changes Made
 
-### 1. Middleware (`/app/src/middleware.ts`)
-- Created middleware that enforces Auth0 authentication on all routes
+### 1. Proxy (`/app/src/proxy.ts`)
+- Created proxy that enforces Auth0 authentication on all routes
 - **PUBLIC routes** (no auth): `/api/auth/*`, `/_next/*`, static assets
 - **BLOCKED routes** (410 Gone): `/api/login` (legacy Supabase auth)
 - **PROTECTED routes**: Everything else - redirects to Auth0 if no session
+
+> **Note**: Migrated from `middleware.ts` to `proxy.ts` per Next.js 16 conventions.
+> The function is now named `proxy` instead of `middleware`.
 
 ### 2. Root Page (`/app/src/app/page.tsx`)
 - Replaced local login form with Auth0-only landing page
