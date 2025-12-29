@@ -22,7 +22,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # API Configuration
-API_BASE_URL = "http://localhost:3000"
+API_BASE_URL = "http://localhost:3001"
 
 class TestResult:
     def __init__(self, test_name: str, expected_status: int, actual_status: int, 
