@@ -1,7 +1,10 @@
 /**
- * Next.js Middleware - Auth0 Authentication Enforcer
+ * Next.js Proxy - Auth0 Authentication Enforcer
  * 
  * Enforces Auth0-only authentication across the application.
+ * 
+ * NOTE: Migrated from middleware.ts to proxy.ts per Next.js 16 conventions.
+ * The function is now named "proxy" instead of "middleware".
  * 
  * PUBLIC routes (no auth required):
  *   - /api/auth/*  (Auth0 callback, login, logout)
@@ -44,7 +47,13 @@ function isBlockedLegacyRoute(pathname: string): boolean {
   return BLOCKED_LEGACY_ROUTES.some((path) => pathname === path);
 }
 
-export async function middleware(request: NextRequest) {
+/**
+ * Proxy function (Next.js 16+)
+ * 
+ * Replaces the deprecated middleware function.
+ * Handles authentication enforcement for all protected routes.
+ */
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Block legacy authentication routes
