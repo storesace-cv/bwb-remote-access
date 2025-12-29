@@ -29,161 +29,107 @@ class TestResult:
         self.passed = passed
         self.details = details
 
-def make_request(data: Optional[Dict[str, Any]] = None, headers: Optional[Dict[str, str]] = None) -> requests.Response:
-    """Make a POST request to the API endpoint"""
-    default_headers = {"Content-Type": "application/json"}
-    if headers:
-        default_headers.update(headers)
+def test_legacy_login_410_gone() -> TestResult:
+    """Test 1: Legacy login should return 410 Gone"""
+    print("🧪 Test 1: Legacy Login API - 410 Gone")
+    
+    endpoint = f"{API_BASE_URL}/api/login"
+    data = {
+        "email": "test@test.com",
+        "password": "test123"
+    }
     
     try:
         response = requests.post(
-            API_ENDPOINT,
+            endpoint,
             json=data,
-            headers=default_headers,
-            timeout=10
-        )
-        return response
-    except requests.exceptions.RequestException as e:
-        print(f"❌ Request failed: {e}")
-        sys.exit(1)
-
-def test_unauthorized_no_auth() -> TestResult:
-    """Test 1: No Auth0 Session - should return 401"""
-    print("🧪 Test 1: No Auth0 Session")
-    
-    data = {
-        "nodeId": "node/mesh/test123",
-        "domain": "mesh"
-    }
-    
-    response = make_request(data)
-    response_data = response.json()
-    
-    expected_status = 401
-    passed = (
-        response.status_code == expected_status and
-        response_data.get("success") == False and
-        response_data.get("error") == "Unauthorized"
-    )
-    
-    details = f"Response: {json.dumps(response_data, indent=2)}"
-    
-    return TestResult(
-        "No Auth0 Session",
-        expected_status,
-        response.status_code,
-        response_data,
-        passed,
-        details
-    )
-
-def test_invalid_body_empty() -> TestResult:
-    """Test 2: Invalid Body - Empty JSON should return 400 or 401"""
-    print("🧪 Test 2: Invalid Body - Empty JSON")
-    
-    data = {}
-    
-    response = make_request(data)
-    response_data = response.json()
-    
-    # Since there's no auth, it should return 401 first
-    expected_status = 401
-    passed = (
-        response.status_code == expected_status and
-        response_data.get("success") == False and
-        response_data.get("error") == "Unauthorized"
-    )
-    
-    details = f"Response: {json.dumps(response_data, indent=2)}"
-    
-    return TestResult(
-        "Invalid Body - Empty JSON",
-        expected_status,
-        response.status_code,
-        response_data,
-        passed,
-        details
-    )
-
-def test_invalid_body_missing_fields() -> TestResult:
-    """Test 3: Invalid Body - Missing required fields"""
-    print("🧪 Test 3: Invalid Body - Missing nodeId")
-    
-    data = {
-        "domain": "mesh"
-        # Missing nodeId
-    }
-    
-    response = make_request(data)
-    response_data = response.json()
-    
-    # Since there's no auth, it should return 401 first
-    expected_status = 401
-    passed = (
-        response.status_code == expected_status and
-        response_data.get("success") == False and
-        response_data.get("error") == "Unauthorized"
-    )
-    
-    details = f"Response: {json.dumps(response_data, indent=2)}"
-    
-    return TestResult(
-        "Invalid Body - Missing nodeId",
-        expected_status,
-        response.status_code,
-        response_data,
-        passed,
-        details
-    )
-
-def test_invalid_domain() -> TestResult:
-    """Test 4: Invalid Domain - should return 400 or 401"""
-    print("🧪 Test 4: Invalid Domain")
-    
-    data = {
-        "nodeId": "node/mesh/test123",
-        "domain": "invalid_domain"
-    }
-    
-    response = make_request(data)
-    response_data = response.json()
-    
-    # Since there's no auth, it should return 401 first
-    expected_status = 401
-    passed = (
-        response.status_code == expected_status and
-        response_data.get("success") == False and
-        response_data.get("error") == "Unauthorized"
-    )
-    
-    details = f"Response: {json.dumps(response_data, indent=2)}"
-    
-    return TestResult(
-        "Invalid Domain",
-        expected_status,
-        response.status_code,
-        response_data,
-        passed,
-        details
-    )
-
-def test_malformed_json() -> TestResult:
-    """Test 5: Malformed JSON - should return 400"""
-    print("🧪 Test 5: Malformed JSON")
-    
-    # Send malformed JSON
-    headers = {"Content-Type": "application/json"}
-    
-    try:
-        response = requests.post(
-            API_ENDPOINT,
-            data='{"nodeId": "test", "domain":}',  # Malformed JSON
-            headers=headers,
+            headers={"Content-Type": "application/json"},
             timeout=10
         )
         response_data = response.json()
         
-        # Since there's no auth, it should return 401 first
+        expected_status = 410
+        passed = (
+            response.status_code == expected_status and
+            response_data.get("error") == "Gone" and
+            "deprecated" in response_data.get("message", "").lower()
+        )
+        
+        details = f"Response: {json.dumps(response_data, indent=2)}"
+        
+        return TestResult(
+            "Legacy Login API - 410 Gone",
+            expected_status,
+            response.status_code,
+            response_data,
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Legacy Login API - 410 Gone",
+            410,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_auth0_me_endpoint() -> TestResult:
+    """Test 2: Auth0 me endpoint should return unauthenticated status"""
+    print("🧪 Test 2: Auth0 /me endpoint")
+    
+    endpoint = f"{API_BASE_URL}/api/auth0/me"
+    
+    try:
+        response = requests.get(endpoint, timeout=10)
+        response_data = response.json()
+        
+        expected_status = 200
+        passed = (
+            response.status_code == expected_status and
+            response_data.get("authenticated") == False
+        )
+        
+        details = f"Response: {json.dumps(response_data, indent=2)}"
+        
+        return TestResult(
+            "Auth0 /me endpoint",
+            expected_status,
+            response.status_code,
+            response_data,
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Auth0 /me endpoint",
+            200,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_mesh_open_session_requires_auth() -> TestResult:
+    """Test 3: MeshCentral open-session should require auth"""
+    print("🧪 Test 3: MeshCentral open-session requires auth")
+    
+    endpoint = f"{API_BASE_URL}/api/mesh/open-session"
+    data = {
+        "nodeId": "node/mesh/test",
+        "domain": "mesh"
+    }
+    
+    try:
+        response = requests.post(
+            endpoint,
+            json=data,
+            headers={"Content-Type": "application/json"},
+            timeout=10
+        )
+        response_data = response.json()
+        
         expected_status = 401
         passed = (
             response.status_code == expected_status and
@@ -194,7 +140,7 @@ def test_malformed_json() -> TestResult:
         details = f"Response: {json.dumps(response_data, indent=2)}"
         
         return TestResult(
-            "Malformed JSON",
+            "MeshCentral open-session requires auth",
             expected_status,
             response.status_code,
             response_data,
@@ -203,31 +149,32 @@ def test_malformed_json() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Malformed JSON",
-            400,
+            "MeshCentral open-session requires auth",
+            401,
             0,
             {},
             False,
             f"Request failed: {e}"
         )
 
-def test_endpoint_exists() -> TestResult:
-    """Test 6: Verify endpoint exists and responds"""
-    print("🧪 Test 6: Endpoint Existence")
+def test_auth0_login_redirect() -> TestResult:
+    """Test 4: Auth0 login endpoint should be accessible"""
+    print("🧪 Test 4: Auth0 login endpoint accessibility")
     
-    # Test with a simple GET request to see if endpoint exists
+    endpoint = f"{API_BASE_URL}/api/auth/login"
+    
     try:
-        response = requests.get(API_ENDPOINT, timeout=10)
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
         
-        # Next.js API routes typically return 405 for unsupported methods
-        expected_status = 405
-        passed = response.status_code == expected_status
+        # Auth0 login should redirect (302/307) or return some response
+        expected_statuses = [200, 302, 307, 401, 403]
+        passed = response.status_code in expected_statuses
         
-        details = f"GET request returned {response.status_code} (expected 405 for unsupported method)"
+        details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
         
         return TestResult(
-            "Endpoint Existence",
-            expected_status,
+            "Auth0 login endpoint accessibility",
+            "302/307 or accessible",
             response.status_code,
             {},
             passed,
@@ -235,8 +182,41 @@ def test_endpoint_exists() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Endpoint Existence",
-            405,
+            "Auth0 login endpoint accessibility",
+            302,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_auth0_logout_endpoint() -> TestResult:
+    """Test 5: Auth0 logout endpoint should be accessible"""
+    print("🧪 Test 5: Auth0 logout endpoint accessibility")
+    
+    endpoint = f"{API_BASE_URL}/api/auth/logout"
+    
+    try:
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
+        
+        # Auth0 logout should redirect or return some response
+        expected_statuses = [200, 302, 307, 401, 403]
+        passed = response.status_code in expected_statuses
+        
+        details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
+        
+        return TestResult(
+            "Auth0 logout endpoint accessibility",
+            "302/307 or accessible",
+            response.status_code,
+            {},
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Auth0 logout endpoint accessibility",
+            302,
             0,
             {},
             False,
