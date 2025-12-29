@@ -1,14 +1,14 @@
 /**
- * Auth0 Test Page - STEP 1
+ * Auth Page - Auth0 Session Status
  * 
- * Minimal page to verify Auth0 integration:
- * - Shows "Login (Auth0)" button if not logged in
- * - Shows user info + claims + logout if logged in
+ * Shows Auth0 authentication status and user claims.
+ * This is the ONLY authentication method - Auth0.
  * 
- * This page runs in PARALLEL with existing Supabase auth.
- * It does NOT replace the existing login flow.
+ * If not logged in: Redirects to Auth0 login
+ * If logged in: Shows session details and claims
  */
 
+import { redirect } from "next/navigation";
 import { auth0 } from "@/lib/auth0";
 import Link from "next/link";
 
@@ -31,100 +31,82 @@ function extractClaims(user: Record<string, unknown>): Auth0Claims {
   };
 }
 
-export default async function Auth0TestPage() {
+export default async function AuthPage() {
   const session = await auth0.getSession();
   const user = session?.user;
+
+  // If not logged in, redirect to Auth0 login
+  if (!user) {
+    redirect("/api/auth/login");
+  }
+
+  const claims = extractClaims(user as Record<string, unknown>);
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
       <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-lg p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-slate-100 text-center">
-          Auth0 Integration Test
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-slate-100">
+            Sessão Auth0
+          </h1>
+          <span className="px-3 py-1 text-xs rounded-full bg-emerald-600/20 text-emerald-400">
+            Autenticado
+          </span>
+        </div>
 
-        {!user ? (
-          /* ─────────────────────────────────────────────────────────────────
-             NOT LOGGED IN
-           ───────────────────────────────────────────────────────────────── */
-          <div className="text-center space-y-4">
-            <p className="text-slate-400">
-              You are not logged in via Auth0.
-            </p>
-            <a
-              href="/api/auth/login"
-              className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-            >
-              Login (Auth0)
-            </a>
-            <p className="text-sm text-slate-500 mt-4">
-              This is a parallel auth flow. Existing Supabase login remains active.
-            </p>
-          </div>
-        ) : (
-          /* ─────────────────────────────────────────────────────────────────
-             LOGGED IN
-           ───────────────────────────────────────────────────────────────── */
-          <div className="space-y-4">
-            {/* User Info */}
-            <div className="bg-slate-800 rounded-lg p-4">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                User Info
-              </h2>
-              <p className="text-slate-100">
-                <span className="text-slate-400">Email:</span>{" "}
-                {user.email || "N/A"}
-              </p>
-              <p className="text-slate-100">
-                <span className="text-slate-400">Sub:</span>{" "}
-                <span className="text-xs font-mono">{user.sub}</span>
-              </p>
-            </div>
+        {/* User Info */}
+        <div className="bg-slate-800 rounded-lg p-4">
+          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
+            Informação do Utilizador
+          </h2>
+          <p className="text-slate-100">
+            <span className="text-slate-400">Email:</span>{" "}
+            {user.email || "N/A"}
+          </p>
+          <p className="text-slate-100">
+            <span className="text-slate-400">Sub:</span>{" "}
+            <span className="text-xs font-mono">{user.sub}</span>
+          </p>
+        </div>
 
-            {/* Custom Claims */}
-            <div className="bg-slate-800 rounded-lg p-4">
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                Custom Claims (from Auth0 Action)
-              </h2>
-              <ClaimsDisplay user={user as Record<string, unknown>} />
-            </div>
+        {/* Custom Claims */}
+        <div className="bg-slate-800 rounded-lg p-4">
+          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
+            Claims Personalizadas (Auth0 Action)
+          </h2>
+          <ClaimsDisplay claims={claims} />
+        </div>
 
-            {/* Logout */}
-            <div className="text-center pt-2">
-              <a
-                href="/api/auth/logout"
-                className="inline-block px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
-              >
-                Logout
-              </a>
-            </div>
-
-            {/* Back to dashboard */}
-            <div className="text-center">
-              <Link
-                href="/dashboard"
-                className="text-sm text-blue-400 hover:text-blue-300 underline"
-              >
-                ← Back to Dashboard
-              </Link>
-            </div>
-          </div>
-        )}
+        {/* Actions */}
+        <div className="flex flex-col gap-3">
+          <Link
+            href="/dashboard"
+            className="w-full text-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-colors"
+          >
+            Ir para Dashboard
+          </Link>
+          
+          <a
+            href="/api/auth/logout"
+            className="w-full text-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+          >
+            Terminar Sessão
+          </a>
+        </div>
       </div>
     </main>
   );
 }
 
 /** Display extracted custom claims */
-function ClaimsDisplay({ user }: { user: Record<string, unknown> }) {
-  const claims = extractClaims(user);
-
+function ClaimsDisplay({ claims }: { claims: Auth0Claims }) {
   const hasAnyClaim =
     claims.email || claims.global_roles || claims.org || claims.org_roles;
 
   if (!hasAnyClaim) {
     return (
       <p className="text-slate-500 text-sm italic">
-        No custom claims found. Ensure Auth0 Post-Login Action is configured.
+        Sem claims personalizadas. Verifica se a Auth0 Post-Login Action está configurada.
       </p>
     );
   }
