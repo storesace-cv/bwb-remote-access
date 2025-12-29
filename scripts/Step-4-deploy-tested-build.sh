@@ -28,29 +28,16 @@ cd "$REPO_ROOT"
 DEPLOY_HOST="${DEPLOY_HOST:-46.101.78.179}"
 DEPLOY_USER="${DEPLOY_USER:-rustdeskweb}"
 DEPLOY_PATH="${DEPLOY_PATH:-/opt/rustdesk-frontend}"
-DEPLOY_SSH_KEY="${DEPLOY_SSH_KEY:-$HOME/.ssh/rustdeskweb-digitalocean}"
 # Alias SSH recomendado no ~/.ssh/config:
 #   Host rustdesk-do
 #     HostName 46.101.78.179
 #     User rustdeskweb
 #     IdentityFile ~/.ssh/rustdeskweb-digitalocean
 #     IdentitiesOnly yes
-#     IdentityAgent none
 DEPLOY_SSH_ALIAS="${DEPLOY_SSH_ALIAS:-rustdesk-do}"
 
-# Expandir ~ manualmente se o utilizador usar DEPLOY_SSH_KEY=~/.ssh/...
-SSH_KEY_PATH="${DEPLOY_SSH_KEY/#\~/$HOME}"
-
-if [[ ! -f "$SSH_KEY_PATH" ]]; then
-  echo "❌ ERRO: chave SSH para deploy não encontrada em:"
-  echo "   $SSH_KEY_PATH"
-  echo ""
-  echo "   Garante que a chave existe (por omissão: ~/.ssh/rustdeskweb-digitalocean)"
-  echo "   ou define explicitamente DEPLOY_SSH_KEY com o caminho correcto."
-  exit 1
-fi
-
-SSH_COMMON_OPTS="-o IdentitiesOnly=yes -o IdentityAgent=none -i \"$SSH_KEY_PATH\""
+# SSH options: let ssh-agent or ~/.ssh/config handle key selection
+SSH_COMMON_OPTS="-o StrictHostKeyChecking=accept-new -o BatchMode=yes -o ConnectTimeout=10"
 RSYNC_OPTS="-avz --delete"
 REMOTE_DIR="${DEPLOY_PATH}"
 
@@ -60,7 +47,6 @@ echo "╚═══════════════════════�
 echo ""
 echo "📍 Repositório local: $REPO_ROOT"
 echo "📍 Pasta remota:      $REMOTE_DIR"
-echo "📍 Chave SSH:         $SSH_KEY_PATH"
 echo ""
 
 # 1) Sanidade local – build e node_modules têm de existir
