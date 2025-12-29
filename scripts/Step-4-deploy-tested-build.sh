@@ -158,6 +158,10 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" \
   "$REPO_ROOT/scripts/sync-devices.sh" \
   "$REMOTE_TARGET:$REMOTE_DIR/scripts/"
 
+# 8.1) Sync API server (server/sync-api.js)
+echo "📦 A enviar server/ (Sync API)..."
+rsync $RSYNC_OPTS -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/server/" "$REMOTE_TARGET:$REMOTE_DIR/server/"
+
 # 9) Systemd service/timer units para sync automático
 echo "📦 A enviar systemd units (meshcentral-supabase-sync.{service,timer})..."
 rsync -avz -e "ssh $SSH_COMMON_OPTS" \
