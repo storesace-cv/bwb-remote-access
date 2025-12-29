@@ -54,9 +54,18 @@ Pizza Hut
 
 - **Frontend**: Next.js 16 (App Router), React 18, TypeScript, Tailwind CSS
 - **Backend**: Supabase (PostgreSQL + Edge Functions)
-- **Authentication**: Supabase Auth with JWT
+- **Authentication**: Auth0 (Single Sign-On)
 - **Device Management**: RustDesk + MeshCentral integration
 - **Android Provisioning**: Custom Android app with QR scanning
+
+## ⚠️ Architecture Rules (Source of Truth)
+
+**Before making any changes to authentication or middleware, read:**
+
+- 📋 [Global SoT Index](docs/SoT/INDEX.md) — Registry of all canonical rules
+- 🔐 [Auth & Middleware Architecture](docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — Non-negotiable auth rules
+
+> **SoT documents define hard architectural constraints.** Violations are treated as defects regardless of test results.
 
 ## 🏗️ Architecture
 
