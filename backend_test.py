@@ -130,7 +130,8 @@ def test_mesh_open_session_requires_auth() -> TestResult:
             endpoint,
             json=data,
             headers={"Content-Type": "application/json"},
-            timeout=10
+            timeout=10,
+            allow_redirects=False
         )
         
         # Try to parse JSON, but handle non-JSON responses (like redirects)
@@ -140,14 +141,16 @@ def test_mesh_open_session_requires_auth() -> TestResult:
             response_data = {"raw_response": response.text}
         
         # Check if it's a redirect to auth or returns 401
-        expected_status = 401
         passed = (
-            response.status_code == expected_status or
-            (response.status_code in [302, 307] and "/api/auth/login" in response.text) or
+            response.status_code == 401 or
+            (response.status_code in [302, 307] and "/api/auth/login" in (response.headers.get('location', '') + response.text)) or
             (response_data.get("success") == False and response_data.get("error") == "Unauthorized")
         )
         
-        details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
+        if response.status_code in [302, 307]:
+            details = f"Status: {response.status_code} (Redirect to auth - CORRECT), Location: {response.headers.get('location', 'N/A')}"
+        else:
+            details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
         
         return TestResult(
             "MeshCentral open-session requires auth",
