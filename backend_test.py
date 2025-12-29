@@ -289,4 +289,4 @@ def run_all_tests() -> None:
     return results
 
 if __name__ == "__main__":
-    run_all_tests()
+    results = run_all_tests()
