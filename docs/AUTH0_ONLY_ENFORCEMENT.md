@@ -4,16 +4,31 @@
 
 The RustDesk Web application has been migrated to **Auth0-only authentication**. No local email/password authentication is available.
 
+## Architecture (CRITICAL)
+
+**`NextResponse.next()` may ONLY exist in `middleware.ts` at root level.**
+
+Route handlers (`app/**/route.ts`) must NEVER:
+- Return `NextResponse.next()`
+- Call `auth0.middleware()`
+- Import or call proxy functions
+
 ## Changes Made
 
-### 1. Proxy (`/app/src/proxy.ts`)
-- Created proxy that enforces Auth0 authentication on all routes
-- **PUBLIC routes** (no auth): `/auth/*`, `/_next/*`, static assets
-- **BLOCKED routes** (410 Gone): `/api/login` (legacy Supabase auth)
-- **PROTECTED routes**: Everything else - redirects to Auth0 if no session
+### 1. Middleware (`/middleware.ts` - ROOT LEVEL)
+- Handles ALL authentication enforcement
+- Auth0 routes (`/auth/*`) delegated to `auth0.middleware()`
+- **PUBLIC routes** (no auth): `/_next/*`, static assets
+- **PROTECTED routes**: Everything else - redirects to `/auth/login` if no session
+- Legacy `/api/auth/*` routes redirect to `/auth/*`
 
-> **Note**: Migrated from `middleware.ts` to `proxy.ts` per Next.js 16 conventions.
-> The function is now named `proxy` instead of `middleware`.
+### 2. Removed Files
+- `src/proxy.ts` - DELETED (was incorrectly structured)
+- `src/middleware.ts` - DELETED (wrong location)
+- `src/app/api/auth/[...auth0]/route.ts` - DELETED (caused NextResponse.next() error)
+
+### 3. Renamed Directories  
+- `src/app/auth/` → `src/app/auth-status/` (to not conflict with Auth0 SDK routes)
 
 ### 2. Root Page (`/app/src/app/page.tsx`)
 - Replaced local login form with Auth0-only landing page
