@@ -198,10 +198,11 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/auth/login
 
 | Question | Relevant SoT |
 |----------|--------------|
-| "Where can I use `NextResponse.next()`?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) |
-| "How should Auth0 routes be handled?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) |
+| "Where should the boundary file be?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — `/proxy.ts` at root |
+| "Can I use `NextResponse.next()`?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — Only in `/proxy.ts` |
+| "How should Auth0 routes be handled?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — Via `auth0.middleware()` |
 | "Can I create pages under `/auth/`?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — **NO** |
-| "Where should authentication logic live?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) |
+| "Should I use middleware.ts or proxy.ts?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — **proxy.ts** (Next.js 16) |
 
 ### SoT Validation Checklist
 
