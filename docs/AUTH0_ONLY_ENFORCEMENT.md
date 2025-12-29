@@ -6,11 +6,14 @@ The RustDesk Web application has been migrated to **Auth0-only authentication**.
 
 ## Changes Made
 
-### 1. Middleware (`/app/src/middleware.ts`)
-- Created middleware that enforces Auth0 authentication on all routes
+### 1. Proxy (`/app/src/proxy.ts`)
+- Created proxy that enforces Auth0 authentication on all routes
 - **PUBLIC routes** (no auth): `/api/auth/*`, `/_next/*`, static assets
 - **BLOCKED routes** (410 Gone): `/api/login` (legacy Supabase auth)
 - **PROTECTED routes**: Everything else - redirects to Auth0 if no session
+
+> **Note**: Migrated from `middleware.ts` to `proxy.ts` per Next.js 16 conventions.
+> The function is now named `proxy` instead of `middleware`.
 
 ### 2. Root Page (`/app/src/app/page.tsx`)
 - Replaced local login form with Auth0-only landing page
@@ -41,7 +44,7 @@ The RustDesk Web application has been migrated to **Auth0-only authentication**.
 User visits https://rustdesk.bwb.pt/
          │
          ▼
-    Middleware checks for appSession cookie
+    Proxy checks for appSession cookie
          │
     ┌────┴────┐
     │         │
@@ -69,7 +72,7 @@ Callback      │
 
 ### Pre-Deployment
 1. ✅ Build successful (`yarn build` completes without errors)
-2. ✅ Middleware created and registered
+2. ✅ Proxy created and registered (migrated from middleware.ts)
 3. ✅ Root page converted to Auth0-only
 4. ✅ Legacy `/api/login` returns 410 Gone
 5. ✅ Dashboard uses Auth0 session
@@ -144,7 +147,8 @@ MESHCENTRAL_LOGIN_TOKEN_KEY=<hex_string_from_meshcentral>
 
 | File | Change |
 |------|--------|
-| `/src/middleware.ts` | NEW - Auth0 enforcement |
+| `/src/proxy.ts` | NEW - Auth0 enforcement (Next.js 16 proxy convention) |
+| `/src/middleware.ts` | DELETED - Replaced by proxy.ts |
 | `/src/app/page.tsx` | Auth0-only landing |
 | `/src/app/api/login/route.ts` | Returns 410 Gone |
 | `/src/app/dashboard/page.tsx` | Auth0 Server Component |

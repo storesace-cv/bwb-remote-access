@@ -2,7 +2,7 @@
  * Dashboard Page - Auth0 Only
  * 
  * Main dashboard showing devices and user info.
- * Requires Auth0 session (enforced by middleware).
+ * Requires Auth0 session (enforced by proxy).
  * 
  * This is a hybrid page:
  * - Server Component fetches Auth0 session
@@ -11,11 +11,11 @@
 
 import { redirect } from "next/navigation";
 import { auth0 } from "@/lib/auth0";
-import { getClaimsFromAuth0Session, canManageUsers, getAdminRoleLabel, isSuperAdminAny } from "@/lib/rbac";
+import { getClaimsFromAuth0Session, canManageUsers, getAdminRoleLabel } from "@/lib/rbac";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
-  // Get Auth0 session (middleware already enforces auth)
+  // Get Auth0 session (proxy already enforces auth)
   const session = await auth0.getSession();
   
   if (!session?.user) {
@@ -25,7 +25,6 @@ export default async function DashboardPage() {
   // Extract claims
   const claims = getClaimsFromAuth0Session(session);
   const isAdmin = canManageUsers(claims);
-  const isSuperAdmin = isSuperAdminAny(claims);
   const roleLabel = getAdminRoleLabel(claims);
 
   // User info for display
@@ -39,7 +38,6 @@ export default async function DashboardPage() {
       userDisplayName={userDisplayName}
       userDomain={userDomain}
       isAdmin={isAdmin}
-      isSuperAdmin={isSuperAdmin}
       roleLabel={roleLabel}
       orgRoles={claims.orgRoles}
     />

@@ -10,7 +10,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth0 } from "@/lib/auth0";
-import { getClaimsFromAuth0Session, canManageUsers, getAdminRoleLabel, isSuperAdminAny } from "@/lib/rbac";
+import { getClaimsFromAuth0Session, canManageUsers, getAdminRoleLabel } from "@/lib/rbac";
 
 export default async function ProfilePage() {
   // Get Auth0 session
@@ -23,7 +23,6 @@ export default async function ProfilePage() {
   // Extract claims and user info
   const claims = getClaimsFromAuth0Session(session);
   const isAdmin = canManageUsers(claims);
-  const isSuperAdmin = isSuperAdminAny(claims);
   const roleLabel = getAdminRoleLabel(claims);
   
   const user = session.user;
@@ -31,21 +30,6 @@ export default async function ProfilePage() {
   const userDisplayName = user.name as string || user.nickname as string || userEmail;
   const userSub = user.sub as string;
   const userPicture = user.picture as string | null;
-
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return "N/A";
-    try {
-      return new Date(dateString).toLocaleString("pt-PT", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    } catch {
-      return dateString;
-    }
-  };
 
   return (
     <main className="min-h-screen px-4 py-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
