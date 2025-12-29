@@ -28,29 +28,16 @@ cd "$REPO_ROOT"
 DEPLOY_HOST="${DEPLOY_HOST:-46.101.78.179}"
 DEPLOY_USER="${DEPLOY_USER:-rustdeskweb}"
 DEPLOY_PATH="${DEPLOY_PATH:-/opt/rustdesk-frontend}"
-DEPLOY_SSH_KEY="${DEPLOY_SSH_KEY:-$HOME/.ssh/rustdeskweb-digitalocean}"
 # Alias SSH recomendado no ~/.ssh/config:
 #   Host rustdesk-do
 #     HostName 46.101.78.179
 #     User rustdeskweb
 #     IdentityFile ~/.ssh/rustdeskweb-digitalocean
 #     IdentitiesOnly yes
-#     IdentityAgent none
 DEPLOY_SSH_ALIAS="${DEPLOY_SSH_ALIAS:-rustdesk-do}"
 
-# Expandir ~ manualmente se o utilizador usar DEPLOY_SSH_KEY=~/.ssh/...
-SSH_KEY_PATH="${DEPLOY_SSH_KEY/#\~/$HOME}"
-
-if [[ ! -f "$SSH_KEY_PATH" ]]; then
-  echo "❌ ERRO: chave SSH para deploy não encontrada em:"
-  echo "   $SSH_KEY_PATH"
-  echo ""
-  echo "   Garante que a chave existe (por omissão: ~/.ssh/rustdeskweb-digitalocean)"
-  echo "   ou define explicitamente DEPLOY_SSH_KEY com o caminho correcto."
-  exit 1
-fi
-
-SSH_COMMON_OPTS="-o IdentitiesOnly=yes -o IdentityAgent=none -i \"$SSH_KEY_PATH\""
+# SSH options: let ssh-agent or ~/.ssh/config handle key selection
+SSH_COMMON_OPTS="-o StrictHostKeyChecking=accept-new -o BatchMode=yes -o ConnectTimeout=10"
 RSYNC_OPTS="-avz --delete"
 REMOTE_DIR="${DEPLOY_PATH}"
 
@@ -60,7 +47,6 @@ echo "╚═══════════════════════�
 echo ""
 echo "📍 Repositório local: $REPO_ROOT"
 echo "📍 Pasta remota:      $REMOTE_DIR"
-echo "📍 Chave SSH:         $SSH_KEY_PATH"
 echo ""
 
 # 1) Sanidade local – build e node_modules têm de existir
@@ -101,7 +87,7 @@ REMOTE_TARGET="${DEPLOY_USER}@${DEPLOY_HOST}"
 
 if [[ -n "$DEPLOY_SSH_ALIAS" ]]; then
   echo "🔐 A testar alias SSH '${DEPLOY_SSH_ALIAS}' (se existir em ~/.ssh/config)..."
-  if ssh $SSH_COMMON_OPTS -o BatchMode=yes -o ConnectTimeout=5 "$DEPLOY_SSH_ALIAS" "echo alias-ok >/dev/null" 2>/dev/null; then
+  if ssh $SSH_COMMON_OPTS "$DEPLOY_SSH_ALIAS" "echo alias-ok >/dev/null" 2>/dev/null; then
     echo "✅ Alias '${DEPLOY_SSH_ALIAS}' detectado; será usado como destino remoto."
     REMOTE_TARGET="$DEPLOY_SSH_ALIAS"
   else
@@ -113,15 +99,14 @@ echo ""
 echo "📍 Destino efectivo: $REMOTE_TARGET:$REMOTE_DIR"
 echo ""
 
-# 3) Confirmar conectividade SSH (sem depender de ssh-agent)
+# 3) Confirmar conectividade SSH
 echo "🔐 A testar SSH para $REMOTE_TARGET..."
-if ! ssh $SSH_COMMON_OPTS -o ConnectTimeout=10 "$REMOTE_TARGET" "echo 'SSH OK' >/dev/null"; then
-  echo "❌ ERRO: Não foi possível estabelecer SSH com $REMOTE_TARGET usando a chave:"
-  echo "   $SSH_KEY_PATH"
+if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "echo 'SSH OK' >/dev/null"; then
+  echo "❌ ERRO: Não foi possível estabelecer SSH com $REMOTE_TARGET"
   echo ""
   echo "   Verifica:"
   echo "     - ~/.ssh/config (Host ${DEPLOY_SSH_ALIAS})"
-  echo "     - authorized_keys em ${REMOTE_DIR}/.ssh/authorized_keys"
+  echo "     - ssh-agent tem a chave correcta carregada"
   exit 1
 fi
 echo "✅ SSH OK"
