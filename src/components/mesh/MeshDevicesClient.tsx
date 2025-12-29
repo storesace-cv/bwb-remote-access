@@ -118,6 +118,80 @@ export default function MeshDevicesClient({
     }
   };
 
+  /**
+   * Opens a remote session for a device (STEP 6.2)
+   */
+  const handleOpenSession = async (device: Device) => {
+    const deviceId = device.id;
+    
+    // Update state to loading
+    setSessionStates(prev => ({
+      ...prev,
+      [deviceId]: { deviceId, status: "loading" }
+    }));
+
+    try {
+      const response = await fetch("/api/mesh/open-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nodeId: device.nodeId,
+          domain: device.domain,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.details || data.error || "Failed to open session");
+      }
+
+      // Success - open session URL in new tab
+      setSessionStates(prev => ({
+        ...prev,
+        [deviceId]: { deviceId, status: "success" }
+      }));
+
+      // Open the session URL in a new tab
+      if (data.sessionUrl) {
+        window.open(data.sessionUrl, "_blank", "noopener,noreferrer");
+      }
+
+      // Reset state after 3 seconds
+      setTimeout(() => {
+        setSessionStates(prev => ({
+          ...prev,
+          [deviceId]: { deviceId, status: "idle" }
+        }));
+      }, 3000);
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Erro ao abrir sessão";
+      
+      setSessionStates(prev => ({
+        ...prev,
+        [deviceId]: { deviceId, status: "error", error: errorMessage }
+      }));
+
+      // Reset error state after 5 seconds
+      setTimeout(() => {
+        setSessionStates(prev => ({
+          ...prev,
+          [deviceId]: { deviceId, status: "idle" }
+        }));
+      }, 5000);
+    }
+  };
+
+  /**
+   * Gets the session button state for a device
+   */
+  const getSessionButtonState = (deviceId: string): SessionState => {
+    return sessionStates[deviceId] || { deviceId, status: "idle" };
+  };
+
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "—";
     const date = new Date(dateStr);
