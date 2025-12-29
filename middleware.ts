@@ -3,7 +3,7 @@
  * 
  * ARCHITECTURE NOTE:
  * This is the ONLY file where NextResponse.next() may be used.
- * Route handlers (app/**/route.ts) must NEVER call middleware functions.
+ * Route handlers (app/.../route.ts) must NEVER call middleware functions.
  * 
  * Responsibilities:
  * 1. Auth0 routes (/auth/*) - delegated to Auth0 SDK via auth0.middleware()
