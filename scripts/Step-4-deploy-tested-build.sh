@@ -36,8 +36,21 @@ DEPLOY_PATH="${DEPLOY_PATH:-/opt/rustdesk-frontend}"
 #     IdentitiesOnly yes
 DEPLOY_SSH_ALIAS="${DEPLOY_SSH_ALIAS:-rustdesk-do}"
 
-# SSH options: let ssh-agent or ~/.ssh/config handle key selection
+# Optional SSH identity file (only used if the file exists)
+# Override via: SSH_IDENTITY_FILE=/path/to/key ./scripts/Step-4-deploy-tested-build.sh
+SSH_IDENTITY_FILE="${SSH_IDENTITY_FILE:-}"
+
+# SSH options: let ssh-agent or ~/.ssh/config handle key selection by default
+# Only add -i option if SSH_IDENTITY_FILE is set AND the file exists
 SSH_COMMON_OPTS="-o StrictHostKeyChecking=accept-new -o BatchMode=yes -o ConnectTimeout=10"
+if [[ -n "$SSH_IDENTITY_FILE" && -f "$SSH_IDENTITY_FILE" ]]; then
+  echo "ℹ️ Usando chave SSH específica: $SSH_IDENTITY_FILE"
+  SSH_COMMON_OPTS="$SSH_COMMON_OPTS -i $SSH_IDENTITY_FILE"
+elif [[ -n "$SSH_IDENTITY_FILE" && ! -f "$SSH_IDENTITY_FILE" ]]; then
+  echo "⚠️ AVISO: SSH_IDENTITY_FILE='$SSH_IDENTITY_FILE' definido mas ficheiro não existe."
+  echo "   A continuar sem -i (ssh-agent ou ~/.ssh/config será usado)."
+fi
+
 RSYNC_OPTS="-avz --delete"
 REMOTE_DIR="${DEPLOY_PATH}"
 
