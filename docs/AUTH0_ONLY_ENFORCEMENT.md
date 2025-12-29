@@ -44,7 +44,7 @@ The RustDesk Web application has been migrated to **Auth0-only authentication**.
 User visits https://rustdesk.bwb.pt/
          │
          ▼
-    Middleware checks for appSession cookie
+    Proxy checks for appSession cookie
          │
     ┌────┴────┐
     │         │
