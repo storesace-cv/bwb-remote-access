@@ -131,7 +131,7 @@ export async function middleware(request: NextRequest) {
     console.log(`[MIDDLEWARE] Auth0 route: ${pathname}`);
     try {
       // Lazy-load auth0 to avoid build-time initialization issues
-      const { auth0 } = await import("@/lib/auth0");
+      const { auth0 } = await import("./src/lib/auth0");
       return auth0.middleware(request);
     } catch (error) {
       console.error(`[MIDDLEWARE] Auth0 error: ${error}`);
