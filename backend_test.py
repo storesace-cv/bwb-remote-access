@@ -34,50 +34,40 @@ class TestResult:
         self.passed = passed
         self.details = details
 
-def test_legacy_login_410_gone() -> TestResult:
-    """Test 1: Legacy login should return 410 Gone"""
-    print("🧪 Test 1: Legacy Login API - 410 Gone")
+def test_legacy_api_auth_login_redirect() -> TestResult:
+    """Test 1: Legacy /api/auth/login should redirect to /auth/login"""
+    print("🧪 Test 1: Legacy /api/auth/login should redirect to /auth/login")
     
-    endpoint = f"{API_BASE_URL}/api/login"
-    data = {
-        "email": "test@test.com",
-        "password": "test123"
-    }
+    endpoint = f"{API_BASE_URL}/api/auth/login"
     
     try:
-        response = requests.post(
+        response = requests.get(
             endpoint,
-            json=data,
-            headers={"Content-Type": "application/json"},
-            timeout=10
+            timeout=10,
+            allow_redirects=False
         )
         
-        # Try to parse JSON, but handle non-JSON responses
-        try:
-            response_data = response.json()
-        except:
-            response_data = {"raw_response": response.text}
-        
-        expected_status = 410
+        expected_status = 307
+        location_header = response.headers.get('location', '')
         passed = (
             response.status_code == expected_status and
-            (response_data.get("error") == "Gone" or "deprecated" in response.text.lower())
+            '/auth/login' in location_header
         )
         
-        details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
+        details = f"Status: {response.status_code}, Location: {location_header}"
         
         return TestResult(
-            "Legacy Login API - 410 Gone",
+            "Legacy /api/auth/login redirects to /auth/login",
             expected_status,
             response.status_code,
-            response_data,
+            {"location": location_header},
             passed,
             details
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Legacy Login API - 410 Gone",
-            410,
+            "Legacy /api/auth/login redirects to /auth/login",
+            307,
             0,
             {},
             False,
