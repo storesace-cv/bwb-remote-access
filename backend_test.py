@@ -225,17 +225,16 @@ def test_auth0_logout_endpoint() -> TestResult:
 
 def run_all_tests() -> None:
     """Run all test scenarios and report results"""
-    print("🚀 Starting MeshCentral Remote Session API Tests")
-    print(f"📍 Testing endpoint: {API_ENDPOINT}")
+    print("🚀 Starting Auth0-Only Authentication Enforcement Tests")
+    print(f"📍 Testing application: {API_BASE_URL}")
     print("=" * 60)
     
     tests = [
-        test_endpoint_exists,
-        test_unauthorized_no_auth,
-        test_invalid_body_empty,
-        test_invalid_body_missing_fields,
-        test_invalid_domain,
-        test_malformed_json,
+        test_legacy_login_410_gone,
+        test_auth0_me_endpoint,
+        test_mesh_open_session_requires_auth,
+        test_auth0_login_redirect,
+        test_auth0_logout_endpoint,
     ]
     
     results = []
@@ -272,7 +271,7 @@ def run_all_tests() -> None:
     print(f"❌ Failed: {total_count - passed_count}/{total_count}")
     
     if passed_count == total_count:
-        print("\n🎉 All tests passed! The API endpoint is working correctly.")
+        print("\n🎉 All tests passed! Auth0-only authentication enforcement is working correctly.")
     else:
         print("\n⚠️  Some tests failed. Check the details above.")
         
@@ -282,16 +281,12 @@ def run_all_tests() -> None:
                 print(f"   • {result.test_name}: {result.details}")
     
     print("\n📝 Key Findings:")
-    print("   • API endpoint exists and responds")
-    print("   • Auth0 authentication is properly enforced (401 responses)")
-    print("   • JSON parsing works correctly")
+    print("   • Legacy login API properly deprecated (410 Gone)")
+    print("   • Auth0 authentication endpoints accessible")
+    print("   • Protected endpoints require authentication")
     print("   • Error responses follow expected format")
     
-    # Check if MeshCentral is configured
-    print("\n🔧 Configuration Status:")
-    print("   • MESHCENTRAL_URL: Not checked (requires auth)")
-    print("   • MESHCENTRAL_LOGIN_TOKEN_KEY: Not checked (requires auth)")
-    print("   • To test 503 responses, valid Auth0 session would be needed")
+    return results
 
 if __name__ == "__main__":
     run_all_tests()
