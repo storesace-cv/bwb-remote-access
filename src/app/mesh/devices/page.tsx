@@ -27,7 +27,7 @@ export default async function MeshDevicesPage({ searchParams }: PageProps) {
   // Get Auth0 session
   const session = await auth0.getSession();
   if (!session?.user) {
-    redirect("/auth");
+    redirect("/auth/login");
   }
 
   const claims = getClaimsFromAuth0Session(session);
@@ -40,7 +40,7 @@ export default async function MeshDevicesPage({ searchParams }: PageProps) {
     (claims.org && Object.keys(claims.orgRoles).length > 0);
 
   if (!hasOrgRole) {
-    redirect("/auth");
+    redirect("/auth/login");
   }
 
   // Determine domain filter
