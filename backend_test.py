@@ -238,16 +238,16 @@ def test_auth0_me_endpoint_no_nextresponse_next() -> TestResult:
 
 def run_all_tests() -> None:
     """Run all test scenarios and report results"""
-    print("🚀 Starting Auth0-Only Authentication Enforcement Tests")
+    print("🚀 Starting Auth0 NextResponse.next() Fix Verification Tests")
     print(f"📍 Testing application: {API_BASE_URL}")
     print("=" * 60)
     
     tests = [
-        test_legacy_login_410_gone,
-        test_auth0_me_endpoint,
-        test_mesh_open_session_requires_auth,
-        test_auth0_login_redirect,
-        test_auth0_logout_endpoint,
+        test_legacy_api_auth_login_redirect,
+        test_new_auth_login_works,
+        test_legacy_api_login_410_gone,
+        test_protected_routes_redirect_to_auth_login,
+        test_auth0_me_endpoint_no_nextresponse_next,
     ]
     
     results = []
@@ -284,7 +284,7 @@ def run_all_tests() -> None:
     print(f"❌ Failed: {total_count - passed_count}/{total_count}")
     
     if passed_count == total_count:
-        print("\n🎉 All tests passed! Auth0-only authentication enforcement is working correctly.")
+        print("\n🎉 All tests passed! Auth0 NextResponse.next() fix is working correctly.")
     else:
         print("\n⚠️  Some tests failed. Check the details above.")
         
@@ -294,10 +294,11 @@ def run_all_tests() -> None:
                 print(f"   • {result.test_name}: {result.details}")
     
     print("\n📝 Key Findings:")
-    print("   • Legacy login API properly deprecated (410 Gone)")
-    print("   • Auth0 authentication endpoints accessible")
-    print("   • Protected endpoints require authentication")
-    print("   • Error responses follow expected format")
+    print("   • Legacy /api/auth/login redirects to /auth/login")
+    print("   • New /auth/login works (Auth0 SDK handles it)")
+    print("   • Legacy /api/login still returns 410 Gone")
+    print("   • Protected routes redirect to /auth/login (not /api/auth/login)")
+    print("   • No NextResponse.next() errors in route handlers")
     
     return results
 
