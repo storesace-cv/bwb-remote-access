@@ -63,6 +63,7 @@ export default function MeshDevicesClient({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [sessionStates, setSessionStates] = useState<Record<string, SessionState>>({});
 
   const refreshDevices = useCallback(async (groupFilter?: string | null) => {
     setIsRefreshing(true);
