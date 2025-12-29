@@ -72,7 +72,7 @@ Callback      │
 
 ### Pre-Deployment
 1. ✅ Build successful (`yarn build` completes without errors)
-2. ✅ Middleware created and registered
+2. ✅ Proxy created and registered (migrated from middleware.ts)
 3. ✅ Root page converted to Auth0-only
 4. ✅ Legacy `/api/login` returns 410 Gone
 5. ✅ Dashboard uses Auth0 session
