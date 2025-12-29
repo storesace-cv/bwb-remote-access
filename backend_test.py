@@ -162,38 +162,37 @@ def test_legacy_api_login_410_gone() -> TestResult:
             f"Request failed: {e}"
         )
 
-def test_auth0_login_redirect() -> TestResult:
-    """Test 4: Auth0 login endpoint should be accessible"""
-    print("🧪 Test 4: Auth0 login endpoint accessibility")
+def test_protected_routes_redirect_to_auth_login() -> TestResult:
+    """Test 4: Protected routes redirect to /auth/login (not /api/auth/login)"""
+    print("🧪 Test 4: Protected routes redirect to /auth/login (not /api/auth/login)")
     
-    endpoint = f"{API_BASE_URL}/api/auth/login"
+    endpoint = f"{API_BASE_URL}/dashboard"
     
     try:
         response = requests.get(endpoint, timeout=10, allow_redirects=False)
         
-        # Auth0 login might return 500 if not configured, which is expected in test environment
-        expected_statuses = [200, 302, 307, 401, 403, 500]
-        passed = response.status_code in expected_statuses
+        expected_status = 307
+        location_header = response.headers.get('location', '')
+        passed = (
+            response.status_code == expected_status and
+            '/auth/login' in location_header and
+            'returnTo=%2Fdashboard' in location_header
+        )
         
-        # If it's 500, it's likely due to missing Auth0 config, which is expected
-        if response.status_code == 500:
-            passed = True
-            details = f"Status: {response.status_code} (Expected - Auth0 not configured in test environment)"
-        else:
-            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
+        details = f"Status: {response.status_code}, Location: {location_header}"
         
         return TestResult(
-            "Auth0 login endpoint accessibility",
-            "Accessible or 500 (config missing)",
+            "Protected routes redirect to /auth/login",
+            expected_status,
             response.status_code,
-            {},
+            {"location": location_header},
             passed,
             details
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Auth0 login endpoint accessibility",
-            302,
+            "Protected routes redirect to /auth/login",
+            307,
             0,
             {},
             False,
