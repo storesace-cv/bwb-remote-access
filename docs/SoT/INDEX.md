@@ -74,7 +74,7 @@ The following table is the **authoritative registry** of all Source of Truth doc
 
 ## 4. Governed Domains
 
-### 4.1 Authentication & Middleware
+### 4.1 Authentication & Proxy (Next.js 16)
 
 **Governing SoT**: [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md)
 
@@ -82,13 +82,25 @@ This SoT **exclusively governs**:
 
 | Domain | Rule Summary |
 |--------|--------------|
-| `NextResponse.next()` usage | ONLY allowed in `/middleware.ts` at repository root |
-| `/auth/*` routing | RESERVED for Auth0 SDK; no application code may exist at `src/app/auth/` |
-| `auth0.middleware()` calls | ONLY allowed from `/middleware.ts`; forbidden in route handlers |
+| Boundary file | MUST be `/proxy.ts` at project root (not `middleware.ts`, not in `src/`) |
+| Function name | MUST be `export async function proxy()` |
+| `NextResponse.next()` usage | ONLY allowed in `/proxy.ts` |
+| `/auth/*` routing | RESERVED for Auth0 SDK; no application code at `src/app/auth/` |
+| `auth0.middleware()` calls | ONLY allowed from `/proxy.ts` |
 | Legacy auth paths | `/api/login` → 410 Gone; `/api/auth/*` → redirect to `/auth/*` |
-| Route handler responses | Must return `NextResponse.json()` or `redirect()`; never `next()` |
+| Route handler responses | Must return `NextResponse.json()` or `redirect()`; NEVER `next()` |
 
 **Any code that violates these rules is architecturally invalid, regardless of whether it compiles or passes tests.**
+
+### Validation Commands (from SoT)
+
+```bash
+# All must PASS before merge
+test -f proxy.ts                     # proxy.ts exists at root
+test ! -f src/proxy.ts               # src/proxy.ts does NOT exist
+test ! -f middleware.ts              # middleware.ts does NOT exist
+test ! -d src/app/auth               # src/app/auth/ does NOT exist
+```
 
 ---
 
