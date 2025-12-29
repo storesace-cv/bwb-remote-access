@@ -1,12 +1,13 @@
 "use client";
 
 /**
- * MeshCentral Devices Client Component - STEP 6.1
+ * MeshCentral Devices Client Component - STEP 6.1 & 6.2
  * 
  * Handles client-side interactions for the devices list:
  * - Group filter
  * - Refresh
  * - Sync trigger (admin only)
+ * - Open Remote Session (STEP 6.2)
  */
 
 import { useState, useCallback } from "react";
@@ -40,6 +41,12 @@ interface MeshDevicesClientProps {
   initialTotal: number;
   filterDomain: ValidDomain | null;
   isSuperAdmin: boolean;
+}
+
+interface SessionState {
+  deviceId: string;
+  status: "idle" | "loading" | "success" | "error";
+  error?: string;
 }
 
 export default function MeshDevicesClient({
