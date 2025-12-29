@@ -7,7 +7,7 @@
  * Auth0 session is already validated by the parent Server Component.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -16,7 +16,6 @@ interface DashboardClientProps {
   userDisplayName: string;
   userDomain: string | null;
   isAdmin: boolean;
-  isSuperAdmin: boolean;
   roleLabel: string | null;
   orgRoles: Record<string, string[]>;
 }
@@ -26,12 +25,10 @@ export default function DashboardClient({
   userDisplayName,
   userDomain,
   isAdmin,
-  isSuperAdmin,
   roleLabel,
   orgRoles,
 }: DashboardClientProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const handleLogout = useCallback(() => {
     // Clear any legacy tokens
