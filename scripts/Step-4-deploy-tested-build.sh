@@ -158,6 +158,10 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" \
   "$REPO_ROOT/scripts/sync-devices.sh" \
   "$REMOTE_TARGET:$REMOTE_DIR/scripts/"
 
+# 8.1) Sync API server (server/sync-api.js)
+echo "📦 A enviar server/ (Sync API)..."
+rsync $RSYNC_OPTS -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/server/" "$REMOTE_TARGET:$REMOTE_DIR/server/"
+
 # 9) Systemd service/timer units para sync automático
 echo "📦 A enviar systemd units (meshcentral-supabase-sync.{service,timer})..."
 rsync -avz -e "ssh $SSH_COMMON_OPTS" \
@@ -195,15 +199,22 @@ echo "1) Verificar serviço frontend Next.js:"
 echo "   ssh root@$DEPLOY_HOST 'systemctl status rustdesk-frontend --no-pager'"
 echo "   ssh root@$DEPLOY_HOST 'journalctl -u rustdesk-frontend -n 50 --no-pager'"
 echo ""
-echo "2) Verificar timer/serviço de sincronização de devices (se configurado):"
+echo "2) Reiniciar e verificar serviço Sync API (rustdesk-sync-api):"
+echo "   ssh root@$DEPLOY_HOST 'systemctl restart rustdesk-sync-api.service'"
+echo "   ssh root@$DEPLOY_HOST 'systemctl status rustdesk-sync-api --no-pager'"
+echo ""
+echo "3) Testar endpoints da Sync API:"
+echo "   # Health check (deve retornar 200 SEM Authorization):"
+echo "   ssh root@$DEPLOY_HOST 'curl -s http://127.0.0.1:3001/health'"
+echo "   # Sync endpoint (deve retornar 401 SEM Authorization):"
+echo "   ssh root@$DEPLOY_HOST 'curl -s -X POST http://127.0.0.1:3001/sync'"
+echo ""
+echo "4) Verificar timer/serviço de sincronização de devices (se configurado):"
 echo "   ssh root@$DEPLOY_HOST 'systemctl status rustsync.timer rustsync.service --no-pager' || true"
 echo "   ssh root@$DEPLOY_HOST 'journalctl -u rustsync.service -n 50 --no-pager' || true"
 echo ""
-echo "3) Correr um teste manual rápido ao sync-devices.sh (sem depender do timer):"
+echo "5) Correr um teste manual rápido ao sync-devices.sh (sem depender do timer):"
 echo "   ssh root@$DEPLOY_HOST 'bash /opt/rustdesk-integration/bin/sync-devices.sh || echo \"sync-devices.sh terminou com erro\"'"
-echo ""
-echo "4) Validar a Sync API local (server/sync-api.js), se estiver activa:"
-echo "   ssh root@$DEPLOY_HOST 'curl -sS -o /dev/null -w \"%{http_code}\\n\" http://127.0.0.1:3001/health || echo \"Sync API health check falhou\"'"
 echo ""
 echo "Se algum dos comandos acima reportar erro, segue as instruções em:"
 echo "  - docs/TROUBLESHOOTING.md"
