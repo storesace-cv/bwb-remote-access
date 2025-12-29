@@ -147,7 +147,8 @@ MESHCENTRAL_LOGIN_TOKEN_KEY=<hex_string_from_meshcentral>
 
 | File | Change |
 |------|--------|
-| `/src/middleware.ts` | NEW - Auth0 enforcement |
+| `/src/proxy.ts` | NEW - Auth0 enforcement (Next.js 16 proxy convention) |
+| `/src/middleware.ts` | DELETED - Replaced by proxy.ts |
 | `/src/app/page.tsx` | Auth0-only landing |
 | `/src/app/api/login/route.ts` | Returns 410 Gone |
 | `/src/app/dashboard/page.tsx` | Auth0 Server Component |
