@@ -37,6 +37,7 @@ const PUBLIC_PATHS = [
   "/next.svg",
   "/vercel.svg",
   "/window.svg",
+  "/api/auth0/me",      // Auth0 session check endpoint
 ];
 
 // Legacy routes to block (return 410 Gone)
