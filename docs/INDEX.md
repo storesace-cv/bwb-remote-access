@@ -15,7 +15,17 @@
 - **[Deployment](DEPLOYMENT.md)** - Guia de deployment
 
 ### Source of Truth (SoT)
-Documentação técnica detalhada em **[docs/sot/](sot/README.md)**
+
+**⚠️ MANDATORY READING FOR ALL DEVELOPERS**
+
+| Document | Description | Authority |
+|----------|-------------|-----------|
+| **[SoT/INDEX.md](SoT/INDEX.md)** | **Global SoT Index — Registry of all canonical rules** | HIGHEST |
+| **[SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md)** | Auth0 & Middleware architecture rules | Canonical |
+
+> **SoT documents override all other documentation.** If any instruction conflicts with an Active SoT, the SoT wins.
+
+Documentação técnica detalhada em **[docs/sot/](sot/README.md)** (legacy)
 
 ---
 
