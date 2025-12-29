@@ -88,6 +88,13 @@ app.use((req, res, next) => {
 
 // Middleware: Verificar token de autenticação
 app.use((req, res, next) => {
+  // Allow /health endpoint to bypass authentication
+  const p = req.path || '';
+  const ou = req.originalUrl || '';
+  if (p === '/health' || ou.startsWith('/health')) {
+    return next();
+  }
+
   if (!API_SECRET) {
     console.error('[CONFIG] SYNC_API_SECRET not set - API is insecure!');
   }
