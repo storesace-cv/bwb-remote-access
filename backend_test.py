@@ -113,14 +113,14 @@ def test_new_auth_login_works() -> TestResult:
             f"Request failed: {e}"
         )
 
-def test_mesh_open_session_requires_auth() -> TestResult:
-    """Test 3: MeshCentral open-session should require auth"""
-    print("🧪 Test 3: MeshCentral open-session requires auth")
+def test_legacy_api_login_410_gone() -> TestResult:
+    """Test 3: Legacy /api/login still returns 410 Gone"""
+    print("🧪 Test 3: Legacy /api/login still returns 410 Gone")
     
-    endpoint = f"{API_BASE_URL}/api/mesh/open-session"
+    endpoint = f"{API_BASE_URL}/api/login"
     data = {
-        "nodeId": "node/mesh/test",
-        "domain": "mesh"
+        "email": "user@example.com",
+        "password": "password123"
     }
     
     try:
@@ -128,31 +128,25 @@ def test_mesh_open_session_requires_auth() -> TestResult:
             endpoint,
             json=data,
             headers={"Content-Type": "application/json"},
-            timeout=10,
-            allow_redirects=False
+            timeout=10
         )
         
-        # Try to parse JSON, but handle non-JSON responses (like redirects)
         try:
             response_data = response.json()
         except:
             response_data = {"raw_response": response.text}
         
-        # Check if it's a redirect to auth or returns 401
+        expected_status = 410
         passed = (
-            response.status_code == 401 or
-            (response.status_code in [302, 307] and "/api/auth/login" in (response.headers.get('location', '') + response.text)) or
-            (response_data.get("success") == False and response_data.get("error") == "Unauthorized")
+            response.status_code == expected_status and
+            (response_data.get("error") == "Gone" or "deprecated" in response.text.lower())
         )
         
-        if response.status_code in [302, 307]:
-            details = f"Status: {response.status_code} (Redirect to auth - CORRECT), Location: {response.headers.get('location', 'N/A')}"
-        else:
-            details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
+        details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
         
         return TestResult(
-            "MeshCentral open-session requires auth",
-            "401 or redirect to auth",
+            "Legacy /api/login returns 410 Gone",
+            expected_status,
             response.status_code,
             response_data,
             passed,
@@ -160,8 +154,8 @@ def test_mesh_open_session_requires_auth() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "MeshCentral open-session requires auth",
-            401,
+            "Legacy /api/login returns 410 Gone",
+            410,
             0,
             {},
             False,
