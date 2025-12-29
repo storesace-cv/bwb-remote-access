@@ -419,13 +419,114 @@ export default function MeshDevicesClient({
 
                       {/* Actions */}
                       <td className="px-6 py-4">
-                        <button
-                          disabled
-                          className="px-3 py-1.5 text-xs rounded-md bg-slate-700 text-slate-500 cursor-not-allowed"
-                          title="STEP 6.2 irá implementar sessões remotas"
-                        >
-                          Remote (STEP 6.2)
-                        </button>
+                        {(() => {
+                          const sessionState = getSessionButtonState(device.id);
+                          const isLoading = sessionState.status === "loading";
+                          const isSuccess = sessionState.status === "success";
+                          const isError = sessionState.status === "error";
+
+                          return (
+                            <div className="flex flex-col gap-1">
+                              <button
+                                onClick={() => handleOpenSession(device)}
+                                disabled={isLoading || !online}
+                                className={`px-3 py-1.5 text-xs rounded-md flex items-center gap-1.5 transition ${
+                                  isLoading
+                                    ? "bg-cyan-700 text-white cursor-wait"
+                                    : isSuccess
+                                    ? "bg-emerald-600 text-white"
+                                    : isError
+                                    ? "bg-red-600 text-white"
+                                    : online
+                                    ? "bg-cyan-600 hover:bg-cyan-500 text-white cursor-pointer"
+                                    : "bg-slate-700 text-slate-500 cursor-not-allowed"
+                                }`}
+                                title={
+                                  !online
+                                    ? "Dispositivo offline"
+                                    : isError
+                                    ? sessionState.error
+                                    : "Abrir sessão remota"
+                                }
+                              >
+                                {isLoading ? (
+                                  <>
+                                    <svg
+                                      className="w-3.5 h-3.5 animate-spin"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                      />
+                                    </svg>
+                                    A conectar...
+                                  </>
+                                ) : isSuccess ? (
+                                  <>
+                                    <svg
+                                      className="w-3.5 h-3.5"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M5 13l4 4L19 7"
+                                      />
+                                    </svg>
+                                    Aberto!
+                                  </>
+                                ) : isError ? (
+                                  <>
+                                    <svg
+                                      className="w-3.5 h-3.5"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                      />
+                                    </svg>
+                                    Erro
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg
+                                      className="w-3.5 h-3.5"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                    Controlo Remoto
+                                  </>
+                                )}
+                              </button>
+                              {isError && sessionState.error && (
+                                <span className="text-xs text-red-400 truncate max-w-[150px]" title={sessionState.error}>
+                                  {sessionState.error}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </td>
                     </tr>
                   );
