@@ -98,10 +98,14 @@ function isStaticAsset(pathname: string): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Add debug logging
+  console.log(`[MIDDLEWARE] Processing: ${pathname}`);
+
   // -------------------------------------------------------------------------
   // 1. DEPRECATED ROUTES → 410 Gone
   // -------------------------------------------------------------------------
   if (isDeprecatedRoute(pathname)) {
+    console.log(`[MIDDLEWARE] Deprecated route: ${pathname}`);
     return NextResponse.json(
       {
         error: "Gone",
@@ -116,6 +120,7 @@ export async function middleware(request: NextRequest) {
   // -------------------------------------------------------------------------
   if (isLegacyAuthRoute(pathname)) {
     const newPath = pathname.replace("/api/auth/", "/auth/");
+    console.log(`[MIDDLEWARE] Legacy auth route redirect: ${pathname} → ${newPath}`);
     return NextResponse.redirect(new URL(newPath, request.url));
   }
 
@@ -123,15 +128,25 @@ export async function middleware(request: NextRequest) {
   // 3. AUTH0 ROUTES → Delegate to Auth0 SDK
   // -------------------------------------------------------------------------
   if (isAuth0Route(pathname)) {
-    // Lazy-load auth0 to avoid build-time initialization issues
-    const { auth0 } = await import("@/lib/auth0");
-    return auth0.middleware(request);
+    console.log(`[MIDDLEWARE] Auth0 route: ${pathname}`);
+    try {
+      // Lazy-load auth0 to avoid build-time initialization issues
+      const { auth0 } = await import("@/lib/auth0");
+      return auth0.middleware(request);
+    } catch (error) {
+      console.error(`[MIDDLEWARE] Auth0 error: ${error}`);
+      return NextResponse.json(
+        { error: "Auth0 configuration error" },
+        { status: 500 }
+      );
+    }
   }
 
   // -------------------------------------------------------------------------
   // 4. PUBLIC PATHS → Allow without authentication
   // -------------------------------------------------------------------------
   if (isPublicPath(pathname)) {
+    console.log(`[MIDDLEWARE] Public path: ${pathname}`);
     return NextResponse.next();
   }
 
@@ -139,6 +154,7 @@ export async function middleware(request: NextRequest) {
   // 5. STATIC ASSETS → Allow without authentication
   // -------------------------------------------------------------------------
   if (isStaticAsset(pathname)) {
+    console.log(`[MIDDLEWARE] Static asset: ${pathname}`);
     return NextResponse.next();
   }
 
@@ -151,10 +167,12 @@ export async function middleware(request: NextRequest) {
     // No session - redirect to Auth0 login
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("returnTo", pathname);
+    console.log(`[MIDDLEWARE] Protected route redirect: ${pathname} → ${loginUrl.toString()}`);
     return NextResponse.redirect(loginUrl);
   }
 
   // Session exists - allow request
+  console.log(`[MIDDLEWARE] Authenticated access: ${pathname}`);
   return NextResponse.next();
 }
 
