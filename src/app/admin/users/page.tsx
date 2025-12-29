@@ -114,7 +114,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           </div>
           <div className="flex gap-3">
             <Link
-              href="/auth"
+              href="/auth/login"
               className="px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
             >
               Auth0 Test
