@@ -273,7 +273,46 @@ fi
 echo "[Step-2] ✓ Clean complete"
 
 # ---------------------------------------------------------
-# 3. Install dependencies (deterministic)
+# 3. Lockfile Sync Gate (MUST pass before npm ci)
+# ---------------------------------------------------------
+echo ""
+echo "[Step-2] 🔐 Lockfile Sync Gate..."
+
+if [[ ! -f "$REPO_ROOT/package-lock.json" ]]; then
+  echo "   ❌ FAIL: package-lock.json not found"
+  echo ""
+  echo "   Regenerate and commit to main:"
+  echo "     rm -rf node_modules package-lock.json"
+  echo "     npm install --package-lock-only"
+  echo "     git add package-lock.json && git commit && git push"
+  exit 1
+fi
+
+# Check if lockfile contains express (critical dependency)
+LOCK_HAS_EXPRESS=$(node -e "try { const p=require('./package-lock.json'); console.log(!!(p.packages&&p.packages['node_modules/express'])); } catch(e) { console.log('false'); }" 2>/dev/null || echo "false")
+
+if [[ "$LOCK_HAS_EXPRESS" != "true" ]]; then
+  echo "   ❌ FAIL: Lockfile out of sync"
+  echo ""
+  echo "   package-lock.json is missing node_modules/express."
+  echo "   This will cause 'npm ci' to fail deterministically."
+  echo ""
+  echo "   To fix, regenerate package-lock.json and commit to main:"
+  echo "     rm -rf node_modules package-lock.json"
+  echo "     npm install --package-lock-only"
+  echo "     git add package-lock.json"
+  echo "     git commit -m 'fix(lockfile): regenerate package-lock.json'"
+  echo "     git push origin main"
+  echo ""
+  echo "   DO NOT run 'npm install' as a workaround."
+  exit 1
+fi
+
+EXPRESS_VERSION=$(node -e "const p=require('./package-lock.json'); console.log(p.packages['node_modules/express']?.version || 'unknown');" 2>/dev/null || echo "unknown")
+echo "   ✅ PASS: Lockfile in sync (express@$EXPRESS_VERSION)"
+
+# ---------------------------------------------------------
+# 4. Install dependencies (deterministic)
 # ---------------------------------------------------------
 echo ""
 echo "[Step-2] 📦 Installing dependencies..."
