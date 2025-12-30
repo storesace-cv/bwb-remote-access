@@ -1,4 +1,4 @@
-# Source of Truth — Authentication & Middleware Architecture (Next.js 16 + Auth0)
+# Source of Truth — Authentication & Middleware Architecture
 
 > **Document Status**: CANONICAL  
 > **Last Updated**: December 2024  
@@ -10,42 +10,33 @@
 
 ## Purpose & Scope
 
-This document establishes **non-negotiable architectural rules** for authentication and routing in this Next.js 16 application. It exists to:
+This document establishes **non-negotiable architectural rules** for authentication and routing in this Next.js application. It exists to:
 
-1. Prevent the recurrence of production errors like `"NextResponse.next() was used in a app route handler"` and `/auth/login` returning 404
-2. Ensure Auth0 integration follows the correct SDK patterns for Next.js 16
-3. Establish clear boundaries between proxy and route handlers
+1. Prevent the recurrence of production errors like `/auth/login` returning 404
+2. Ensure Auth0 integration follows the correct SDK v4 patterns
+3. Establish clear boundaries between middleware and route handlers
 4. Serve as the definitive reference for any future development
 
 **If future instructions conflict with this document, THIS DOCUMENT WINS.**
 
 ---
 
-## 1. Next.js 16 Boundary File Convention
-
-### CRITICAL CHANGE FROM PREVIOUS VERSIONS
-
-In **Next.js 16**, the boundary file convention changed:
-
-| Version | File Name | Function Name | Location |
-|---------|-----------|---------------|----------|
-| Next.js 15 and earlier | `middleware.ts` | `middleware()` | Root or src/ |
-| **Next.js 16** | **`proxy.ts`** | **`proxy()`** | **Root ONLY** |
+## 1. Next.js Middleware File Convention
 
 ### RULE: Boundary File Location and Naming
 
 | Requirement | Value |
 |-------------|-------|
-| File name | `proxy.ts` |
+| File name | `middleware.ts` |
 | Location | **Project root** (same level as `package.json`) |
-| Function name | `export async function proxy(request)` |
-| NOT allowed | `middleware.ts`, `src/proxy.ts`, `src/middleware.ts` |
+| Function name | `export async function middleware(request)` |
+| NOT allowed | `proxy.ts`, `src/middleware.ts`, any other name |
 
 ### DO ✅
 
 ```
-/app
-├── proxy.ts          ✅ CORRECT - Root level, named proxy.ts
+/project-root
+├── middleware.ts     ✅ CORRECT - Root level, named middleware.ts
 ├── package.json
 ├── next.config.mjs
 └── src/
@@ -55,22 +46,22 @@ In **Next.js 16**, the boundary file convention changed:
 ### DO NOT ❌
 
 ```
-/app
-├── middleware.ts     ❌ WRONG - Deprecated name in Next.js 16
+/project-root
+├── proxy.ts          ❌ WRONG - Must be middleware.ts
 ├── src/
-│   ├── proxy.ts      ❌ WRONG - Must be at root, not in src/
-│   └── middleware.ts ❌ WRONG - Deprecated name
+│   ├── middleware.ts ❌ WRONG - Must be at root, not in src/
+│   └── proxy.ts      ❌ WRONG - Invalid name and location
 ```
 
 ---
 
 ## 2. `NextResponse.next()` Location
 
-### RULE: Only Allowed in `/proxy.ts`
+### RULE: Only Allowed in `/middleware.ts`
 
 | Location | Allowed | 
-|----------|---------|
-| `/proxy.ts` (root) | ✅ YES |
+|----------|--------|
+| `/middleware.ts` (root) | ✅ YES |
 | `src/app/**/route.ts` | ❌ **FORBIDDEN** |
 | `src/**/*.ts` (any other file) | ❌ **FORBIDDEN** |
 | API handlers | ❌ **FORBIDDEN** |
@@ -78,11 +69,11 @@ In **Next.js 16**, the boundary file convention changed:
 ### DO ✅
 
 ```typescript
-// /proxy.ts (ROOT LEVEL ONLY)
+// /middleware.ts (ROOT LEVEL ONLY)
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // ... authentication logic ...
   return NextResponse.next(); // ✅ ALLOWED HERE
 }
@@ -101,11 +92,11 @@ export async function GET() {
 
 ---
 
-## 3. Auth0 Route Ownership
+## 3. Auth0 Route Ownership (SDK v4)
 
 ### RULE: `/auth/*` Paths Are Reserved for Auth0 SDK
 
-The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK**. The SDK automatically handles:
+The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK v4**. The SDK automatically handles these routes via middleware:
 
 | Route | Purpose |
 |-------|---------|
@@ -117,23 +108,35 @@ The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK**. The SDK a
 | `/auth/access-token` | Returns access token |
 | `/auth/backchannel-logout` | Handles backchannel logout |
 
+### CRITICAL: Auth0 SDK v4 Auto-Mounts Routes
+
+In **@auth0/nextjs-auth0 v4**, auth routes are **automatically mounted via middleware**. 
+
+**No explicit route handler files are required or allowed:**
+
+| Pattern | Status |
+|---------|--------|
+| `src/app/auth/[...auth0]/route.ts` | ❌ **FORBIDDEN** (v3 pattern, conflicts with v4) |
+| `src/pages/api/auth/[...auth0].ts` | ❌ **FORBIDDEN** (Pages Router pattern) |
+| `src/app/auth/` directory | ❌ **FORBIDDEN** (shadows SDK routes) |
+
 ### DO ✅
 
-- Delegate all `/auth/*` routes to `auth0.middleware(request)` in `proxy.ts`
+- Delegate all `/auth/*` routes to `auth0.middleware(request)` in `middleware.ts`
 - Keep `/auth/*` path FREE of any application code
 
 ### DO NOT ❌
 
 ```
-src/app/auth/             ❌ FORBIDDEN - This directory must NOT exist
-src/app/auth/page.tsx     ❌ FORBIDDEN - Shadows Auth0 routes
-src/app/auth/login/       ❌ FORBIDDEN - Conflicts with SDK
-src/app/auth/layout.tsx   ❌ FORBIDDEN - Intercepts Auth0 flow
+src/app/auth/                    ❌ FORBIDDEN - Shadows Auth0 routes
+src/app/auth/page.tsx            ❌ FORBIDDEN - Shadows Auth0 routes
+src/app/auth/[...auth0]/route.ts ❌ FORBIDDEN - v3 pattern, conflicts with v4
+src/pages/api/auth/[...auth0].ts ❌ FORBIDDEN - Pages Router pattern
 ```
 
 ### Why?
 
-When `src/app/auth/` exists, Next.js serves pages from that directory BEFORE the proxy can delegate to Auth0. This causes:
+When `src/app/auth/` exists, Next.js serves pages from that directory BEFORE the middleware can delegate to Auth0. This causes:
 
 - **404 errors** on `/auth/login`
 - Auth0 SDK routes being shadowed
@@ -141,20 +144,20 @@ When `src/app/auth/` exists, Next.js serves pages from that directory BEFORE the
 
 ---
 
-## 4. Auth0 SDK Integration in Proxy
+## 4. Auth0 SDK Integration in Middleware
 
 ### RULE: How to Delegate to Auth0
 
-The proxy MUST delegate `/auth/*` routes to the Auth0 SDK:
+The middleware MUST delegate `/auth/*` routes to the Auth0 SDK:
 
 ```typescript
-// /proxy.ts
+// /middleware.ts
 import { auth0 } from "./src/lib/auth0";
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // CRITICAL: Delegate /auth/* to Auth0 SDK
+  // CRITICAL: Delegate /auth/* to Auth0 SDK v4
   if (pathname.startsWith("/auth")) {
     return auth0.middleware(request);  // ✅ CORRECT
   }
@@ -166,8 +169,8 @@ export async function proxy(request: NextRequest) {
 ### RULE: Where `auth0.middleware()` May Be Called
 
 | Location | Allowed |
-|----------|---------|
-| `/proxy.ts` | ✅ YES |
+|----------|--------|
+| `/middleware.ts` | ✅ YES |
 | Route handlers (`app/**/route.ts`) | ❌ **FORBIDDEN** |
 | API routes | ❌ **FORBIDDEN** |
 | Server Actions | ❌ **FORBIDDEN** |
@@ -177,7 +180,7 @@ export async function proxy(request: NextRequest) {
 
 ## 5. Responsibility Separation
 
-### Proxy Responsibilities (`/proxy.ts`)
+### Middleware Responsibilities (`/middleware.ts`)
 
 | Responsibility | Example |
 |----------------|---------|
@@ -199,7 +202,7 @@ export async function proxy(request: NextRequest) {
 
 - Return `NextResponse.next()`
 - Call `auth0.middleware()`
-- Delegate flow control to proxy functions
+- Delegate flow control to middleware functions
 
 ---
 
@@ -221,20 +224,24 @@ export async function proxy(request: NextRequest) {
 ### MANDATORY: Run Before Any PR Merge
 
 ```bash
-# 1. proxy.ts exists at root
-test -f proxy.ts && echo "PASS" || echo "FAIL: proxy.ts missing"
+# 1. middleware.ts exists at root
+test -f middleware.ts && echo "PASS" || echo "FAIL: middleware.ts missing"
 
-# 2. src/proxy.ts does NOT exist
-test -f src/proxy.ts && echo "FAIL: src/proxy.ts exists" || echo "PASS"
+# 2. proxy.ts does NOT exist (deprecated pattern)
+test -f proxy.ts && echo "FAIL: proxy.ts exists" || echo "PASS"
 
-# 3. middleware.ts does NOT exist (deprecated)
-test -f middleware.ts && echo "FAIL: middleware.ts exists" || echo "PASS"
+# 3. src/middleware.ts does NOT exist (wrong location)
+test -f src/middleware.ts && echo "FAIL: src/middleware.ts exists" || echo "PASS"
 
 # 4. src/app/auth/ directory does NOT exist
 test -d src/app/auth && echo "FAIL: src/app/auth/ exists" || echo "PASS"
 
-# 5. NextResponse.next() only in proxy.ts
-grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "proxy.ts"
+# 5. No explicit Auth0 route handlers (v3 pattern)
+test -f src/app/auth/\[...auth0\]/route.ts && echo "FAIL" || echo "PASS"
+test -f src/pages/api/auth/\[...auth0\].ts && echo "FAIL" || echo "PASS"
+
+# 6. NextResponse.next() only in middleware.ts
+grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "middleware.ts"
 # Expected: (empty - no matches)
 ```
 
@@ -242,6 +249,9 @@ grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v
 
 ```bash
 # /auth/login must NOT return 404
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/auth/login
+# Expected: 200 or 302 (redirect to Auth0) - NOT 404
+
 curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 # Expected: 200 or 302 (redirect to Auth0) - NOT 404
 ```
@@ -250,30 +260,31 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 
 ## 8. Before vs After Architecture
 
-### BEFORE (Broken - Next.js 16)
+### BEFORE (Broken)
 
 ```
-/app
-├── middleware.ts                ❌ Deprecated in Next.js 16
+/project-root
+├── proxy.ts                     ❌ Wrong file name
 ├── src/
-│   ├── proxy.ts                 ❌ Wrong location
+│   ├── middleware.ts            ❌ Wrong location
 │   └── app/
 │       └── auth/                ❌ Shadows Auth0 routes
-│           └── page.tsx
+│           └── [...auth0]/
+│               └── route.ts     ❌ v3 pattern, conflicts with v4
 ```
 
 **Result**: `/auth/login` returns 404
 
-### AFTER (Correct - Next.js 16)
+### AFTER (Correct)
 
 ```
-/app
-├── proxy.ts                     ✅ Root level, correct name
+/project-root
+├── middleware.ts                ✅ Root level, correct name
 ├── src/
 │   ├── lib/
 │   │   └── auth0.ts             ✅ Auth0 client (no middleware calls)
 │   └── app/
-│       ├── auth-status/         ✅ Renamed, doesn't shadow /auth/*
+│       ├── auth-status/         ✅ Doesn't shadow /auth/*
 │       └── (no auth/ directory) ✅ Path free for Auth0 SDK
 ```
 
@@ -287,22 +298,23 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 
 **Symptoms**: Production shows 404 for `/auth/login`  
 **Cause**: One of:
-- `proxy.ts` not at root level
-- `middleware.ts` used instead of `proxy.ts`
-- `src/app/auth/` directory exists  
+- `middleware.ts` not at root level
+- `proxy.ts` used instead of `middleware.ts`
+- `src/app/auth/` directory exists
+- Explicit Auth0 route handlers shadowing SDK routes  
 **Fix**: Follow this SoT exactly
 
 ### Failure Mode 2: `NextResponse.next() in route handler`
 
 **Symptoms**: Runtime error in production  
 **Cause**: Route handler calls `NextResponse.next()` or `auth0.middleware()`  
-**Fix**: Only call these in `/proxy.ts`
+**Fix**: Only call these in `/middleware.ts`
 
-### Failure Mode 3: Proxy Not Running
+### Failure Mode 3: Middleware Not Running
 
 **Symptoms**: No authentication enforcement  
-**Cause**: `proxy.ts` not exported correctly or wrong function name  
-**Fix**: Ensure `export async function proxy(request)` exists
+**Cause**: `middleware.ts` not exported correctly or wrong function name  
+**Fix**: Ensure `export async function middleware(request)` exists
 
 ---
 
@@ -310,20 +322,21 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│              NEXT.JS 16 AUTHENTICATION RULES                    │
+│              AUTHENTICATION ARCHITECTURE RULES                   │
 ├─────────────────────────────────────────────────────────────────┤
-│ Boundary file         → /proxy.ts (ROOT, not src/)              │
-│ Function name         → export async function proxy()           │
-│ NextResponse.next()   → ONLY in /proxy.ts                       │
-│ auth0.middleware()    → ONLY in /proxy.ts                       │
-│ /auth/* routes        → RESERVED for Auth0 SDK                  │
-│ src/app/auth/         → MUST NOT EXIST                          │
-│ middleware.ts         → DEPRECATED, do not use                  │
-│ /api/login            → Returns 410 Gone                        │
-│ /api/auth/*           → Redirects to /auth/*                    │
+│ Middleware file       → /middleware.ts (ROOT, not src/)          │
+│ Function name         → export async function middleware()       │
+│ NextResponse.next()   → ONLY in /middleware.ts                   │
+│ auth0.middleware()    → ONLY in /middleware.ts                   │
+│ /auth/* routes        → RESERVED for Auth0 SDK v4                │
+│ src/app/auth/         → MUST NOT EXIST                           │
+│ Auth0 route handlers  → MUST NOT EXIST (v4 auto-mounts)          │
+│ proxy.ts              → MUST NOT EXIST (use middleware.ts)       │
+│ /api/login            → Returns 410 Gone                         │
+│ /api/auth/*           → Redirects to /auth/*                     │
 ├─────────────────────────────────────────────────────────────────┤
-│ Route handlers return: NextResponse.json() or redirect()        │
-│ Proxy returns:         NextResponse.next() or redirect()        │
+│ Route handlers return: NextResponse.json() or redirect()         │
+│ Middleware returns:    NextResponse.next() or redirect()         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -331,10 +344,10 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 
 ## Document Authority
 
-This document is the **canonical Source of Truth** for authentication and proxy architecture in this repository.
+This document is the **canonical Source of Truth** for authentication and middleware architecture in this repository.
 
 - Created in response to production incident: `/auth/login` returning 404
-- Updated for Next.js 16 proxy convention (replaces middleware)
+- Updated for Auth0 SDK v4 (middleware-based route auto-mounting)
 - Establishes permanent architectural constraints
 - Must be consulted before any auth-related changes
 - Violations are considered critical bugs regardless of test status

@@ -4,8 +4,8 @@
 #
 # SoT Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
 #
-# Versão: 20251229.2200
-# Última atualização: 2025-12-29 22:00 UTC
+# Version: 20251230.0100
+# Last Updated: 2025-12-30 01:00 UTC
 #
 set -euo pipefail
 
@@ -14,13 +14,13 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CANONICAL BOUNDARY FILE (per SoT)
-# Next.js 16 requires proxy.ts at project root
+# CANONICAL MIDDLEWARE FILE (per SoT)
+# Auth0 SDK v4 + Next.js requires middleware.ts at project root
 # ═══════════════════════════════════════════════════════════════════════════════
-CANONICAL_BOUNDARY_FILE="proxy.ts"
+CANONICAL_MIDDLEWARE_FILE="middleware.ts"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# SoT COMPLIANCE GATE
+# SoT COMPLIANCE GATE (Redundant by design - defense in depth)
 # Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
 # ═══════════════════════════════════════════════════════════════════════════════
 sot_compliance_gate() {
@@ -29,53 +29,52 @@ sot_compliance_gate() {
   echo "║  Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
-  echo "📋 Canonical boundary file: $CANONICAL_BOUNDARY_FILE"
+  echo "📋 Canonical middleware file: $CANONICAL_MIDDLEWARE_FILE"
   echo ""
 
   local GATE_FAILED=0
 
-  # A) Canonical boundary file MUST exist at repo root
-  echo "🔍 [A] Checking canonical boundary file..."
-  if [[ -f "$REPO_ROOT/$CANONICAL_BOUNDARY_FILE" ]]; then
-    echo "   ✅ PASS: $CANONICAL_BOUNDARY_FILE exists at root"
+  # A) middleware.ts MUST exist at repo root
+  echo "🔍 [A] Checking canonical middleware file..."
+  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
+    echo "   ✅ PASS: $CANONICAL_MIDDLEWARE_FILE exists at root"
   else
-    echo "   ❌ FAIL: $CANONICAL_BOUNDARY_FILE NOT found at root"
+    echo "   ❌ FAIL: $CANONICAL_MIDDLEWARE_FILE NOT found at root"
     echo "      Without this file, /auth/login WILL return 404"
     GATE_FAILED=1
   fi
 
-  # Check for deprecated/wrong boundary files
-  if [[ "$CANONICAL_BOUNDARY_FILE" == "proxy.ts" && -f "$REPO_ROOT/middleware.ts" ]]; then
-    echo "   ❌ FAIL: middleware.ts exists (deprecated in Next.js 16)"
+  # B) proxy.ts MUST NOT exist
+  echo ""
+  echo "🔍 [B] Checking for deprecated proxy.ts..."
+  if [[ -f "$REPO_ROOT/proxy.ts" ]]; then
+    echo "   ❌ FAIL: proxy.ts exists (deprecated pattern)"
+    echo "      SoT requires middleware.ts, not proxy.ts"
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No deprecated middleware.ts"
+    echo "   ✅ PASS: No deprecated proxy.ts"
+  fi
+
+  # C) src/middleware.ts MUST NOT exist
+  echo ""
+  echo "🔍 [C] Checking for misplaced middleware files..."
+  if [[ -f "$REPO_ROOT/src/middleware.ts" ]]; then
+    echo "   ❌ FAIL: src/middleware.ts exists (wrong location)"
+    GATE_FAILED=1
+  else
+    echo "   ✅ PASS: No misplaced src/middleware.ts"
   fi
 
   if [[ -f "$REPO_ROOT/src/proxy.ts" ]]; then
-    echo "   ❌ FAIL: src/proxy.ts exists (wrong location)"
+    echo "   ❌ FAIL: src/proxy.ts exists"
     GATE_FAILED=1
   else
     echo "   ✅ PASS: No misplaced src/proxy.ts"
   fi
 
+  # D) src/app/auth/ MUST NOT exist
   echo ""
-
-  # B) NextResponse.next() only in canonical boundary file
-  echo "🔍 [B] Checking NextResponse.next() usage..."
-  local VIOLATIONS
-  VIOLATIONS=$(grep -Rna "NextResponse\.next" "$REPO_ROOT" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -vE "^\./$CANONICAL_BOUNDARY_FILE:|^$CANONICAL_BOUNDARY_FILE:|node_modules" || true)
-  if [[ -z "$VIOLATIONS" ]]; then
-    echo "   ✅ PASS: NextResponse.next() only in $CANONICAL_BOUNDARY_FILE"
-  else
-    echo "   ❌ FAIL: NextResponse.next() found outside $CANONICAL_BOUNDARY_FILE"
-    GATE_FAILED=1
-  fi
-
-  echo ""
-
-  # C) Auth0 SDK route reservation
-  echo "🔍 [C] Checking /auth/* route reservation..."
+  echo "🔍 [D] Checking /auth/* route reservation..."
   if [[ -d "$REPO_ROOT/src/app/auth" ]]; then
     echo "   ❌ FAIL: src/app/auth/ directory exists"
     echo "      This WILL cause 404 on /auth/login"
@@ -84,10 +83,38 @@ sot_compliance_gate() {
     echo "   ✅ PASS: No conflicting src/app/auth/ directory"
   fi
 
+  # E) No explicit Auth0 route handlers
   echo ""
+  echo "🔍 [E] Checking for explicit Auth0 route handlers..."
+  if [[ -f "$REPO_ROOT/src/app/auth/[...auth0]/route.ts" ]]; then
+    echo "   ❌ FAIL: v3 App Router Auth0 handler exists"
+    GATE_FAILED=1
+  else
+    echo "   ✅ PASS: No v3 App Router Auth0 handler"
+  fi
 
-  # D) auth0.middleware() not in route handlers
-  echo "🔍 [D] Checking auth0.middleware() usage..."
+  if [[ -f "$REPO_ROOT/src/pages/api/auth/[...auth0].ts" ]]; then
+    echo "   ❌ FAIL: Pages Router Auth0 handler exists"
+    GATE_FAILED=1
+  else
+    echo "   ✅ PASS: No Pages Router Auth0 handler"
+  fi
+
+  # F) NextResponse.next() only in middleware.ts
+  echo ""
+  echo "🔍 [F] Checking NextResponse.next() usage..."
+  local VIOLATIONS
+  VIOLATIONS=$(grep -Rna "NextResponse\.next" "$REPO_ROOT" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -vE "^\.\/middleware\.ts:|^middleware\.ts:|node_modules" || true)
+  if [[ -z "$VIOLATIONS" ]]; then
+    echo "   ✅ PASS: NextResponse.next() only in $CANONICAL_MIDDLEWARE_FILE"
+  else
+    echo "   ❌ FAIL: NextResponse.next() found outside $CANONICAL_MIDDLEWARE_FILE"
+    GATE_FAILED=1
+  fi
+
+  # G) auth0.middleware() not in route handlers
+  echo ""
+  echo "🔍 [G] Checking auth0.middleware() usage..."
   local AUTH0_MW_VIOLATIONS
   AUTH0_MW_VIOLATIONS=$(grep -Rna "auth0\.middleware" "$REPO_ROOT/src/app" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
   if [[ -z "$AUTH0_MW_VIOLATIONS" ]]; then
@@ -114,12 +141,13 @@ sot_compliance_gate() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# AUTH ROUTE SMOKE TEST
+# AUTH ROUTE SMOKE TEST (RUNTIME VALIDATION)
 # Starts Next.js locally and verifies /auth/login is NOT 404
 # ═══════════════════════════════════════════════════════════════════════════════
 auth_route_smoke_test() {
   echo "╔════════════════════════════════════════════════════════════╗"
   echo "║         Auth Route Smoke Test - /auth/login                ║"
+  echo "║         (Runtime verification per SoT)                     ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
 
@@ -163,7 +191,7 @@ auth_route_smoke_test() {
     return 0
   fi
 
-  # Test /auth/login
+  # Test /auth/login - CRITICAL
   echo ""
   echo "🔍 Testing /auth/login..."
   local AUTH_STATUS
@@ -188,8 +216,9 @@ auth_route_smoke_test() {
     echo "║   This indicates Auth0 SDK routes are not mounted.         ║"
     echo "║                                                            ║"
     echo "║   Check:                                                   ║"
-    echo "║   - $CANONICAL_BOUNDARY_FILE exists at root                ║"
+    echo "║   - $CANONICAL_MIDDLEWARE_FILE exists at root              ║"
     echo "║   - No src/app/auth/ directory                             ║"
+    echo "║   - No proxy.ts (use middleware.ts)                        ║"
     echo "╚════════════════════════════════════════════════════════════╝"
     return 1
   elif [[ "$AUTH_STATUS" == "000" ]]; then
@@ -215,7 +244,7 @@ echo "╔═══════════════════════�
 echo "║       Step 3: Test Local - Next.js (Auth0-aware)           ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "📦 Versão: 20251229.2200"
+echo "📦 Version: 20251230.0100"
 echo "📁 Root: $REPO_ROOT"
 echo ""
 
@@ -237,13 +266,13 @@ fi
 BUILD_ID="$(cat "$REPO_ROOT/.next/BUILD_ID")"
 echo "[Step-3] ✓ BUILD_ID: $BUILD_ID"
 
-# Verify boundary file exists
-if [[ ! -f "$REPO_ROOT/$CANONICAL_BOUNDARY_FILE" ]]; then
-  echo "[Step-3] ❌ CRITICAL: $CANONICAL_BOUNDARY_FILE not found!"
+# Verify middleware file exists
+if [[ ! -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
+  echo "[Step-3] ❌ CRITICAL: $CANONICAL_MIDDLEWARE_FILE not found!"
   echo "         This WILL cause /auth/login to return 404"
   exit 1
 fi
-echo "[Step-3] ✓ Boundary file: $CANONICAL_BOUNDARY_FILE"
+echo "[Step-3] ✓ Middleware file: $CANONICAL_MIDDLEWARE_FILE"
 echo ""
 
 # ---------------------------------------------------------
@@ -299,7 +328,7 @@ fi
 echo ""
 
 # ---------------------------------------------------------
-# 5. Auth Route Smoke Test (CRITICAL)
+# 5. Auth Route Smoke Test (RUNTIME VALIDATION - CRITICAL)
 # ---------------------------------------------------------
 echo "[Step-3] 🔐 Running Auth Route Smoke Test..."
 
@@ -321,7 +350,7 @@ echo "╚═══════════════════════�
 echo ""
 echo "📋 Summary:"
 echo "   ✅ SoT Compliance Gate: PASSED"
-echo "   ✅ Boundary file:       $CANONICAL_BOUNDARY_FILE (present)"
+echo "   ✅ Middleware file:     $CANONICAL_MIDDLEWARE_FILE (present)"
 echo "   ✅ ESLint:              PASSED"
 echo "   ✅ TypeScript:          PASSED"
 echo "   ✅ Auth Smoke Test:     PASSED (/auth/login ≠ 404)"

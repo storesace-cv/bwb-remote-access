@@ -61,7 +61,7 @@ The following table is the **authoritative registry** of all Source of Truth doc
 
 | SoT Name | Path | Scope | Status | Notes |
 |----------|------|-------|--------|-------|
-| **Authentication & Middleware Architecture** | [`/docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md`](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) | Next.js 16 proxy, routing, Auth0 integration | **Active (Canonical)** | Defines the ONLY allowed architecture for authentication. **Boundary file must be `/proxy.ts` at root (not middleware.ts).** |
+| **Authentication & Middleware Architecture** | [`/docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md`](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) | Next.js middleware, routing, Auth0 SDK v4 integration | **Active (Canonical)** | Defines the ONLY allowed architecture for authentication. **Middleware file must be `/middleware.ts` at root. NO explicit Auth0 route handlers (v4 auto-mounts via middleware).** |
 
 ### Registry Rules
 
@@ -74,7 +74,7 @@ The following table is the **authoritative registry** of all Source of Truth doc
 
 ## 4. Governed Domains
 
-### 4.1 Authentication & Proxy (Next.js 16)
+### 4.1 Authentication & Middleware
 
 **Governing SoT**: [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md)
 
@@ -82,11 +82,12 @@ This SoT **exclusively governs**:
 
 | Domain | Rule Summary |
 |--------|--------------|
-| Boundary file | MUST be `/proxy.ts` at project root (not `middleware.ts`, not in `src/`) |
-| Function name | MUST be `export async function proxy()` |
-| `NextResponse.next()` usage | ONLY allowed in `/proxy.ts` |
-| `/auth/*` routing | RESERVED for Auth0 SDK; no application code at `src/app/auth/` |
-| `auth0.middleware()` calls | ONLY allowed from `/proxy.ts` |
+| Middleware file | MUST be `/middleware.ts` at project root (not `proxy.ts`, not in `src/`) |
+| Function name | MUST be `export async function middleware()` |
+| `NextResponse.next()` usage | ONLY allowed in `/middleware.ts` |
+| `/auth/*` routing | RESERVED for Auth0 SDK v4; no application code at `src/app/auth/` |
+| Auth0 route handlers | MUST NOT EXIST (`src/app/auth/[...auth0]/route.ts` is v3 pattern) |
+| `auth0.middleware()` calls | ONLY allowed from `/middleware.ts` |
 | Legacy auth paths | `/api/login` → 410 Gone; `/api/auth/*` → redirect to `/auth/*` |
 | Route handler responses | Must return `NextResponse.json()` or `redirect()`; NEVER `next()` |
 
@@ -96,10 +97,24 @@ This SoT **exclusively governs**:
 
 ```bash
 # All must PASS before merge
-test -f proxy.ts                     # proxy.ts exists at root
-test ! -f src/proxy.ts               # src/proxy.ts does NOT exist
-test ! -f middleware.ts              # middleware.ts does NOT exist
-test ! -d src/app/auth               # src/app/auth/ does NOT exist
+test -f middleware.ts                     # middleware.ts exists at root
+test ! -f proxy.ts                        # proxy.ts does NOT exist
+test ! -f src/middleware.ts               # src/middleware.ts does NOT exist
+test ! -d src/app/auth                    # src/app/auth/ does NOT exist
+test ! -f "src/app/auth/[...auth0]/route.ts"  # No v3 Auth0 route handler
+test ! -f "src/pages/api/auth/[...auth0].ts"  # No Pages Router Auth0 handler
+```
+
+### Runtime Validation (MANDATORY)
+
+```bash
+# /auth/login must NOT return 404 (local)
+curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/auth/login
+# Expected: 200 or 302 (NOT 404)
+
+# /auth/login must NOT return 404 (production)
+curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
+# Expected: 200 or 302 (NOT 404)
 ```
 
 ---
@@ -154,25 +169,25 @@ Before merging any PR, verify:
 # Run all SoT validation commands
 # From AUTH_AND_MIDDLEWARE_ARCHITECTURE.md:
 
-# 1. proxy.ts exists at root (Next.js 16 requirement)
-test -f proxy.ts && echo "PASS" || echo "FAIL"
+# 1. middleware.ts exists at root
+test -f middleware.ts && echo "PASS" || echo "FAIL"
 
-# 2. src/proxy.ts does NOT exist
-test -f src/proxy.ts && echo "FAIL" || echo "PASS"
+# 2. proxy.ts does NOT exist
+test -f proxy.ts && echo "FAIL" || echo "PASS"
 
-# 3. middleware.ts does NOT exist (deprecated in Next.js 16)
-test -f middleware.ts && echo "FAIL" || echo "PASS"
+# 3. src/middleware.ts does NOT exist
+test -f src/middleware.ts && echo "FAIL" || echo "PASS"
 
 # 4. src/app/auth/ does NOT exist
 test -d src/app/auth && echo "FAIL" || echo "PASS"
 
-# 5. NextResponse.next() only in proxy.ts
-grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "proxy.ts"
-# Expected: (empty)
+# 5. No explicit Auth0 route handlers
+test -f "src/app/auth/[...auth0]/route.ts" && echo "FAIL" || echo "PASS"
+test -f "src/pages/api/auth/[...auth0].ts" && echo "FAIL" || echo "PASS"
 
-# 6. RUNTIME: /auth/login must NOT return 404
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/auth/login
-# Expected: 200 or 302 (NOT 404)
+# 6. NextResponse.next() only in middleware.ts
+grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "middleware.ts"
+# Expected: (empty)
 ```
 
 ### 6.2 Violation Handling
@@ -197,12 +212,12 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/auth/login
 ### Finding the Right SoT
 
 | Question | Relevant SoT |
-|----------|--------------|
-| "Where should the boundary file be?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — `/proxy.ts` at root |
-| "Can I use `NextResponse.next()`?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — Only in `/proxy.ts` |
+|----------|-------------|
+| "Where should the middleware file be?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — `/middleware.ts` at root |
+| "Can I use `NextResponse.next()`?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — Only in `/middleware.ts` |
 | "How should Auth0 routes be handled?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — Via `auth0.middleware()` |
 | "Can I create pages under `/auth/`?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — **NO** |
-| "Should I use middleware.ts or proxy.ts?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — **proxy.ts** (Next.js 16) |
+| "Should I create Auth0 route handlers?" | [AUTH_AND_MIDDLEWARE_ARCHITECTURE.md](./AUTH_AND_MIDDLEWARE_ARCHITECTURE.md) — **NO** (v4 auto-mounts) |
 
 ### SoT Validation Checklist
 
@@ -219,14 +234,14 @@ Before any architectural change:
 
 | Date | Change | Author |
 |------|--------|--------|
-| December 2024 | Initial creation; registered AUTH_AND_MIDDLEWARE_ARCHITECTURE.md | System |
+| December 2024 | Updated for Auth0 SDK v4; middleware.ts is canonical; removed proxy.ts references | System |
+| December 2024 | Initial creation | System |
 
 ---
 
 ## 9. Related Documents
 
 - [/docs/INDEX.md](../INDEX.md) — General documentation index
-- [/docs/ARCHITECTURE.md](../ARCHITECTURE.md) — High-level architecture overview
 - [/README.md](../../README.md) — Project overview
 
 ---

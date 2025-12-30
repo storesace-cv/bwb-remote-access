@@ -1,16 +1,17 @@
 /**
- * Next.js 16 Proxy - Auth0 Authentication Boundary
+ * Next.js Middleware - Auth0 Authentication Boundary
  * 
  * SOURCE OF TRUTH: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
  * 
  * ARCHITECTURE RULES (NON-NEGOTIABLE):
- * 1. This file MUST be at the project ROOT as `proxy.ts`
- * 2. The exported function MUST be named `proxy` (not `middleware`)
+ * 1. This file MUST be at the project ROOT as `middleware.ts`
+ * 2. The exported function MUST be named `middleware`
  * 3. Auth0 routes (/auth/*) are delegated to `auth0.middleware(request)`
- * 4. No src/app/auth/ directory may exist
+ * 4. No src/app/auth/ directory may exist (would shadow Auth0 routes)
  * 5. NextResponse.next() is ONLY allowed in this file
+ * 6. No explicit Auth0 route handlers (v4 auto-mounts via middleware)
  * 
- * Auth0 SDK Routes (auto-mounted):
+ * Auth0 SDK v4 Routes (auto-mounted via middleware):
  *   /auth/login     → Redirects to Auth0 Universal Login
  *   /auth/logout    → Clears session and logs out
  *   /auth/callback  → Handles OAuth callback
@@ -81,19 +82,19 @@ function isDeprecatedRoute(pathname: string): boolean {
 }
 
 // ============================================================================
-// PROXY FUNCTION (Next.js 16 Required Name)
+// MIDDLEWARE FUNCTION (Next.js Standard)
 // ============================================================================
 
 /**
- * Next.js 16 Proxy Entry Point
+ * Next.js Middleware Entry Point
  * 
  * This function:
- * 1. Delegates /auth/* routes to Auth0 SDK
+ * 1. Delegates /auth/* routes to Auth0 SDK (v4 auto-mounts handlers)
  * 2. Handles legacy route redirects
  * 3. Enforces authentication on protected routes
  * 4. Returns NextResponse.next() for allowed requests
  */
-export async function proxy(request: NextRequest): Promise<NextResponse> {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   // -------------------------------------------------------------------------
@@ -118,7 +119,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   // 3. AUTH0 ROUTES → Delegate to Auth0 SDK (CRITICAL)
   // -------------------------------------------------------------------------
   if (isAuth0Route(pathname)) {
-    // The Auth0 SDK handles all /auth/* routes:
+    // Auth0 SDK v4 handles all /auth/* routes via middleware:
     // /auth/login, /auth/logout, /auth/callback, /auth/me, /auth/profile, etc.
     return auth0.middleware(request);
   }
@@ -154,7 +155,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 // ============================================================================
-// PROXY CONFIGURATION (Next.js 16 Required)
+// MIDDLEWARE CONFIGURATION (Next.js Standard)
 // ============================================================================
 
 export const config = {
