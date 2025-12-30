@@ -122,10 +122,47 @@ sot_compliance_gate() {
   fi
 
   # F) NextResponse.next() only in middleware.ts
+  # Robust path normalization to handle ./middleware.ts, absolute paths, etc.
   echo ""
   echo "🔍 [F] Checking NextResponse.next() usage..."
-  local VIOLATIONS
-  VIOLATIONS=$(grep -Rna "NextResponse\.next" "$REPO_ROOT" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -vE "^\.\/middleware\.ts:|^middleware\.ts:|node_modules" || true)
+  
+  # Get canonical absolute path of middleware.ts
+  local CANONICAL_PATH
+  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
+    CANONICAL_PATH="$(cd "$REPO_ROOT" && pwd)/$CANONICAL_MIDDLEWARE_FILE"
+    if command -v realpath >/dev/null 2>&1; then
+      CANONICAL_PATH="$(realpath "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" 2>/dev/null || echo "$CANONICAL_PATH")"
+    fi
+  else
+    CANONICAL_PATH=""
+  fi
+  
+  # Find all NextResponse.next() usages
+  local VIOLATIONS=""
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    local file_path="${line%%:*}"
+    [[ -z "$file_path" ]] && continue
+    local abs_path
+    if [[ "$file_path" = /* ]]; then
+      abs_path="$file_path"
+    else
+      abs_path="$(cd "$REPO_ROOT" && pwd)/$file_path"
+    fi
+    if command -v realpath >/dev/null 2>&1; then
+      abs_path="$(realpath "$abs_path" 2>/dev/null || echo "$abs_path")"
+    fi
+    if [[ "$abs_path" != "$CANONICAL_PATH" ]]; then
+      VIOLATIONS="${VIOLATIONS}${line}"$'\n'
+    fi
+  done < <(grep -Rn "NextResponse\.next" "$REPO_ROOT" \
+    --include="*.ts" --include="*.tsx" \
+    --exclude-dir=node_modules --exclude-dir=.next \
+    --exclude-dir=.git --exclude-dir=dist \
+    --exclude-dir=build --exclude-dir=coverage 2>/dev/null || true)
+  
+  VIOLATIONS="${VIOLATIONS%$'\n'}"
+  
   if [[ -z "$VIOLATIONS" ]]; then
     echo "   ✅ PASS: NextResponse.next() only in $CANONICAL_MIDDLEWARE_FILE"
   else
