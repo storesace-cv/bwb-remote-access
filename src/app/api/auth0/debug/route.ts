@@ -62,10 +62,10 @@ export async function GET(request: NextRequest) {
     
     // Environment check (without exposing values)
     const envCheck = {
-      AUTH0_SECRET: !!process.env.AUTH0_SECRET ? 'set' : 'MISSING',
-      AUTH0_DOMAIN: !!process.env.AUTH0_DOMAIN ? 'set' : 'MISSING',
-      AUTH0_CLIENT_ID: !!process.env.AUTH0_CLIENT_ID ? 'set' : 'MISSING',
-      AUTH0_CLIENT_SECRET: !!process.env.AUTH0_CLIENT_SECRET ? 'set' : 'MISSING',
+      AUTH0_SECRET: process.env.AUTH0_SECRET ? 'set' : 'MISSING',
+      AUTH0_DOMAIN: process.env.AUTH0_DOMAIN ? 'set' : 'MISSING',
+      AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID ? 'set' : 'MISSING',
+      AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET ? 'set' : 'MISSING',
       APP_BASE_URL: process.env.APP_BASE_URL || 'NOT SET',
       AUTH0_BASE_URL: process.env.AUTH0_BASE_URL || 'NOT SET',
       NODE_ENV: process.env.NODE_ENV || 'NOT SET',
