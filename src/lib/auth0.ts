@@ -6,11 +6,16 @@
  * and only if required environment variables are present.
  * 
  * Environment variables required:
- *   - AUTH0_SECRET
- *   - AUTH0_BASE_URL (or APP_BASE_URL)
+ *   - AUTH0_SECRET (32+ char hex string)
+ *   - APP_BASE_URL (PUBLIC URL, e.g., https://rustdesk.bwb.pt)
  *   - AUTH0_DOMAIN
  *   - AUTH0_CLIENT_ID
  *   - AUTH0_CLIENT_SECRET
+ * 
+ * IMPORTANT FOR REVERSE PROXY:
+ *   - APP_BASE_URL must match the PUBLIC domain users access
+ *   - Cookie secure=true is automatic when APP_BASE_URL uses https://
+ *   - Nginx must pass X-Forwarded-Proto and X-Forwarded-Host headers
  * 
  * Custom claims contract (injected by Auth0 Post-Login Action):
  *   - https://bwb.pt/claims/email
@@ -25,6 +30,14 @@ import type { Auth0Client } from "@auth0/nextjs-auth0/server";
 let _auth0Client: Auth0Client | null = null;
 
 /**
+ * Gets the computed base URL from environment.
+ * Priority: APP_BASE_URL > AUTH0_BASE_URL
+ */
+export function getBaseUrl(): string | undefined {
+  return process.env.APP_BASE_URL || process.env.AUTH0_BASE_URL;
+}
+
+/**
  * Checks if Auth0 is configured (all required env vars are set).
  * This check prevents Auth0Client instantiation during build when env vars aren't available.
  */
@@ -34,7 +47,7 @@ function isAuth0Configured(): boolean {
     process.env.AUTH0_DOMAIN &&
     process.env.AUTH0_CLIENT_ID &&
     process.env.AUTH0_CLIENT_SECRET &&
-    (process.env.APP_BASE_URL || process.env.AUTH0_BASE_URL)
+    getBaseUrl()
   );
 }
 
@@ -42,6 +55,11 @@ function isAuth0Configured(): boolean {
  * Gets the Auth0Client instance (lazy initialization).
  * Creates the client on first access to avoid build-time initialization.
  * Returns null if Auth0 is not configured (e.g., during build).
+ * 
+ * Configuration for reverse proxy:
+ *   - appBaseUrl: Must be the PUBLIC URL (https://rustdesk.bwb.pt)
+ *   - session.cookie.secure: true (automatic for https URLs)
+ *   - session.cookie.sameSite: 'lax' (default, works with redirects)
  * 
  * @returns Auth0Client instance or null if not configured
  */
@@ -55,10 +73,34 @@ function getAuth0Client(): Auth0Client | null {
     return null;
   }
 
+  const baseUrl = getBaseUrl();
+  const isHttps = baseUrl?.startsWith('https://');
+
   // Dynamic require to avoid build-time evaluation of Auth0Client constructor
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { Auth0Client: Auth0ClientClass } = require("@auth0/nextjs-auth0/server");
-  _auth0Client = new Auth0ClientClass() as Auth0Client;
+  
+  // Explicitly configure the client with session/cookie settings for reverse proxy
+  _auth0Client = new Auth0ClientClass({
+    // appBaseUrl is read from APP_BASE_URL env var by default,
+    // but we set it explicitly to ensure correctness
+    appBaseUrl: baseUrl,
+    
+    // Session configuration for reverse proxy
+    session: {
+      rolling: true,
+      // Cookie configuration
+      cookie: {
+        // Secure must be true when behind HTTPS reverse proxy
+        secure: isHttps,
+        // SameSite lax works with OAuth redirects
+        sameSite: 'lax' as const,
+        // Path for cookie
+        path: '/',
+      },
+    },
+  }) as Auth0Client;
+  
   return _auth0Client;
 }
 
