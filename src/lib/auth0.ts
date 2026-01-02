@@ -119,18 +119,26 @@ function getAuth0Client(): Auth0Client | null {
     // CRITICAL: Use the canonical base URL - NO localhost fallback in production
     appBaseUrl: baseUrl,
     
-    // Session configuration for reverse proxy
+    // Session configuration for reverse proxy + OIDC compatibility
     session: {
       rolling: true,
-      // Cookie configuration
+      absoluteDuration: 60 * 60 * 24 * 7, // 7 days
+      inactivityDuration: 60 * 60 * 24,   // 1 day
       cookie: {
         // Secure must be true when behind HTTPS reverse proxy
         secure: isHttps,
-        // SameSite lax works with OAuth redirects
+        // SameSite 'lax' is required for OIDC redirects to work
         sameSite: 'lax' as const,
         // Path for cookie
         path: '/',
+        // Do NOT set domain - let browser handle it for rustdesk.bwb.pt
       },
+    },
+    
+    // Transaction cookie for state/nonce (OIDC flow)
+    transactionCookie: {
+      secure: isHttps,
+      sameSite: 'lax' as const,
     },
   }) as Auth0Client;
   
