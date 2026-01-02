@@ -10,6 +10,7 @@ import {
   logError,
   safeError,
 } from "@/lib/debugLogger";
+import { getCanonicalBaseUrl } from "@/lib/baseUrl";
 
 export const runtime = "nodejs";
 
