@@ -322,16 +322,15 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 │ Middleware file       → /middleware.ts (ROOT, not src/)          │
 │ Function name         → export async function middleware()       │
 │ NextResponse.next()   → ONLY in /middleware.ts                   │
-│ auth0.middleware()    → In /src/app/auth/[auth0]/route.ts        │
-│ /auth/* routes        → Handled by route handler + SDK           │
-│ src/app/auth/[auth0]/ → MUST EXIST (route handler)               │
-│ src/app/auth/page.tsx → MUST NOT EXIST (shadows routes)          │
+│ auth0.middleware()    → ONLY in /middleware.ts for /auth/*       │
+│ /auth/* routes        → Processed DIRECTLY by middleware         │
+│ src/app/auth/         → MUST NOT EXIST (shadows middleware)      │
 │ proxy.ts              → MUST NOT EXIST (use middleware.ts)       │
 │ /api/login            → Returns 410 Gone                         │
 │ /api/auth/*           → Redirects to /auth/*                     │
 ├─────────────────────────────────────────────────────────────────┤
 │ Route handlers return: NextResponse.json() or redirect()         │
-│ Middleware returns:    NextResponse.next() or redirect()         │
+│ Middleware returns:    NextResponse.next() or auth0.middleware() │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
