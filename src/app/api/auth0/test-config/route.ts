@@ -5,10 +5,10 @@
  * completing the flow. This helps identify configuration issues.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const headerStore = await headers();
   
   // Check environment
