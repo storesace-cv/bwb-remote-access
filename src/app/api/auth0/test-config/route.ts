@@ -84,6 +84,10 @@ export async function GET(request: NextRequest) {
   
   return NextResponse.json({
     timestamp: new Date().toISOString(),
+    request: {
+      url: requestUrl,
+      origin: requestOrigin,
+    },
     environment: envDiag,
     proxyHeaders,
     expectedCallback,
