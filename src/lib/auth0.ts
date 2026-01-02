@@ -25,7 +25,7 @@
  */
 import "server-only";
 import type { Auth0Client } from "@auth0/nextjs-auth0/server";
-import { getCanonicalBaseUrl, BaseUrlConfigError } from "./baseUrl";
+import { getCanonicalBaseUrl } from "./baseUrl";
 
 // Lazy-initialized Auth0Client instance
 let _auth0Client: Auth0Client | null = null;
