@@ -5,11 +5,15 @@
  * completing the flow. This helps identify configuration issues.
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const headerStore = await headers();
+  
+  // Use request to get URL information for diagnostics
+  const requestUrl = request.url;
+  const requestOrigin = new URL(requestUrl).origin;
   
   // Check environment
   const envDiag = {
