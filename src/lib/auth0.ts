@@ -119,6 +119,13 @@ function getAuth0Client(): Auth0Client | null {
     // CRITICAL: Use the canonical base URL - NO localhost fallback in production
     appBaseUrl: baseUrl,
     
+    // =========================================================================
+    // INVARIANT 2: SINGLE ACTIVE AUTH TRANSACTION
+    // Disable parallel transactions to enforce one-at-a-time auth flow.
+    // This prevents multiple state values and transaction cookie explosion.
+    // =========================================================================
+    enableParallelTransactions: false,
+    
     // Session configuration for reverse proxy + OIDC compatibility
     session: {
       rolling: true,
@@ -139,6 +146,34 @@ function getAuth0Client(): Auth0Client | null {
     transactionCookie: {
       secure: isHttps,
       sameSite: 'lax' as const,
+    },
+    
+    // =========================================================================
+    // INVARIANT 4: NO AUTH LOOPS - Handle callback errors gracefully
+    // On failure, surface controlled error, NOT restart auth.
+    // =========================================================================
+    onCallback: async (error, context, session) => {
+      const { NextResponse } = await import('next/server');
+      
+      if (error) {
+        // Log error for debugging
+        console.error('[AUTH0] Callback error:', {
+          error: error.message,
+          code: error.code,
+          cause: error.cause,
+        });
+        
+        // Return error page instead of restarting auth flow
+        // This prevents infinite loops on auth failures
+        const errorUrl = new URL('/auth-error', baseUrl);
+        errorUrl.searchParams.set('error', error.code || 'callback_error');
+        errorUrl.searchParams.set('message', error.message || 'Authentication failed');
+        return NextResponse.redirect(errorUrl);
+      }
+      
+      // Success - redirect to returnTo or home
+      const returnTo = context.returnTo || '/';
+      return NextResponse.redirect(new URL(returnTo, baseUrl));
     },
   }) as Auth0Client;
   
