@@ -157,7 +157,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // -------------------------------------------------------------------------
   const legacyRedirect = getLegacyRedirect(pathname);
   if (legacyRedirect) {
-    return NextResponse.redirect(new URL(legacyRedirect, request.url));
+    // Use public base URL to avoid localhost redirects
+    const baseUrl = getRedirectBaseUrl(request);
+    return NextResponse.redirect(new URL(legacyRedirect, baseUrl));
   }
 
   // -------------------------------------------------------------------------
