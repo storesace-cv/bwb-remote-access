@@ -110,6 +110,8 @@ const PUBLIC_PATHS = [
   "/_next",
   "/favicon.ico",
   "/api/auth0/me",      // Public session check endpoint
+  "/api/auth0/test-config", // Diagnostic endpoint
+  "/auth-error",        // Auth error page (INVARIANT 4: no auth loops)
 ];
 
 // Legacy routes to redirect
