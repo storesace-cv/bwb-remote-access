@@ -141,7 +141,17 @@ export async function GET(request: NextRequest) {
       },
       headers: proxyHeaders,
       environment: envCheck,
-      urlAnalysis,
+      urlAnalysis: {
+        ...urlAnalysis,
+        canonicalBaseUrl,
+        canonicalSource: baseUrlValidation.source,
+      },
+      baseUrlValidation: {
+        valid: baseUrlValidation.valid,
+        source: baseUrlValidation.source,
+        warnings: baseUrlValidation.warnings,
+        errors: baseUrlValidation.errors,
+      },
       potentialIssues: potentialIssues.length > 0 ? potentialIssues : ['None detected'],
     });
   } catch (error) {
