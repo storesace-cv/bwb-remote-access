@@ -11,6 +11,10 @@ import { headers } from "next/headers";
 export async function GET(request: NextRequest) {
   const headerStore = await headers();
   
+  // Use request to get URL information for diagnostics
+  const requestUrl = request.url;
+  const requestOrigin = new URL(requestUrl).origin;
+  
   // Check environment
   const envDiag = {
     AUTH0_SECRET: process.env.AUTH0_SECRET 
@@ -80,6 +84,10 @@ export async function GET(request: NextRequest) {
   
   return NextResponse.json({
     timestamp: new Date().toISOString(),
+    request: {
+      url: requestUrl,
+      origin: requestOrigin,
+    },
     environment: envDiag,
     proxyHeaders,
     expectedCallback,
