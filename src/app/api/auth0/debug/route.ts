@@ -14,6 +14,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers, cookies } from "next/headers";
 import { auth0, getBaseUrl } from "@/lib/auth0";
+import { validateBaseUrlConfig, getCanonicalBaseUrl } from "@/lib/baseUrl";
 
 export async function GET(request: NextRequest) {
   try {
@@ -84,6 +85,19 @@ export async function GET(request: NextRequest) {
     // Potential issues detection
     const potentialIssues: string[] = [];
     
+    // Add base URL validation
+    const baseUrlValidation = validateBaseUrlConfig();
+    potentialIssues.push(...baseUrlValidation.warnings);
+    potentialIssues.push(...baseUrlValidation.errors);
+    
+    // Get canonical base URL (with error handling)
+    let canonicalBaseUrl: string | null = null;
+    try {
+      canonicalBaseUrl = getCanonicalBaseUrl({ throwOnMissing: false });
+    } catch {
+      potentialIssues.push('Failed to resolve canonical base URL');
+    }
+    
     if (!configuredBaseUrl) {
       potentialIssues.push('APP_BASE_URL is not set');
     }
@@ -108,6 +122,11 @@ export async function GET(request: NextRequest) {
       potentialIssues.push(`Session read error: ${sessionError}`);
     }
     
+    // Check for localhost in production
+    if (canonicalBaseUrl?.includes('localhost') && process.env.NODE_ENV === 'production') {
+      potentialIssues.push('CRITICAL: localhost detected in base URL in production mode');
+    }
+    
     return NextResponse.json({
       timestamp: new Date().toISOString(),
       session: {
@@ -122,7 +141,17 @@ export async function GET(request: NextRequest) {
       },
       headers: proxyHeaders,
       environment: envCheck,
-      urlAnalysis,
+      urlAnalysis: {
+        ...urlAnalysis,
+        canonicalBaseUrl,
+        canonicalSource: baseUrlValidation.source,
+      },
+      baseUrlValidation: {
+        valid: baseUrlValidation.valid,
+        source: baseUrlValidation.source,
+        warnings: baseUrlValidation.warnings,
+        errors: baseUrlValidation.errors,
+      },
       potentialIssues: potentialIssues.length > 0 ? potentialIssues : ['None detected'],
     });
   } catch (error) {

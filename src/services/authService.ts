@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Session } from "@supabase/supabase-js";
+import { getCanonicalBaseUrlWithSlash } from "@/lib/baseUrl";
 
 export interface AuthUser {
   id: string;
@@ -13,25 +14,8 @@ export interface AuthError {
   code?: string;
 }
 
-// Dynamic URL Helper
-const getURL = () => {
-  let url = process?.env?.NEXT_PUBLIC_VERCEL_URL ?? 
-           process?.env?.NEXT_PUBLIC_SITE_URL ?? 
-           'http://localhost:3000'
-  
-  // Handle undefined or null url
-  if (!url) {
-    url = 'http://localhost:3000';
-  }
-  
-  // Ensure url has protocol
-  url = url.startsWith('http') ? url : `https://${url}`
-  
-  // Ensure url ends with slash
-  url = url.endsWith('/') ? url : `${url}/`
-  
-  return url
-}
+// Use canonical base URL resolver (single source of truth)
+const getURL = () => getCanonicalBaseUrlWithSlash();
 
 export const authService = {
   // Get current user

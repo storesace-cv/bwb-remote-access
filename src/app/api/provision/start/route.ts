@@ -10,6 +10,7 @@ import {
   logError,
   safeError,
 } from "@/lib/debugLogger";
+import { getCanonicalBaseUrl } from "@/lib/baseUrl";
 
 export const runtime = "nodejs";
 
@@ -48,21 +49,10 @@ function createAdminClient() {
   });
 }
 
+// Use canonical base URL resolver (single source of truth)
+// Throws in production if not configured - no silent localhost fallback
 function getBaseUrl(): string {
-  let url =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    process.env.NEXT_PUBLIC_VERCEL_URL ??
-    "http://localhost:3000";
-
-  if (!url) {
-    url = "http://localhost:3000";
-  }
-
-  if (!url.startsWith("http")) {
-    url = `https://${url}`;
-  }
-
-  return url.endsWith("/") ? url.slice(0, -1) : url;
+  return getCanonicalBaseUrl();
 }
 
 export async function OPTIONS() {

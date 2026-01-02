@@ -12,6 +12,24 @@ This document provides a checklist for deploying the application with Auth0 auth
 
 ---
 
+## Base URL Resolution (Single Source of Truth)
+
+The application uses a **canonical base URL resolver** (`src/lib/baseUrl.ts`) with strict precedence:
+
+1. `AUTH0_BASE_URL` (Auth0 SDK standard)
+2. `APP_BASE_URL` (custom deployment variable)
+3. `NEXT_PUBLIC_SITE_URL` (Vercel/generic)
+4. `NEXT_PUBLIC_VERCEL_URL` (Vercel auto-set)
+5. **Development only**: `http://localhost:3000`
+6. **Production without config**: **THROWS ERROR** (no silent fallback!)
+
+### IMPORTANT
+- `localhost` fallback is **ONLY** used when `NODE_ENV=development`
+- In production, if no base URL is configured, the application will **fail explicitly**
+- This prevents accidental localhost redirects in production
+
+---
+
 ## 1. Required Environment Variables
 
 ### On the Droplet/Server
@@ -20,7 +38,11 @@ Set these in your environment (e.g., `/opt/rustdesk-frontend/.env.local` or syst
 
 ```bash
 # CRITICAL: Must be the PUBLIC URL users access (not localhost!)
+# This is checked FIRST in the precedence order
 APP_BASE_URL=https://rustdesk.bwb.pt
+
+# Alternative: Auth0 SDK standard variable (also works)
+AUTH0_BASE_URL=https://rustdesk.bwb.pt
 
 # Auth0 tenant domain (without https://)
 AUTH0_DOMAIN=your-tenant.eu.auth0.com
@@ -40,6 +62,7 @@ AUTH0_SECRET=your_32_char_hex_secret
 | `APP_BASE_URL=http://localhost:3000` | Session not readable after login | Use public URL: `https://rustdesk.bwb.pt` |
 | `APP_BASE_URL=http://...` (when behind HTTPS proxy) | Cookies not sent (secure mismatch) | Use `https://` in APP_BASE_URL |
 | Missing `AUTH0_SECRET` | Session encryption fails | Generate and set a 32+ char hex secret |
+| No `APP_BASE_URL` or `AUTH0_BASE_URL` set | Application throws `BaseUrlConfigError` | Set one of the base URL variables |
 
 ---
 
