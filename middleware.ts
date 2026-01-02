@@ -197,24 +197,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 3. AUTH0 ROUTES → Delegate to Auth0 SDK (CRITICAL)
+  // 3. AUTH0 ROUTES → Pass through to route handler
   // -------------------------------------------------------------------------
   if (isAuth0Route(pathname)) {
-    // Auth0 SDK v4 handles all /auth/* routes via middleware:
-    // /auth/login, /auth/logout, /auth/callback, /auth/me, /auth/profile, etc.
-    console.log(`[MIDDLEWARE] Delegating ${pathname} to Auth0 SDK`);
-    try {
-      const response = await auth0.middleware(request);
-      console.log(`[MIDDLEWARE] Auth0 SDK response status: ${response.status}`);
-      return response;
-    } catch (error) {
-      console.error(`[MIDDLEWARE] Auth0 SDK error:`, error);
-      // Return proper error response instead of letting it become 404
-      return NextResponse.json(
-        { error: 'Auth0 configuration error', message: String(error) },
-        { status: 500 }
-      );
-    }
+    // Auth0 SDK v4 with App Router: Let the /app/auth/[auth0]/route.ts handle it
+    // The route handler calls auth0.middleware() directly
+    console.log(`[MIDDLEWARE] Passing through ${pathname} to route handler`);
+    return NextResponse.next();
   }
 
   // -------------------------------------------------------------------------
