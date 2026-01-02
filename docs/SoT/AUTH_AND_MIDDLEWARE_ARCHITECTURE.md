@@ -263,27 +263,27 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 ├── src/
 │   ├── middleware.ts            ❌ Wrong location
 │   └── app/
-│       └── (no auth/ directory) → 404 on /auth/login
+│       └── auth/                ❌ Route handler shadows middleware
+│           └── [auth0]/
+│               └── route.ts     ❌ SDK can't see full pathname
 ```
 
-**Result**: `/auth/login` returns 404
+**Result**: `/auth/login` returns 404 or SDK routing fails
 
 ### AFTER (Correct)
 
 ```
 /project-root
-├── middleware.ts                ✅ Root level, correct name
+├── middleware.ts                ✅ Root level, calls auth0.middleware()
 ├── src/
 │   ├── lib/
 │   │   └── auth0.ts             ✅ Auth0 client
 │   └── app/
-│       ├── auth/
-│       │   └── [auth0]/
-│       │       └── route.ts     ✅ Auth0 route handler
-│       └── auth-status/         ✅ Doesn't shadow /auth/*
+│       ├── auth-status/         ✅ Doesn't shadow /auth/*
+│       └── (no auth/ directory) ✅ Middleware handles /auth/*
 ```
 
-**Result**: `/auth/login` works correctly (redirects to Auth0)
+**Result**: `/auth/login` returns 302 redirect to Auth0
 
 ---
 
