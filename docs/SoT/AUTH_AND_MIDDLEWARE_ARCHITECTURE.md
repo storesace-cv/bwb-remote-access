@@ -253,16 +253,14 @@ test -f proxy.ts && echo "FAIL: proxy.ts exists" || echo "PASS"
 # 3. src/middleware.ts does NOT exist (wrong location)
 test -f src/middleware.ts && echo "FAIL: src/middleware.ts exists" || echo "PASS"
 
-# 4. src/app/auth/ directory does NOT exist
-test -d src/app/auth && echo "FAIL: src/app/auth/ exists" || echo "PASS"
+# 4. Auth0 route handler EXISTS
+test -f src/app/auth/\[auth0\]/route.ts && echo "PASS" || echo "FAIL: Auth0 route handler missing"
 
-# 5. No explicit Auth0 route handlers (v3 pattern)
-test -f src/app/auth/\[...auth0\]/route.ts && echo "FAIL" || echo "PASS"
+# 5. No pages router Auth0 handlers
 test -f src/pages/api/auth/\[...auth0\].ts && echo "FAIL" || echo "PASS"
 
-# 6. NextResponse.next() only in middleware.ts
-grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "middleware.ts"
-# Expected: (empty - no matches)
+# 6. No page.tsx in auth directory (would shadow routes)
+test -f src/app/auth/page.tsx && echo "FAIL" || echo "PASS"
 ```
 
 ### RUNTIME VALIDATION (After Deployment)
