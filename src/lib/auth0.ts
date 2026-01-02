@@ -152,7 +152,12 @@ function getAuth0Client(): Auth0Client | null {
     // INVARIANT 4: NO AUTH LOOPS - Handle callback errors gracefully
     // On failure, surface controlled error, NOT restart auth.
     // =========================================================================
-    onCallback: async (error, context, _session) => {
+    onCallback: async (
+      error: { message?: string; code?: string; cause?: unknown } | null, 
+      context: { returnTo?: string }, 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      _session: unknown
+    ) => {
       const { NextResponse } = await import('next/server');
       
       if (error) {
