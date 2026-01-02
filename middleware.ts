@@ -170,6 +170,11 @@ function isDeprecatedRoute(pathname: string): boolean {
  */
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
+  
+  // DEBUG: Log auth routes (remove after debugging)
+  if (pathname.startsWith('/auth')) {
+    console.log(`[MIDDLEWARE] Auth route: ${pathname}, method: ${request.method}`);
+  }
 
   // -------------------------------------------------------------------------
   // 1. DEPRECATED ROUTES → 410 Gone
