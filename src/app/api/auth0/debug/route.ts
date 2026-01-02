@@ -14,6 +14,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers, cookies } from "next/headers";
 import { auth0, getBaseUrl } from "@/lib/auth0";
+import { validateBaseUrlConfig, getCanonicalBaseUrl } from "@/lib/baseUrl";
 
 export async function GET(request: NextRequest) {
   try {
