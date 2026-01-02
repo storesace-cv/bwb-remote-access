@@ -7,14 +7,14 @@
  * 
  * Environment variables required:
  *   - AUTH0_SECRET (32+ char hex string)
- *   - APP_BASE_URL (PUBLIC URL, e.g., https://rustdesk.bwb.pt)
+ *   - APP_BASE_URL or AUTH0_BASE_URL (PUBLIC URL, e.g., https://rustdesk.bwb.pt)
  *   - AUTH0_DOMAIN
  *   - AUTH0_CLIENT_ID
  *   - AUTH0_CLIENT_SECRET
  * 
  * IMPORTANT FOR REVERSE PROXY:
- *   - APP_BASE_URL must match the PUBLIC domain users access
- *   - Cookie secure=true is automatic when APP_BASE_URL uses https://
+ *   - Base URL must match the PUBLIC domain users access
+ *   - Cookie secure=true is automatic when base URL uses https://
  *   - Nginx must pass X-Forwarded-Proto and X-Forwarded-Host headers
  * 
  * Custom claims contract (injected by Auth0 Post-Login Action):
@@ -25,16 +25,21 @@
  */
 import "server-only";
 import type { Auth0Client } from "@auth0/nextjs-auth0/server";
+import { getCanonicalBaseUrl, BaseUrlConfigError } from "./baseUrl";
 
 // Lazy-initialized Auth0Client instance
 let _auth0Client: Auth0Client | null = null;
 
 /**
- * Gets the computed base URL from environment.
- * Priority: APP_BASE_URL > AUTH0_BASE_URL
+ * Gets the computed base URL from the canonical resolver.
+ * Uses the same precedence as the rest of the application.
+ * 
+ * @throws BaseUrlConfigError in production if no base URL is configured
  */
-export function getBaseUrl(): string | undefined {
-  return process.env.APP_BASE_URL || process.env.AUTH0_BASE_URL;
+export function getBaseUrl(): string {
+  // In production, this will throw if not configured
+  // In development, it will fallback to localhost
+  return getCanonicalBaseUrl();
 }
 
 /**
@@ -42,12 +47,27 @@ export function getBaseUrl(): string | undefined {
  * This check prevents Auth0Client instantiation during build when env vars aren't available.
  */
 function isAuth0Configured(): boolean {
+  // Check base URL availability without throwing
+  let hasBaseUrl = false;
+  try {
+    getCanonicalBaseUrl({ throwOnMissing: false });
+    hasBaseUrl = !!(
+      process.env.AUTH0_BASE_URL ||
+      process.env.APP_BASE_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_VERCEL_URL ||
+      process.env.NODE_ENV === 'development'
+    );
+  } catch {
+    hasBaseUrl = false;
+  }
+  
   return !!(
     process.env.AUTH0_SECRET &&
     process.env.AUTH0_DOMAIN &&
     process.env.AUTH0_CLIENT_ID &&
     process.env.AUTH0_CLIENT_SECRET &&
-    getBaseUrl()
+    hasBaseUrl
   );
 }
 
