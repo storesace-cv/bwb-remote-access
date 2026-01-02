@@ -286,9 +286,7 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 ├── src/
 │   ├── middleware.ts            ❌ Wrong location
 │   └── app/
-│       └── auth/                ❌ Shadows Auth0 routes
-│           └── [...auth0]/
-│               └── route.ts     ❌ v3 pattern, conflicts with v4
+│       └── (no auth/ directory) → 404 on /auth/login
 ```
 
 **Result**: `/auth/login` returns 404
@@ -300,10 +298,12 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 ├── middleware.ts                ✅ Root level, correct name
 ├── src/
 │   ├── lib/
-│   │   └── auth0.ts             ✅ Auth0 client (no middleware calls)
+│   │   └── auth0.ts             ✅ Auth0 client
 │   └── app/
-│       ├── auth-status/         ✅ Doesn't shadow /auth/*
-│       └── (no auth/ directory) ✅ Path free for Auth0 SDK
+│       ├── auth/
+│       │   └── [auth0]/
+│       │       └── route.ts     ✅ Auth0 route handler
+│       └── auth-status/         ✅ Doesn't shadow /auth/*
 ```
 
 **Result**: `/auth/login` works correctly (redirects to Auth0)
