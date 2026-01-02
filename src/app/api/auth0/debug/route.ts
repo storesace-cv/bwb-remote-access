@@ -85,6 +85,19 @@ export async function GET(request: NextRequest) {
     // Potential issues detection
     const potentialIssues: string[] = [];
     
+    // Add base URL validation
+    const baseUrlValidation = validateBaseUrlConfig();
+    potentialIssues.push(...baseUrlValidation.warnings);
+    potentialIssues.push(...baseUrlValidation.errors);
+    
+    // Get canonical base URL (with error handling)
+    let canonicalBaseUrl: string | null = null;
+    try {
+      canonicalBaseUrl = getCanonicalBaseUrl({ throwOnMissing: false });
+    } catch {
+      potentialIssues.push('Failed to resolve canonical base URL');
+    }
+    
     if (!configuredBaseUrl) {
       potentialIssues.push('APP_BASE_URL is not set');
     }
@@ -107,6 +120,11 @@ export async function GET(request: NextRequest) {
     
     if (sessionError) {
       potentialIssues.push(`Session read error: ${sessionError}`);
+    }
+    
+    // Check for localhost in production
+    if (canonicalBaseUrl?.includes('localhost') && process.env.NODE_ENV === 'production') {
+      potentialIssues.push('CRITICAL: localhost detected in base URL in production mode');
     }
     
     return NextResponse.json({
