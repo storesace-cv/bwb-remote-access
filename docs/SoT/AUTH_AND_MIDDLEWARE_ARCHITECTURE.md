@@ -153,25 +153,37 @@ With Next.js App Router, the middleware alone cannot "mount" API routes. The rou
 
 ---
 
-## 4. Auth0 SDK Integration in Middleware
+## 4. Auth0 SDK Integration Pattern
 
-### RULE: How to Delegate to Auth0
+### RULE: Middleware Passes Through, Route Handler Processes
 
-The middleware MUST delegate `/auth/*` routes to the Auth0 SDK:
+The architecture separates concerns:
+
+1. **Middleware** (`/middleware.ts`): Passes `/auth/*` through to route handler, protects other routes
+2. **Route Handler** (`src/app/auth/[auth0]/route.ts`): Calls `auth0.middleware()` to process auth requests
 
 ```typescript
 // /middleware.ts
-import { auth0 } from "./src/lib/auth0";
+import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // CRITICAL: Delegate /auth/* to Auth0 SDK v4
+  // Let /auth/* pass through to the route handler
   if (pathname.startsWith("/auth")) {
-    return auth0.middleware(request);  // ✅ CORRECT
+    return NextResponse.next();  // ✅ Pass to route handler
   }
 
-  // ... other routing logic ...
+  // ... other routing logic (session checks, etc.) ...
+}
+```
+
+```typescript
+// src/app/auth/[auth0]/route.ts
+import { auth0 } from '@/lib/auth0';
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  return await auth0.middleware(request);  // ✅ Auth0 SDK processes here
 }
 ```
 
@@ -179,11 +191,10 @@ export async function middleware(request: NextRequest) {
 
 | Location | Allowed |
 |----------|--------|
-| `/middleware.ts` | ✅ YES |
-| Route handlers (`app/**/route.ts`) | ❌ **FORBIDDEN** |
-| API routes | ❌ **FORBIDDEN** |
+| `src/app/auth/[auth0]/route.ts` | ✅ YES |
+| `/middleware.ts` | ❌ **NOT RECOMMENDED** (use pass-through pattern) |
+| Other route handlers | ❌ **FORBIDDEN** |
 | Server Actions | ❌ **FORBIDDEN** |
-| Any other file | ❌ **FORBIDDEN** |
 
 ---
 
