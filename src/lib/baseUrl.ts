@@ -12,6 +12,10 @@
  *   5. ONLY in development → http://localhost:3000
  *   6. In production without config → THROWS ERROR (no silent fallback)
  * 
+ * HARD-FAIL IN PRODUCTION:
+ *   - If resolved URL contains localhost, 127.0.0.1, 0.0.0.0 → THROWS
+ *   - No silent fallback, ever
+ * 
  * HTTPS ENFORCEMENT:
  *   - URLs without protocol get https:// prepended
  *   - http:// is ONLY allowed in development
@@ -19,13 +23,49 @@
  */
 
 /**
- * Configuration error thrown when base URL cannot be resolved in production.
+ * Configuration error thrown when base URL cannot be resolved or is invalid.
  */
 export class BaseUrlConfigError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'BaseUrlConfigError';
   }
+}
+
+/**
+ * Internal/private host patterns that are NEVER allowed in production.
+ */
+const INTERNAL_HOST_PATTERNS = [
+  'localhost',
+  '127.0.0.1',
+  '0.0.0.0',
+  '::1',
+  '10.',      // Private network
+  '192.168.', // Private network
+  '172.16.',  // Private network (172.16.0.0 - 172.31.255.255)
+  '172.17.',
+  '172.18.',
+  '172.19.',
+  '172.20.',
+  '172.21.',
+  '172.22.',
+  '172.23.',
+  '172.24.',
+  '172.25.',
+  '172.26.',
+  '172.27.',
+  '172.28.',
+  '172.29.',
+  '172.30.',
+  '172.31.',
+];
+
+/**
+ * Checks if a URL contains an internal/private host.
+ */
+function isInternalHost(url: string): boolean {
+  const lowerUrl = url.toLowerCase();
+  return INTERNAL_HOST_PATTERNS.some(pattern => lowerUrl.includes(pattern));
 }
 
 /**

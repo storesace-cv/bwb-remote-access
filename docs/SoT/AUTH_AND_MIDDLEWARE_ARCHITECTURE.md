@@ -96,7 +96,7 @@ export async function GET() {
 
 ### RULE: `/auth/*` Paths Are Reserved for Auth0 SDK
 
-The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK v4**. The SDK automatically handles these routes via middleware:
+The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK v4**. The SDK handles these routes:
 
 | Route | Purpose |
 |-------|---------|
@@ -108,61 +108,82 @@ The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK v4**. The SD
 | `/auth/access-token` | Returns access token |
 | `/auth/backchannel-logout` | Handles backchannel logout |
 
-### CRITICAL: Auth0 SDK v4 Auto-Mounts Routes
+### CRITICAL: Auth0 SDK v4 with App Router Requires Route Handler
 
-In **@auth0/nextjs-auth0 v4**, auth routes are **automatically mounted via middleware**. 
-
-**No explicit route handler files are required or allowed:**
+In **@auth0/nextjs-auth0 v4** with **Next.js App Router**, auth routes require a **catch-all route handler**:
 
 | Pattern | Status |
 |---------|--------|
-| `src/app/auth/[...auth0]/route.ts` | ❌ **FORBIDDEN** (v3 pattern, conflicts with v4) |
+| `src/app/auth/[auth0]/route.ts` | ✅ **REQUIRED** (catch-all for Auth0 routes) |
+| `src/app/auth/[...auth0]/route.ts` | ❌ **WRONG** (rest params not supported) |
 | `src/pages/api/auth/[...auth0].ts` | ❌ **FORBIDDEN** (Pages Router pattern) |
-| `src/app/auth/` directory | ❌ **FORBIDDEN** (shadows SDK routes) |
+| `src/app/auth/page.tsx` | ❌ **FORBIDDEN** (shadows Auth0 routes) |
 
 ### DO ✅
 
-- Delegate all `/auth/*` routes to `auth0.middleware(request)` in `middleware.ts`
-- Keep `/auth/*` path FREE of any application code
+```typescript
+// src/app/auth/[auth0]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { auth0 } from '@/lib/auth0';
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  return await auth0.middleware(request);
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  return await auth0.middleware(request);
+}
+```
 
 ### DO NOT ❌
 
 ```
-src/app/auth/                    ❌ FORBIDDEN - Shadows Auth0 routes
 src/app/auth/page.tsx            ❌ FORBIDDEN - Shadows Auth0 routes
-src/app/auth/[...auth0]/route.ts ❌ FORBIDDEN - v3 pattern, conflicts with v4
-src/pages/api/auth/[...auth0].ts ❌ FORBIDDEN - Pages Router pattern
+src/app/auth/login/page.tsx      ❌ FORBIDDEN - Shadows Auth0 routes
+src/app/auth/[...auth0]/route.ts ❌ WRONG - Use [auth0] not [...auth0]
 ```
 
-### Why?
+### Why Route Handler is Needed?
 
-When `src/app/auth/` exists, Next.js serves pages from that directory BEFORE the middleware can delegate to Auth0. This causes:
+With Next.js App Router, the middleware alone cannot "mount" API routes. The route handler:
 
-- **404 errors** on `/auth/login`
-- Auth0 SDK routes being shadowed
-- Authentication flow breaking completely
+1. Declares `/auth/*` as valid routes to Next.js
+2. Delegates to `auth0.middleware()` for actual processing
+3. Prevents 404 errors on `/auth/login`, `/auth/callback`, etc.
 
 ---
 
-## 4. Auth0 SDK Integration in Middleware
+## 4. Auth0 SDK Integration Pattern
 
-### RULE: How to Delegate to Auth0
+### RULE: Middleware Passes Through, Route Handler Processes
 
-The middleware MUST delegate `/auth/*` routes to the Auth0 SDK:
+The architecture separates concerns:
+
+1. **Middleware** (`/middleware.ts`): Passes `/auth/*` through to route handler, protects other routes
+2. **Route Handler** (`src/app/auth/[auth0]/route.ts`): Calls `auth0.middleware()` to process auth requests
 
 ```typescript
 // /middleware.ts
-import { auth0 } from "./src/lib/auth0";
+import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // CRITICAL: Delegate /auth/* to Auth0 SDK v4
+  // Let /auth/* pass through to the route handler
   if (pathname.startsWith("/auth")) {
-    return auth0.middleware(request);  // ✅ CORRECT
+    return NextResponse.next();  // ✅ Pass to route handler
   }
 
-  // ... other routing logic ...
+  // ... other routing logic (session checks, etc.) ...
+}
+```
+
+```typescript
+// src/app/auth/[auth0]/route.ts
+import { auth0 } from '@/lib/auth0';
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  return await auth0.middleware(request);  // ✅ Auth0 SDK processes here
 }
 ```
 
@@ -170,11 +191,10 @@ export async function middleware(request: NextRequest) {
 
 | Location | Allowed |
 |----------|--------|
-| `/middleware.ts` | ✅ YES |
-| Route handlers (`app/**/route.ts`) | ❌ **FORBIDDEN** |
-| API routes | ❌ **FORBIDDEN** |
+| `src/app/auth/[auth0]/route.ts` | ✅ YES |
+| `/middleware.ts` | ❌ **NOT RECOMMENDED** (use pass-through pattern) |
+| Other route handlers | ❌ **FORBIDDEN** |
 | Server Actions | ❌ **FORBIDDEN** |
-| Any other file | ❌ **FORBIDDEN** |
 
 ---
 
@@ -233,16 +253,14 @@ test -f proxy.ts && echo "FAIL: proxy.ts exists" || echo "PASS"
 # 3. src/middleware.ts does NOT exist (wrong location)
 test -f src/middleware.ts && echo "FAIL: src/middleware.ts exists" || echo "PASS"
 
-# 4. src/app/auth/ directory does NOT exist
-test -d src/app/auth && echo "FAIL: src/app/auth/ exists" || echo "PASS"
+# 4. Auth0 route handler EXISTS
+test -f src/app/auth/\[auth0\]/route.ts && echo "PASS" || echo "FAIL: Auth0 route handler missing"
 
-# 5. No explicit Auth0 route handlers (v3 pattern)
-test -f src/app/auth/\[...auth0\]/route.ts && echo "FAIL" || echo "PASS"
+# 5. No pages router Auth0 handlers
 test -f src/pages/api/auth/\[...auth0\].ts && echo "FAIL" || echo "PASS"
 
-# 6. NextResponse.next() only in middleware.ts
-grep -rn "NextResponse.next" --include="*.ts" . | grep -v node_modules | grep -v "middleware.ts"
-# Expected: (empty - no matches)
+# 6. No page.tsx in auth directory (would shadow routes)
+test -f src/app/auth/page.tsx && echo "FAIL" || echo "PASS"
 ```
 
 ### RUNTIME VALIDATION (After Deployment)
@@ -268,9 +286,7 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 ├── src/
 │   ├── middleware.ts            ❌ Wrong location
 │   └── app/
-│       └── auth/                ❌ Shadows Auth0 routes
-│           └── [...auth0]/
-│               └── route.ts     ❌ v3 pattern, conflicts with v4
+│       └── (no auth/ directory) → 404 on /auth/login
 ```
 
 **Result**: `/auth/login` returns 404
@@ -282,10 +298,12 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 ├── middleware.ts                ✅ Root level, correct name
 ├── src/
 │   ├── lib/
-│   │   └── auth0.ts             ✅ Auth0 client (no middleware calls)
+│   │   └── auth0.ts             ✅ Auth0 client
 │   └── app/
-│       ├── auth-status/         ✅ Doesn't shadow /auth/*
-│       └── (no auth/ directory) ✅ Path free for Auth0 SDK
+│       ├── auth/
+│       │   └── [auth0]/
+│       │       └── route.ts     ✅ Auth0 route handler
+│       └── auth-status/         ✅ Doesn't shadow /auth/*
 ```
 
 **Result**: `/auth/login` works correctly (redirects to Auth0)
@@ -327,10 +345,10 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 │ Middleware file       → /middleware.ts (ROOT, not src/)          │
 │ Function name         → export async function middleware()       │
 │ NextResponse.next()   → ONLY in /middleware.ts                   │
-│ auth0.middleware()    → ONLY in /middleware.ts                   │
-│ /auth/* routes        → RESERVED for Auth0 SDK v4                │
-│ src/app/auth/         → MUST NOT EXIST                           │
-│ Auth0 route handlers  → MUST NOT EXIST (v4 auto-mounts)          │
+│ auth0.middleware()    → In /src/app/auth/[auth0]/route.ts        │
+│ /auth/* routes        → Handled by route handler + SDK           │
+│ src/app/auth/[auth0]/ → MUST EXIST (route handler)               │
+│ src/app/auth/page.tsx → MUST NOT EXIST (shadows routes)          │
 │ proxy.ts              → MUST NOT EXIST (use middleware.ts)       │
 │ /api/login            → Returns 410 Gone                         │
 │ /api/auth/*           → Redirects to /auth/*                     │

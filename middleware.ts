@@ -6,14 +6,13 @@
  * ARCHITECTURE RULES (NON-NEGOTIABLE):
  * 1. This file MUST be at the project ROOT as `middleware.ts`
  * 2. The exported function MUST be named `middleware`
- * 3. Auth0 routes (/auth/*) are delegated to auth0.middleware(request)
- *    - The Auth0Client is pre-configured with appBaseUrl from canonical resolver
+ * 3. Auth0 routes (/auth/*) are passed through to /app/auth/[auth0]/route.ts
+ *    - The route handler calls auth0.middleware(request) for processing
  *    - NO localhost fallback is allowed in production
- * 4. No src/app/auth/ directory may exist (would shadow Auth0 routes)
+ * 4. The src/app/auth/[auth0]/route.ts MUST exist for App Router
  * 5. NextResponse.next() is ONLY allowed in this file
- * 6. No explicit Auth0 route handlers (v4 auto-mounts via middleware)
  * 
- * Auth0 SDK v4 Routes (auto-mounted via middleware):
+ * Auth0 SDK v4 Routes (handled via route handler):
  *   /auth/login     → Redirects to Auth0 Universal Login
  *   /auth/logout    → Clears session and logs out
  *   /auth/callback  → Handles OAuth callback
@@ -170,6 +169,11 @@ function isDeprecatedRoute(pathname: string): boolean {
  */
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
+  
+  // DEBUG: Log auth routes (remove after debugging)
+  if (pathname.startsWith('/auth')) {
+    console.log(`[MIDDLEWARE] Auth route: ${pathname}, method: ${request.method}`);
+  }
 
   // -------------------------------------------------------------------------
   // 1. DEPRECATED ROUTES → 410 Gone
@@ -192,12 +196,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 3. AUTH0 ROUTES → Delegate to Auth0 SDK (CRITICAL)
+  // 3. AUTH0 ROUTES → Pass through to route handler
   // -------------------------------------------------------------------------
   if (isAuth0Route(pathname)) {
-    // Auth0 SDK v4 handles all /auth/* routes via middleware:
-    // /auth/login, /auth/logout, /auth/callback, /auth/me, /auth/profile, etc.
-    return auth0.middleware(request);
+    // Auth0 SDK v4 with App Router: Let the /app/auth/[auth0]/route.ts handle it
+    // The route handler calls auth0.middleware() directly
+    console.log(`[MIDDLEWARE] Passing through ${pathname} to route handler`);
+    return NextResponse.next();
   }
 
   // -------------------------------------------------------------------------
