@@ -145,35 +145,26 @@ Route handlers only receive the dynamic segment (`login`, `callback`), which bre
 
 ## 4. Auth0 SDK Integration Pattern
 
-### RULE: Middleware Passes Through, Route Handler Processes
+### RULE: Middleware Processes /auth/* Directly
 
-The architecture separates concerns:
+The architecture is simple:
 
-1. **Middleware** (`/middleware.ts`): Passes `/auth/*` through to route handler, protects other routes
-2. **Route Handler** (`src/app/auth/[auth0]/route.ts`): Calls `auth0.middleware()` to process auth requests
+1. **Middleware** (`/middleware.ts`): Processes `/auth/*` via `auth0.middleware()`, protects other routes
+2. **No route handlers** for `/auth/*` - SDK handles everything via middleware
 
 ```typescript
 // /middleware.ts
-import { NextResponse } from "next/server";
+import { auth0 } from "./src/lib/auth0";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Let /auth/* pass through to the route handler
+  // CRITICAL: Delegate /auth/* directly to Auth0 SDK v4
   if (pathname.startsWith("/auth")) {
-    return NextResponse.next();  // ✅ Pass to route handler
+    return await auth0.middleware(request);  // ✅ Direct processing
   }
 
   // ... other routing logic (session checks, etc.) ...
-}
-```
-
-```typescript
-// src/app/auth/[auth0]/route.ts
-import { auth0 } from '@/lib/auth0';
-
-export async function GET(request: NextRequest): Promise<NextResponse> {
-  return await auth0.middleware(request);  // ✅ Auth0 SDK processes here
 }
 ```
 
@@ -181,9 +172,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 | Location | Allowed |
 |----------|--------|
-| `src/app/auth/[auth0]/route.ts` | ✅ YES |
-| `/middleware.ts` | ❌ **NOT RECOMMENDED** (use pass-through pattern) |
-| Other route handlers | ❌ **FORBIDDEN** |
+| `/middleware.ts` | ✅ YES |
+| Route handlers (`app/**/route.ts`) | ❌ **FORBIDDEN** |
 | Server Actions | ❌ **FORBIDDEN** |
 
 ---
