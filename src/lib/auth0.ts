@@ -77,11 +77,12 @@ function isAuth0Configured(): boolean {
  * Returns null if Auth0 is not configured (e.g., during build).
  * 
  * Configuration for reverse proxy:
- *   - appBaseUrl: Must be the PUBLIC URL (https://rustdesk.bwb.pt)
+ *   - appBaseUrl: Uses the canonical base URL resolver
  *   - session.cookie.secure: true (automatic for https URLs)
  *   - session.cookie.sameSite: 'lax' (default, works with redirects)
  * 
  * @returns Auth0Client instance or null if not configured
+ * @throws BaseUrlConfigError in production if base URL is not configured
  */
 function getAuth0Client(): Auth0Client | null {
   if (_auth0Client) {
@@ -93,8 +94,10 @@ function getAuth0Client(): Auth0Client | null {
     return null;
   }
 
-  const baseUrl = getBaseUrl();
-  const isHttps = baseUrl?.startsWith('https://');
+  // Get base URL from canonical resolver
+  // This will throw in production if not configured (NO localhost fallback)
+  const baseUrl = getCanonicalBaseUrl();
+  const isHttps = baseUrl.startsWith('https://');
 
   // Dynamic require to avoid build-time evaluation of Auth0Client constructor
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -102,8 +105,7 @@ function getAuth0Client(): Auth0Client | null {
   
   // Explicitly configure the client with session/cookie settings for reverse proxy
   _auth0Client = new Auth0ClientClass({
-    // appBaseUrl is read from APP_BASE_URL env var by default,
-    // but we set it explicitly to ensure correctness
+    // CRITICAL: Use the canonical base URL - NO localhost fallback in production
     appBaseUrl: baseUrl,
     
     // Session configuration for reverse proxy
