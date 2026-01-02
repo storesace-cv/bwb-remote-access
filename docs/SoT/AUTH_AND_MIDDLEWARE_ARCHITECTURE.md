@@ -233,14 +233,11 @@ test -f proxy.ts && echo "FAIL: proxy.ts exists" || echo "PASS"
 # 3. src/middleware.ts does NOT exist (wrong location)
 test -f src/middleware.ts && echo "FAIL: src/middleware.ts exists" || echo "PASS"
 
-# 4. Auth0 route handler EXISTS
-test -f src/app/auth/\[auth0\]/route.ts && echo "PASS" || echo "FAIL: Auth0 route handler missing"
+# 4. src/app/auth/ directory does NOT exist (would shadow middleware)
+test -d src/app/auth && echo "FAIL: src/app/auth/ exists" || echo "PASS"
 
 # 5. No pages router Auth0 handlers
 test -f src/pages/api/auth/\[...auth0\].ts && echo "FAIL" || echo "PASS"
-
-# 6. No page.tsx in auth directory (would shadow routes)
-test -f src/app/auth/page.tsx && echo "FAIL" || echo "PASS"
 ```
 
 ### RUNTIME VALIDATION (After Deployment)
@@ -248,10 +245,10 @@ test -f src/app/auth/page.tsx && echo "FAIL" || echo "PASS"
 ```bash
 # /auth/login must NOT return 404
 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/auth/login
-# Expected: 200 or 302 (redirect to Auth0) - NOT 404
+# Expected: 302/307 (redirect to Auth0) - NOT 404
 
 curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
-# Expected: 200 or 302 (redirect to Auth0) - NOT 404
+# Expected: 302/307 (redirect to Auth0) - NOT 404
 ```
 
 ---
