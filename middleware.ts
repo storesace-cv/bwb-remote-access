@@ -189,8 +189,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const sessionCookie = request.cookies.get("appSession");
 
   if (!sessionCookie?.value) {
-    // No session - redirect to Auth0 login
-    const loginUrl = new URL("/auth/login", request.url);
+    // No session - redirect to Auth0 login using PUBLIC base URL
+    // CRITICAL: Use getRedirectBaseUrl() to avoid localhost redirects in production
+    const baseUrl = getRedirectBaseUrl(request);
+    const loginUrl = new URL("/auth/login", baseUrl);
     loginUrl.searchParams.set("returnTo", pathname);
     return NextResponse.redirect(loginUrl);
   }
