@@ -97,6 +97,17 @@ function getAuth0Client(): Auth0Client | null {
   // Get base URL from canonical resolver
   // This will throw in production if not configured (NO localhost fallback)
   const baseUrl = getCanonicalBaseUrl();
+  
+  // HARD FAIL: Localhost in production is NEVER allowed
+  const isProduction = process.env.NODE_ENV === 'production';
+  if (isProduction && baseUrl.includes('localhost')) {
+    throw new Error(
+      `CRITICAL: Auth0 baseUrl contains 'localhost' in production mode. ` +
+      `Resolved URL: ${baseUrl}. ` +
+      `Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.`
+    );
+  }
+  
   const isHttps = baseUrl.startsWith('https://');
 
   // Dynamic require to avoid build-time evaluation of Auth0Client constructor

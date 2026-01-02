@@ -6,7 +6,9 @@
  * ARCHITECTURE RULES (NON-NEGOTIABLE):
  * 1. This file MUST be at the project ROOT as `middleware.ts`
  * 2. The exported function MUST be named `middleware`
- * 3. Auth0 routes (/auth/*) are delegated to `auth0.middleware(request)`
+ * 3. Auth0 routes (/auth/*) are delegated to auth0.middleware(request)
+ *    - The Auth0Client is pre-configured with appBaseUrl from canonical resolver
+ *    - NO localhost fallback is allowed in production
  * 4. No src/app/auth/ directory may exist (would shadow Auth0 routes)
  * 5. NextResponse.next() is ONLY allowed in this file
  * 6. No explicit Auth0 route handlers (v4 auto-mounts via middleware)
@@ -29,6 +31,8 @@ import { auth0 } from "./src/lib/auth0";
 // BASE URL RESOLUTION FOR REDIRECTS
 // ============================================================================
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
 /**
  * Gets the canonical base URL for redirects.
  * 
@@ -37,9 +41,9 @@ import { auth0 } from "./src/lib/auth0";
  *   2. AUTH0_BASE_URL environment variable
  *   3. APP_BASE_URL environment variable
  *   4. NEXT_PUBLIC_SITE_URL environment variable
- *   5. request.url (fallback, may be localhost in dev)
+ *   5. request.url (ONLY in development)
  * 
- * This ensures redirects use the public URL, not the internal server URL.
+ * HARD FAIL: In production, if resolved URL contains 'localhost', throws error.
  */
 function getRedirectBaseUrl(request: NextRequest): string {
   // Check for reverse proxy headers first (most reliable in production)
@@ -47,7 +51,15 @@ function getRedirectBaseUrl(request: NextRequest): string {
   const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
   
   if (forwardedHost) {
-    return `${forwardedProto}://${forwardedHost}`;
+    const url = `${forwardedProto}://${forwardedHost}`;
+    // HARD FAIL: localhost in production is NEVER allowed
+    if (IS_PRODUCTION && url.includes('localhost')) {
+      throw new Error(
+        `CRITICAL: Resolved redirect URL contains 'localhost' in production. ` +
+        `URL: ${url}. Check X-Forwarded-Host header.`
+      );
+    }
+    return url;
   }
   
   // Check environment variables (strict precedence)
@@ -62,10 +74,27 @@ function getRedirectBaseUrl(request: NextRequest): string {
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       url = `https://${url}`;
     }
-    return url.endsWith("/") ? url.slice(0, -1) : url;
+    url = url.endsWith("/") ? url.slice(0, -1) : url;
+    
+    // HARD FAIL: localhost in production is NEVER allowed
+    if (IS_PRODUCTION && url.includes('localhost')) {
+      throw new Error(
+        `CRITICAL: Base URL contains 'localhost' in production. ` +
+        `URL: ${url}. Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.`
+      );
+    }
+    return url;
   }
   
-  // Fallback to request URL (may be localhost in dev - acceptable)
+  // Fallback to request URL - ONLY allowed in development
+  if (IS_PRODUCTION) {
+    throw new Error(
+      `CRITICAL: No base URL configured in production. ` +
+      `Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.`
+    );
+  }
+  
+  // Development fallback
   const requestUrl = new URL(request.url);
   return `${requestUrl.protocol}//${requestUrl.host}`;
 }
