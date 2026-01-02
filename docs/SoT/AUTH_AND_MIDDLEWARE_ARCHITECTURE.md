@@ -345,10 +345,10 @@ curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
 │ Middleware file       → /middleware.ts (ROOT, not src/)          │
 │ Function name         → export async function middleware()       │
 │ NextResponse.next()   → ONLY in /middleware.ts                   │
-│ auth0.middleware()    → ONLY in /middleware.ts                   │
-│ /auth/* routes        → RESERVED for Auth0 SDK v4                │
-│ src/app/auth/         → MUST NOT EXIST                           │
-│ Auth0 route handlers  → MUST NOT EXIST (v4 auto-mounts)          │
+│ auth0.middleware()    → In /src/app/auth/[auth0]/route.ts        │
+│ /auth/* routes        → Handled by route handler + SDK           │
+│ src/app/auth/[auth0]/ → MUST EXIST (route handler)               │
+│ src/app/auth/page.tsx → MUST NOT EXIST (shadows routes)          │
 │ proxy.ts              → MUST NOT EXIST (use middleware.ts)       │
 │ /api/login            → Returns 410 Gone                         │
 │ /api/auth/*           → Redirects to /auth/*                     │
