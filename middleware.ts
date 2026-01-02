@@ -26,6 +26,51 @@ import type { NextRequest } from "next/server";
 import { auth0 } from "./src/lib/auth0";
 
 // ============================================================================
+// BASE URL RESOLUTION FOR REDIRECTS
+// ============================================================================
+
+/**
+ * Gets the canonical base URL for redirects.
+ * 
+ * Priority:
+ *   1. X-Forwarded-Host + X-Forwarded-Proto headers (reverse proxy)
+ *   2. AUTH0_BASE_URL environment variable
+ *   3. APP_BASE_URL environment variable
+ *   4. NEXT_PUBLIC_SITE_URL environment variable
+ *   5. request.url (fallback, may be localhost in dev)
+ * 
+ * This ensures redirects use the public URL, not the internal server URL.
+ */
+function getRedirectBaseUrl(request: NextRequest): string {
+  // Check for reverse proxy headers first (most reliable in production)
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+  
+  // Check environment variables (strict precedence)
+  const envBaseUrl = 
+    process.env.AUTH0_BASE_URL ||
+    process.env.APP_BASE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL;
+  
+  if (envBaseUrl) {
+    // Normalize: ensure protocol, remove trailing slash
+    let url = envBaseUrl.trim();
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = `https://${url}`;
+    }
+    return url.endsWith("/") ? url.slice(0, -1) : url;
+  }
+  
+  // Fallback to request URL (may be localhost in dev - acceptable)
+  const requestUrl = new URL(request.url);
+  return `${requestUrl.protocol}//${requestUrl.host}`;
+}
+
+// ============================================================================
 // ROUTE CLASSIFICATION
 // ============================================================================
 
@@ -112,7 +157,9 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // -------------------------------------------------------------------------
   const legacyRedirect = getLegacyRedirect(pathname);
   if (legacyRedirect) {
-    return NextResponse.redirect(new URL(legacyRedirect, request.url));
+    // Use public base URL to avoid localhost redirects
+    const baseUrl = getRedirectBaseUrl(request);
+    return NextResponse.redirect(new URL(legacyRedirect, baseUrl));
   }
 
   // -------------------------------------------------------------------------
@@ -144,8 +191,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const sessionCookie = request.cookies.get("appSession");
 
   if (!sessionCookie?.value) {
-    // No session - redirect to Auth0 login
-    const loginUrl = new URL("/auth/login", request.url);
+    // No session - redirect to Auth0 login using PUBLIC base URL
+    // CRITICAL: Use getRedirectBaseUrl() to avoid localhost redirects in production
+    const baseUrl = getRedirectBaseUrl(request);
+    const loginUrl = new URL("/auth/login", baseUrl);
     loginUrl.searchParams.set("returnTo", pathname);
     return NextResponse.redirect(loginUrl);
   }
