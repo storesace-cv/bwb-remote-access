@@ -1,7 +1,7 @@
 # Source of Truth — Authentication & Middleware Architecture
 
 > **Document Status**: CANONICAL  
-> **Last Updated**: December 2024  
+> **Last Updated**: January 2026  
 > **Next.js Version**: 16.x  
 > **Auth0 SDK Version**: @auth0/nextjs-auth0 v4.x  
 > **Authority**: This document overrides any conflicting instructions, comments, or patterns found elsewhere.
@@ -15,9 +15,51 @@ This document establishes **non-negotiable architectural rules** for authenticat
 1. Prevent the recurrence of production errors like `/auth/login` returning 404
 2. Ensure Auth0 integration follows the correct SDK v4 patterns
 3. Establish clear boundaries between middleware and route handlers
-4. Serve as the definitive reference for any future development
+4. **Enforce OAuth/OIDC invariants that prevent auth loops and state errors**
+5. Serve as the definitive reference for any future development
 
 **If future instructions conflict with this document, THIS DOCUMENT WINS.**
+
+---
+
+## 0. CRITICAL OAUTH/OIDC INVARIANTS (NON-NEGOTIABLE)
+
+These invariants MUST be enforced at all times:
+
+### INVARIANT 1: CALLBACK IS TERMINAL AND UNGUARDED
+- `/auth/callback` MUST NOT trigger authentication
+- `/auth/callback` MUST NOT be protected by auth guards
+- `/auth/callback` MUST NOT perform redirect-based auth checks
+- Callback handling must be linear and atomic
+
+### INVARIANT 2: SINGLE ACTIVE AUTH TRANSACTION
+- Only ONE auth transaction may exist per client at any time
+- While a transaction is pending:
+  - No new authorization request may be initiated
+  - No new `state` may be generated
+- Re-entrancy is FORBIDDEN
+- **Implementation**: `enableParallelTransactions: false` in Auth0Client config
+
+### INVARIANT 3: STATE ↔ TRANSACTION CONSISTENCY
+- Every authorization `state` MUST map 1:1 to persisted transaction data
+- That data MUST still exist when the callback is processed
+- No logic may invalidate or overwrite it prematurely
+
+### INVARIANT 4: NO AUTH LOOPS
+- After successful callback: user MUST NOT be redirected back to login
+- Session establishment MUST be final
+- On failure: system MUST surface a controlled error (`/auth-error`), NOT restart auth
+- **Implementation**: `onCallback` handler redirects to `/auth-error` on failure
+
+### INVARIANT 5: SESSION PAYLOAD CONTROL
+- Session storage MUST be minimal
+- Large tokens or excessive claims MUST NOT be stored in client cookies
+- Cookie chunking must be avoided
+- Session size must remain stable across logins
+
+### INVARIANT 6: CONFIGURATION COHERENCE
+- All base URLs, redirect URIs, and environment bindings MUST be internally consistent
+- Any mismatch that can cause auth re-entry MUST be eliminated
 
 ---
 
