@@ -34,15 +34,16 @@ export class BaseUrlConfigError extends Error {
 
 /**
  * Internal/private host patterns that are NEVER allowed in production.
+ * This is the SINGLE SOURCE OF TRUTH for internal host detection.
  */
 const INTERNAL_HOST_PATTERNS = [
   'localhost',
   '127.0.0.1',
   '0.0.0.0',
   '::1',
-  '10.',      // Private network
-  '192.168.', // Private network
-  '172.16.',  // Private network (172.16.0.0 - 172.31.255.255)
+  '10.',      // Private network 10.0.0.0/8
+  '192.168.', // Private network 192.168.0.0/16
+  '172.16.',  // Private network 172.16.0.0/12
   '172.17.',
   '172.18.',
   '172.19.',
@@ -61,11 +62,29 @@ const INTERNAL_HOST_PATTERNS = [
 ];
 
 /**
- * Checks if a URL contains an internal/private host.
+ * Checks if a URL or host string represents an internal/private address.
+ * This is the SINGLE SOURCE OF TRUTH for internal host detection.
+ * All production hard-fail checks MUST route through this function.
+ * 
+ * @param urlOrHost - A full URL (e.g., "https://localhost:3000") or host string (e.g., "localhost")
+ * @returns true if the URL/host is internal/private, false otherwise
  */
-function isInternalHost(url: string): boolean {
-  const lowerUrl = url.toLowerCase();
-  return INTERNAL_HOST_PATTERNS.some(pattern => lowerUrl.includes(pattern));
+function isInternalHost(urlOrHost: string): boolean {
+  // Normalize: extract host if it's a URL, lowercase for comparison
+  let host = urlOrHost.toLowerCase().trim();
+  
+  // If it looks like a URL, extract the host portion
+  if (host.includes('://')) {
+    try {
+      const url = new URL(host);
+      host = url.hostname;
+    } catch {
+      // If URL parsing fails, use the original string
+    }
+  }
+  
+  // Check against all internal patterns
+  return INTERNAL_HOST_PATTERNS.some(pattern => host.includes(pattern));
 }
 
 /**
@@ -105,10 +124,17 @@ function normalizeUrl(url: string, allowHttp: boolean): string {
 /**
  * Resolves the canonical base URL for the application.
  * 
+ * PRODUCTION BEHAVIOR:
+ *   - HARD FAIL if no base URL configured
+ *   - HARD FAIL if resolved URL is internal/localhost/private
+ * 
+ * DEVELOPMENT BEHAVIOR:
+ *   - Allows localhost fallback
+ * 
  * @param options.allowLocalhost - If true, allows localhost fallback in development (default: true)
  * @param options.throwOnMissing - If true, throws error when URL cannot be resolved (default: true in production)
  * @returns The canonical base URL without trailing slash
- * @throws BaseUrlConfigError if URL cannot be resolved in production
+ * @throws BaseUrlConfigError if URL cannot be resolved or is internal in production
  * 
  * @example
  * // Standard usage
@@ -141,7 +167,19 @@ export function getCanonicalBaseUrl(options?: {
   // Find first non-empty candidate
   for (const candidate of candidates) {
     if (candidate && candidate.trim()) {
-      return normalizeUrl(candidate, inDev);
+      const normalized = normalizeUrl(candidate, inDev);
+      
+      // PRODUCTION HARD-FAIL: Internal hosts are NEVER allowed
+      // All internal host detection routes through isInternalHost()
+      if (!inDev && isInternalHost(normalized)) {
+        throw new BaseUrlConfigError(
+          `Base URL "${normalized}" is an internal/private address. ` +
+          'Production requires a public domain. ' +
+          'Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.'
+        );
+      }
+      
+      return normalized;
     }
   }
   
@@ -150,7 +188,7 @@ export function getCanonicalBaseUrl(options?: {
     return 'http://localhost:3000';
   }
   
-  // Production without configuration
+  // Production without configuration - HARD FAIL
   if (throwOnMissing) {
     throw new BaseUrlConfigError(
       'Cannot resolve base URL in production. ' +
@@ -192,6 +230,8 @@ export function buildUrl(path: string): string {
 /**
  * Validates that the base URL is properly configured.
  * Useful for startup checks or health endpoints.
+ * 
+ * Uses isInternalHost() as the SINGLE SOURCE OF TRUTH for internal host detection.
  * 
  * @returns Object with validation status and details
  */
@@ -238,8 +278,9 @@ export function validateBaseUrlConfig(): {
       warnings.push('Base URL uses http:// in non-development mode');
     }
     
-    if (baseUrl.includes('localhost') && !inDev) {
-      errors.push('localhost in base URL is not allowed in production');
+    // SINGLE SOURCE OF TRUTH: Use isInternalHost() for internal host detection
+    if (!inDev && isInternalHost(normalized)) {
+      errors.push('Internal/private host in base URL is not allowed in production');
     }
     
     baseUrl = normalized;
