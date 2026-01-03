@@ -80,7 +80,7 @@ test.describe('Auth Flow Invariants', () => {
    */
   test('callback error terminates in auth-error page', async ({ page }) => {
     // Directly hit callback with invalid state
-    const response = await page.goto(
+    await page.goto(
       `${BASE_URL}/auth/callback?code=fake&state=invalid_state_value`
     );
     
