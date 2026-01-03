@@ -296,13 +296,23 @@ export const auth0 = {
     const url = new URL(req.url);
     const correlationId = generateCorrelationId();
     
+    // Check for cookies (NextRequest has cookies property)
+    let hasStateCookie = false;
+    let hasSessionCookie = false;
+    
+    if ('cookies' in req && req.cookies) {
+      const cookies = req.cookies as { has: (name: string) => boolean; getAll: () => Array<{ name: string }> };
+      hasStateCookie = cookies.has('__txn') || 
+                       cookies.getAll().some((c: { name: string }) => c.name.startsWith('__txn'));
+      hasSessionCookie = cookies.has('appSession');
+    }
+    
     logAuth('info', 'auth_route_access', {
       correlationId,
       path: url.pathname,
       method: req.method,
-      hasStateCookie: req.cookies.has('__txn') || 
-                      Array.from(req.cookies.getAll()).some(c => c.name.startsWith('__txn')),
-      hasSessionCookie: req.cookies.has('appSession'),
+      hasStateCookie,
+      hasSessionCookie,
     });
     
     return client.middleware(req);
