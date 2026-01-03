@@ -1,53 +1,97 @@
 /**
- * Auth0 singleton client for server-side operations.
+ * Auth0 Client Configuration - Single Transaction Enforcement
  * 
- * Uses lazy initialization to avoid build-time warnings.
- * Auth0Client is only instantiated at runtime when first accessed,
- * and only if required environment variables are present.
+ * SOURCE OF TRUTH: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+ * 
+ * INVARIANTS ENFORCED:
+ *   1. SINGLE ACTIVE AUTH TRANSACTION (enableParallelTransactions: false)
+ *   2. NO AUTH LOOPS (onCallback redirects to /auth-error on failure)
+ *   3. SESSION PAYLOAD CONTROL (bounded cookies, no chunking)
+ *   4. CONFIGURATION COHERENCE (base URL matches production domain)
  * 
  * Environment variables required:
  *   - AUTH0_SECRET (32+ char hex string)
- *   - APP_BASE_URL or AUTH0_BASE_URL (PUBLIC URL, e.g., https://rustdesk.bwb.pt)
+ *   - APP_BASE_URL or AUTH0_BASE_URL (e.g., https://rustdesk.bwb.pt)
  *   - AUTH0_DOMAIN
  *   - AUTH0_CLIENT_ID
  *   - AUTH0_CLIENT_SECRET
- * 
- * IMPORTANT FOR REVERSE PROXY:
- *   - Base URL must match the PUBLIC domain users access
- *   - Cookie secure=true is automatic when base URL uses https://
- *   - Nginx must pass X-Forwarded-Proto and X-Forwarded-Host headers
- * 
- * Custom claims contract (injected by Auth0 Post-Login Action):
- *   - https://bwb.pt/claims/email
- *   - https://bwb.pt/claims/global_roles
- *   - https://bwb.pt/claims/org
- *   - https://bwb.pt/claims/org_roles
  */
 import "server-only";
 import type { Auth0Client } from "@auth0/nextjs-auth0/server";
 import { getCanonicalBaseUrl } from "./baseUrl";
 
-// Lazy-initialized Auth0Client instance
+// =============================================================================
+// OBSERVABILITY: Structured logging for auth events
+// =============================================================================
+
+type LogLevel = 'info' | 'warn' | 'error';
+
+interface AuthLogEntry {
+  timestamp: string;
+  level: LogLevel;
+  event: string;
+  correlationId?: string;
+  details?: Record<string, unknown>;
+}
+
+/**
+ * Generates a short correlation ID for tracking auth flows.
+ * Uses only first 8 chars for brevity in logs.
+ */
+function generateCorrelationId(): string {
+  return Math.random().toString(36).substring(2, 10);
+}
+
+/**
+ * Masks sensitive values for safe logging.
+ * Shows only first 4 and last 4 characters.
+ */
+function maskValue(value: string | undefined): string {
+  if (!value || value.length < 12) return '[redacted]';
+  return `${value.substring(0, 4)}...${value.substring(value.length - 4)}`;
+}
+
+/**
+ * Structured auth logger - NEVER logs secrets, tokens, or full cookies.
+ */
+function logAuth(level: LogLevel, event: string, details?: Record<string, unknown>): void {
+  const entry: AuthLogEntry = {
+    timestamp: new Date().toISOString(),
+    level,
+    event,
+    details,
+  };
+  
+  const prefix = `[AUTH0:${level.toUpperCase()}]`;
+  
+  if (level === 'error') {
+    console.error(prefix, JSON.stringify(entry));
+  } else if (level === 'warn') {
+    console.warn(prefix, JSON.stringify(entry));
+  } else {
+    console.log(prefix, JSON.stringify(entry));
+  }
+}
+
+// =============================================================================
+// AUTH0 CLIENT CONFIGURATION
+// =============================================================================
+
+// Lazy-initialized Auth0Client instance (singleton)
 let _auth0Client: Auth0Client | null = null;
 
 /**
  * Gets the computed base URL from the canonical resolver.
- * Uses the same precedence as the rest of the application.
- * 
  * @throws BaseUrlConfigError in production if no base URL is configured
  */
 export function getBaseUrl(): string {
-  // In production, this will throw if not configured
-  // In development, it will fallback to localhost
   return getCanonicalBaseUrl();
 }
 
 /**
  * Checks if Auth0 is configured (all required env vars are set).
- * This check prevents Auth0Client instantiation during build when env vars aren't available.
  */
 function isAuth0Configured(): boolean {
-  // Check base URL availability without throwing
   let hasBaseUrl = false;
   try {
     getCanonicalBaseUrl({ throwOnMissing: false });
@@ -73,111 +117,125 @@ function isAuth0Configured(): boolean {
 
 /**
  * Gets the Auth0Client instance (lazy initialization).
- * Creates the client on first access to avoid build-time initialization.
- * Returns null if Auth0 is not configured (e.g., during build).
  * 
- * Configuration for reverse proxy:
- *   - appBaseUrl: Uses the canonical base URL resolver
- *   - session.cookie.secure: true (automatic for https URLs)
- *   - session.cookie.sameSite: 'lax' (default, works with redirects)
+ * CRITICAL CONFIGURATION:
+ *   - enableParallelTransactions: false (INVARIANT 2)
+ *   - onCallback: redirects to /auth-error on failure (INVARIANT 4)
+ *   - transactionCookie: secure + sameSite lax (INVARIANT 5)
  * 
  * @returns Auth0Client instance or null if not configured
- * @throws BaseUrlConfigError in production if base URL is not configured
  */
 function getAuth0Client(): Auth0Client | null {
   if (_auth0Client) {
     return _auth0Client;
   }
 
-  // Skip initialization if Auth0 env vars aren't configured (build time)
   if (!isAuth0Configured()) {
+    logAuth('warn', 'auth0_not_configured', {
+      reason: 'Missing required environment variables',
+    });
     return null;
   }
 
-  // Get base URL from canonical resolver
-  // This will throw in production if not configured (NO localhost fallback)
   const baseUrl = getCanonicalBaseUrl();
+  const isProduction = process.env.NODE_ENV === 'production';
   
   // HARD FAIL: Localhost in production is NEVER allowed
-  const isProduction = process.env.NODE_ENV === 'production';
   if (isProduction && baseUrl.includes('localhost')) {
-    throw new Error(
-      `CRITICAL: Auth0 baseUrl contains 'localhost' in production mode. ` +
-      `Resolved URL: ${baseUrl}. ` +
-      `Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.`
-    );
+    const error = `CRITICAL: Auth0 baseUrl contains 'localhost' in production. URL: ${baseUrl}`;
+    logAuth('error', 'invalid_base_url', { baseUrl, isProduction });
+    throw new Error(error);
   }
   
   const isHttps = baseUrl.startsWith('https://');
+  
+  logAuth('info', 'auth0_client_init', {
+    baseUrl: maskValue(baseUrl),
+    isHttps,
+    isProduction,
+    parallelTransactions: false,
+  });
 
-  // Dynamic require to avoid build-time evaluation of Auth0Client constructor
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { Auth0Client: Auth0ClientClass } = require("@auth0/nextjs-auth0/server");
   
-  // Explicitly configure the client with session/cookie settings for reverse proxy
   _auth0Client = new Auth0ClientClass({
-    // CRITICAL: Use the canonical base URL - NO localhost fallback in production
+    // =======================================================================
+    // BASE URL CONFIGURATION (INVARIANT 6: Configuration Coherence)
+    // =======================================================================
     appBaseUrl: baseUrl,
     
-    // =========================================================================
+    // =======================================================================
     // INVARIANT 2: SINGLE ACTIVE AUTH TRANSACTION
     // Disable parallel transactions to enforce one-at-a-time auth flow.
     // This prevents multiple state values and transaction cookie explosion.
-    // =========================================================================
+    // =======================================================================
     enableParallelTransactions: false,
     
-    // Session configuration for reverse proxy + OIDC compatibility
+    // =======================================================================
+    // SESSION CONFIGURATION (INVARIANT 5: Session Payload Control)
+    // =======================================================================
     session: {
       rolling: true,
       absoluteDuration: 60 * 60 * 24 * 7, // 7 days
       inactivityDuration: 60 * 60 * 24,   // 1 day
       cookie: {
-        // Secure must be true when behind HTTPS reverse proxy
         secure: isHttps,
-        // SameSite 'lax' is required for OIDC redirects to work
         sameSite: 'lax' as const,
-        // Path for cookie
         path: '/',
         // Do NOT set domain - let browser handle it for rustdesk.bwb.pt
       },
     },
     
-    // Transaction cookie for state/nonce (OIDC flow)
+    // =======================================================================
+    // TRANSACTION COOKIE (INVARIANT 5: Session Payload Control)
+    // Single transaction cookie, secure in production, sameSite lax for OAuth
+    // =======================================================================
     transactionCookie: {
       secure: isHttps,
       sameSite: 'lax' as const,
+      // Path must be root for callback to find it
+      path: '/',
     },
     
-    // =========================================================================
-    // INVARIANT 4: NO AUTH LOOPS - Handle callback errors gracefully
-    // On failure, surface controlled error, NOT restart auth.
-    // =========================================================================
+    // =======================================================================
+    // INVARIANT 4: NO AUTH LOOPS
+    // On callback failure, redirect to /auth-error, NEVER restart auth.
+    // =======================================================================
     onCallback: async (
-      error: { message?: string; code?: string; cause?: unknown } | null, 
-      context: { returnTo?: string }, 
+      error: { message?: string; code?: string; cause?: unknown } | null,
+      context: { returnTo?: string; responseType?: string },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       _session: unknown
     ) => {
       const { NextResponse } = await import('next/server');
+      const correlationId = generateCorrelationId();
       
       if (error) {
-        // Log error for debugging
-        console.error('[AUTH0] Callback error:', {
-          error: error.message,
-          code: error.code,
-          cause: error.cause,
+        // OBSERVABILITY: Log callback error (no secrets)
+        logAuth('error', 'callback_error', {
+          correlationId,
+          errorCode: error.code || 'unknown',
+          errorMessage: error.message || 'No message',
+          hasContext: !!context,
+          returnTo: context?.returnTo ? '[set]' : '[not set]',
         });
         
-        // Return error page instead of restarting auth flow
-        // This prevents infinite loops on auth failures
+        // INVARIANT 4: Redirect to error page, NEVER restart auth
         const errorUrl = new URL('/auth-error', baseUrl);
-        errorUrl.searchParams.set('error', error.code || 'callback_error');
-        errorUrl.searchParams.set('message', error.message || 'Authentication failed');
+        errorUrl.searchParams.set('e', error.code || 'callback_error');
+        errorUrl.searchParams.set('cid', correlationId);
         return NextResponse.redirect(errorUrl);
       }
       
+      // OBSERVABILITY: Log successful callback
+      logAuth('info', 'callback_success', {
+        correlationId,
+        returnTo: context?.returnTo ? '[set]' : '[default:/]',
+      });
+      
       // Success - redirect to returnTo or home
-      const returnTo = context.returnTo || '/';
+      const returnTo = context?.returnTo || '/';
       return NextResponse.redirect(new URL(returnTo, baseUrl));
     },
   }) as Auth0Client;
@@ -185,27 +243,26 @@ function getAuth0Client(): Auth0Client | null {
   return _auth0Client;
 }
 
+// =============================================================================
+// AUTH0 CLIENT ACCESSOR (PUBLIC API)
+// =============================================================================
+
 /**
- * Auth0 client accessor object.
- * Provides a compatible interface while ensuring lazy initialization.
+ * Auth0 client accessor object with observability.
  * All method calls are delegated to the lazily-initialized Auth0Client.
- * Methods return null/empty values during build when Auth0 isn't configured.
  */
 export const auth0 = {
   /**
    * Gets the session data for the current request.
-   * Can be called with no arguments in App Router (Server Components, Route Handlers).
    */
   async getSession(req?: unknown) {
     const client = getAuth0Client();
     if (!client) {
-      return null; // Return null during build
+      return null;
     }
     if (req !== undefined) {
-      // Pages Router / middleware usage with request object
       return (client.getSession as (req: unknown) => ReturnType<Auth0Client["getSession"]>)(req);
     }
-    // App Router usage without arguments
     return client.getSession();
   },
 
@@ -225,15 +282,33 @@ export const auth0 = {
 
   /**
    * Middleware handler for Auth0 routes.
+   * 
+   * OBSERVABILITY: Logs auth route access for debugging.
+   * INVARIANT 1: Each call to /auth/login initiates exactly ONE transaction.
    */
   middleware(req: Parameters<Auth0Client["middleware"]>[0]) {
     const client = getAuth0Client();
     if (!client) {
       throw new Error("Auth0 is not configured");
     }
+    
+    // OBSERVABILITY: Log auth route access
+    const url = new URL(req.url);
+    const correlationId = generateCorrelationId();
+    
+    logAuth('info', 'auth_route_access', {
+      correlationId,
+      path: url.pathname,
+      method: req.method,
+      hasStateCookie: req.cookies.has('__txn') || 
+                      Array.from(req.cookies.getAll()).some(c => c.name.startsWith('__txn')),
+      hasSessionCookie: req.cookies.has('appSession'),
+    });
+    
     return client.middleware(req);
   },
 };
 
-// Export getAuth0Client for direct access if needed
+// Export for direct access if needed
 export { getAuth0Client as getAuth0 };
+export { logAuth };
