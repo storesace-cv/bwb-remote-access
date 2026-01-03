@@ -189,7 +189,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 3. LEGACY AUTH ROUTES → Redirect to /auth/*
+  // 2. LEGACY AUTH ROUTES → Redirect to /auth/*
   // -------------------------------------------------------------------------
   const legacyRedirect = getLegacyRedirect(pathname);
   if (legacyRedirect) {
