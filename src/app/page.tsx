@@ -11,7 +11,6 @@
 
 import { redirect } from "next/navigation";
 import { auth0 } from "@/lib/auth0";
-import Link from "next/link";
 
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "2.0.0";
 
