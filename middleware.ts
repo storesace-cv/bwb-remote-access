@@ -223,7 +223,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 3. AUTH0 ROUTES → Delegate to Auth0 SDK (INVARIANT 1: UNGUARDED)
+  // 4. AUTH0 ROUTES → Delegate to Auth0 SDK (INVARIANT 1: UNGUARDED)
   // CRITICAL: These routes MUST NOT trigger any auth checks or redirects.
   // The callback route is TERMINAL - it must complete without interference.
   // -------------------------------------------------------------------------
