@@ -53,11 +53,11 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Auth0 Login Button */}
+          {/* Auth0 Login Button - MUST use <a> for full page navigation */}
+          {/* Next.js <Link> uses client-side navigation (RSC/fetch) which causes CORS errors with Auth0 */}
           <div className="space-y-4">
-            <Link
+            <a
               href="/auth/login"
-              prefetch={false}
               className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-center"
             >
               <svg
