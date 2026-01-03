@@ -222,7 +222,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 6. PROTECTED ROUTES → Require session
+  // 5. PROTECTED ROUTES → Require session
   // Only these routes will trigger a redirect to /auth/login
   // -------------------------------------------------------------------------
   if (isProtectedRoute(pathname)) {
