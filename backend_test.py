@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
 """
-Backend API Test Suite for Auth0 NextResponse.next() Fix Verification
+Backend API Test Suite for Auth0 Authentication Flow - Production Testing
 
-Tests the Auth0 authentication flow after fixing NextResponse.next() misuse.
-The /api/auth/[...auth0]/route.ts file was deleted because it incorrectly used 
-auth0.middleware() which returns NextResponse.next() internally.
+Tests the Auth0 authentication flow for the production application at https://rustdesk.bwb.pt
 
-Auth0 routes are now at /auth/* (not /api/auth/*) as required by nextjs-auth0 v4.
-
-Test Scenarios:
-1. Legacy /api/auth/login should redirect to /auth/login
-2. New /auth/login should work (Auth0 SDK handles it)
-3. Legacy /api/login still returns 410 Gone
-4. Protected routes redirect to /auth/login (not /api/auth/login)
-5. No NextResponse.next() in route handlers
+CRITICAL TESTS TO PERFORM:
+1. Home Page Load Test - GET / (Expected: 200 OK, HTML page with "Entrar com Auth0" button)
+2. Auth Login Redirect Test - GET /auth/login (Expected: 302/307 redirect to Auth0)
+3. Auth Error Page Test - GET /auth-error?e=test (Expected: 200 OK, shows error page)
+4. Auth Callback Error Handling Test - GET /auth/callback?code=fake&state=invalid (Expected: redirect to /auth-error)
+5. Protected Route Without Session Test - GET /dashboard (Expected: 302/307 redirect to /auth/login?returnTo=/dashboard)
+6. API Debug Endpoint Test - GET /api/auth0/test-config (Expected: 200 OK, JSON with configuration details)
 """
 
 import requests
@@ -21,8 +18,8 @@ import json
 import sys
 from typing import Dict, Any, Optional
 
-# API Configuration
-API_BASE_URL = "http://localhost:3000"
+# API Configuration - Production URL
+API_BASE_URL = "https://rustdesk.bwb.pt"
 
 class TestResult:
     def __init__(self, test_name: str, expected_status: int, actual_status: int, 
