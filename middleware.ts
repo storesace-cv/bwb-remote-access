@@ -3,118 +3,81 @@
  * 
  * SOURCE OF TRUTH: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
  * 
- * ARCHITECTURE RULES (NON-NEGOTIABLE):
- * 1. This file MUST be at the project ROOT as `middleware.ts`
- * 2. The exported function MUST be named `middleware`
- * 3. Auth0 routes (/auth/*) are passed through to /app/auth/[auth0]/route.ts
- *    - The route handler calls auth0.middleware(request) for processing
- *    - NO localhost fallback is allowed in production
- * 4. The src/app/auth/[auth0]/route.ts MUST exist for App Router
- * 5. NextResponse.next() is ONLY allowed in this file
+ * ARCHITECTURE MODEL: ALLOWLIST-BASED PROTECTION
+ * - Only explicitly listed protected routes require authentication
+ * - Everything else is public by default (prevents accidental auth triggers)
+ * - Auth routes (/auth/*) are ALWAYS delegated to Auth0 SDK without guards
  * 
- * Auth0 SDK v4 Routes (handled via route handler):
- *   /auth/login     → Redirects to Auth0 Universal Login
- *   /auth/logout    → Clears session and logs out
- *   /auth/callback  → Handles OAuth callback
- *   /auth/me        → Returns session info (JSON)
- *   /auth/profile   → Returns user profile
- *   /auth/access-token → Returns access token
- *   /auth/backchannel-logout → Handles backchannel logout
+ * INVARIANTS ENFORCED:
+ *   1. CALLBACK IS TERMINAL AND UNGUARDED (/auth/* routes never trigger auth)
+ *   2. NO ACCIDENTAL AUTH TRIGGERS (static assets, public routes never start auth)
+ *   3. SINGLE AUTH INITIATION (middleware never creates parallel auth flows)
  */
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth0 } from "./src/lib/auth0";
 
-// ============================================================================
-// BASE URL RESOLUTION FOR REDIRECTS
-// ============================================================================
+// =============================================================================
+// CONFIGURATION
+// =============================================================================
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
+// =============================================================================
+// ROUTE CLASSIFICATION (ALLOWLIST MODEL)
+// =============================================================================
+
 /**
- * Gets the canonical base URL for redirects.
- * 
- * Priority:
- *   1. X-Forwarded-Host + X-Forwarded-Proto headers (reverse proxy)
- *   2. AUTH0_BASE_URL environment variable
- *   3. APP_BASE_URL environment variable
- *   4. NEXT_PUBLIC_SITE_URL environment variable
- *   5. request.url (ONLY in development)
- * 
- * HARD FAIL: In production, if resolved URL contains 'localhost', throws error.
+ * PROTECTED ROUTES - These paths REQUIRE authentication.
+ * Only these routes will trigger a redirect to /auth/login if no session exists.
+ * Everything else is public by default.
  */
-function getRedirectBaseUrl(request: NextRequest): string {
-  // Check for reverse proxy headers first (most reliable in production)
-  const forwardedHost = request.headers.get("x-forwarded-host");
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  
-  if (forwardedHost) {
-    const url = `${forwardedProto}://${forwardedHost}`;
-    // HARD FAIL: localhost in production is NEVER allowed
-    if (IS_PRODUCTION && url.includes('localhost')) {
-      throw new Error(
-        `CRITICAL: Resolved redirect URL contains 'localhost' in production. ` +
-        `URL: ${url}. Check X-Forwarded-Host header.`
-      );
-    }
-    return url;
-  }
-  
-  // Check environment variables (strict precedence)
-  const envBaseUrl = 
-    process.env.AUTH0_BASE_URL ||
-    process.env.APP_BASE_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL;
-  
-  if (envBaseUrl) {
-    // Normalize: ensure protocol, remove trailing slash
-    let url = envBaseUrl.trim();
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = `https://${url}`;
-    }
-    url = url.endsWith("/") ? url.slice(0, -1) : url;
-    
-    // HARD FAIL: localhost in production is NEVER allowed
-    if (IS_PRODUCTION && url.includes('localhost')) {
-      throw new Error(
-        `CRITICAL: Base URL contains 'localhost' in production. ` +
-        `URL: ${url}. Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.`
-      );
-    }
-    return url;
-  }
-  
-  // Fallback to request URL - ONLY allowed in development
-  if (IS_PRODUCTION) {
-    throw new Error(
-      `CRITICAL: No base URL configured in production. ` +
-      `Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.`
-    );
-  }
-  
-  // Development fallback
-  const requestUrl = new URL(request.url);
-  return `${requestUrl.protocol}//${requestUrl.host}`;
-}
-
-// ============================================================================
-// ROUTE CLASSIFICATION
-// ============================================================================
-
-// Auth0 SDK routes - MUST be delegated to auth0.middleware()
-const AUTH0_ROUTES_PREFIX = "/auth";
-
-// Public paths - no authentication required
-const PUBLIC_PATHS = [
-  "/_next",
-  "/favicon.ico",
-  "/api/auth0/me",      // Public session check endpoint
-  "/api/auth0/test-config", // Diagnostic endpoint
-  "/auth-error",        // Auth error page (INVARIANT 4: no auth loops)
+const PROTECTED_ROUTE_PREFIXES = [
+  "/dashboard",
+  "/mesh",
+  "/admin",
+  "/provisioning",
 ];
 
-// Legacy routes to redirect
+/**
+ * AUTH0 SDK ROUTES - Delegated directly to auth0.middleware()
+ * INVARIANT 1: These routes MUST NEVER trigger auth guards or redirects.
+ */
+const AUTH0_ROUTES_PREFIX = "/auth";
+
+/**
+ * EXPLICITLY PUBLIC ROUTES - Always allowed without auth (for clarity)
+ */
+const PUBLIC_ROUTES = [
+  "/",
+  "/auth-error",
+  "/api/auth0/debug",
+  "/api/auth0/me",
+  "/api/auth0/test-config",
+];
+
+/**
+ * STATIC ASSET PATTERNS - Never trigger auth
+ */
+const STATIC_ASSET_PREFIXES = [
+  "/_next",
+  "/favicon",
+  "/robots",
+  "/sitemap",
+  "/apk",
+];
+
+const STATIC_ASSET_EXTENSIONS = [
+  ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".webp",
+  ".css", ".js", ".map",
+  ".woff", ".woff2", ".ttf", ".eot",
+  ".xml", ".txt", ".json",
+];
+
+/**
+ * LEGACY AUTH ROUTES - Redirect to new /auth/* paths
+ */
 const LEGACY_AUTH_REDIRECTS: Record<string, string> = {
   "/api/auth/login": "/auth/login",
   "/api/auth/logout": "/auth/logout",
@@ -122,69 +85,103 @@ const LEGACY_AUTH_REDIRECTS: Record<string, string> = {
   "/api/auth/me": "/auth/me",
 };
 
-// Deprecated routes - return 410 Gone
-const DEPRECATED_ROUTES = ["/api/login"];
-
-// Static asset extensions
-const STATIC_EXTENSIONS = [
-  ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico",
-  ".css", ".js", ".woff", ".woff2", ".ttf", ".eot",
-  ".map", ".webp",
-];
-
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
+// =============================================================================
+// ROUTE CLASSIFICATION HELPERS
+// =============================================================================
 
 function isAuth0Route(pathname: string): boolean {
   return pathname.startsWith(AUTH0_ROUTES_PREFIX);
 }
 
-function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PATHS.some((path) => pathname.startsWith(path));
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_ROUTE_PREFIXES.some(prefix => pathname.startsWith(prefix));
+}
+
+function isExplicitlyPublicRoute(pathname: string): boolean {
+  return PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route + '/'));
 }
 
 function isStaticAsset(pathname: string): boolean {
-  return STATIC_EXTENSIONS.some((ext) => pathname.endsWith(ext));
+  // Check prefixes
+  if (STATIC_ASSET_PREFIXES.some(prefix => pathname.startsWith(prefix))) {
+    return true;
+  }
+  // Check extensions
+  return STATIC_ASSET_EXTENSIONS.some(ext => pathname.endsWith(ext));
 }
 
 function getLegacyRedirect(pathname: string): string | null {
   return LEGACY_AUTH_REDIRECTS[pathname] || null;
 }
 
-function isDeprecatedRoute(pathname: string): boolean {
-  return DEPRECATED_ROUTES.includes(pathname);
+// =============================================================================
+// BASE URL RESOLUTION
+// =============================================================================
+
+function getRedirectBaseUrl(request: NextRequest): string {
+  // Priority 1: X-Forwarded-Host header (reverse proxy)
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  
+  if (forwardedHost) {
+    const url = `${forwardedProto}://${forwardedHost}`;
+    if (IS_PRODUCTION && url.includes('localhost')) {
+      throw new Error(`CRITICAL: localhost in production. URL: ${url}`);
+    }
+    return url;
+  }
+  
+  // Priority 2: Environment variables
+  const envBaseUrl = 
+    process.env.AUTH0_BASE_URL ||
+    process.env.APP_BASE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL;
+  
+  if (envBaseUrl) {
+    let url = envBaseUrl.trim();
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = `https://${url}`;
+    }
+    if (url.endsWith("/")) {
+      url = url.slice(0, -1);
+    }
+    if (IS_PRODUCTION && url.includes('localhost')) {
+      throw new Error(`CRITICAL: localhost in base URL. URL: ${url}`);
+    }
+    return url;
+  }
+  
+  // Priority 3: Development fallback only
+  if (IS_PRODUCTION) {
+    throw new Error("CRITICAL: No base URL configured in production.");
+  }
+  
+  const requestUrl = new URL(request.url);
+  return `${requestUrl.protocol}//${requestUrl.host}`;
 }
 
-// ============================================================================
-// MIDDLEWARE FUNCTION (Next.js Standard)
-// ============================================================================
+// =============================================================================
+// MIDDLEWARE FUNCTION
+// =============================================================================
 
 /**
  * Next.js Middleware Entry Point
  * 
- * This function:
- * 1. Delegates /auth/* routes to Auth0 SDK (v4 auto-mounts handlers)
- * 2. Handles legacy route redirects
- * 3. Enforces authentication on protected routes
- * 4. Returns NextResponse.next() for allowed requests
+ * Flow:
+ *   1. Static assets → NextResponse.next() (no auth)
+ *   2. Auth0 routes → auth0.middleware() (delegated, UNGUARDED)
+ *   3. Explicitly public routes → NextResponse.next() (no auth)
+ *   4. Protected routes → Check session, redirect to login if missing
+ *   5. Everything else → NextResponse.next() (public by default)
  */
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
-  
-  // DEBUG: Log auth routes (remove after debugging)
-  if (pathname.startsWith('/auth')) {
-    console.log(`[MIDDLEWARE] Auth route: ${pathname}, method: ${request.method}`);
-  }
 
   // -------------------------------------------------------------------------
-  // 1. DEPRECATED ROUTES → 410 Gone
+  // 1. STATIC ASSETS → Pass through without any auth logic
   // -------------------------------------------------------------------------
-  if (isDeprecatedRoute(pathname)) {
-    return NextResponse.json(
-      { error: "Gone", message: "Use /auth/login for authentication." },
-      { status: 410 }
-    );
+  if (isStaticAsset(pathname)) {
+    return NextResponse.next();
   }
 
   // -------------------------------------------------------------------------
@@ -192,22 +189,20 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // -------------------------------------------------------------------------
   const legacyRedirect = getLegacyRedirect(pathname);
   if (legacyRedirect) {
-    // Use public base URL to avoid localhost redirects
     const baseUrl = getRedirectBaseUrl(request);
     return NextResponse.redirect(new URL(legacyRedirect, baseUrl));
   }
 
   // -------------------------------------------------------------------------
-  // 3. AUTH0 ROUTES → Delegate DIRECTLY to Auth0 SDK (BYPASS TOTAL)
+  // 3. AUTH0 ROUTES → Delegate to Auth0 SDK (INVARIANT 1: UNGUARDED)
+  // CRITICAL: These routes MUST NOT trigger any auth checks or redirects.
+  // The callback route is TERMINAL - it must complete without interference.
   // -------------------------------------------------------------------------
   if (isAuth0Route(pathname)) {
-    // Auth0 SDK v4: middleware processes /auth/* routes directly
-    // SDK sees full pathname (/auth/login, /auth/callback, etc.)
-    console.log(`[MIDDLEWARE] Delegating ${pathname} to auth0.middleware()`);
     try {
       return await auth0.middleware(request);
     } catch (error) {
-      console.error(`[MIDDLEWARE] Auth0 error for ${pathname}:`, error);
+      console.error(`[MIDDLEWARE] Auth0 SDK error for ${pathname}:`, error);
       return NextResponse.json(
         { error: 'Auth0 error', message: String(error), path: pathname },
         { status: 500 }
@@ -216,40 +211,42 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 4. PUBLIC PATHS → Allow without authentication
+  // 4. EXPLICITLY PUBLIC ROUTES → Pass through without auth
   // -------------------------------------------------------------------------
-  if (isPublicPath(pathname)) {
+  if (isExplicitlyPublicRoute(pathname)) {
     return NextResponse.next();
   }
 
   // -------------------------------------------------------------------------
-  // 5. STATIC ASSETS → Allow without authentication
+  // 5. PROTECTED ROUTES → Require session
+  // Only these routes will trigger a redirect to /auth/login
   // -------------------------------------------------------------------------
-  if (isStaticAsset(pathname)) {
+  if (isProtectedRoute(pathname)) {
+    const sessionCookie = request.cookies.get("appSession");
+    
+    if (!sessionCookie?.value) {
+      // No session - redirect to login
+      // INVARIANT 2: Only ONE redirect to login, with returnTo for this path
+      const baseUrl = getRedirectBaseUrl(request);
+      const loginUrl = new URL("/auth/login", baseUrl);
+      loginUrl.searchParams.set("returnTo", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    
+    // Session exists - allow access
     return NextResponse.next();
   }
 
   // -------------------------------------------------------------------------
-  // 6. PROTECTED ROUTES → Require Auth0 session
+  // 6. DEFAULT: PUBLIC (Allowlist model - unmatched routes are public)
+  // This prevents accidental auth triggers for any route not explicitly protected.
   // -------------------------------------------------------------------------
-  const sessionCookie = request.cookies.get("appSession");
-
-  if (!sessionCookie?.value) {
-    // No session - redirect to Auth0 login using PUBLIC base URL
-    // CRITICAL: Use getRedirectBaseUrl() to avoid localhost redirects in production
-    const baseUrl = getRedirectBaseUrl(request);
-    const loginUrl = new URL("/auth/login", baseUrl);
-    loginUrl.searchParams.set("returnTo", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Session exists - allow request
   return NextResponse.next();
 }
 
-// ============================================================================
-// MIDDLEWARE CONFIGURATION (Next.js Standard)
-// ============================================================================
+// =============================================================================
+// MIDDLEWARE CONFIGURATION
+// =============================================================================
 
 export const config = {
   matcher: [
