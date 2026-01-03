@@ -240,7 +240,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 4. EXPLICITLY PUBLIC ROUTES → Pass through without auth
+  // 5. EXPLICITLY PUBLIC ROUTES → Pass through without auth
   // -------------------------------------------------------------------------
   if (isExplicitlyPublicRoute(pathname)) {
     return NextResponse.next();
