@@ -261,16 +261,17 @@ def test_api_debug_endpoint() -> TestResult:
 
 def run_all_tests() -> None:
     """Run all test scenarios and report results"""
-    print("🚀 Starting Auth0 NextResponse.next() Fix Verification Tests")
+    print("🚀 Starting Auth0 Authentication Flow Tests - Production Environment")
     print(f"📍 Testing application: {API_BASE_URL}")
     print("=" * 60)
     
     tests = [
-        test_legacy_api_auth_login_redirect,
-        test_new_auth_login_works,
-        test_legacy_api_login_410_gone,
-        test_protected_routes_redirect_to_auth_login,
-        test_auth0_me_endpoint_no_nextresponse_next,
+        test_home_page_load,
+        test_auth_login_redirect,
+        test_auth_error_page,
+        test_auth_callback_error_handling,
+        test_protected_route_without_session,
+        test_api_debug_endpoint,
     ]
     
     results = []
@@ -307,7 +308,7 @@ def run_all_tests() -> None:
     print(f"❌ Failed: {total_count - passed_count}/{total_count}")
     
     if passed_count == total_count:
-        print("\n🎉 All tests passed! Auth0 NextResponse.next() fix is working correctly.")
+        print("\n🎉 All tests passed! Auth0 authentication flow is working correctly.")
     else:
         print("\n⚠️  Some tests failed. Check the details above.")
         
@@ -317,11 +318,12 @@ def run_all_tests() -> None:
                 print(f"   • {result.test_name}: {result.details}")
     
     print("\n📝 Key Findings:")
-    print("   • Legacy /api/auth/login redirects to /auth/login")
-    print("   • New /auth/login works (Auth0 SDK handles it)")
-    print("   • Legacy /api/login still returns 410 Gone")
-    print("   • Protected routes redirect to /auth/login (not /api/auth/login)")
-    print("   • No NextResponse.next() errors in route handlers")
+    print("   • Home page loads with Auth0 login button")
+    print("   • Auth login redirects to Auth0 properly")
+    print("   • Auth error page displays correctly")
+    print("   • Auth callback handles errors appropriately")
+    print("   • Protected routes require authentication")
+    print("   • API debug endpoint provides configuration details")
     
     return results
 
