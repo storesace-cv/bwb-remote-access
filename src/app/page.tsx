@@ -74,7 +74,7 @@ export default async function HomePage() {
                 />
               </svg>
               Entrar com Auth0
-            </Link>
+            </a>
 
             <p className="text-xs text-slate-500 text-center">
               Autenticação segura via Auth0
