@@ -165,14 +165,33 @@ function getRedirectBaseUrl(request: NextRequest): string {
 // =============================================================================
 
 /**
+ * Checks if this is a Next.js prefetch request.
+ * Prefetch requests should NOT trigger auth redirects.
+ */
+function isPrefetchRequest(request: NextRequest): boolean {
+  const purpose = request.headers.get('purpose');
+  const secPurpose = request.headers.get('sec-purpose');
+  const nextRouterPrefetch = request.headers.get('next-router-prefetch');
+  const rsc = request.headers.get('rsc');
+  
+  return (
+    purpose === 'prefetch' ||
+    secPurpose === 'prefetch' ||
+    nextRouterPrefetch === '1' ||
+    (rsc === '1' && request.method === 'GET')
+  );
+}
+
+/**
  * Next.js Middleware Entry Point
  * 
  * Flow:
  *   1. Static assets → NextResponse.next() (no auth)
- *   2. Auth0 routes → auth0.middleware() (delegated, UNGUARDED)
- *   3. Explicitly public routes → NextResponse.next() (no auth)
- *   4. Protected routes → Check session, redirect to login if missing
- *   5. Everything else → NextResponse.next() (public by default)
+ *   2. Prefetch requests → NextResponse.next() (no auth redirects)
+ *   3. Auth0 routes → auth0.middleware() (delegated, UNGUARDED)
+ *   4. Explicitly public routes → NextResponse.next() (no auth)
+ *   5. Protected routes → Check session, redirect to login if missing
+ *   6. Everything else → NextResponse.next() (public by default)
  */
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
@@ -181,6 +200,16 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   // 1. STATIC ASSETS → Pass through without any auth logic
   // -------------------------------------------------------------------------
   if (isStaticAsset(pathname)) {
+    return NextResponse.next();
+  }
+  
+  // -------------------------------------------------------------------------
+  // 2. PREFETCH REQUESTS → Pass through (no redirects for prefetch)
+  // Next.js prefetches links in the background. If we redirect these to Auth0,
+  // the browser will block it with CORS errors because prefetch uses fetch(),
+  // not navigation. Auth0 /authorize endpoint doesn't support fetch().
+  // -------------------------------------------------------------------------
+  if (isPrefetchRequest(request)) {
     return NextResponse.next();
   }
 
