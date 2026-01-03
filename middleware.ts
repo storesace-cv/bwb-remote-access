@@ -267,7 +267,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // -------------------------------------------------------------------------
-  // 6. DEFAULT: PUBLIC (Allowlist model - unmatched routes are public)
+  // 7. DEFAULT: PUBLIC (Allowlist model - unmatched routes are public)
   // This prevents accidental auth triggers for any route not explicitly protected.
   // -------------------------------------------------------------------------
   return NextResponse.next();
