@@ -4,388 +4,295 @@
 > **Last Updated**: January 2026  
 > **Next.js Version**: 16.x  
 > **Auth0 SDK Version**: @auth0/nextjs-auth0 v4.x  
-> **Authority**: This document overrides any conflicting instructions, comments, or patterns found elsewhere.
+> **Authority**: This document overrides any conflicting instructions.
 
 ---
 
-## Purpose & Scope
+## Purpose
 
-This document establishes **non-negotiable architectural rules** for authentication and routing in this Next.js application. It exists to:
+This document establishes **non-negotiable architectural rules** for authentication in this Next.js application. It exists to prevent:
 
-1. Prevent the recurrence of production errors like `/auth/login` returning 404
-2. Ensure Auth0 integration follows the correct SDK v4 patterns
-3. Establish clear boundaries between middleware and route handlers
-4. **Enforce OAuth/OIDC invariants that prevent auth loops and state errors**
-5. Serve as the definitive reference for any future development
-
-**If future instructions conflict with this document, THIS DOCUMENT WINS.**
+- "The state parameter is invalid" errors
+- Infinite redirect loops
+- Cookie explosion (multiple transaction cookies)
+- Multiple concurrent OAuth transactions
+- 404 errors on `/auth/login` or `/auth/callback`
 
 ---
 
-## 0. CRITICAL OAUTH/OIDC INVARIANTS (NON-NEGOTIABLE)
-
-These invariants MUST be enforced at all times:
+## OAuth/OIDC Invariants (NON-NEGOTIABLE)
 
 ### INVARIANT 1: CALLBACK IS TERMINAL AND UNGUARDED
-- `/auth/callback` MUST NOT trigger authentication
-- `/auth/callback` MUST NOT be protected by auth guards
-- `/auth/callback` MUST NOT perform redirect-based auth checks
-- Callback handling must be linear and atomic
+
+> `/auth/callback` MUST complete without any authentication guards or redirects.
+
+**Rules:**
+- The `/auth/*` routes are delegated directly to `auth0.middleware()`
+- Middleware MUST NOT check for session cookies on `/auth/*` routes
+- Middleware MUST NOT redirect `/auth/*` routes to `/auth/login`
+- The callback handler processes the OAuth response and establishes the session
+
+**Violation causes:** Infinite redirect loops, "state invalid" errors
 
 ### INVARIANT 2: SINGLE ACTIVE AUTH TRANSACTION
-- Only ONE auth transaction may exist per client at any time
-- While a transaction is pending:
-  - No new authorization request may be initiated
-  - No new `state` may be generated
-- Re-entrancy is FORBIDDEN
-- **Implementation**: `enableParallelTransactions: false` in Auth0Client config
+
+> Only ONE authentication transaction may exist per client at any time.
+
+**Implementation:**
+```typescript
+// In auth0.ts
+new Auth0Client({
+  enableParallelTransactions: false,  // CRITICAL
+})
+```
+
+**Rules:**
+- While a transaction is pending, no new `/authorize` request may be initiated
+- No new `state` value may be generated until current transaction completes
+- Re-entrancy is forbidden
+
+**Violation causes:** Multiple state values, transaction cookie explosion, "state invalid" errors
 
 ### INVARIANT 3: STATE ↔ TRANSACTION CONSISTENCY
-- Every authorization `state` MUST map 1:1 to persisted transaction data
-- That data MUST still exist when the callback is processed
-- No logic may invalidate or overwrite it prematurely
+
+> Every authorization `state` MUST map 1:1 to persisted transaction data.
+
+**Rules:**
+- Transaction data MUST exist when callback is processed
+- No logic may invalidate or overwrite transaction data prematurely
+- Cookie secure/sameSite settings must be consistent across login and callback
+
+**Violation causes:** "state invalid" errors, lost auth context
 
 ### INVARIANT 4: NO AUTH LOOPS
-- After successful callback: user MUST NOT be redirected back to login
-- Session establishment MUST be final
-- On failure: system MUST surface a controlled error (`/auth-error`), NOT restart auth
-- **Implementation**: `onCallback` handler redirects to `/auth-error` on failure
+
+> Authentication failures MUST terminate cleanly, never restart auth.
+
+**Implementation:**
+```typescript
+// In auth0.ts
+new Auth0Client({
+  onCallback: async (error, context, session) => {
+    if (error) {
+      // Redirect to error page, NOT back to login
+      return NextResponse.redirect('/auth-error?e=' + error.code);
+    }
+    // Success continues normally
+  },
+})
+```
+
+**Rules:**
+- After successful callback, user reaches protected page (NOT login)
+- On failure, user reaches `/auth-error` (NOT login)
+- `/auth-error` is PUBLIC - no auth required
+- User must manually click "Try Again" to restart auth
+
+**Violation causes:** Infinite redirect loops
 
 ### INVARIANT 5: SESSION PAYLOAD CONTROL
-- Session storage MUST be minimal
-- Large tokens or excessive claims MUST NOT be stored in client cookies
-- Cookie chunking must be avoided
-- Session size must remain stable across logins
+
+> Cookies must remain bounded and consistent.
+
+**Rules:**
+- No "infinitely stacking cookies"
+- Session cookie must not exceed safe size limits
+- Transaction cookie is single-use and cleaned up after callback
+- Cookie settings must match proxy configuration:
+  - `secure: true` in production (HTTPS)
+  - `sameSite: 'lax'` for OAuth redirects
+  - `path: '/'` for both session and transaction cookies
+
+**Violation causes:** Header explosion, proxy failures
 
 ### INVARIANT 6: CONFIGURATION COHERENCE
-- All base URLs, redirect URIs, and environment bindings MUST be internally consistent
-- Any mismatch that can cause auth re-entry MUST be eliminated
+
+> All URLs and environment bindings must be internally consistent.
+
+**Required Environment Variables:**
+```
+AUTH0_SECRET=<32+ char random hex string>
+AUTH0_DOMAIN=<tenant>.eu.auth0.com
+AUTH0_CLIENT_ID=<from Auth0 dashboard>
+AUTH0_CLIENT_SECRET=<from Auth0 dashboard>
+APP_BASE_URL=https://rustdesk.bwb.pt
+```
+
+**Auth0 Dashboard Settings:**
+```
+Allowed Callback URLs: https://rustdesk.bwb.pt/auth/callback
+Allowed Logout URLs:   https://rustdesk.bwb.pt
+Allowed Web Origins:   https://rustdesk.bwb.pt
+```
+
+**Violation causes:** Redirect URI mismatch, cookie domain issues
 
 ---
 
-## 1. Next.js Middleware File Convention
+## Middleware Architecture
 
-### RULE: Boundary File Location and Naming
+### Model: ALLOWLIST-BASED PROTECTION
 
-| Requirement | Value |
-|-------------|-------|
-| File name | `middleware.ts` |
-| Location | **Project root** (same level as `package.json`) |
-| Function name | `export async function middleware(request)` |
-| NOT allowed | `proxy.ts`, `src/middleware.ts`, any other name |
-
-### DO ✅
-
-```
-/project-root
-├── middleware.ts     ✅ CORRECT - Root level, named middleware.ts
-├── package.json
-├── next.config.mjs
-└── src/
-    └── app/
-```
-
-### DO NOT ❌
-
-```
-/project-root
-├── proxy.ts          ❌ WRONG - Must be middleware.ts
-├── src/
-│   ├── middleware.ts ❌ WRONG - Must be at root, not in src/
-│   └── proxy.ts      ❌ WRONG - Invalid name and location
-```
-
----
-
-## 2. `NextResponse.next()` Location
-
-### RULE: Only Allowed in `/middleware.ts`
-
-| Location | Allowed | 
-|----------|--------|
-| `/middleware.ts` (root) | ✅ YES |
-| `src/app/**/route.ts` | ❌ **FORBIDDEN** |
-| `src/**/*.ts` (any other file) | ❌ **FORBIDDEN** |
-| API handlers | ❌ **FORBIDDEN** |
-
-### DO ✅
-
-```typescript
-// /middleware.ts (ROOT LEVEL ONLY)
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-
-export async function middleware(request: NextRequest) {
-  // ... authentication logic ...
-  return NextResponse.next(); // ✅ ALLOWED HERE
-}
-```
-
-### DO NOT ❌
-
-```typescript
-// src/app/api/example/route.ts
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.next(); // ❌ HARD VIOLATION - Causes runtime error
-}
-```
-
----
-
-## 3. Auth0 Route Ownership (SDK v4)
-
-### RULE: `/auth/*` Paths Are Reserved for Auth0 SDK
-
-The `/auth/*` URL namespace is **exclusively owned by the Auth0 SDK v4**. The SDK handles these routes via middleware:
-
-| Route | Purpose |
-|-------|---------|
-| `/auth/login` | Redirects to Auth0 Universal Login |
-| `/auth/logout` | Clears session and logs out |
-| `/auth/callback` | Handles OAuth callback |
-| `/auth/me` | Returns session info (JSON) |
-| `/auth/profile` | Returns user profile |
-| `/auth/access-token` | Returns access token |
-| `/auth/backchannel-logout` | Handles backchannel logout |
-
-### CRITICAL: Auth0 SDK v4 Routes via Middleware (NOT Route Handlers)
-
-In **@auth0/nextjs-auth0 v4**, auth routes are processed **directly by middleware**:
-
-| Pattern | Status |
-|---------|--------|
-| `/middleware.ts` calling `auth0.middleware()` | ✅ **REQUIRED** |
-| `src/app/auth/[auth0]/route.ts` | ❌ **FORBIDDEN** (SDK needs full pathname) |
-| `src/app/auth/[...auth0]/route.ts` | ❌ **FORBIDDEN** |
-| `src/pages/api/auth/[...auth0].ts` | ❌ **FORBIDDEN** (Pages Router pattern) |
-| `src/app/auth/page.tsx` | ❌ **FORBIDDEN** (shadows routes) |
-
-### DO ✅
-
-```typescript
-// /middleware.ts
-if (pathname.startsWith('/auth')) {
-  return await auth0.middleware(request);  // ✅ Direct delegation
-}
-```
-
-### DO NOT ❌
-
-```
-src/app/auth/                    ❌ FORBIDDEN - Shadows middleware
-src/app/auth/[auth0]/route.ts    ❌ FORBIDDEN - SDK needs full pathname
-```
-
-### Why Middleware, Not Route Handlers?
-
-The Auth0 SDK v4 `handler()` function expects the **full pathname** (`/auth/login`, `/auth/callback`). 
-Route handlers only receive the dynamic segment (`login`, `callback`), which breaks route matching.
-
----
-
-## 4. Auth0 SDK Integration Pattern
-
-### RULE: Middleware Processes /auth/* Directly
-
-The architecture is simple:
-
-1. **Middleware** (`/middleware.ts`): Processes `/auth/*` via `auth0.middleware()`, protects other routes
-2. **No route handlers** for `/auth/*` - SDK handles everything via middleware
-
-```typescript
-// /middleware.ts
-import { auth0 } from "./src/lib/auth0";
-
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // CRITICAL: Delegate /auth/* directly to Auth0 SDK v4
-  if (pathname.startsWith("/auth")) {
-    return await auth0.middleware(request);  // ✅ Direct processing
-  }
-
-  // ... other routing logic (session checks, etc.) ...
-}
-```
-
-### RULE: Where `auth0.middleware()` May Be Called
-
-| Location | Allowed |
-|----------|--------|
-| `/middleware.ts` | ✅ YES |
-| Route handlers (`app/**/route.ts`) | ❌ **FORBIDDEN** |
-| Server Actions | ❌ **FORBIDDEN** |
-
----
-
-## 5. Responsibility Separation
-
-### Middleware Responsibilities (`/middleware.ts`)
-
-| Responsibility | Example |
-|----------------|---------|
-| Authentication enforcement | Check `appSession` cookie |
-| Route protection | Redirect unauthenticated users to `/auth/login` |
-| Auth0 SDK delegation | Call `auth0.middleware()` for `/auth/*` |
-| Request continuation | Return `NextResponse.next()` |
-| Legacy route handling | Redirect `/api/auth/*` → `/auth/*` |
-
-### Route Handler Responsibilities (`src/app/**/route.ts`)
-
-| Responsibility | Example |
-|----------------|---------|
-| Return data | `NextResponse.json({ data })` |
-| Return errors | `NextResponse.json({ error }, { status: 500 })` |
-| Return redirects | `NextResponse.redirect(url)` |
-
-### Route Handlers Must NEVER:
-
-- Return `NextResponse.next()`
-- Call `auth0.middleware()`
-- Delegate flow control to middleware functions
-
----
-
-## 6. Legacy Auth Path Policy
-
-### Deprecated and Redirected Endpoints
-
-| Path | Required Behavior |
-|------|-------------------|
-| `/api/login` | Return `410 Gone` |
-| `/api/auth/login` | Redirect to `/auth/login` |
-| `/api/auth/logout` | Redirect to `/auth/logout` |
-| `/api/auth/callback` | Redirect to `/auth/callback` |
-
----
-
-## 7. Validation Commands
-
-### MANDATORY: Run Before Any PR Merge
-
-```bash
-# 1. middleware.ts exists at root
-test -f middleware.ts && echo "PASS" || echo "FAIL: middleware.ts missing"
-
-# 2. proxy.ts does NOT exist (deprecated pattern)
-test -f proxy.ts && echo "FAIL: proxy.ts exists" || echo "PASS"
-
-# 3. src/middleware.ts does NOT exist (wrong location)
-test -f src/middleware.ts && echo "FAIL: src/middleware.ts exists" || echo "PASS"
-
-# 4. src/app/auth/ directory does NOT exist (would shadow middleware)
-test -d src/app/auth && echo "FAIL: src/app/auth/ exists" || echo "PASS"
-
-# 5. No pages router Auth0 handlers
-test -f src/pages/api/auth/\[...auth0\].ts && echo "FAIL" || echo "PASS"
-```
-
-### RUNTIME VALIDATION (After Deployment)
-
-```bash
-# /auth/login must NOT return 404
-curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/auth/login
-# Expected: 302/307 (redirect to Auth0) - NOT 404
-
-curl -s -o /dev/null -w "%{http_code}" https://your-domain.com/auth/login
-# Expected: 302/307 (redirect to Auth0) - NOT 404
-```
-
----
-
-## 8. Before vs After Architecture
-
-### BEFORE (Broken)
-
-```
-/project-root
-├── proxy.ts                     ❌ Wrong file name
-├── src/
-│   ├── middleware.ts            ❌ Wrong location
-│   └── app/
-│       └── auth/                ❌ Route handler shadows middleware
-│           └── [auth0]/
-│               └── route.ts     ❌ SDK can't see full pathname
-```
-
-**Result**: `/auth/login` returns 404 or SDK routing fails
-
-### AFTER (Correct)
-
-```
-/project-root
-├── middleware.ts                ✅ Root level, calls auth0.middleware()
-├── src/
-│   ├── lib/
-│   │   └── auth0.ts             ✅ Auth0 client
-│   └── app/
-│       ├── auth-status/         ✅ Doesn't shadow /auth/*
-│       └── (no auth/ directory) ✅ Middleware handles /auth/*
-```
-
-**Result**: `/auth/login` returns 302 redirect to Auth0
-
----
-
-## 9. Common Failure Modes
-
-### Failure Mode 1: `/auth/login` Returns 404
-
-**Symptoms**: Production shows 404 for `/auth/login`  
-**Cause**: One of:
-- `middleware.ts` not at root level
-- `proxy.ts` used instead of `middleware.ts`
-- `src/app/auth/` directory exists
-- Explicit Auth0 route handlers shadowing SDK routes  
-**Fix**: Follow this SoT exactly
-
-### Failure Mode 2: `NextResponse.next() in route handler`
-
-**Symptoms**: Runtime error in production  
-**Cause**: Route handler calls `NextResponse.next()` or `auth0.middleware()`  
-**Fix**: Only call these in `/middleware.ts`
-
-### Failure Mode 3: Middleware Not Running
-
-**Symptoms**: No authentication enforcement  
-**Cause**: `middleware.ts` not exported correctly or wrong function name  
-**Fix**: Ensure `export async function middleware(request)` exists
-
----
-
-## 10. Quick Reference Card
+The middleware uses an **allowlist model** where only explicitly listed routes require authentication. This prevents accidental auth triggers.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│              AUTHENTICATION ARCHITECTURE RULES                   │
+│                    MIDDLEWARE FLOW                               │
 ├─────────────────────────────────────────────────────────────────┤
-│ Middleware file       → /middleware.ts (ROOT, not src/)          │
-│ Function name         → export async function middleware()       │
-│ NextResponse.next()   → ONLY in /middleware.ts                   │
-│ auth0.middleware()    → ONLY in /middleware.ts for /auth/*       │
-│ /auth/* routes        → Processed DIRECTLY by middleware         │
-│ src/app/auth/         → MUST NOT EXIST (shadows middleware)      │
-│ proxy.ts              → MUST NOT EXIST (use middleware.ts)       │
-│ /api/login            → Returns 410 Gone                         │
-│ /api/auth/*           → Redirects to /auth/*                     │
+│  1. Static assets (/_next/*, etc)  → NextResponse.next()        │
+│  2. Auth0 routes (/auth/*)         → auth0.middleware() [1]     │
+│  3. Explicitly public routes       → NextResponse.next()        │
+│  4. Protected routes (/dashboard)  → Check session [2]          │
+│  5. Everything else                → NextResponse.next()        │
 ├─────────────────────────────────────────────────────────────────┤
-│ Route handlers return: NextResponse.json() or redirect()         │
-│ Middleware returns:    NextResponse.next() or auth0.middleware() │
+│  [1] INVARIANT 1: No guards, no redirects, just delegate        │
+│  [2] Redirect to /auth/login?returnTo=<path> if no session      │
 └─────────────────────────────────────────────────────────────────┘
+```
+
+### Protected Routes (Require Auth)
+
+```typescript
+const PROTECTED_ROUTE_PREFIXES = [
+  "/dashboard",
+  "/mesh",
+  "/admin",
+  "/provisioning",
+];
+```
+
+Only these routes trigger a redirect to `/auth/login` when no session exists.
+
+### Explicitly Public Routes
+
+```typescript
+const PUBLIC_ROUTES = [
+  "/",
+  "/auth-error",
+  "/api/auth0/debug",
+  "/api/auth0/me",
+  "/api/auth0/test-config",
+];
+```
+
+### Auth0 SDK Routes
+
+```
+/auth/login     → Initiates login (redirect to Auth0)
+/auth/logout    → Clears session (redirect to Auth0)
+/auth/callback  → Processes OAuth response [TERMINAL]
+/auth/me        → Returns session info (JSON)
 ```
 
 ---
 
-## Document Authority
+## File Structure
 
-This document is the **canonical Source of Truth** for authentication and middleware architecture in this repository.
+```
+/project-root
+├── middleware.ts                    # Auth boundary (root level)
+├── src/
+│   ├── lib/
+│   │   ├── auth0.ts                 # Auth0 client configuration
+│   │   └── baseUrl.ts               # Canonical URL resolver
+│   └── app/
+│       ├── auth-error/
+│       │   └── page.tsx             # Error page (PUBLIC)
+│       ├── dashboard/               # Protected
+│       ├── mesh/                    # Protected
+│       └── (public pages)           # Public
+└── docs/
+    └── SoT/
+        └── AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  # This file
+```
 
-- Created in response to production incident: `/auth/login` returning 404
-- Updated for Auth0 SDK v4 (middleware-based route auto-mounting)
-- Establishes permanent architectural constraints
-- Must be consulted before any auth-related changes
-- Violations are considered critical bugs regardless of test status
+---
+
+## Validation Commands
+
+### Pre-Deploy Checklist
+
+```bash
+# 1. middleware.ts at root
+test -f middleware.ts && echo "✓ middleware.ts exists" || echo "✗ FAIL"
+
+# 2. Auth0 config in auth0.ts has parallel transactions disabled
+grep -q "enableParallelTransactions: false" src/lib/auth0.ts && \
+  echo "✓ Parallel transactions disabled" || echo "✗ FAIL"
+
+# 3. onCallback handler exists
+grep -q "onCallback:" src/lib/auth0.ts && \
+  echo "✓ onCallback handler exists" || echo "✗ FAIL"
+
+# 4. auth-error page exists
+test -f src/app/auth-error/page.tsx && \
+  echo "✓ auth-error page exists" || echo "✗ FAIL"
+
+# 5. No src/app/auth/ directory (would shadow SDK routes)
+test ! -d src/app/auth && \
+  echo "✓ No shadowing auth directory" || echo "✗ FAIL"
+```
+
+### Runtime Validation
+
+```bash
+# /auth/login returns redirect (302) to Auth0, not 404
+curl -sI https://rustdesk.bwb.pt/auth/login | head -5
+
+# /auth-error is accessible without auth
+curl -sI https://rustdesk.bwb.pt/auth-error | grep "200 OK"
+
+# Protected route redirects to login
+curl -sI https://rustdesk.bwb.pt/dashboard | grep "307"
+```
+
+---
+
+## Troubleshooting
+
+### "The state parameter is invalid"
+
+**Cause:** Multiple concurrent auth transactions overwriting transaction cookies.
+
+**Fix:** Ensure `enableParallelTransactions: false` in auth0.ts.
+
+### Infinite redirect loops
+
+**Cause:** `/auth/callback` is protected or `onCallback` restarts auth on error.
+
+**Fix:** 
+- Middleware must NOT guard `/auth/*` routes
+- `onCallback` must redirect to `/auth-error` on failure
+
+### Cookie explosion in headers
+
+**Cause:** Parallel transactions enabled, or session too large.
+
+**Fix:** 
+- Disable parallel transactions
+- Keep session payload minimal
+
+### 404 on /auth/login
+
+**Cause:** Auth routes shadowed by `src/app/auth/` directory.
+
+**Fix:** Delete `src/app/auth/` - SDK handles these routes via middleware.
+
+---
+
+## Acceptance Criteria
+
+A deploy is BLOCKED unless ALL of the following are true:
+
+| # | Criterion | Test |
+|---|-----------|------|
+| 1 | Login produces exactly ONE /authorize request | NetLog |
+| 2 | Login produces exactly ONE /auth/callback | NetLog |
+| 3 | No "state invalid" errors in 50 login attempts | Automated test |
+| 4 | No redirect loops | Manual + automated |
+| 5 | Failure terminates in /auth-error | Automated test |
+| 6 | Cookie count stable (no explosion) | NetLog |
+
+---
 
 **END OF DOCUMENT**
