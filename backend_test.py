@@ -31,11 +31,11 @@ class TestResult:
         self.passed = passed
         self.details = details
 
-def test_legacy_api_auth_login_redirect() -> TestResult:
-    """Test 1: Legacy /api/auth/login should redirect to /auth/login"""
-    print("🧪 Test 1: Legacy /api/auth/login should redirect to /auth/login")
+def test_home_page_load() -> TestResult:
+    """Test 1: Home Page Load Test - GET / (Expected: 200 OK, HTML page with "Entrar com Auth0" button)"""
+    print("🧪 Test 1: Home Page Load Test")
     
-    endpoint = f"{API_BASE_URL}/api/auth/login"
+    endpoint = f"{API_BASE_URL}/"
     
     try:
         response = requests.get(
@@ -44,18 +44,58 @@ def test_legacy_api_auth_login_redirect() -> TestResult:
             allow_redirects=False
         )
         
-        expected_status = 307
-        location_header = response.headers.get('location', '')
+        expected_status = 200
         passed = (
             response.status_code == expected_status and
-            '/auth/login' in location_header
+            "Entrar com Auth0" in response.text and
+            "/auth/login" in response.text
         )
         
-        details = f"Status: {response.status_code}, Location: {location_header}"
+        details = f"Status: {response.status_code}, Contains 'Entrar com Auth0': {'Entrar com Auth0' in response.text}, Contains '/auth/login': {'/auth/login' in response.text}"
         
         return TestResult(
-            "Legacy /api/auth/login redirects to /auth/login",
+            "Home Page Load Test",
             expected_status,
+            response.status_code,
+            {"contains_login_button": "Entrar com Auth0" in response.text, "contains_auth_link": "/auth/login" in response.text},
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Home Page Load Test",
+            200,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_auth_login_redirect() -> TestResult:
+    """Test 2: Auth Login Redirect Test - GET /auth/login (Expected: 302/307 redirect to Auth0)"""
+    print("🧪 Test 2: Auth Login Redirect Test")
+    
+    endpoint = f"{API_BASE_URL}/auth/login"
+    
+    try:
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
+        
+        # Auth0 login should either redirect to Auth0 (302/307) or return 500 if not configured
+        expected_statuses = [302, 307]
+        location_header = response.headers.get('location', '')
+        passed = (
+            response.status_code in expected_statuses and
+            'auth0.com/authorize' in location_header
+        )
+        
+        if response.status_code in expected_statuses:
+            details = f"Status: {response.status_code} (Redirect to Auth0), Location: {location_header}"
+        else:
+            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
+        
+        return TestResult(
+            "Auth Login Redirect Test",
+            "302/307 redirect to Auth0",
             response.status_code,
             {"location": location_header},
             passed,
@@ -63,46 +103,7 @@ def test_legacy_api_auth_login_redirect() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Legacy /api/auth/login redirects to /auth/login",
-            307,
-            0,
-            {},
-            False,
-            f"Request failed: {e}"
-        )
-
-def test_new_auth_login_works() -> TestResult:
-    """Test 2: New /auth/login should work (Auth0 SDK handles it)"""
-    print("🧪 Test 2: New /auth/login should work (Auth0 SDK handles it)")
-    
-    endpoint = f"{API_BASE_URL}/auth/login"
-    
-    try:
-        response = requests.get(endpoint, timeout=10, allow_redirects=False)
-        
-        # Auth0 login should either redirect to Auth0 (302) or return 500 if not configured
-        expected_statuses = [302, 500]
-        passed = response.status_code in expected_statuses
-        
-        if response.status_code == 500:
-            details = f"Status: {response.status_code} (Expected - Auth0 not configured in test environment)"
-        elif response.status_code == 302:
-            location = response.headers.get('location', '')
-            details = f"Status: {response.status_code} (Redirect to Auth0), Location: {location}"
-        else:
-            details = f"Status: {response.status_code}, Headers: {dict(response.headers)}"
-        
-        return TestResult(
-            "New /auth/login works (Auth0 SDK)",
-            "302 or 500",
-            response.status_code,
-            {"location": response.headers.get('location', '')},
-            passed,
-            details
-        )
-    except requests.exceptions.RequestException as e:
-        return TestResult(
-            "New /auth/login works (Auth0 SDK)",
+            "Auth Login Redirect Test",
             302,
             0,
             {},
@@ -110,68 +111,93 @@ def test_new_auth_login_works() -> TestResult:
             f"Request failed: {e}"
         )
 
-def test_legacy_api_login_410_gone() -> TestResult:
-    """Test 3: Legacy /api/login still returns 410 Gone"""
-    print("🧪 Test 3: Legacy /api/login still returns 410 Gone")
+def test_auth_error_page() -> TestResult:
+    """Test 3: Auth Error Page Test - GET /auth-error?e=test (Expected: 200 OK, shows error page)"""
+    print("🧪 Test 3: Auth Error Page Test")
     
-    endpoint = f"{API_BASE_URL}/api/login"
-    data = {
-        "email": "user@example.com",
-        "password": "password123"
-    }
+    endpoint = f"{API_BASE_URL}/auth-error?e=test"
     
     try:
-        response = requests.post(
-            endpoint,
-            json=data,
-            headers={"Content-Type": "application/json"},
-            timeout=10
-        )
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
         
-        try:
-            response_data = response.json()
-        except:
-            response_data = {"raw_response": response.text}
-        
-        expected_status = 410
+        expected_status = 200
         passed = (
             response.status_code == expected_status and
-            (response_data.get("error") == "Gone" or "deprecated" in response.text.lower())
+            "Login Failed" in response.text and
+            not response.headers.get('location')  # Should not redirect
         )
         
-        details = f"Status: {response.status_code}, Response: {json.dumps(response_data, indent=2) if isinstance(response_data, dict) else response.text[:200]}"
+        details = f"Status: {response.status_code}, Contains 'Login Failed': {'Login Failed' in response.text}, Is redirect: {bool(response.headers.get('location'))}"
         
         return TestResult(
-            "Legacy /api/login returns 410 Gone",
+            "Auth Error Page Test",
             expected_status,
             response.status_code,
-            response_data,
+            {"contains_error_message": "Login Failed" in response.text, "is_redirect": bool(response.headers.get('location'))},
             passed,
             details
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Legacy /api/login returns 410 Gone",
-            410,
+            "Auth Error Page Test",
+            200,
             0,
             {},
             False,
             f"Request failed: {e}"
         )
 
-def test_protected_routes_redirect_to_auth_login() -> TestResult:
-    """Test 4: Protected routes redirect to /auth/login (not /api/auth/login)"""
-    print("🧪 Test 4: Protected routes redirect to /auth/login (not /api/auth/login)")
+def test_auth_callback_error_handling() -> TestResult:
+    """Test 4: Auth Callback Error Handling Test - GET /auth/callback?code=fake&state=invalid (Expected: redirect to /auth-error)"""
+    print("🧪 Test 4: Auth Callback Error Handling Test")
+    
+    endpoint = f"{API_BASE_URL}/auth/callback?code=fake&state=invalid"
+    
+    try:
+        response = requests.get(endpoint, timeout=10, allow_redirects=False)
+        
+        # Should redirect to /auth-error (NOT loop back to /auth/login)
+        expected_statuses = [302, 307]
+        location_header = response.headers.get('location', '')
+        passed = (
+            response.status_code in expected_statuses and
+            '/auth-error' in location_header and
+            '/auth/login' not in location_header
+        )
+        
+        details = f"Status: {response.status_code}, Location: {location_header}, Redirects to error page: {'/auth-error' in location_header}"
+        
+        return TestResult(
+            "Auth Callback Error Handling Test",
+            "302/307 redirect to /auth-error",
+            response.status_code,
+            {"location": location_header, "redirects_to_error": '/auth-error' in location_header},
+            passed,
+            details
+        )
+    except requests.exceptions.RequestException as e:
+        return TestResult(
+            "Auth Callback Error Handling Test",
+            302,
+            0,
+            {},
+            False,
+            f"Request failed: {e}"
+        )
+
+def test_protected_route_without_session() -> TestResult:
+    """Test 5: Protected Route Without Session Test - GET /dashboard (Expected: 302/307 redirect to /auth/login?returnTo=/dashboard)"""
+    print("🧪 Test 5: Protected Route Without Session Test")
     
     endpoint = f"{API_BASE_URL}/dashboard"
     
     try:
         response = requests.get(endpoint, timeout=10, allow_redirects=False)
         
-        expected_status = 307
+        expected_statuses = [302, 307]
         location_header = response.headers.get('location', '')
         passed = (
-            response.status_code == expected_status and
+            response.status_code in expected_statuses and
             '/auth/login' in location_header and
             'returnTo=%2Fdashboard' in location_header
         )
@@ -179,8 +205,8 @@ def test_protected_routes_redirect_to_auth_login() -> TestResult:
         details = f"Status: {response.status_code}, Location: {location_header}"
         
         return TestResult(
-            "Protected routes redirect to /auth/login",
-            expected_status,
+            "Protected Route Without Session Test",
+            "302/307 redirect to /auth/login?returnTo=/dashboard",
             response.status_code,
             {"location": location_header},
             passed,
@@ -188,7 +214,7 @@ def test_protected_routes_redirect_to_auth_login() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "Protected routes redirect to /auth/login",
+            "Protected Route Without Session Test",
             307,
             0,
             {},
@@ -196,11 +222,11 @@ def test_protected_routes_redirect_to_auth_login() -> TestResult:
             f"Request failed: {e}"
         )
 
-def test_auth0_me_endpoint_no_nextresponse_next() -> TestResult:
-    """Test 5: No NextResponse.next() in route handlers - /api/auth0/me should work"""
-    print("🧪 Test 5: /api/auth0/me should work (no NextResponse.next() error)")
+def test_api_debug_endpoint() -> TestResult:
+    """Test 6: API Debug Endpoint Test - GET /api/auth0/test-config (Expected: 200 OK, JSON with configuration details)"""
+    print("🧪 Test 6: API Debug Endpoint Test")
     
-    endpoint = f"{API_BASE_URL}/api/auth0/me"
+    endpoint = f"{API_BASE_URL}/api/auth0/test-config"
     
     try:
         response = requests.get(endpoint, timeout=10)
@@ -209,14 +235,14 @@ def test_auth0_me_endpoint_no_nextresponse_next() -> TestResult:
         expected_status = 200
         passed = (
             response.status_code == expected_status and
-            response_data.get("authenticated") == False and
-            "NextResponse.next()" not in response.text
+            "environment" in response_data and
+            "requiredAuth0Config" in response_data
         )
         
-        details = f"Response: {json.dumps(response_data, indent=2)}"
+        details = f"Response: {json.dumps(response_data, indent=2)[:500]}..."
         
         return TestResult(
-            "/api/auth0/me works (no NextResponse.next() error)",
+            "API Debug Endpoint Test",
             expected_status,
             response.status_code,
             response_data,
@@ -225,7 +251,7 @@ def test_auth0_me_endpoint_no_nextresponse_next() -> TestResult:
         )
     except requests.exceptions.RequestException as e:
         return TestResult(
-            "/api/auth0/me works (no NextResponse.next() error)",
+            "API Debug Endpoint Test",
             200,
             0,
             {},
