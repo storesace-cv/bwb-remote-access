@@ -70,13 +70,13 @@ export default async function AuthStatusPage() {
             {claims && (
               <>
                 <div>
-                  <span className="text-slate-400">Role:</span>{" "}
-                  <span className="text-emerald-400 font-mono">{claims.role}</span>
+                  <span className="text-slate-400">Tipo:</span>{" "}
+                  <span className="text-emerald-400 font-mono">{claims.userType}</span>
                 </div>
-                {claims.isSuperAdmin && (
+                {claims.isSiteAdmin && (
                   <div>
                     <span className="px-2 py-0.5 text-xs rounded bg-amber-600/20 text-amber-400">
-                      SuperAdmin
+                      Site Admin
                     </span>
                   </div>
                 )}
