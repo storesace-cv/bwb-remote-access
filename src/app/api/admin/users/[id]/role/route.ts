@@ -2,23 +2,25 @@
  * API Route: PATCH /api/admin/users/[id]/role
  * 
  * Updates a user's role for a specific domain.
+ * Now works purely with Supabase (no Auth0).
  * 
  * Body: { domain: "mesh"|"zonetech"|"zsangola", role: "AGENT"|"DOMAIN_ADMIN" }
  * 
  * RBAC:
  *   - SuperAdmin can update any domain
- *   - Domain Admin can only update users in their current org
+ *   - Domain Admin can only update users in their domain
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/require-admin";
-import { isSuperAdminAny } from "@/lib/rbac";
-import { getAuth0UserById, updateAuth0UserMetadata } from "@/lib/auth0-management";
+import { isSuperAdmin } from "@/lib/rbac-mesh";
 import { getMirrorUserById, setUserDomainRole } from "@/lib/user-mirror";
-import { VALID_DOMAINS, type ValidDomain } from "@/lib/org-map";
 
-type ValidRole = "DOMAIN_ADMIN" | "AGENT";
-const VALID_ROLES: ValidRole[] = ["DOMAIN_ADMIN", "AGENT"];
+type ValidDomain = "mesh" | "zonetech" | "zsangola";
+const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
+
+type ValidRole = "DOMAIN_ADMIN" | "AGENT" | "USER";
+const VALID_ROLES: ValidRole[] = ["DOMAIN_ADMIN", "AGENT", "USER"];
 
 interface RoleUpdateRequest {
   domain: ValidDomain;
@@ -34,7 +36,7 @@ export async function PATCH(
 
     // Check admin access
     const { authorized, claims } = await checkAdminAccess();
-    if (!authorized) {
+    if (!authorized || !claims) {
       return NextResponse.json(
         { error: "Unauthorized - admin access required" },
         { status: 403 }
@@ -70,27 +72,27 @@ export async function PATCH(
       );
     }
 
-    // RBAC: Domain Admin can only modify users in their org
-    const isSuperAdmin = isSuperAdminAny(claims);
-    if (!isSuperAdmin && claims.org !== domain) {
+    // RBAC: Domain Admin can only modify users in their domain
+    const superAdmin = isSuperAdmin(claims);
+    if (!superAdmin && claims.domain !== domain) {
       return NextResponse.json(
-        { error: `Domain Admin can only modify users in their org (${claims.org})` },
+        { error: `Domain Admin can only modify users in their domain (${claims.domain})` },
         { status: 403 }
       );
     }
 
-    // Get the mirror user to find Auth0 ID
+    // Get the mirror user
     const mirrorUser = await getMirrorUserById(mirrorUserId);
     if (!mirrorUser) {
       return NextResponse.json(
-        { error: "User not found in mirror" },
+        { error: "User not found" },
         { status: 404 }
       );
     }
 
-    // Verify user exists in their domain (for Domain Admin)
-    if (!isSuperAdmin) {
-      const userInDomain = mirrorUser.domains.some(d => d.domain === domain);
+    // Verify user exists in the domain (for Domain Admin)
+    if (!superAdmin) {
+      const userInDomain = mirrorUser.domains?.some((d: { domain: string }) => d.domain === domain);
       if (!userInDomain) {
         return NextResponse.json(
           { error: "User is not in your domain" },
@@ -98,29 +100,6 @@ export async function PATCH(
         );
       }
     }
-
-    // Get current Auth0 user
-    const auth0User = await getAuth0UserById(mirrorUser.auth0_user_id);
-
-    // Update Auth0 app_metadata
-    const existingBwb = (auth0User.app_metadata?.bwb as Record<string, unknown>) || {};
-    const existingOrgRoles = (existingBwb.org_roles as Record<string, string[]>) || {};
-    
-    // Set new roles for the domain
-    const newRoles = role === "DOMAIN_ADMIN" ? ["DOMAIN_ADMIN", "AGENT"] : ["AGENT"];
-    const updatedOrgRoles = {
-      ...existingOrgRoles,
-      [domain]: newRoles,
-    };
-
-    const updatedAppMetadata = {
-      bwb: {
-        ...existingBwb,
-        org_roles: updatedOrgRoles,
-      },
-    };
-
-    await updateAuth0UserMetadata(mirrorUser.auth0_user_id, updatedAppMetadata);
 
     // Update Supabase mirror
     await setUserDomainRole(mirrorUserId, domain, role);
@@ -130,7 +109,7 @@ export async function PATCH(
       message: `Role updated to ${role} for domain ${domain}`,
       userId: mirrorUserId,
       domain,
-      roles: newRoles,
+      role,
     });
 
   } catch (error) {

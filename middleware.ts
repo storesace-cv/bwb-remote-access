@@ -1,68 +1,120 @@
 /**
- * Next.js Middleware - Auth0 Authentication Boundary
+ * Next.js Middleware - Session-based Authentication
  * 
- * SOURCE OF TRUTH: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+ * Authentication is based on MeshCentral credentials.
+ * Session is stored in a cookie (mesh_session).
  * 
- * RULES:
- * 1. auth0.middleware() is ONLY called here
- * 2. /auth/* routes are handled by Auth0 SDK via middleware
- * 3. Protected routes redirect to /auth/login if no session
+ * Protected routes redirect to /login if no session.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth0 } from "./src/lib/auth0";
 
-// Protected path prefixes
-const protectedPrefixes = ["/admin", "/dashboard", "/mesh", "/provisioning"];
+// =============================================================================
+// CONFIGURATION
+// =============================================================================
 
-// Public paths (never require auth)
-const publicPaths = ["/", "/auth-error", "/health", "/api/health", "/favicon.ico", "/robots.txt", "/sitemap.xml"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/login",
+  "/auth-error",
+  "/api/auth/login",
+  "/api/auth/logout",
+  "/api/auth/session",
+];
 
-function isProtected(pathname: string): boolean {
-  return protectedPrefixes.some(p => pathname === p || pathname.startsWith(p + "/"));
+const PROTECTED_ROUTE_PREFIXES = [
+  "/dashboard",
+  "/mesh",
+  "/admin",
+  "/provisioning",
+];
+
+const SESSION_COOKIE_NAME = "mesh_session";
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+function getPublicBaseUrl(request: NextRequest): string {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+  
+  const envUrl = process.env.APP_BASE_URL;
+  if (envUrl) {
+    let url = envUrl.trim();
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = `https://${url}`;
+    }
+    return url.replace(/\/$/, "");
+  }
+  
+  return "https://rustdesk.bwb.pt";
 }
 
-function isPublic(pathname: string): boolean {
-  if (publicPaths.includes(pathname)) return true;
+function isStaticAsset(pathname: string): boolean {
   if (pathname.startsWith("/_next/")) return true;
-  if (pathname.startsWith("/api/auth0/")) return true;
-  if (/\.(png|jpg|jpeg|gif|svg|ico|css|js|woff|woff2|ttf|map|json)$/.test(pathname)) return true;
+  if (pathname.startsWith("/assets/")) return true;
+  if (pathname.startsWith("/images/")) return true;
+  if (pathname.startsWith("/apk/")) return true;
+  if (/\.(png|jpg|jpeg|gif|svg|ico|webp|css|js|map|woff|woff2|ttf|eot|xml|txt|json|pdf)$/.test(pathname)) return true;
   return false;
 }
 
-export default async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+function isPublicRoute(pathname: string): boolean {
+  return PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route + "/"));
+}
 
-  // 1. ALL requests go through auth0.middleware() first to handle cookies/session
-  const authResponse = await auth0.middleware(req);
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_ROUTE_PREFIXES.some(prefix => 
+    pathname === prefix || pathname.startsWith(prefix + "/")
+  );
+}
 
-  // 2. /auth/* routes: return Auth0 SDK response directly
-  if (pathname.startsWith("/auth")) {
-    return authResponse;
+function hasSession(request: NextRequest): boolean {
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
+  return !!sessionCookie?.value;
+}
+
+// =============================================================================
+// MIDDLEWARE
+// =============================================================================
+
+export default async function middleware(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+
+  // 1. STATIC ASSETS → Pass through
+  if (isStaticAsset(pathname)) {
+    return NextResponse.next();
   }
 
-  // 3. Public paths: pass through
-  if (isPublic(pathname)) {
-    return authResponse;
+  // 2. PUBLIC ROUTES → Pass through
+  if (isPublicRoute(pathname)) {
+    return NextResponse.next();
   }
 
-  // 4. Protected paths: check session
-  if (isProtected(pathname)) {
-    const session = await auth0.getSession(req);
-    if (!session) {
-      const loginUrl = new URL("/auth/login", req.url);
-      loginUrl.searchParams.set("returnTo", pathname);
-      return NextResponse.redirect(loginUrl, { status: 303 });
+  // 3. PROTECTED ROUTES → Check session
+  if (isProtectedRoute(pathname)) {
+    if (!hasSession(request)) {
+      const baseUrl = getPublicBaseUrl(request);
+      const loginUrl = new URL("/login", baseUrl);
+      const returnTo = pathname + (search || "");
+      loginUrl.searchParams.set("returnTo", returnTo);
+      return NextResponse.redirect(loginUrl, { status: 302 });
     }
+    
+    return NextResponse.next();
   }
 
-  // 5. Default: return auth response (preserves cookies)
-  return authResponse;
+  // 4. DEFAULT → Pass through
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/auth/:path*",
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };

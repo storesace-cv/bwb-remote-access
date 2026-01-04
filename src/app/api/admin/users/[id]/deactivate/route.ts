@@ -1,17 +1,17 @@
 /**
  * API Route: POST /api/admin/users/[id]/deactivate
  * 
- * Deactivates a user by setting Auth0 blocked=true and mirror deleted_at.
+ * Deactivates a user by setting deleted_at in Supabase.
+ * No longer uses Auth0 - purely Supabase-based.
  * 
  * RBAC:
  *   - SuperAdmin can deactivate any user
- *   - Domain Admin can only deactivate users in their current org
+ *   - Domain Admin can only deactivate users in their domain
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/require-admin";
-import { isSuperAdminAny } from "@/lib/rbac";
-import { setAuth0UserBlocked } from "@/lib/auth0-management";
+import { isSuperAdmin } from "@/lib/rbac-mesh";
 import { getMirrorUserById, setMirrorUserDeleted } from "@/lib/user-mirror";
 
 export async function POST(
@@ -23,7 +23,7 @@ export async function POST(
 
     // Check admin access
     const { authorized, claims, email: currentUserEmail } = await checkAdminAccess();
-    if (!authorized) {
+    if (!authorized || !claims) {
       return NextResponse.json(
         { error: "Unauthorized - admin access required" },
         { status: 403 }
@@ -34,7 +34,7 @@ export async function POST(
     const mirrorUser = await getMirrorUserById(mirrorUserId);
     if (!mirrorUser) {
       return NextResponse.json(
-        { error: "User not found in mirror" },
+        { error: "User not found" },
         { status: 404 }
       );
     }
@@ -47,10 +47,10 @@ export async function POST(
       );
     }
 
-    // RBAC: Domain Admin can only deactivate users in their org
-    const isSuperAdmin = isSuperAdminAny(claims);
-    if (!isSuperAdmin) {
-      const userInDomain = mirrorUser.domains.some(d => d.domain === claims.org);
+    // RBAC: Domain Admin can only deactivate users in their domain
+    const superAdmin = isSuperAdmin(claims);
+    if (!superAdmin) {
+      const userInDomain = mirrorUser.domains?.some((d: { domain: string }) => d.domain === claims.domain);
       if (!userInDomain) {
         return NextResponse.json(
           { error: "You can only deactivate users in your domain" },
@@ -59,17 +59,13 @@ export async function POST(
       }
     }
 
-    // Set Auth0 blocked=true
-    await setAuth0UserBlocked(mirrorUser.auth0_user_id, true);
-
-    // Set mirror deleted_at
+    // Set deleted_at in Supabase
     const updatedUser = await setMirrorUserDeleted(mirrorUserId, true);
 
     return NextResponse.json({
       success: true,
       message: "User deactivated successfully",
       userId: mirrorUserId,
-      blocked: true,
       deletedAt: updatedUser.deleted_at,
     });
 

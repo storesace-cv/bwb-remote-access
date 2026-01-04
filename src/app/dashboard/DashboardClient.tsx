@@ -4,7 +4,7 @@
  * Dashboard Client Component
  * 
  * Handles client-side device management interactions.
- * Auth0 session is already validated by the parent Server Component.
+ * Session is already validated by the parent Server Component.
  */
 
 import { useCallback } from "react";
@@ -17,7 +17,6 @@ interface DashboardClientProps {
   userDomain: string | null;
   isAdmin: boolean;
   roleLabel: string | null;
-  orgRoles: Record<string, string[]>;
 }
 
 export default function DashboardClient({
@@ -26,7 +25,6 @@ export default function DashboardClient({
   userDomain,
   isAdmin,
   roleLabel,
-  orgRoles,
 }: DashboardClientProps) {
   const router = useRouter();
 
@@ -35,8 +33,8 @@ export default function DashboardClient({
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("rustdesk_jwt");
     }
-    // Redirect to Auth0 logout
-    router.push("/auth/logout");
+    // Redirect to logout endpoint
+    router.push("/api/auth/logout");
   }, [router]);
 
   return (
@@ -75,39 +73,37 @@ export default function DashboardClient({
 
         {/* Quick Actions */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {/* MeshCentral Devices */}
-          {(isAdmin || Object.keys(orgRoles).length > 0) && (
-            <Link
-              href="/mesh/devices"
-              className="bg-slate-900/70 border border-cyan-700/50 rounded-xl p-6 hover:bg-slate-800/70 transition group"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center group-hover:bg-cyan-600/30 transition">
-                  <svg
-                    className="w-6 h-6 text-cyan-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-medium text-white">
-                    Dispositivos MeshCentral
-                  </h3>
-                  <p className="text-sm text-slate-400">
-                    {userDomain ? `Domínio: ${userDomain}` : "Ver todos os dispositivos"}
-                  </p>
-                </div>
+          {/* MeshCentral Devices - Always show since user is authenticated */}
+          <Link
+            href="/mesh/devices"
+            className="bg-slate-900/70 border border-cyan-700/50 rounded-xl p-6 hover:bg-slate-800/70 transition group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center group-hover:bg-cyan-600/30 transition">
+                <svg
+                  className="w-6 h-6 text-cyan-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
               </div>
-            </Link>
-          )}
+              <div>
+                <h3 className="text-lg font-medium text-white">
+                  Dispositivos MeshCentral
+                </h3>
+                <p className="text-sm text-slate-400">
+                  {userDomain ? `Domínio: ${userDomain}` : "Ver todos os dispositivos"}
+                </p>
+              </div>
+            </div>
+          </Link>
 
           {/* User Management (Admin only) */}
           {isAdmin && (
@@ -203,7 +199,7 @@ export default function DashboardClient({
             <div>
               <label className="block text-xs text-slate-400 mb-1">Autenticação</label>
               <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-emerald-400">
-                ✓ Auth0 (Single Sign-On)
+                ✓ MeshCentral
               </div>
             </div>
           </div>

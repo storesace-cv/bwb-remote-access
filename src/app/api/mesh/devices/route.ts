@@ -2,7 +2,7 @@
  * API Route: GET /api/mesh/devices
  * 
  * Lists MeshCentral devices from Supabase mirror.
- * Requires Auth0 session with org role.
+ * Requires MeshCentral session.
  * 
  * Query params:
  *   - domain: Filter by domain (mesh|zonetech|zsangola) - SuperAdmin only
@@ -12,36 +12,26 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth0 } from "@/lib/auth0";
-import { getClaimsFromAuth0Session, isSuperAdminAny } from "@/lib/rbac";
+import { getSession } from "@/lib/mesh-auth";
+import { getUserClaims, isSuperAdmin, canAccessDomain, type ValidDomain, VALID_DOMAINS } from "@/lib/rbac-mesh";
 import { listMeshDevices, listMeshGroups } from "@/lib/meshcentral-mirror";
-
-type ValidDomain = "mesh" | "zonetech" | "zsangola";
-const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 export async function GET(req: NextRequest) {
   try {
-    // Get Auth0 session
-    const session = await auth0.getSession();
-    if (!session?.user) {
+    // Get session
+    const session = await getSession();
+    if (!session?.authenticated) {
       return NextResponse.json(
-        { error: "Unauthorized - Auth0 session required" },
+        { error: "Unauthorized - session required" },
         { status: 401 }
       );
     }
 
-    const claims = getClaimsFromAuth0Session(session);
-    const isSuperAdmin = isSuperAdminAny(claims);
-
-    // Check if user has any org role
-    const hasOrgRole = 
-      isSuperAdmin || 
-      (claims.org && Object.keys(claims.orgRoles).length > 0);
-
-    if (!hasOrgRole) {
+    const claims = await getUserClaims(session);
+    if (!claims) {
       return NextResponse.json(
-        { error: "Unauthorized - org role required to view devices" },
-        { status: 403 }
+        { error: "Unauthorized - invalid session" },
+        { status: 401 }
       );
     }
 
@@ -55,15 +45,15 @@ export async function GET(req: NextRequest) {
     // Determine domain filter
     let filterDomain: ValidDomain | null = null;
 
-    if (isSuperAdmin) {
+    if (isSuperAdmin(claims)) {
       // SuperAdmin can filter by any domain or see all
       if (requestedDomain && VALID_DOMAINS.includes(requestedDomain)) {
         filterDomain = requestedDomain;
       }
     } else {
-      // Non-superadmin must be scoped to their org
-      if (claims.org && VALID_DOMAINS.includes(claims.org as ValidDomain)) {
-        filterDomain = claims.org as ValidDomain;
+      // Non-superadmin is scoped to their domain
+      if (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain)) {
+        filterDomain = claims.domain as ValidDomain;
       } else {
         return NextResponse.json({
           groups: [],

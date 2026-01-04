@@ -18,11 +18,10 @@ interface CreateUserFormProps {
 
 interface CreateUserResponse {
   success: boolean;
-  auth0_user_id: string;
+  user_id: string;
   email: string;
   domain: ValidDomain;
-  roles: string[];
-  password_setup_url?: string;
+  role: string;
   is_new_user: boolean;
   message: string;
   error?: string;
@@ -203,27 +202,9 @@ export default function CreateUserForm({ allowedDomains, onSuccess }: CreateUser
           {success && (
             <div className="p-3 bg-emerald-950/50 border border-emerald-900 rounded-md text-sm text-emerald-400 space-y-2">
               <p>{success.message}</p>
-              {success.password_setup_url && (
-                <div className="mt-2">
-                  <p className="text-xs text-slate-400 mb-1">Link para configurar password:</p>
-                  <input
-                    type="text"
-                    readOnly
-                    value={success.password_setup_url}
-                    className="w-full px-2 py-1 bg-slate-800 border border-slate-700 rounded text-xs font-mono text-white"
-                    onClick={(e) => (e.target as HTMLInputElement).select()}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(success.password_setup_url || "");
-                    }}
-                    className="mt-1 text-xs text-emerald-400 hover:text-emerald-300"
-                  >
-                    Copiar link
-                  </button>
-                </div>
-              )}
+              <p className="text-xs text-slate-400">
+                O utilizador poderá entrar com as suas credenciais MeshCentral.
+              </p>
             </div>
           )}
 

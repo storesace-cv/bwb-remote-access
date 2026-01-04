@@ -2,7 +2,7 @@
  * API Route: POST /api/mesh/open-session
  * 
  * Opens a remote control session for a MeshCentral device.
- * Requires Auth0 session with appropriate permissions.
+ * Requires MeshCentral session with appropriate permissions.
  * 
  * Request body:
  *   - nodeId: string - MeshCentral device node ID (e.g., "node/mesh/xxxxx")
@@ -11,29 +11,15 @@
  * Response:
  *   - sessionUrl: URL to open for remote session
  *   - expiresAt: ISO timestamp when session token expires
- * 
- * Security:
- *   - Validates Auth0 JWT session
- *   - Verifies user has permission to access the device's domain
- *   - Generates time-limited MeshCentral login token
- *   - Never exposes MeshCentral credentials
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth0 } from "@/lib/auth0";
-import {
-  getClaimsFromAuth0Session,
-  isSuperAdminAny,
-} from "@/lib/rbac";
+import { getSession, getShortDomain } from "@/lib/mesh-auth";
+import { getUserClaims, isSuperAdmin, canAccessDomain, type ValidDomain, VALID_DOMAINS } from "@/lib/rbac-mesh";
 import {
   generateMeshCentralSession,
   isMeshCentralSessionConfigured,
-  canAccessDevice,
-  mapAuth0UserToMeshUser,
 } from "@/lib/meshcentral-session";
-
-type ValidDomain = "mesh" | "zonetech" | "zsangola";
-const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 export interface OpenSessionRequest {
   nodeId: string;
@@ -48,38 +34,40 @@ export interface OpenSessionResponse {
   details?: string;
 }
 
+/**
+ * Map email to MeshCentral username format
+ */
+function mapToMeshUser(email: string, domain: string | null): string {
+  // Use email prefix as mesh username, scoped by domain
+  const username = email.split("@")[0];
+  return domain ? `${domain}/${username}` : username;
+}
+
 export async function POST(req: NextRequest): Promise<NextResponse<OpenSessionResponse>> {
   try {
-    // 1. Validate Auth0 session
-    const session = await auth0.getSession();
-    if (!session?.user) {
+    // 1. Validate session
+    const session = await getSession();
+    if (!session?.authenticated) {
       return NextResponse.json(
         {
           success: false,
           error: "Unauthorized",
-          details: "Auth0 session required",
+          details: "Session required",
         },
         { status: 401 }
       );
     }
 
-    // 2. Extract user claims
-    const claims = getClaimsFromAuth0Session(session);
-    const isSuperAdmin = isSuperAdminAny(claims);
-
-    // Check if user has any org role
-    const hasOrgRole =
-      isSuperAdmin ||
-      (claims.org && Object.keys(claims.orgRoles).length > 0);
-
-    if (!hasOrgRole) {
+    // 2. Get user claims
+    const claims = await getUserClaims(session);
+    if (!claims) {
       return NextResponse.json(
         {
           success: false,
-          error: "Forbidden",
-          details: "User does not have required organization role",
+          error: "Unauthorized",
+          details: "Invalid session",
         },
-        { status: 403 }
+        { status: 401 }
       );
     }
 
@@ -123,9 +111,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<OpenSessionRe
     }
 
     // 4. Authorization check - can user access this device's domain?
-    if (!canAccessDevice(claims.org, domain, isSuperAdmin)) {
+    if (!canAccessDomain(claims, domain)) {
       console.warn(
-        `[SECURITY] User ${claims.email} attempted to access device in domain ${domain} but belongs to ${claims.org}`
+        `[SECURITY] User ${claims.email} attempted to access device in domain ${domain} but belongs to ${claims.domain}`
       );
       return NextResponse.json(
         {
@@ -152,7 +140,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<OpenSessionRe
     }
 
     // 6. Generate MeshCentral session
-    const meshUser = mapAuth0UserToMeshUser(claims.email || "anonymous", claims.org);
+    const meshUser = mapToMeshUser(claims.email, claims.domain);
     
     console.log(
       `[MESH SESSION] Generating session for user ${claims.email} (${meshUser}) to device ${nodeId} in domain ${domain}`
@@ -180,7 +168,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<OpenSessionRe
       `[MESH SESSION] Session generated successfully, expires at ${sessionResult.expiresAt}`
     );
 
-    // 7. Return session URL (do NOT return the raw token)
+    // 7. Return session URL
     return NextResponse.json({
       success: true,
       sessionUrl: sessionResult.sessionUrl,
