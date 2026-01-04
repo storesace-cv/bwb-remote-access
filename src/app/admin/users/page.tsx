@@ -113,12 +113,12 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
             </p>
           </div>
           <div className="flex gap-3">
-            <Link
+            <a
               href="/auth/login"
               className="px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
             >
               Auth0 Test
-            </Link>
+            </a>
             <Link
               href="/dashboard/profile"
               className="px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
