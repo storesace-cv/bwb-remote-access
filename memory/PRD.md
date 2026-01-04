@@ -66,11 +66,16 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 
 ## Pending / Future Work
 
-### P1 - Testing Required
+### P0 - Testing Required (User Verification Needed)
 - [ ] End-to-end testing of login flow with real MeshCentral credentials
 - [ ] Test user creation and role assignment
 - [ ] Test device listing and remote sessions
 - [ ] Test multi-domain routing
+
+### P1 - Configuration Required
+- [ ] Add SUPABASE_URL to .env.local
+- [ ] Add SUPABASE_SERVICE_ROLE_KEY to .env.local
+- [ ] Add MESHCENTRAL_LOGIN_TOKEN_KEY for remote sessions
 
 ### P2 - Documentation
 - [x] Update authentication architecture docs
