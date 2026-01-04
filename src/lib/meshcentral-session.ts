@@ -11,7 +11,7 @@
  * Security:
  *   - Tokens are time-limited (default 5 minutes)
  *   - Never expose the loginTokenKey
- *   - Auth0 is the only authentication authority
+ *   - MeshCentral is the authentication source
  */
 import "server-only";
 import crypto from "crypto";
@@ -190,16 +190,16 @@ export function generateMeshCentralSession(
 }
 
 /**
- * Maps an Auth0 user to a MeshCentral user identifier.
+ * Maps a user email to a MeshCentral user identifier.
  * 
  * MeshCentral users are typically in format: user//<domain>/<username>
- * We map Auth0 email to MeshCentral username.
+ * We map email to MeshCentral username.
  * 
- * @param email - Auth0 user email
+ * @param email - User email
  * @param domain - User's organization domain
  * @returns MeshCentral user identifier
  */
-export function mapAuth0UserToMeshUser(
+export function mapEmailToMeshUser(
   email: string,
   domain: string | null
 ): string {
@@ -211,6 +211,9 @@ export function mapAuth0UserToMeshUser(
   // Otherwise use just the email-based username
   return domain ? `${domain}_${safeEmail}` : safeEmail;
 }
+
+// Legacy alias for backwards compatibility
+export const mapAuth0UserToMeshUser = mapEmailToMeshUser;
 
 /**
  * Validates that a user can access a device based on domain.
