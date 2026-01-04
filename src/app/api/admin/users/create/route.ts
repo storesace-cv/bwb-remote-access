@@ -1,29 +1,25 @@
 /**
  * API Route: POST /api/admin/users/create
  * 
- * Creates or invites a user via Auth0 Management API.
- * Also upserts the user to the Supabase mirror.
+ * Creates a user record in Supabase.
+ * With MeshCentral authentication, users authenticate via MeshCentral.
+ * This endpoint pre-creates the user record with a role assignment.
  * 
  * Protected by RBAC:
  *   - SuperAdmin can create users in any domain
- *   - Domain Admin can only create users in their current org
+ *   - Domain Admin can only create users in their current domain
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/require-admin";
-import { isSuperAdminAny } from "@/lib/rbac";
-import { 
-  createAuth0User, 
-  getAuth0UserByEmail, 
-  updateAuth0UserMetadata,
-  createPasswordChangeTicket,
-  addUserToOrganization,
-} from "@/lib/auth0-management";
-import { getOrgIdForDomain, getAuth0Connection, type ValidDomain, VALID_DOMAINS } from "@/lib/org-map";
-import { upsertMirrorUser } from "@/lib/user-mirror";
+import { isSuperAdmin } from "@/lib/rbac-mesh";
+import { createClient } from "@supabase/supabase-js";
 
-type ValidRole = "DOMAIN_ADMIN" | "AGENT";
-const VALID_ROLES: ValidRole[] = ["DOMAIN_ADMIN", "AGENT"];
+type ValidDomain = "mesh" | "zonetech" | "zsangola";
+const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
+
+type ValidRole = "DOMAIN_ADMIN" | "AGENT" | "USER";
+const VALID_ROLES: ValidRole[] = ["DOMAIN_ADMIN", "AGENT", "USER"];
 
 interface CreateUserRequest {
   email: string;
@@ -34,11 +30,10 @@ interface CreateUserRequest {
 
 interface CreateUserResponse {
   success: boolean;
-  auth0_user_id: string;
+  user_id: string;
   email: string;
   domain: ValidDomain;
-  roles: string[];
-  password_setup_url?: string;
+  role: string;
   is_new_user: boolean;
   message: string;
 }
@@ -52,15 +47,17 @@ function isValidEmail(email: string): boolean {
 }
 
 /**
- * Generates a random temporary password.
+ * Get Supabase admin client
  */
-function generateTempPassword(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%";
-  let password = "";
-  for (let i = 0; i < 16; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
+function getSupabase() {
+  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+  
+  if (!url || !key) {
+    throw new Error("Supabase not configured");
   }
-  return password;
+  
+  return createClient(url, key);
 }
 
 export async function POST(req: NextRequest) {
@@ -68,7 +65,7 @@ export async function POST(req: NextRequest) {
     // Check admin access
     const { authorized, claims } = await checkAdminAccess();
 
-    if (!authorized) {
+    if (!authorized || !claims) {
       return NextResponse.json(
         { error: "Unauthorized - admin access required" },
         { status: 403 }
@@ -96,8 +93,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Normalize email
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Validate email format
-    if (!isValidEmail(email)) {
+    if (!isValidEmail(normalizedEmail)) {
       return NextResponse.json(
         { error: "Invalid email format" },
         { status: 400 }
@@ -120,153 +120,96 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // RBAC: Domain Admin can only create in their org
-    const isSuperAdmin = isSuperAdminAny(claims);
-    if (!isSuperAdmin) {
-      if (claims.org !== domain) {
+    // RBAC: Domain Admin can only create in their domain
+    const superAdmin = isSuperAdmin(claims);
+    if (!superAdmin) {
+      if (claims.domain !== domain) {
         return NextResponse.json(
-          { error: `Domain Admin can only create users in their org (${claims.org})` },
+          { error: `Domain Admin can only create users in their domain (${claims.domain})` },
           { status: 403 }
         );
       }
     }
 
-    // Get Auth0 Organization ID for domain
-    const orgId = getOrgIdForDomain(domain);
-    // Note: orgId may be null if not configured - we'll skip org assignment
+    const supabase = getSupabase();
 
-    // Prepare app_metadata for Auth0
-    // Structure: { bwb: { org_roles: { "domain": ["ROLE1", "ROLE2"] } } }
-    const orgRoles = role === "DOMAIN_ADMIN" 
-      ? ["DOMAIN_ADMIN", "AGENT"] 
-      : ["AGENT"];
+    // Check if user already exists
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id, role")
+      .eq("email", normalizedEmail)
+      .eq("domain", domain)
+      .single();
 
-    const appMetadata = {
-      bwb: {
-        org_roles: {
-          [domain]: orgRoles,
-        },
-        // Default: not a superadmin
-        superadmin_meshcentral: false,
-        superadmin_rustdesk: false,
-      },
-    };
-
-    let auth0User;
+    let userId: string;
     let isNewUser = false;
-    let passwordSetupUrl: string | undefined;
-
-    // Check if user already exists in Auth0
-    const existingUser = await getAuth0UserByEmail(email);
 
     if (existingUser) {
-      // User exists - update metadata and org membership
-      auth0User = existingUser;
-
-      // Merge org_roles with existing metadata
-      const existingBwb = (existingUser.app_metadata?.bwb as Record<string, unknown>) || {};
-      const existingOrgRoles = (existingBwb.org_roles as Record<string, string[]>) || {};
+      // User exists - update role
+      userId = existingUser.id;
       
-      // Merge roles for the domain
-      const mergedOrgRoles = {
-        ...existingOrgRoles,
-        [domain]: [...new Set([...(existingOrgRoles[domain] || []), ...orgRoles])],
-      };
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({ 
+          role,
+          display_name: display_name || normalizedEmail.split("@")[0],
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", userId);
 
-      const updatedAppMetadata = {
-        bwb: {
-          ...existingBwb,
-          org_roles: mergedOrgRoles,
-        },
-      };
-
-      auth0User = await updateAuth0UserMetadata(existingUser.user_id, updatedAppMetadata);
+      if (updateError) {
+        console.error("Error updating user:", updateError);
+        throw new Error("Failed to update user");
+      }
     } else {
-      // Create new user in Auth0
-      const connection = getAuth0Connection();
-      const tempPassword = generateTempPassword();
+      // Create new user
+      const { data: newUser, error: createError } = await supabase
+        .from("users")
+        .insert({
+          email: normalizedEmail,
+          username: normalizedEmail,
+          domain,
+          role,
+          user_type: "user",
+          profile_code: role === "DOMAIN_ADMIN" ? "DOMAIN_ADMIN" : "USER",
+          display_name: display_name || normalizedEmail.split("@")[0],
+          created_at: new Date().toISOString(),
+        })
+        .select("id")
+        .single();
 
-      auth0User = await createAuth0User({
-        email,
-        connection,
-        password: tempPassword,
-        name: display_name || email.split("@")[0],
-        app_metadata: appMetadata,
-        email_verified: false,
-      });
+      if (createError) {
+        console.error("Error creating user:", createError);
+        if (createError.code === "23505") {
+          return NextResponse.json(
+            { error: "A user with this email already exists in this domain" },
+            { status: 409 }
+          );
+        }
+        throw new Error("Failed to create user");
+      }
 
+      userId = newUser.id;
       isNewUser = true;
-
-      // Create password change ticket so user can set their own password
-      try {
-        const ticket = await createPasswordChangeTicket(auth0User.user_id);
-        passwordSetupUrl = ticket.ticket;
-      } catch (ticketError) {
-        console.error("Failed to create password change ticket:", ticketError);
-        // Non-fatal - user can use "forgot password" flow
-      }
-    }
-
-    // Add user to Auth0 Organization (if configured)
-    if (orgId) {
-      try {
-        await addUserToOrganization(orgId, auth0User.user_id);
-      } catch (orgError) {
-        console.error("Failed to add user to organization:", orgError);
-        // Non-fatal - org membership is optional
-      }
-    }
-
-    // Upsert to Supabase mirror
-    try {
-      await upsertMirrorUser({
-        auth0UserId: auth0User.user_id,
-        email: auth0User.email,
-        displayName: auth0User.name || display_name,
-        isSuperAdminMeshCentral: false,
-        isSuperAdminRustDesk: false,
-        domain,
-        role,
-      });
-    } catch (mirrorError) {
-      console.error("Failed to upsert mirror (non-fatal):", mirrorError);
-      // Non-fatal - user was created in Auth0
     }
 
     const response: CreateUserResponse = {
       success: true,
-      auth0_user_id: auth0User.user_id,
-      email: auth0User.email,
+      user_id: userId,
+      email: normalizedEmail,
       domain,
-      roles: orgRoles,
+      role,
       is_new_user: isNewUser,
       message: isNewUser 
-        ? "User created successfully. Password setup link generated."
-        : "User already exists. Roles updated.",
+        ? "Utilizador criado com sucesso. Pode entrar com credenciais MeshCentral."
+        : "Utilizador atualizado com sucesso.",
     };
-
-    if (passwordSetupUrl) {
-      response.password_setup_url = passwordSetupUrl;
-    }
 
     return NextResponse.json(response, { status: isNewUser ? 201 : 200 });
 
   } catch (error) {
     console.error("Error in /api/admin/users/create:", error);
-    
     const message = error instanceof Error ? error.message : "Internal server error";
-    
-    // Check for specific Auth0 errors
-    if (message.includes("already exists")) {
-      return NextResponse.json(
-        { error: "A user with this email already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
