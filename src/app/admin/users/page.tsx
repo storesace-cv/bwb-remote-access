@@ -1,5 +1,5 @@
 /**
- * Admin Users Page - STEP 4
+ * Admin Users Page
  * 
  * Protected by RBAC: only SuperAdmin or Domain Admin can access.
  * Shows users list from Supabase mirror with create functionality.
@@ -8,38 +8,28 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/require-admin";
 import {
-  isSuperAdminAny,
+  isSuperAdmin as checkSuperAdmin,
   getAdminRoleLabel,
-} from "@/lib/rbac";
+  type ValidDomain,
+  VALID_DOMAINS,
+} from "@/lib/rbac-mesh";
 import { listMirrorUsers } from "@/lib/user-mirror";
-import { syncUserToMirror } from "@/lib/user-mirror";
-import { auth0 } from "@/lib/auth0";
 import UsersListClient from "@/components/admin/UsersListClient";
-
-type ValidDomain = "mesh" | "zonetech" | "zsangola";
-const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 interface PageProps {
   searchParams: Promise<{ domain?: string }>;
 }
 
 export default async function AdminUsersPage({ searchParams }: PageProps) {
-  // This will redirect to /auth if not authorized
-  const { claims, email, sub } = await requireAdmin();
+  // This will redirect to /login if not authorized
+  const { claims, email } = await requireAdmin();
+
+  if (!claims) {
+    return null; // requireAdmin will redirect
+  }
 
   const roleLabel = getAdminRoleLabel(claims);
-  const isSuperAdmin = isSuperAdminAny(claims);
-
-  // Sync current user to mirror on page load
-  if (sub) {
-    try {
-      const session = await auth0.getSession();
-      const displayName = (session?.user?.name as string) || (session?.user?.nickname as string) || null;
-      await syncUserToMirror(sub, claims, displayName);
-    } catch (syncError) {
-      console.error("Failed to sync current user (non-fatal):", syncError);
-    }
-  }
+  const isSuperAdmin = checkSuperAdmin(claims);
 
   // Determine domain filter
   const params = await searchParams;
@@ -50,16 +40,16 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     if (params.domain && VALID_DOMAINS.includes(params.domain as ValidDomain)) {
       filterDomain = params.domain as ValidDomain;
     }
-  } else if (claims.org && VALID_DOMAINS.includes(claims.org as ValidDomain)) {
-    // Domain Admin only sees their org
-    filterDomain = claims.org as ValidDomain;
+  } else if (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain)) {
+    // Domain Admin only sees their domain
+    filterDomain = claims.domain as ValidDomain;
   }
 
   // Determine allowed domains for creating users
   const allowedDomains: ValidDomain[] = isSuperAdmin 
-    ? VALID_DOMAINS 
-    : (claims.org && VALID_DOMAINS.includes(claims.org as ValidDomain) 
-        ? [claims.org as ValidDomain] 
+    ? [...VALID_DOMAINS]
+    : (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain) 
+        ? [claims.domain as ValidDomain] 
         : []);
 
   // Fetch users from mirror (including deleted for admin view)
@@ -84,17 +74,17 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   // Transform users for client component
   const clientUsers = users.map((u) => ({
     id: u.id,
-    auth0_user_id: u.auth0_user_id,
+    user_id: u.auth0_user_id || u.id,
     email: u.email,
     display_name: u.display_name,
     is_superadmin_meshcentral: u.is_superadmin_meshcentral,
     is_superadmin_rustdesk: u.is_superadmin_rustdesk,
     created_at: u.created_at,
     deleted_at: u.deleted_at,
-    domains: u.domains.map((d) => ({
+    domains: u.domains?.map((d) => ({
       domain: d.domain,
       role: d.role,
-    })),
+    })) || [],
   }));
 
   return (
@@ -105,7 +95,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           <div>
             <h1 className="text-2xl font-bold text-white">Gestão de Utilizadores</h1>
             <p className="text-sm text-slate-400 mt-1">
-              {isSuperAdmin ? "Todos os domínios" : `Domínio: ${claims.org || "N/A"}`}
+              {isSuperAdmin ? "Todos os domínios" : `Domínio: ${claims.domain || "N/A"}`}
               {" · "}
               <span className={isSuperAdmin ? "text-amber-400" : "text-emerald-400"}>
                 {roleLabel}
@@ -113,12 +103,12 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
             </p>
           </div>
           <div className="flex gap-3">
-            <a
-              href="/auth/login"
+            <Link
+              href="/auth-status"
               className="px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
             >
-              Auth0 Test
-            </a>
+              Sessão
+            </Link>
             <Link
               href="/dashboard/profile"
               className="px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
@@ -186,7 +176,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         {/* Current Session Info (collapsed) */}
         <details className="mt-6">
           <summary className="text-sm text-slate-500 cursor-pointer hover:text-slate-400">
-            Debug: Sessão Auth0 actual
+            Debug: Sessão actual
           </summary>
           <section className="mt-3 bg-slate-900/70 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -197,21 +187,21 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Organização</label>
+                <label className="block text-xs text-slate-400 mb-1">Domínio</label>
                 <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-white">
-                  {claims.org || "Nenhuma"}
+                  {claims.domain || "Nenhum"}
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Global Roles</label>
+                <label className="block text-xs text-slate-400 mb-1">Role</label>
                 <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-xs font-mono text-purple-300">
-                  {claims.globalRoles.length > 0 ? JSON.stringify(claims.globalRoles) : "[]"}
+                  {claims.role}
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Org Roles</label>
+                <label className="block text-xs text-slate-400 mb-1">SuperAdmin</label>
                 <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-xs font-mono text-blue-300">
-                  {Object.keys(claims.orgRoles).length > 0 ? JSON.stringify(claims.orgRoles) : "{}"}
+                  {isSuperAdmin ? "Sim" : "Não"}
                 </div>
               </div>
             </div>
