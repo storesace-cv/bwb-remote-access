@@ -24,7 +24,7 @@ interface UserDomain {
 
 interface User {
   id: string;
-  auth0_user_id: string;
+  user_id: string;
   email: string;
   display_name: string | null;
   is_superadmin_meshcentral: boolean;
@@ -67,7 +67,7 @@ export default function UsersListClient({
         const data = await response.json();
         setUsers(data.users.map((u: Record<string, unknown>) => ({
           id: u.id,
-          auth0_user_id: u.auth0UserId,
+          user_id: u.auth0UserId || u.id,
           email: u.email,
           display_name: u.displayName,
           is_superadmin_meshcentral: u.isSuperAdminMeshCentral,
@@ -156,7 +156,7 @@ export default function UsersListClient({
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
-      showMessage("success", "Utilizador sincronizado do Auth0");
+      showMessage("success", "Dados do utilizador atualizados");
       refreshUsers();
     } catch (error) {
       showMessage("error", error instanceof Error ? error.message : "Erro ao sincronizar");
@@ -236,7 +236,7 @@ export default function UsersListClient({
             Nenhum utilizador encontrado
           </h3>
           <p className="text-sm text-slate-500 max-w-md mx-auto">
-            Os utilizadores aparecem aqui após fazerem login via Auth0 ou serem criados manualmente.
+            Os utilizadores aparecem aqui após fazerem login ou serem criados manualmente.
             {filterDomain && ` (filtrado por domínio: ${filterDomain})`}
           </p>
         </div>
@@ -278,7 +278,7 @@ export default function UsersListClient({
                         </span>
                         <span className="text-xs text-slate-400">{user.email}</span>
                         <span className="text-xs text-slate-600 font-mono mt-1">
-                          {user.auth0_user_id.substring(0, 20)}...
+                          ID: {user.user_id.substring(0, 12)}...
                         </span>
                       </div>
                     </td>
@@ -364,7 +364,7 @@ export default function UsersListClient({
                           onClick={() => handleResync(user.id)}
                           disabled={loading}
                           className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-slate-800 rounded transition disabled:opacity-50"
-                          title="Sincronizar do Auth0"
+                          title="Atualizar dados"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
