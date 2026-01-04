@@ -92,7 +92,7 @@ export default async function AuthErrorPage({ searchParams }: AuthErrorPageProps
               className="w-full inline-flex justify-center items-center px-4 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               Go to Home Page
-            </Link>
+            </a>
           </div>
           
           {/* Help Text */}
