@@ -1,13 +1,7 @@
 /**
- * Organization Mapping
+ * Domain Mapping
  * 
- * Maps domain slugs to Auth0 Organization IDs.
- * Organization IDs are configured via environment variables.
- * 
- * Required env vars:
- *   - AUTH0_ORG_ID_MESH
- *   - AUTH0_ORG_ID_ZONETECH
- *   - AUTH0_ORG_ID_ZSANGOLA
+ * Maps domain slugs and provides domain utilities.
  */
 import "server-only";
 
@@ -16,42 +10,43 @@ export type ValidDomain = "mesh" | "zonetech" | "zsangola";
 export const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 /**
- * Gets the Auth0 Organization ID for a domain.
- * Returns null if not configured.
+ * Map of full domain names to short domain slugs
  */
-export function getOrgIdForDomain(domain: ValidDomain): string | null {
-  switch (domain) {
-    case "mesh":
-      return process.env.AUTH0_ORG_ID_MESH || null;
-    case "zonetech":
-      return process.env.AUTH0_ORG_ID_ZONETECH || null;
-    case "zsangola":
-      return process.env.AUTH0_ORG_ID_ZSANGOLA || null;
-    default:
-      return null;
-  }
+export const DOMAIN_MAP: Record<string, ValidDomain> = {
+  "mesh.bwb.pt": "mesh",
+  "zonetech.bwb.pt": "zonetech",
+  "zsangola.bwb.pt": "zsangola",
+};
+
+/**
+ * Checks if a domain slug is valid
+ */
+export function isValidDomain(domain: string): domain is ValidDomain {
+  return VALID_DOMAINS.includes(domain as ValidDomain);
 }
 
 /**
- * Checks if a domain has an Organization ID configured.
+ * Gets the short domain slug from a full domain name
  */
-export function isOrgConfigured(domain: ValidDomain): boolean {
-  return getOrgIdForDomain(domain) !== null;
+export function getShortDomain(fullDomain: string): ValidDomain {
+  return DOMAIN_MAP[fullDomain] || "mesh";
 }
 
 /**
- * Gets all configured organization mappings.
+ * Gets the full domain name from a short domain slug
  */
-export function getConfiguredOrgs(): { domain: ValidDomain; orgId: string }[] {
-  return VALID_DOMAINS
-    .map((domain) => ({ domain, orgId: getOrgIdForDomain(domain) }))
-    .filter((item): item is { domain: ValidDomain; orgId: string } => item.orgId !== null);
+export function getFullDomain(shortDomain: ValidDomain): string {
+  const reverseMap: Record<ValidDomain, string> = {
+    mesh: "mesh.bwb.pt",
+    zonetech: "zonetech.bwb.pt",
+    zsangola: "zsangola.bwb.pt",
+  };
+  return reverseMap[shortDomain];
 }
 
 /**
- * Gets the Auth0 Database connection name for user creation.
- * Can be configured via env or defaults to "Username-Password-Authentication".
+ * Gets the MeshCentral URL for a domain
  */
-export function getAuth0Connection(): string {
-  return process.env.AUTH0_DB_CONNECTION || "Username-Password-Authentication";
+export function getMeshCentralUrl(domain: ValidDomain): string {
+  return `https://${getFullDomain(domain)}`;
 }
