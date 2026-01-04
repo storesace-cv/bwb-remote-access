@@ -8,8 +8,6 @@
  * This page is EXPLICITLY PUBLIC (no auth required) to prevent loops.
  */
 
-import Link from 'next/link';
-
 // Error code descriptions for user-friendly messages
 const ERROR_MESSAGES: Record<string, string> = {
   'invalid_state': 'Your login session expired or was interrupted. This can happen if you took too long to complete login, or if you opened multiple login windows.',
