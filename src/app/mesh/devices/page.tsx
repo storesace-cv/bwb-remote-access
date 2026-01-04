@@ -1,47 +1,39 @@
 /**
- * MeshCentral Devices Page - STEP 6.1
+ * MeshCentral Devices Page
  * 
  * Lists MeshCentral devices from Supabase mirror.
- * Requires Auth0 session with org role.
+ * Requires authenticated session.
  * 
  * RBAC:
  *   - SuperAdmin: can view all domains
- *   - Domain Admin / Agent: can view only their org domain
+ *   - Domain Admin / Agent: can view only their domain
  */
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth0 } from "@/lib/auth0";
-import { getClaimsFromAuth0Session, isSuperAdminAny, getAdminRoleLabel } from "@/lib/rbac";
+import { getSession } from "@/lib/mesh-auth";
+import { getUserClaims, isSuperAdmin as checkSuperAdmin, getAdminRoleLabel, type ValidDomain, VALID_DOMAINS } from "@/lib/rbac-mesh";
 import { listMeshDevices, listMeshGroups } from "@/lib/meshcentral-mirror";
 import MeshDevicesClient from "@/components/mesh/MeshDevicesClient";
-
-type ValidDomain = "mesh" | "zonetech" | "zsangola";
-const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 interface PageProps {
   searchParams: Promise<{ domain?: string; group?: string }>;
 }
 
 export default async function MeshDevicesPage({ searchParams }: PageProps) {
-  // Get Auth0 session
-  const session = await auth0.getSession();
-  if (!session?.user) {
-    redirect("/auth/login");
+  // Get session
+  const session = await getSession();
+  if (!session?.authenticated) {
+    redirect("/login");
   }
 
-  const claims = getClaimsFromAuth0Session(session);
-  const isSuperAdmin = isSuperAdminAny(claims);
+  const claims = await getUserClaims(session);
+  if (!claims) {
+    redirect("/login");
+  }
+
+  const isSuperAdmin = checkSuperAdmin(claims);
   const roleLabel = getAdminRoleLabel(claims);
-
-  // Check if user has any org role
-  const hasOrgRole = 
-    isSuperAdmin || 
-    (claims.org && Object.keys(claims.orgRoles).length > 0);
-
-  if (!hasOrgRole) {
-    redirect("/auth/login");
-  }
 
   // Determine domain filter
   const params = await searchParams;
@@ -52,9 +44,9 @@ export default async function MeshDevicesPage({ searchParams }: PageProps) {
     if (params.domain && VALID_DOMAINS.includes(params.domain as ValidDomain)) {
       filterDomain = params.domain as ValidDomain;
     }
-  } else if (claims.org && VALID_DOMAINS.includes(claims.org as ValidDomain)) {
-    // Non-superadmin scoped to their org
-    filterDomain = claims.org as ValidDomain;
+  } else if (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain)) {
+    // Non-superadmin scoped to their domain
+    filterDomain = claims.domain as ValidDomain;
   }
 
   // Fetch groups and devices
@@ -115,7 +107,7 @@ export default async function MeshDevicesPage({ searchParams }: PageProps) {
               Dispositivos MeshCentral
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              {isSuperAdmin ? "Todos os domínios" : `Domínio: ${claims.org || "N/A"}`}
+              {isSuperAdmin ? "Todos os domínios" : `Domínio: ${claims.domain || "N/A"}`}
               {roleLabel && (
                 <>
                   {" · "}
