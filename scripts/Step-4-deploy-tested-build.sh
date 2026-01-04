@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 #
-# Step 4: Deploy to Droplet (Auth0-aware, SoT Compliant)
+# Step 4: Deploy to Droplet (MeshCentral Auth, No Auth0)
 #
-# SoT Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+# Authentication: MeshCentral credential validation + encrypted cookies
+# Database: Supabase (mesh_users table)
 #
-# Strategy: rsync source + lockfiles to droplet, then build ON droplet
-# Rationale: Avoids mismatched server actions / stale .next artifacts
-#            and guarantees runtime matches source.
-#
-# Version: 20251230.0100
-# Last Updated: 2025-12-30 01:00 UTC
+# Version: 20260104.0100
+# Last Updated: 2026-01-04
 #
 set -euo pipefail
 
@@ -18,12 +15,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CANONICAL MIDDLEWARE FILE (per SoT)
-# Auth0 SDK v4 + Next.js requires middleware.ts at project root
+# CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════════════════
-CANONICAL_MIDDLEWARE_FILE="middleware.ts"
-
-# Configuration
 DEPLOY_HOST="${DEPLOY_HOST:-46.101.78.179}"
 DEPLOY_USER="${DEPLOY_USER:-rustdeskweb}"
 DEPLOY_PATH="${DEPLOY_PATH:-/opt/rustdesk-frontend}"
@@ -41,144 +34,128 @@ RSYNC_OPTS="-avz --delete"
 REMOTE_DIR="${DEPLOY_PATH}"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# SoT COMPLIANCE GATE
-# Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+# SUPABASE MIGRATION PHASE (Run on Mac BEFORE deploying)
 # ═══════════════════════════════════════════════════════════════════════════════
-sot_compliance_gate() {
+run_supabase_migrations() {
   echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║         SoT Compliance Gate - Auth & Middleware            ║"
-  echo "║  Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  ║"
+  echo "║         Supabase Migration Phase                           ║"
+  echo "║         (Runs locally on Mac before deploy)                ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
-  echo "📋 Canonical middleware file: $CANONICAL_MIDDLEWARE_FILE"
+
+  # Check if supabase CLI is installed
+  if ! command -v supabase &> /dev/null; then
+    echo "❌ ERROR: supabase CLI not found"
+    echo ""
+    echo "   Install with: brew install supabase/tap/supabase"
+    echo ""
+    exit 1
+  fi
+  echo "✅ Supabase CLI found: $(supabase --version)"
+  echo ""
+
+  # Check if project is linked
+  if [[ ! -f "$REPO_ROOT/supabase/.temp/project-ref" ]]; then
+    echo "⚠️  WARNING: Supabase project may not be linked"
+    echo "   Run: supabase link --project-ref <your-project-ref>"
+    echo ""
+    echo "   Skipping db push - manual migration may be required"
+    echo ""
+    return 0
+  fi
+
+  echo "🔄 Running supabase db push..."
+  echo ""
+
+  # Run db push to apply any pending migrations
+  if ! (cd "$REPO_ROOT" && supabase db push); then
+    echo ""
+    echo "❌ ERROR: supabase db push failed"
+    echo ""
+    echo "   Check the error above and fix migration issues."
+    echo "   Deploy ABORTED to prevent database drift."
+    echo ""
+    exit 1
+  fi
+
+  echo ""
+  echo "✅ Supabase migrations applied successfully"
+  echo ""
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COMPLIANCE GATE (MeshCentral Auth - No Auth0)
+# ═══════════════════════════════════════════════════════════════════════════════
+compliance_gate() {
+  echo "╔════════════════════════════════════════════════════════════╗"
+  echo "║         Compliance Gate - MeshCentral Auth                 ║"
+  echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
 
   local GATE_FAILED=0
 
   # A) middleware.ts MUST exist at repo root
-  echo "🔍 [A] Checking canonical middleware file..."
-  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-    echo "   ✅ PASS: $CANONICAL_MIDDLEWARE_FILE exists at root"
-    echo "   📄 Size: $(wc -c < "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE") bytes"
-    echo "   📄 MD5:  $(md5sum "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" | cut -d' ' -f1)"
+  echo "🔍 [A] Checking middleware.ts..."
+  if [[ -f "$REPO_ROOT/middleware.ts" ]]; then
+    echo "   ✅ PASS: middleware.ts exists"
   else
-    echo "   ❌ FAIL: $CANONICAL_MIDDLEWARE_FILE NOT found at root"
-    echo ""
-    echo "   CRITICAL: Without this file, /auth/login WILL return 404"
-    echo "   This is the #1 cause of auth failures after deploy."
-    echo ""
-    echo "   Files at repo root:"
-    ls -la "$REPO_ROOT"/*.ts 2>/dev/null | head -10 || echo "      (no .ts files found)"
+    echo "   ❌ FAIL: middleware.ts NOT found"
     GATE_FAILED=1
   fi
 
-  # B) proxy.ts MUST NOT exist
+  # B) No Auth0 package in dependencies
   echo ""
-  echo "🔍 [B] Checking for deprecated proxy.ts..."
-  if [[ -f "$REPO_ROOT/proxy.ts" ]]; then
-    echo "   ❌ FAIL: proxy.ts exists (deprecated pattern)"
-    echo "      SoT requires middleware.ts, not proxy.ts"
+  echo "🔍 [B] Checking for Auth0 dependencies..."
+  if grep -q "@auth0/nextjs-auth0" "$REPO_ROOT/package.json" 2>/dev/null; then
+    echo "   ❌ FAIL: @auth0/nextjs-auth0 still in package.json"
+    echo "      Remove with: npm uninstall @auth0/nextjs-auth0"
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No deprecated proxy.ts"
+    echo "   ✅ PASS: No Auth0 package in dependencies"
   fi
 
-  # C) src/middleware.ts MUST NOT exist
+  # C) No Auth0 imports in code
   echo ""
-  echo "🔍 [C] Checking for misplaced middleware files..."
-  if [[ -f "$REPO_ROOT/src/middleware.ts" ]]; then
-    echo "   ❌ FAIL: src/middleware.ts exists (wrong location)"
+  echo "🔍 [C] Checking for Auth0 imports..."
+  local AUTH0_IMPORTS
+  AUTH0_IMPORTS=$(grep -rn "@auth0" "$REPO_ROOT/src" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
+  if [[ -n "$AUTH0_IMPORTS" ]]; then
+    echo "   ❌ FAIL: Auth0 imports found in src/"
+    echo "$AUTH0_IMPORTS" | head -5 | sed 's/^/      /'
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No misplaced src/middleware.ts"
+    echo "   ✅ PASS: No Auth0 imports in code"
   fi
 
-  if [[ -f "$REPO_ROOT/src/proxy.ts" ]]; then
-    echo "   ❌ FAIL: src/proxy.ts exists"
-    GATE_FAILED=1
-  else
-    echo "   ✅ PASS: No misplaced src/proxy.ts"
-  fi
-
-  # D) src/app/auth/ MUST NOT exist
+  # D) SESSION_SECRET must be set (required for MeshCentral auth)
   echo ""
-  echo "🔍 [D] Checking /auth/* route reservation..."
+  echo "🔍 [D] Checking for SESSION_SECRET in .env files..."
+  if grep -q "SESSION_SECRET" "$REPO_ROOT/.env.local" 2>/dev/null || \
+     grep -q "SESSION_SECRET" "$REPO_ROOT/.env" 2>/dev/null; then
+    echo "   ✅ PASS: SESSION_SECRET configured"
+  else
+    echo "   ⚠️  WARN: SESSION_SECRET not found in local .env files"
+    echo "      Make sure it's set on the droplet"
+  fi
+
+  # E) src/app/auth directory should NOT exist (conflicts with /api/auth routes)
+  echo ""
+  echo "🔍 [E] Checking for conflicting auth directory..."
   if [[ -d "$REPO_ROOT/src/app/auth" ]]; then
-    echo "   ❌ FAIL: src/app/auth/ directory exists"
-    echo "      This WILL cause 404 on /auth/login"
+    echo "   ❌ FAIL: src/app/auth/ directory exists (legacy)"
+    echo "      Remove it to avoid route conflicts"
     GATE_FAILED=1
   else
     echo "   ✅ PASS: No conflicting src/app/auth/ directory"
   fi
 
-  # E) No explicit Auth0 route handlers
+  # F) Login page must exist
   echo ""
-  echo "🔍 [E] Checking for explicit Auth0 route handlers..."
-  if [[ -f "$REPO_ROOT/src/app/auth/[...auth0]/route.ts" ]]; then
-    echo "   ❌ FAIL: v3 App Router Auth0 handler exists"
-    GATE_FAILED=1
+  echo "🔍 [F] Checking login page..."
+  if [[ -f "$REPO_ROOT/src/app/login/page.tsx" ]]; then
+    echo "   ✅ PASS: Login page exists at src/app/login/page.tsx"
   else
-    echo "   ✅ PASS: No v3 App Router Auth0 handler"
-  fi
-
-  # F) NextResponse.next() only in middleware.ts
-  # Robust path normalization to handle ./middleware.ts, absolute paths, etc.
-  echo ""
-  echo "🔍 [F] Checking NextResponse.next() usage..."
-  
-  # Get canonical absolute path of middleware.ts
-  local CANONICAL_PATH
-  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-    CANONICAL_PATH="$(cd "$REPO_ROOT" && pwd)/$CANONICAL_MIDDLEWARE_FILE"
-    if command -v realpath >/dev/null 2>&1; then
-      CANONICAL_PATH="$(realpath "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" 2>/dev/null || echo "$CANONICAL_PATH")"
-    fi
-  else
-    CANONICAL_PATH=""
-  fi
-  
-  # Find all NextResponse.next() usages
-  local VIOLATIONS=""
-  while IFS= read -r line; do
-    [[ -z "$line" ]] && continue
-    local file_path="${line%%:*}"
-    [[ -z "$file_path" ]] && continue
-    local abs_path
-    if [[ "$file_path" = /* ]]; then
-      abs_path="$file_path"
-    else
-      abs_path="$(cd "$REPO_ROOT" && pwd)/$file_path"
-    fi
-    if command -v realpath >/dev/null 2>&1; then
-      abs_path="$(realpath "$abs_path" 2>/dev/null || echo "$abs_path")"
-    fi
-    if [[ "$abs_path" != "$CANONICAL_PATH" ]]; then
-      VIOLATIONS="${VIOLATIONS}${line}"$'\n'
-    fi
-  done < <(grep -Rn "NextResponse\.next" "$REPO_ROOT" \
-    --include="*.ts" --include="*.tsx" \
-    --exclude-dir=node_modules --exclude-dir=.next \
-    --exclude-dir=.git --exclude-dir=dist \
-    --exclude-dir=build --exclude-dir=coverage 2>/dev/null || true)
-  
-  VIOLATIONS="${VIOLATIONS%$'\n'}"
-  
-  if [[ -z "$VIOLATIONS" ]]; then
-    echo "   ✅ PASS: NextResponse.next() only in $CANONICAL_MIDDLEWARE_FILE"
-  else
-    echo "   ❌ FAIL: NextResponse.next() found outside $CANONICAL_MIDDLEWARE_FILE"
-    GATE_FAILED=1
-  fi
-
-  # G) auth0.middleware() not in route handlers
-  echo ""
-  echo "🔍 [G] Checking auth0.middleware() usage..."
-  local AUTH0_MW_VIOLATIONS
-  AUTH0_MW_VIOLATIONS=$(grep -Rna "auth0\.middleware" "$REPO_ROOT/src/app" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
-  if [[ -z "$AUTH0_MW_VIOLATIONS" ]]; then
-    echo "   ✅ PASS: No auth0.middleware() in route handlers"
-  else
-    echo "   ❌ FAIL: auth0.middleware() found in route handlers"
+    echo "   ❌ FAIL: Login page NOT found"
     GATE_FAILED=1
   fi
 
@@ -186,73 +163,32 @@ sot_compliance_gate() {
 
   if [[ $GATE_FAILED -eq 1 ]]; then
     echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ❌ SoT COMPLIANCE GATE FAILED                            ║"
-    echo "║                                                            ║"
-    echo "║   DEPLOY BLOCKED - Fix violations first.                   ║"
-    echo "║   Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md ║"
+    echo "║   ❌ COMPLIANCE GATE FAILED                                ║"
+    echo "║   Fix violations before deploying.                         ║"
     echo "╚════════════════════════════════════════════════════════════╝"
     exit 1
   else
     echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ✅ SoT COMPLIANCE GATE PASSED                            ║"
+    echo "║   ✅ COMPLIANCE GATE PASSED                                ║"
     echo "╚════════════════════════════════════════════════════════════╝"
   fi
-
   echo ""
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# VERIFY MIDDLEWARE FILE ON DROPLET
-# ═══════════════════════════════════════════════════════════════════════════════
-verify_middleware_file_on_droplet() {
-  local REMOTE_TARGET="$1"
-  
-  echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║    Verifying Middleware File on Droplet                    ║"
-  echo "╚════════════════════════════════════════════════════════════╝"
-  echo ""
-
-  echo "🔍 Checking for $CANONICAL_MIDDLEWARE_FILE on droplet..."
-  
-  local REMOTE_FILE="$REMOTE_DIR/$CANONICAL_MIDDLEWARE_FILE"
-  
-  if ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "test -f '$REMOTE_FILE'"; then
-    local REMOTE_SIZE
-    REMOTE_SIZE=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "wc -c < '$REMOTE_FILE'" 2>/dev/null || echo "unknown")
-    local REMOTE_MD5
-    REMOTE_MD5=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "md5sum '$REMOTE_FILE' | cut -d' ' -f1" 2>/dev/null || echo "unknown")
-    
-    echo "   ✅ PASS: $CANONICAL_MIDDLEWARE_FILE exists on droplet"
-    echo "   📄 Path: $REMOTE_FILE"
-    echo "   📄 Size: $REMOTE_SIZE bytes"
-    echo "   📄 MD5:  $REMOTE_MD5"
-    return 0
-  else
-    echo "   ❌ FAIL: $CANONICAL_MIDDLEWARE_FILE NOT found on droplet"
-    echo ""
-    echo "   CRITICAL: This WILL cause /auth/login to return 404"
-    echo ""
-    echo "   Files at $REMOTE_DIR:"
-    ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "ls -la '$REMOTE_DIR'/*.ts 2>/dev/null || echo '      (no .ts files)'" | head -10
-    return 1
-  fi
-}
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# POST-DEPLOY VALIDATION (RUNTIME)
+# POST-DEPLOY VALIDATION
 # ═══════════════════════════════════════════════════════════════════════════════
 post_deploy_validation() {
   local REMOTE_TARGET="$1"
   
   echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║         Post-Deploy Validation - Auth Routes               ║"
-  echo "║         (Runtime verification per SoT)                     ║"
+  echo "║         Post-Deploy Validation                             ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   echo ""
 
   local VALIDATION_FAILED=0
 
-  # Test 1: Root endpoint (localhost)
+  # Test 1: Root endpoint
   echo "🔍 [1/4] Testing http://127.0.0.1:3000/ ..."
   local ROOT_STATUS
   ROOT_STATUS=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:3000/'" 2>/dev/null || echo "000")
@@ -266,74 +202,62 @@ post_deploy_validation() {
 
   echo ""
 
-  # Test 2: /auth/login (localhost) - CRITICAL
-  echo "🔍 [2/4] Testing http://127.0.0.1:3000/auth/login ..."
-  local AUTH_STATUS
-  AUTH_STATUS=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:3000/auth/login'" 2>/dev/null || echo "000")
-  echo "   HTTP Status: $AUTH_STATUS"
-  if [[ "$AUTH_STATUS" == "404" ]]; then
-    echo "   ❌ FAIL: /auth/login returned 404"
-    echo ""
-    echo "   CRITICAL: Auth0 routes are NOT mounted."
-    echo "   Likely cause: $CANONICAL_MIDDLEWARE_FILE missing or not working."
-    VALIDATION_FAILED=1
-  elif [[ "$AUTH_STATUS" == "000" ]]; then
-    echo "   ❌ FAIL: Could not connect to localhost:3000"
-    echo "   Service may not be running"
-    VALIDATION_FAILED=1
+  # Test 2: Login page
+  echo "🔍 [2/4] Testing http://127.0.0.1:3000/login ..."
+  local LOGIN_STATUS
+  LOGIN_STATUS=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:3000/login'" 2>/dev/null || echo "000")
+  echo "   HTTP Status: $LOGIN_STATUS"
+  if [[ "$LOGIN_STATUS" == "200" ]]; then
+    echo "   ✅ PASS: Login page accessible"
   else
-    echo "   ✅ PASS: /auth/login is NOT 404 (got $AUTH_STATUS)"
+    echo "   ❌ FAIL: Login page returned $LOGIN_STATUS"
+    VALIDATION_FAILED=1
   fi
 
   echo ""
 
-  # Test 3: Root endpoint (HTTPS)
-  echo "🔍 [3/4] Testing https://$DEPLOY_DOMAIN/ ..."
-  local HTTPS_ROOT_STATUS
-  HTTPS_ROOT_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$DEPLOY_DOMAIN/" 2>/dev/null || echo "000")
-  echo "   HTTP Status: $HTTPS_ROOT_STATUS"
-  if [[ "$HTTPS_ROOT_STATUS" =~ ^(200|301|302|307|308)$ ]]; then
-    echo "   ✅ PASS"
-  else
-    echo "   ⚠️  WARN: Expected 200/30x, got $HTTPS_ROOT_STATUS"
-  fi
-
-  echo ""
-
-  # Test 4: /auth/login (HTTPS) - CRITICAL
-  echo "🔍 [4/4] Testing https://$DEPLOY_DOMAIN/auth/login ..."
-  local HTTPS_AUTH_STATUS
-  HTTPS_AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$DEPLOY_DOMAIN/auth/login" 2>/dev/null || echo "000")
-  echo "   HTTP Status: $HTTPS_AUTH_STATUS"
-  if [[ "$HTTPS_AUTH_STATUS" == "404" ]]; then
-    echo "   ❌ FAIL: /auth/login returned 404 on HTTPS"
+  # Test 3: Login API endpoint
+  echo "🔍 [3/4] Testing POST /api/auth/login ..."
+  local LOGIN_API_STATUS
+  LOGIN_API_STATUS=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "curl -s -o /dev/null -w '%{http_code}' -X POST 'http://127.0.0.1:3000/api/auth/login' -H 'Content-Type: application/json' -d '{}'" 2>/dev/null || echo "000")
+  echo "   HTTP Status: $LOGIN_API_STATUS"
+  # Should return 400 (bad request - missing credentials) not 404
+  if [[ "$LOGIN_API_STATUS" =~ ^(400|401|500)$ ]]; then
+    echo "   ✅ PASS: Login API route exists (returns $LOGIN_API_STATUS)"
+  elif [[ "$LOGIN_API_STATUS" == "404" ]]; then
+    echo "   ❌ FAIL: Login API route returns 404"
     VALIDATION_FAILED=1
-  elif [[ "$HTTPS_AUTH_STATUS" == "000" ]]; then
-    echo "   ⚠️  WARN: Could not connect to HTTPS endpoint"
   else
-    echo "   ✅ PASS: /auth/login is NOT 404 (got $HTTPS_AUTH_STATUS)"
+    echo "   ⚠️  WARN: Unexpected status $LOGIN_API_STATUS"
   fi
 
   echo ""
 
-  # Diagnostics on failure
+  # Test 4: Dashboard redirect (should redirect to login)
+  echo "🔍 [4/4] Testing /dashboard (should redirect to /login)..."
+  local DASH_STATUS
+  DASH_STATUS=$(ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "curl -s -o /dev/null -w '%{http_code}' 'http://127.0.0.1:3000/dashboard'" 2>/dev/null || echo "000")
+  echo "   HTTP Status: $DASH_STATUS"
+  if [[ "$DASH_STATUS" =~ ^(307|302|303)$ ]]; then
+    echo "   ✅ PASS: Dashboard redirects (protected route working)"
+  else
+    echo "   ⚠️  WARN: Expected redirect (307), got $DASH_STATUS"
+  fi
+
+  echo ""
+
   if [[ $VALIDATION_FAILED -eq 1 ]]; then
     echo "╔════════════════════════════════════════════════════════════╗"
     echo "║   ❌ POST-DEPLOY VALIDATION FAILED                         ║"
     echo "╚════════════════════════════════════════════════════════════╝"
     echo ""
     echo "📋 Diagnostics:"
-    echo ""
-    echo "   Middleware file on droplet:"
-    ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "ls -la '$REMOTE_DIR'/middleware.ts '$REMOTE_DIR'/proxy.ts 2>/dev/null || echo '   NONE FOUND'" | sed 's/^/   /'
-    echo ""
-    echo "   Last 200 lines of frontend logs:"
-    ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n /usr/bin/journalctl -u rustdesk-frontend --no-pager -n 200" 2>/dev/null | tail -100 | sed 's/^/   /'
+    echo "   Last 100 lines of frontend logs:"
+    ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n /usr/bin/journalctl -u rustdesk-frontend --no-pager -n 100" 2>/dev/null | tail -50 | sed 's/^/   /'
     return 1
   else
     echo "╔════════════════════════════════════════════════════════════╗"
     echo "║   ✅ POST-DEPLOY VALIDATION PASSED                         ║"
-    echo "║   /auth/login is working correctly                        ║"
     echo "╚════════════════════════════════════════════════════════════╝"
     return 0
   fi
@@ -344,23 +268,28 @@ post_deploy_validation() {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║    Step 4: Deploy to Droplet (Auth0-aware, SoT Compliant)  ║"
+echo "║    Step 4: Deploy to Droplet (MeshCentral Auth)            ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "📦 Version: 20251230.0100"
+echo "📦 Version: 20260104.0100"
 echo "📁 Local:  $REPO_ROOT"
 echo "📍 Remote: $REMOTE_DIR"
 echo "🌐 Domain: $DEPLOY_DOMAIN"
-echo "🔑 Middleware file: $CANONICAL_MIDDLEWARE_FILE"
+echo "🔐 Auth:   MeshCentral (encrypted cookie sessions)"
 echo ""
 
 # ---------------------------------------------------------
-# 0. SoT Compliance Gate (MANDATORY - blocks deploy)
+# 0. Compliance Gate (blocks deploy on failure)
 # ---------------------------------------------------------
-sot_compliance_gate
+compliance_gate
 
 # ---------------------------------------------------------
-# 1. Verify local build exists
+# 1. Supabase Migrations (run from Mac before deploy)
+# ---------------------------------------------------------
+run_supabase_migrations
+
+# ---------------------------------------------------------
+# 2. Verify local build exists
 # ---------------------------------------------------------
 echo "🔍 Checking local build artifacts..."
 
@@ -379,28 +308,6 @@ echo "✅ GIT_SHA:  $GIT_SHA"
 echo ""
 
 # ---------------------------------------------------------
-# 2. CRITICAL: Verify middleware file exists locally
-# ---------------------------------------------------------
-echo "🔍 CRITICAL: Verifying $CANONICAL_MIDDLEWARE_FILE exists..."
-
-if [[ ! -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-  echo "❌ CRITICAL ERROR: $CANONICAL_MIDDLEWARE_FILE not found locally!"
-  echo ""
-  echo "   This file is REQUIRED for Auth0 routes to work."
-  echo "   Without it, /auth/login WILL return 404 after deploy."
-  echo ""
-  echo "   Files at repo root:"
-  ls -la "$REPO_ROOT"/*.ts 2>/dev/null || echo "   (no .ts files)"
-  exit 1
-fi
-
-LOCAL_MIDDLEWARE_SIZE=$(wc -c < "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE")
-LOCAL_MIDDLEWARE_MD5=$(md5sum "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" | cut -d' ' -f1)
-
-echo "✅ $CANONICAL_MIDDLEWARE_FILE exists ($LOCAL_MIDDLEWARE_SIZE bytes, MD5: $LOCAL_MIDDLEWARE_MD5)"
-echo ""
-
-# ---------------------------------------------------------
 # 3. Determine SSH target
 # ---------------------------------------------------------
 REMOTE_TARGET="${DEPLOY_USER}@${DEPLOY_HOST}"
@@ -414,7 +321,6 @@ if [[ -n "$DEPLOY_SSH_ALIAS" ]]; then
     echo "ℹ️  Alias unavailable, using: $REMOTE_TARGET"
   fi
 fi
-
 echo ""
 
 # ---------------------------------------------------------
@@ -429,13 +335,13 @@ echo "✅ SSH OK"
 echo ""
 
 # ---------------------------------------------------------
-# 5. Stop service (using exact sudoers path)
+# 5. Stop service
 # ---------------------------------------------------------
 echo "🛑 Stopping rustdesk-frontend.service..."
 ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n /usr/bin/systemctl stop rustdesk-frontend.service" 2>/dev/null || true
 
 # ---------------------------------------------------------
-# 6. Fix ownership (using exact sudoers path)
+# 6. Fix ownership
 # ---------------------------------------------------------
 echo "🔧 Fixing ownership..."
 ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n /usr/bin/chown -R rustdeskweb:rustdeskweb '$REMOTE_DIR'" 2>/dev/null || true
@@ -448,7 +354,7 @@ ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "rm -rf '$REMOTE_DIR/.next'" 2>/dev/null |
 echo ""
 
 # ---------------------------------------------------------
-# 8. Rsync files (INCLUDING MIDDLEWARE FILE)
+# 8. Rsync files
 # ---------------------------------------------------------
 echo "📦 Uploading files to droplet..."
 echo ""
@@ -461,9 +367,9 @@ rsync $RSYNC_OPTS -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/src/" "$REMOTE_TARGET:$R
 echo "   📁 public/"
 rsync $RSYNC_OPTS -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/public/" "$REMOTE_TARGET:$REMOTE_DIR/public/"
 
-# CRITICAL: Middleware file (middleware.ts)
-echo "   🔑 $CANONICAL_MIDDLEWARE_FILE (CRITICAL for Auth0)"
-rsync -avz -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" "$REMOTE_TARGET:$REMOTE_DIR/$CANONICAL_MIDDLEWARE_FILE"
+# Middleware
+echo "   🔑 middleware.ts"
+rsync -avz -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/middleware.ts" "$REMOTE_TARGET:$REMOTE_DIR/middleware.ts"
 
 # Config files
 echo "   📄 Config files..."
@@ -477,9 +383,6 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" \
 if [[ -f "$REPO_ROOT/package-lock.json" ]]; then
   echo "   📄 package-lock.json"
   rsync -avz -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/package-lock.json" "$REMOTE_TARGET:$REMOTE_DIR/"
-elif [[ -f "$REPO_ROOT/yarn.lock" ]]; then
-  echo "   📄 yarn.lock"
-  rsync -avz -e "ssh $SSH_COMMON_OPTS" "$REPO_ROOT/yarn.lock" "$REMOTE_TARGET:$REMOTE_DIR/"
 fi
 
 echo ""
@@ -487,18 +390,7 @@ echo "✅ Files uploaded"
 echo ""
 
 # ---------------------------------------------------------
-# 9. CRITICAL: Verify middleware file on droplet BEFORE build
-# ---------------------------------------------------------
-if ! verify_middleware_file_on_droplet "$REMOTE_TARGET"; then
-  echo ""
-  echo "❌ CRITICAL: Middleware file missing on droplet after rsync!"
-  echo "   Deploy ABORTED - this would cause /auth/login 404"
-  exit 1
-fi
-echo ""
-
-# ---------------------------------------------------------
-# 10. Build on droplet
+# 9. Build on droplet
 # ---------------------------------------------------------
 echo "🏗️  Building on droplet..."
 ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "cd '$REMOTE_DIR' && npm ci && npm run build"
@@ -507,7 +399,7 @@ echo "✅ Build completed on droplet"
 echo ""
 
 # ---------------------------------------------------------
-# 11. Start service (using exact sudoers path)
+# 10. Start service
 # ---------------------------------------------------------
 echo "🚀 Starting rustdesk-frontend.service..."
 if ! ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "sudo -n /usr/bin/systemctl start rustdesk-frontend.service"; then
@@ -521,21 +413,18 @@ sleep 15
 echo ""
 
 # ---------------------------------------------------------
-# 12. Post-deploy validation (RUNTIME - CRITICAL)
+# 11. Post-deploy validation
 # ---------------------------------------------------------
 if ! post_deploy_validation "$REMOTE_TARGET"; then
   echo ""
   echo "╔════════════════════════════════════════════════════════════╗"
   echo "║   ❌ DEPLOY FAILED                                         ║"
-  echo "║                                                            ║"
-  echo "║   /auth/login is returning 404 in production.              ║"
-  echo "║   Authentication is broken.                                ║"
   echo "╚════════════════════════════════════════════════════════════╝"
   exit 1
 fi
 
 # ---------------------------------------------------------
-# 13. Create deploy stamp
+# 12. Create deploy stamp
 # ---------------------------------------------------------
 echo ""
 echo "📝 Creating DEPLOYED_VERSION.txt..."
@@ -544,7 +433,7 @@ DEPLOY_TIMESTAMP="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
 DEPLOY_STAMP="GIT_SHA=${GIT_SHA}
 GIT_BRANCH=${GIT_BRANCH}
 BUILD_ID=${BUILD_ID}
-MIDDLEWARE_FILE=${CANONICAL_MIDDLEWARE_FILE}
+AUTH_METHOD=MeshCentral
 DEPLOYED_AT=${DEPLOY_TIMESTAMP}"
 
 ssh $SSH_COMMON_OPTS "$REMOTE_TARGET" "echo '$DEPLOY_STAMP' > '$REMOTE_DIR/DEPLOYED_VERSION.txt'"
@@ -558,9 +447,9 @@ echo "║              Deploy Completed Successfully!                ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "📋 Summary:"
-echo "   ✅ SoT Compliance:  PASSED"
-echo "   ✅ Middleware file: $CANONICAL_MIDDLEWARE_FILE (deployed)"
-echo "   ✅ Auth Routes:     WORKING (/auth/login ≠ 404)"
+echo "   ✅ Auth Method:     MeshCentral (no Auth0)"
+echo "   ✅ Login Page:      /login"
+echo "   ✅ Login API:       /api/auth/login"
 echo "   ✅ BUILD_ID:        $BUILD_ID"
 echo "   ✅ GIT_SHA:         $GIT_SHA"
 echo "   ✅ Deployed at:     $DEPLOY_TIMESTAMP"
