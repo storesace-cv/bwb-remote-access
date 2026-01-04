@@ -1,14 +1,13 @@
 /**
- * Next.js Middleware - Auth0 Authentication Boundary
+ * Next.js Middleware - Session-based Authentication
  * 
- * SOURCE OF TRUTH: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+ * Authentication is based on MeshCentral credentials.
+ * Session is stored in a cookie (mesh_session).
  * 
- * NOTE: /auth/* routes are now handled by explicit route handlers in src/app/auth/
- * This middleware handles session protection for protected routes only.
+ * Protected routes redirect to /login if no session.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth0 } from "./src/lib/auth0";
 
 // =============================================================================
 // CONFIGURATION
@@ -16,10 +15,11 @@ import { auth0 } from "./src/lib/auth0";
 
 const PUBLIC_ROUTES = [
   "/",
+  "/login",
   "/auth-error",
-  "/api/auth0/debug",
-  "/api/auth0/me",
-  "/api/auth0/test-config",
+  "/api/auth/login",
+  "/api/auth/logout",
+  "/api/auth/session",
 ];
 
 const PROTECTED_ROUTE_PREFIXES = [
@@ -28,6 +28,8 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/admin",
   "/provisioning",
 ];
+
+const SESSION_COOKIE_NAME = "mesh_session";
 
 // =============================================================================
 // HELPERS
@@ -41,7 +43,7 @@ function getPublicBaseUrl(request: NextRequest): string {
     return `${forwardedProto}://${forwardedHost}`;
   }
   
-  const envUrl = process.env.APP_BASE_URL || process.env.AUTH0_BASE_URL;
+  const envUrl = process.env.APP_BASE_URL;
   if (envUrl) {
     let url = envUrl.trim();
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -63,13 +65,18 @@ function isStaticAsset(pathname: string): boolean {
 }
 
 function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_ROUTES.includes(pathname);
+  return PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route + "/"));
 }
 
 function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_ROUTE_PREFIXES.some(prefix => 
     pathname === prefix || pathname.startsWith(prefix + "/")
   );
+}
+
+function hasSession(request: NextRequest): boolean {
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
+  return !!sessionCookie?.value;
 }
 
 // =============================================================================
@@ -84,46 +91,25 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. /auth/* → Let route handlers handle (src/app/auth/*)
-  // Route handlers take precedence, middleware should not interfere
-  if (pathname.startsWith("/auth")) {
-    return NextResponse.next();
-  }
-
-  // 3. /api/auth/* → Pass through (if exists)
-  if (pathname.startsWith("/api/auth/")) {
-    return NextResponse.next();
-  }
-
-  // 4. PUBLIC ROUTES → Pass through
+  // 2. PUBLIC ROUTES → Pass through
   if (isPublicRoute(pathname)) {
     return NextResponse.next();
   }
 
-  // 5. PROTECTED ROUTES → Check session
+  // 3. PROTECTED ROUTES → Check session
   if (isProtectedRoute(pathname)) {
-    try {
-      const session = await auth0.getSession(request);
-      
-      if (!session) {
-        const baseUrl = getPublicBaseUrl(request);
-        const loginUrl = new URL("/auth/login", baseUrl);
-        const returnTo = pathname + (search || "");
-        loginUrl.searchParams.set("returnTo", returnTo);
-        return NextResponse.redirect(loginUrl, { status: 302 });
-      }
-    } catch (error) {
-      console.error("[MIDDLEWARE] Session check error:", error);
+    if (!hasSession(request)) {
       const baseUrl = getPublicBaseUrl(request);
-      const loginUrl = new URL("/auth/login", baseUrl);
-      loginUrl.searchParams.set("returnTo", pathname);
+      const loginUrl = new URL("/login", baseUrl);
+      const returnTo = pathname + (search || "");
+      loginUrl.searchParams.set("returnTo", returnTo);
       return NextResponse.redirect(loginUrl, { status: 302 });
     }
     
     return NextResponse.next();
   }
 
-  // 6. DEFAULT → Pass through
+  // 4. DEFAULT → Pass through
   return NextResponse.next();
 }
 
