@@ -1,10 +1,7 @@
 /**
- * Legacy Login Route - DEPRECATED
+ * Legacy Login Route - Redirects to /api/auth/login
  * 
- * This endpoint has been deprecated in favor of Auth0 authentication.
- * All authentication must now go through /auth/login (Auth0).
- * 
- * Returns 410 Gone to indicate the endpoint is no longer available.
+ * This endpoint now redirects to the MeshCentral auth endpoint.
  */
 
 import { NextResponse } from "next/server";
@@ -25,22 +22,21 @@ export async function OPTIONS() {
 export async function POST() {
   return NextResponse.json(
     {
-      error: "Gone",
-      message: "Local email/password authentication has been deprecated. Please use Auth0 authentication.",
-      redirect: "/auth/login",
-      documentation: "All users must now authenticate via Auth0 Single Sign-On.",
+      error: "Moved",
+      message: "Please use /api/auth/login for authentication.",
+      redirect: "/api/auth/login",
     },
-    { status: 410, headers: CORS_HEADERS }
+    { status: 308, headers: CORS_HEADERS }
   );
 }
 
 export async function GET() {
   return NextResponse.json(
     {
-      error: "Gone",
-      message: "Local email/password authentication has been deprecated. Please use Auth0 authentication.",
-      redirect: "/auth/login",
+      error: "Moved",
+      message: "Please use /api/auth/login for authentication.",
+      redirect: "/api/auth/login",
     },
-    { status: 410, headers: CORS_HEADERS }
+    { status: 308, headers: CORS_HEADERS }
   );
 }
