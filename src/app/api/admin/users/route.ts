@@ -1,7 +1,7 @@
 /**
  * API Route: /api/admin/users
  * 
- * Lists users from the Supabase mirror.
+ * Lists users from mesh_users table.
  * Protected by RBAC - requires admin access.
  * 
  * Query params:
@@ -43,13 +43,11 @@ export async function GET(req: NextRequest) {
       if (requestedDomain && VALID_DOMAINS.includes(requestedDomain)) {
         filterDomain = requestedDomain;
       }
-      // If no domain specified, show all users
     } else {
       // Domain Admin can only see their own domain
       if (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain)) {
         filterDomain = claims.domain as ValidDomain;
       } else {
-        // No valid domain - return empty
         return NextResponse.json({
           users: [],
           total: 0,
@@ -60,7 +58,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Fetch users from mirror
+    // Fetch users from mesh_users table
     const { users, total } = await listMirrorUsers({
       domain: filterDomain,
       limit,
@@ -68,21 +66,20 @@ export async function GET(req: NextRequest) {
       includeDeleted,
     });
 
-    // Transform for response (keep auth0_user_id for backwards compatibility)
+    // Transform for response
     const responseUsers = users.map((user) => ({
       id: user.id,
-      auth0UserId: user.auth0_user_id || user.id, // Fallback to id if no auth0_user_id
+      meshUsername: user.mesh_username,
       email: user.email,
-      displayName: user.display_name,
-      isSuperAdminMeshCentral: user.is_superadmin_meshcentral,
-      isSuperAdminRustDesk: user.is_superadmin_rustdesk,
+      displayName: user.display_name || user.name,
+      userType: user.user_type,
+      domain: user.domain,
+      agentId: user.agent_id,
+      disabled: user.disabled,
+      siteadmin: user.siteadmin,
+      domainadmin: user.domainadmin,
       createdAt: user.created_at,
-      updatedAt: user.updated_at,
       deletedAt: user.deleted_at,
-      domains: user.domains?.map((d) => ({
-        domain: d.domain,
-        role: d.role,
-      })) || [],
     }));
 
     return NextResponse.json({
