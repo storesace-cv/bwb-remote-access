@@ -5,12 +5,11 @@
  * This module MUST be used by all code that needs the base URL.
  * 
  * STRICT PRECEDENCE ORDER:
- *   1. AUTH0_BASE_URL (Auth0 SDK standard)
- *   2. APP_BASE_URL (Custom deployment variable)
- *   3. NEXT_PUBLIC_SITE_URL (Vercel/generic)
- *   4. NEXT_PUBLIC_VERCEL_URL (Vercel auto-set)
- *   5. ONLY in development → http://localhost:3000
- *   6. In production without config → THROWS ERROR (no silent fallback)
+ *   1. APP_BASE_URL (Custom deployment variable)
+ *   2. NEXT_PUBLIC_SITE_URL (Vercel/generic)
+ *   3. NEXT_PUBLIC_VERCEL_URL (Vercel auto-set)
+ *   4. ONLY in development → http://localhost:3000
+ *   5. In production without config → THROWS ERROR (no silent fallback)
  * 
  * HARD-FAIL IN PRODUCTION:
  *   - If resolved URL contains localhost, 127.0.0.1, 0.0.0.0 → THROWS
@@ -158,7 +157,6 @@ export function getCanonicalBaseUrl(options?: {
   
   // Strict precedence order
   const candidates = [
-    process.env.AUTH0_BASE_URL,
     process.env.APP_BASE_URL,
     process.env.NEXT_PUBLIC_SITE_URL,
     process.env.NEXT_PUBLIC_VERCEL_URL,
@@ -175,7 +173,7 @@ export function getCanonicalBaseUrl(options?: {
         throw new BaseUrlConfigError(
           `Base URL "${normalized}" is an internal/private address. ` +
           'Production requires a public domain. ' +
-          'Set AUTH0_BASE_URL or APP_BASE_URL to your public domain.'
+          'Set APP_BASE_URL to your public domain.'
         );
       }
       
@@ -192,7 +190,7 @@ export function getCanonicalBaseUrl(options?: {
   if (throwOnMissing) {
     throw new BaseUrlConfigError(
       'Cannot resolve base URL in production. ' +
-      'Set one of: AUTH0_BASE_URL, APP_BASE_URL, NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_VERCEL_URL'
+      'Set one of: APP_BASE_URL, NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_VERCEL_URL'
     );
   }
   
@@ -250,10 +248,7 @@ export function validateBaseUrlConfig(): {
   const inDev = isDevelopment();
   
   // Check each source in precedence order
-  if (process.env.AUTH0_BASE_URL) {
-    source = 'AUTH0_BASE_URL';
-    baseUrl = process.env.AUTH0_BASE_URL;
-  } else if (process.env.APP_BASE_URL) {
+  if (process.env.APP_BASE_URL) {
     source = 'APP_BASE_URL';
     baseUrl = process.env.APP_BASE_URL;
   } else if (process.env.NEXT_PUBLIC_SITE_URL) {
