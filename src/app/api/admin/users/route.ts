@@ -13,18 +13,15 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/require-admin";
-import { isSuperAdminAny } from "@/lib/rbac";
+import { isSuperAdmin, type ValidDomain, VALID_DOMAINS } from "@/lib/rbac-mesh";
 import { listMirrorUsers } from "@/lib/user-mirror";
-
-type ValidDomain = "mesh" | "zonetech" | "zsangola";
-const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 export async function GET(req: NextRequest) {
   try {
     // Check admin access
     const { authorized, claims } = await checkAdminAccess();
 
-    if (!authorized) {
+    if (!authorized || !claims) {
       return NextResponse.json(
         { error: "Unauthorized - admin access required" },
         { status: 403 }
@@ -41,18 +38,18 @@ export async function GET(req: NextRequest) {
     // Determine which domain to filter by
     let filterDomain: ValidDomain | null = null;
 
-    if (isSuperAdminAny(claims)) {
+    if (isSuperAdmin(claims)) {
       // SuperAdmin can filter by any domain or see all
       if (requestedDomain && VALID_DOMAINS.includes(requestedDomain)) {
         filterDomain = requestedDomain;
       }
       // If no domain specified, show all users
     } else {
-      // Domain Admin can only see their own org
-      if (claims.org && VALID_DOMAINS.includes(claims.org as ValidDomain)) {
-        filterDomain = claims.org as ValidDomain;
+      // Domain Admin can only see their own domain
+      if (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain)) {
+        filterDomain = claims.domain as ValidDomain;
       } else {
-        // No valid org - return empty
+        // No valid domain - return empty
         return NextResponse.json({
           users: [],
           total: 0,
@@ -71,10 +68,10 @@ export async function GET(req: NextRequest) {
       includeDeleted,
     });
 
-    // Transform for response
+    // Transform for response (keep auth0_user_id for backwards compatibility)
     const responseUsers = users.map((user) => ({
       id: user.id,
-      auth0UserId: user.auth0_user_id,
+      auth0UserId: user.auth0_user_id || user.id, // Fallback to id if no auth0_user_id
       email: user.email,
       displayName: user.display_name,
       isSuperAdminMeshCentral: user.is_superadmin_meshcentral,
@@ -82,10 +79,10 @@ export async function GET(req: NextRequest) {
       createdAt: user.created_at,
       updatedAt: user.updated_at,
       deletedAt: user.deleted_at,
-      domains: user.domains.map((d) => ({
+      domains: user.domains?.map((d) => ({
         domain: d.domain,
         role: d.role,
-      })),
+      })) || [],
     }));
 
     return NextResponse.json({
