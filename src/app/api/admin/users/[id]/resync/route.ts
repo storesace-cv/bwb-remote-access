@@ -1,12 +1,8 @@
 /**
  * API Route: POST /api/admin/users/[id]/resync
  * 
- * Resyncs a user's data from the database.
- * With Auth0 removed, this now just refreshes the user record.
- * 
- * RBAC:
- *   - SuperAdmin can resync any user
- *   - Domain Admin can only resync users in their domain
+ * Refreshes a user's data from the database.
+ * Uses mesh_users table.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,7 +15,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: mirrorUserId } = await params;
+    const { id: userId } = await params;
 
     // Check admin access
     const { authorized, claims } = await checkAdminAccess();
@@ -30,9 +26,9 @@ export async function POST(
       );
     }
 
-    // Get the mirror user
-    const mirrorUser = await getMirrorUserById(mirrorUserId);
-    if (!mirrorUser) {
+    // Get the user
+    const user = await getMirrorUserById(userId);
+    if (!user) {
       return NextResponse.json(
         { error: "User not found" },
         { status: 404 }
@@ -41,31 +37,26 @@ export async function POST(
 
     // RBAC: Domain Admin can only resync users in their domain
     const superAdmin = isSuperAdmin(claims);
-    if (!superAdmin) {
-      const userInDomain = mirrorUser.domains?.some((d: { domain: string }) => d.domain === claims.domain);
-      if (!userInDomain) {
-        return NextResponse.json(
-          { error: "You can only refresh users in your domain" },
-          { status: 403 }
-        );
-      }
+    if (!superAdmin && user.domain !== claims.domain) {
+      return NextResponse.json(
+        { error: "You can only refresh users in your domain" },
+        { status: 403 }
+      );
     }
 
-    // Return current user data (no external sync needed without Auth0)
+    // Return current user data
     return NextResponse.json({
       success: true,
       message: "User data refreshed",
       user: {
-        id: mirrorUser.id,
-        email: mirrorUser.email,
-        displayName: mirrorUser.display_name,
-        isSuperAdminMeshCentral: mirrorUser.is_superadmin_meshcentral,
-        isSuperAdminRustDesk: mirrorUser.is_superadmin_rustdesk,
-        deletedAt: mirrorUser.deleted_at,
-        domains: mirrorUser.domains?.map((d: { domain: string; role: string }) => ({
-          domain: d.domain,
-          role: d.role,
-        })) || [],
+        id: user.id,
+        meshUsername: user.mesh_username,
+        email: user.email,
+        displayName: user.display_name || user.name,
+        userType: user.user_type,
+        domain: user.domain,
+        disabled: user.disabled,
+        deletedAt: user.deleted_at,
       },
     });
 

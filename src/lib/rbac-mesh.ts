@@ -1,24 +1,31 @@
 /**
  * RBAC (Role-Based Access Control) for MeshCentral Sessions
  * 
- * Replaces the old Auth0-based RBAC with session-based authorization.
- * Roles are stored in Supabase and checked against session.
+ * Uses mesh_users.user_type for authorization:
+ * - siteadmin: Full access to all domains (global super admin)
+ * - minisiteadmin: Domain-level super admin
+ * - agent: Manages tenant/collaborators
+ * - colaborador: Active user within a tenant
+ * - inactivo: Disabled user
+ * - candidato: New user without full access
  */
 
-import { MeshSession, getShortDomain } from "./mesh-auth";
+import { MeshSession, getShortDomain, getMeshUserByEmail, type UserType } from "./mesh-auth";
 import { createClient } from "@supabase/supabase-js";
-
-// Known roles
-export const ROLES = {
-  SUPERADMIN: "SUPERADMIN",
-  DOMAIN_ADMIN: "DOMAIN_ADMIN",
-  AGENT: "AGENT",
-  USER: "USER",
-} as const;
 
 // Valid domains
 export type ValidDomain = "mesh" | "zonetech" | "zsangola";
 export const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
+
+// User types hierarchy (from schema)
+export const USER_TYPES = {
+  SITEADMIN: "siteadmin",
+  MINISITEADMIN: "minisiteadmin", 
+  AGENT: "agent",
+  COLABORADOR: "colaborador",
+  INACTIVO: "inactivo",
+  CANDIDATO: "candidato",
+} as const;
 
 /**
  * User claims extracted from session + Supabase
@@ -27,14 +34,13 @@ export interface UserClaims {
   email: string;
   domain: string;          // Short domain (mesh, zonetech, zsangola)
   fullDomain: string;      // Full domain (mesh.bwb.pt, etc.)
-  role: string;            // User's role in their domain
-  isSuperAdmin: boolean;
+  userId?: string;         // mesh_users.id
+  userType: UserType;      // user_type from mesh_users
+  isSiteAdmin: boolean;    // siteadmin or minisiteadmin
+  isAgent: boolean;        // agent user type
   authenticated: boolean;
 }
 
-/**
- * Get Supabase client
- */
 function getSupabase() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || 
@@ -50,7 +56,7 @@ function getSupabase() {
 
 /**
  * Get user claims from MeshCentral session
- * Enriches session with role data from Supabase
+ * Enriches session with role data from mesh_users table
  */
 export async function getUserClaims(session: MeshSession | null): Promise<UserClaims | null> {
   if (!session?.authenticated) {
@@ -64,53 +70,54 @@ export async function getUserClaims(session: MeshSession | null): Promise<UserCl
     email: session.email,
     domain: shortDomain,
     fullDomain: session.domain,
-    role: "USER",
-    isSuperAdmin: false,
+    userId: session.userId,
+    userType: (session.userType as UserType) || "candidato",
+    isSiteAdmin: false,
+    isAgent: false,
     authenticated: true,
   };
   
   // Try to enrich with Supabase data
-  const supabase = getSupabase();
-  if (supabase) {
-    try {
-      const { data: user } = await supabase
-        .from("users")
-        .select("role, user_type, is_superadmin_meshcentral, is_superadmin_rustdesk")
-        .eq("email", session.email)
-        .eq("domain", shortDomain)
-        .single();
-      
-      if (user) {
-        claims.role = user.role || "USER";
-        claims.isSuperAdmin = !!(user.is_superadmin_meshcentral || user.is_superadmin_rustdesk);
-      }
-    } catch (error) {
-      console.warn("[RBAC] Could not fetch user role from Supabase:", error);
-    }
+  const userData = await getMeshUserByEmail(session.email);
+  
+  if (userData) {
+    claims.userId = userData.id;
+    claims.userType = userData.user_type;
+    claims.domain = userData.domain || shortDomain;
+    claims.isSiteAdmin = userData.user_type === "siteadmin" || userData.user_type === "minisiteadmin";
+    claims.isAgent = userData.user_type === "agent";
   }
   
   return claims;
 }
 
 /**
- * Check if user is a SuperAdmin
+ * Check if user is a Site Admin (siteadmin or minisiteadmin)
  */
 export function isSuperAdmin(claims: UserClaims | null): boolean {
-  return claims?.isSuperAdmin ?? false;
+  return claims?.isSiteAdmin ?? false;
 }
 
 /**
- * Check if user is a Domain Admin for their domain
+ * Check if user is an Agent (can manage collaborators)
+ */
+export function isAgent(claims: UserClaims | null): boolean {
+  return claims?.isAgent ?? false;
+}
+
+/**
+ * Check if user is a Domain Admin (agent or higher)
  */
 export function isDomainAdmin(claims: UserClaims | null): boolean {
-  return claims?.role === ROLES.DOMAIN_ADMIN || isSuperAdmin(claims);
+  if (!claims) return false;
+  return ["siteadmin", "minisiteadmin", "agent"].includes(claims.userType);
 }
 
 /**
  * Check if user can manage users
  */
 export function canManageUsers(claims: UserClaims | null): boolean {
-  return isDomainAdmin(claims) || isSuperAdmin(claims);
+  return isDomainAdmin(claims);
 }
 
 /**
@@ -127,9 +134,23 @@ export function canAccessDomain(claims: UserClaims | null, targetDomain: ValidDo
  */
 export function getAdminRoleLabel(claims: UserClaims | null): string | null {
   if (!claims) return null;
-  if (isSuperAdmin(claims)) return "SuperAdmin";
-  if (isDomainAdmin(claims)) return `Domain Admin (${claims.domain})`;
-  return null;
+  
+  switch (claims.userType) {
+    case "siteadmin":
+      return "Super Admin";
+    case "minisiteadmin":
+      return "Admin de Domínio";
+    case "agent":
+      return "Agente";
+    case "colaborador":
+      return "Colaborador";
+    case "inactivo":
+      return "Inativo";
+    case "candidato":
+      return "Candidato";
+    default:
+      return null;
+  }
 }
 
 /**
@@ -142,4 +163,12 @@ export function getAccessibleDomains(claims: UserClaims | null): ValidDomain[] {
     return [claims.domain as ValidDomain];
   }
   return [];
+}
+
+/**
+ * Check if user type allows active access (not disabled/candidate)
+ */
+export function isActiveUser(claims: UserClaims | null): boolean {
+  if (!claims) return false;
+  return !["inactivo", "candidato"].includes(claims.userType);
 }

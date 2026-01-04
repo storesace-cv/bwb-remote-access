@@ -1,12 +1,8 @@
 /**
  * API Route: POST /api/admin/users/[id]/deactivate
  * 
- * Deactivates a user by setting deleted_at in Supabase.
- * No longer uses Auth0 - purely Supabase-based.
- * 
- * RBAC:
- *   - SuperAdmin can deactivate any user
- *   - Domain Admin can only deactivate users in their domain
+ * Deactivates a user by setting user_type to 'inactivo' and deleted_at.
+ * Uses mesh_users table.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,7 +15,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: mirrorUserId } = await params;
+    const { id: userId } = await params;
 
     // Check admin access
     const { authorized, claims, email: currentUserEmail } = await checkAdminAccess();
@@ -30,9 +26,9 @@ export async function POST(
       );
     }
 
-    // Get the mirror user
-    const mirrorUser = await getMirrorUserById(mirrorUserId);
-    if (!mirrorUser) {
+    // Get the user
+    const user = await getMirrorUserById(userId);
+    if (!user) {
       return NextResponse.json(
         { error: "User not found" },
         { status: 404 }
@@ -40,7 +36,7 @@ export async function POST(
     }
 
     // Prevent self-deactivation
-    if (mirrorUser.email === currentUserEmail) {
+    if (user.email === currentUserEmail || user.mesh_username === currentUserEmail) {
       return NextResponse.json(
         { error: "Cannot deactivate your own account" },
         { status: 400 }
@@ -49,23 +45,20 @@ export async function POST(
 
     // RBAC: Domain Admin can only deactivate users in their domain
     const superAdmin = isSuperAdmin(claims);
-    if (!superAdmin) {
-      const userInDomain = mirrorUser.domains?.some((d: { domain: string }) => d.domain === claims.domain);
-      if (!userInDomain) {
-        return NextResponse.json(
-          { error: "You can only deactivate users in your domain" },
-          { status: 403 }
-        );
-      }
+    if (!superAdmin && user.domain !== claims.domain) {
+      return NextResponse.json(
+        { error: "You can only deactivate users in your domain" },
+        { status: 403 }
+      );
     }
 
-    // Set deleted_at in Supabase
-    const updatedUser = await setMirrorUserDeleted(mirrorUserId, true);
+    // Set deleted_at and user_type to inactivo
+    const updatedUser = await setMirrorUserDeleted(userId, true);
 
     return NextResponse.json({
       success: true,
       message: "User deactivated successfully",
-      userId: mirrorUserId,
+      userId,
       deletedAt: updatedUser.deleted_at,
     });
 

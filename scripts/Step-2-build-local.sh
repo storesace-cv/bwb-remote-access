@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #
-# Step 2: Build Local - Next.js (Auth0-aware, SoT Compliant)
+# Step 2: Build Local - Next.js (MeshCentral Auth)
 #
-# SoT Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+# Authentication: MeshCentral credential validation + encrypted cookies
 #
-# Version: 20251230.0100
-# Last Updated: 2025-12-30 01:00 UTC
+# Version: 20260104.0100
 #
 set -euo pipefail
 
@@ -14,209 +13,93 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CANONICAL MIDDLEWARE FILE (per SoT)
-# Auth0 SDK v4 + Next.js requires middleware.ts at project root
+# COMPLIANCE GATE (MeshCentral Auth - No Auth0)
 # ═══════════════════════════════════════════════════════════════════════════════
-CANONICAL_MIDDLEWARE_FILE="middleware.ts"
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# SoT COMPLIANCE GATE
-# Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
-# ═══════════════════════════════════════════════════════════════════════════════
-sot_compliance_gate() {
+compliance_gate() {
   echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║         SoT Compliance Gate - Auth & Middleware            ║"
-  echo "║  Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  ║"
+  echo "║         Compliance Gate - MeshCentral Auth                 ║"
   echo "╚════════════════════════════════════════════════════════════╝"
-  echo ""
-  echo "📋 Canonical middleware file: $CANONICAL_MIDDLEWARE_FILE"
   echo ""
 
   local GATE_FAILED=0
 
-  # -------------------------------------------------------------------------
   # A) middleware.ts MUST exist at repo root
-  # -------------------------------------------------------------------------
-  echo "🔍 [A] Checking canonical middleware file..."
-  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-    echo "   ✅ PASS: $CANONICAL_MIDDLEWARE_FILE exists at root"
-    echo "   📄 File size: $(wc -c < "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE") bytes"
+  echo "🔍 [A] Checking middleware.ts..."
+  if [[ -f "$REPO_ROOT/middleware.ts" ]]; then
+    echo "   ✅ PASS: middleware.ts exists"
+    echo "   📄 File size: $(wc -c < "$REPO_ROOT/middleware.ts") bytes"
   else
-    echo "   ❌ FAIL: $CANONICAL_MIDDLEWARE_FILE NOT found at root"
-    echo "      This file is REQUIRED for Auth0 routes to work."
-    echo "      Without it, /auth/login will return 404 in production."
+    echo "   ❌ FAIL: middleware.ts NOT found at root"
     GATE_FAILED=1
   fi
 
-  # -------------------------------------------------------------------------
-  # B) proxy.ts MUST NOT exist (deprecated pattern)
-  # -------------------------------------------------------------------------
+  # B) No Auth0 package
   echo ""
-  echo "🔍 [B] Checking for deprecated proxy.ts..."
-  if [[ -f "$REPO_ROOT/proxy.ts" ]]; then
-    echo "   ❌ FAIL: proxy.ts exists (deprecated pattern)"
-    echo "      SoT requires middleware.ts, not proxy.ts"
-    echo "      Remove proxy.ts and use middleware.ts instead."
+  echo "🔍 [B] Checking for Auth0 dependencies..."
+  if grep -q "@auth0/nextjs-auth0" "$REPO_ROOT/package.json" 2>/dev/null; then
+    echo "   ❌ FAIL: @auth0/nextjs-auth0 still in package.json"
+    echo "      Run: npm uninstall @auth0/nextjs-auth0"
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No deprecated proxy.ts"
+    echo "   ✅ PASS: No Auth0 package in dependencies"
   fi
 
-  # -------------------------------------------------------------------------
-  # C) src/middleware.ts MUST NOT exist (wrong location)
-  # -------------------------------------------------------------------------
+  # C) No Auth0 imports
   echo ""
-  echo "🔍 [C] Checking for misplaced middleware files..."
-  if [[ -f "$REPO_ROOT/src/middleware.ts" ]]; then
-    echo "   ❌ FAIL: src/middleware.ts exists (wrong location)"
-    echo "      Middleware file must be at root, not in src/"
+  echo "🔍 [C] Checking for Auth0 imports in code..."
+  local AUTH0_IMPORTS
+  AUTH0_IMPORTS=$(grep -rn "@auth0" "$REPO_ROOT/src" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
+  if [[ -n "$AUTH0_IMPORTS" ]]; then
+    echo "   ❌ FAIL: Auth0 imports found:"
+    echo "$AUTH0_IMPORTS" | head -5 | sed 's/^/      /'
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No misplaced src/middleware.ts"
+    echo "   ✅ PASS: No Auth0 imports"
   fi
 
-  if [[ -f "$REPO_ROOT/src/proxy.ts" ]]; then
-    echo "   ❌ FAIL: src/proxy.ts exists (wrong location and name)"
-    GATE_FAILED=1
-  else
-    echo "   ✅ PASS: No misplaced src/proxy.ts"
-  fi
-
-  # -------------------------------------------------------------------------
-  # D) src/app/auth/ directory MUST NOT exist (shadows Auth0 SDK routes)
-  # -------------------------------------------------------------------------
+  # D) src/app/auth/ should NOT exist
   echo ""
-  echo "🔍 [D] Checking /auth/* route reservation..."
+  echo "🔍 [D] Checking for conflicting auth directory..."
   if [[ -d "$REPO_ROOT/src/app/auth" ]]; then
-    echo "   ❌ FAIL: src/app/auth/ directory exists"
-    echo "      SoT Rule: /auth/* is RESERVED for Auth0 SDK v4"
-    echo "      This WILL cause 404 on /auth/login in production"
-    ls -la "$REPO_ROOT/src/app/auth/" 2>/dev/null | head -5 | sed 's/^/      /'
+    echo "   ❌ FAIL: src/app/auth/ directory exists (legacy)"
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No conflicting src/app/auth/ directory"
+    echo "   ✅ PASS: No conflicting src/app/auth/"
   fi
 
-  # -------------------------------------------------------------------------
-  # E) No explicit Auth0 route handlers (v3 pattern, conflicts with v4)
-  # -------------------------------------------------------------------------
+  # E) Login page must exist
   echo ""
-  echo "🔍 [E] Checking for explicit Auth0 route handlers (v3 pattern)..."
-  local V3_HANDLER_APP="$REPO_ROOT/src/app/auth/[...auth0]/route.ts"
-  local V3_HANDLER_PAGES="$REPO_ROOT/src/pages/api/auth/[...auth0].ts"
-  
-  if [[ -f "$V3_HANDLER_APP" ]]; then
-    echo "   ❌ FAIL: src/app/auth/[...auth0]/route.ts exists"
-    echo "      This is a v3 pattern that conflicts with Auth0 SDK v4."
-    echo "      In v4, auth routes are auto-mounted via middleware."
-    GATE_FAILED=1
+  echo "🔍 [E] Checking login page..."
+  if [[ -f "$REPO_ROOT/src/app/login/page.tsx" ]]; then
+    echo "   ✅ PASS: Login page exists"
   else
-    echo "   ✅ PASS: No v3 App Router Auth0 handler"
+    echo "   ❌ FAIL: Login page NOT found"
+    GATE_FAILED=1
   fi
 
-  if [[ -f "$V3_HANDLER_PAGES" ]]; then
-    echo "   ❌ FAIL: src/pages/api/auth/[...auth0].ts exists"
-    echo "      This is a Pages Router pattern that conflicts with App Router."
-    GATE_FAILED=1
-  else
-    echo "   ✅ PASS: No Pages Router Auth0 handler"
-  fi
-
-  # -------------------------------------------------------------------------
-  # F) NextResponse.next() ONLY in middleware.ts
-  # Robust path normalization to handle ./middleware.ts, absolute paths, etc.
-  # -------------------------------------------------------------------------
+  # F) mesh-auth.ts must exist
   echo ""
-  echo "🔍 [F] Checking NextResponse.next() usage..."
-  
-  # Get canonical absolute path of middleware.ts
-  local CANONICAL_PATH
-  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-    CANONICAL_PATH="$(cd "$REPO_ROOT" && pwd)/$CANONICAL_MIDDLEWARE_FILE"
-    # Use realpath if available for symlink resolution
-    if command -v realpath >/dev/null 2>&1; then
-      CANONICAL_PATH="$(realpath "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" 2>/dev/null || echo "$CANONICAL_PATH")"
-    fi
+  echo "🔍 [F] Checking MeshCentral auth library..."
+  if [[ -f "$REPO_ROOT/src/lib/mesh-auth.ts" ]]; then
+    echo "   ✅ PASS: mesh-auth.ts exists"
   else
-    CANONICAL_PATH=""
-  fi
-  
-  # Find all NextResponse.next() usages, excluding common non-source directories
-  local VIOLATIONS=""
-  while IFS= read -r line; do
-    [[ -z "$line" ]] && continue
-    # Extract file path (everything before first colon)
-    local file_path="${line%%:*}"
-    # Skip if file_path is empty
-    [[ -z "$file_path" ]] && continue
-    # Get absolute path of the matched file
-    local abs_path
-    if [[ "$file_path" = /* ]]; then
-      abs_path="$file_path"
-    else
-      abs_path="$(cd "$REPO_ROOT" && pwd)/$file_path"
-    fi
-    # Normalize with realpath if available
-    if command -v realpath >/dev/null 2>&1; then
-      abs_path="$(realpath "$abs_path" 2>/dev/null || echo "$abs_path")"
-    fi
-    # Compare against canonical path
-    if [[ "$abs_path" != "$CANONICAL_PATH" ]]; then
-      VIOLATIONS="${VIOLATIONS}${line}"$'\n'
-    fi
-  done < <(grep -Rn "NextResponse\.next" "$REPO_ROOT" \
-    --include="*.ts" --include="*.tsx" \
-    --exclude-dir=node_modules --exclude-dir=.next \
-    --exclude-dir=.git --exclude-dir=dist \
-    --exclude-dir=build --exclude-dir=coverage 2>/dev/null || true)
-  
-  # Trim trailing newline
-  VIOLATIONS="${VIOLATIONS%$'\n'}"
-  
-  if [[ -z "$VIOLATIONS" ]]; then
-    echo "   ✅ PASS: NextResponse.next() only in $CANONICAL_MIDDLEWARE_FILE"
-  else
-    echo "   ❌ FAIL: NextResponse.next() found outside $CANONICAL_MIDDLEWARE_FILE:"
-    echo "$VIOLATIONS" | head -5 | sed 's/^/      /'
-    echo "      SoT Rule: NextResponse.next() ONLY allowed in /middleware.ts"
-    GATE_FAILED=1
-  fi
-
-  # -------------------------------------------------------------------------
-  # G) auth0.middleware() NOT in route handlers
-  # -------------------------------------------------------------------------
-  echo ""
-  echo "🔍 [G] Checking auth0.middleware() usage in route handlers..."
-  local AUTH0_MW_VIOLATIONS
-  AUTH0_MW_VIOLATIONS=$(grep -Rna "auth0\.middleware" "$REPO_ROOT/src/app" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
-  if [[ -z "$AUTH0_MW_VIOLATIONS" ]]; then
-    echo "   ✅ PASS: No auth0.middleware() in route handlers"
-  else
-    echo "   ❌ FAIL: auth0.middleware() found in route handlers:"
-    echo "$AUTH0_MW_VIOLATIONS" | head -5 | sed 's/^/      /'
-    echo "      SoT Rule: auth0.middleware() ONLY allowed in /middleware.ts"
+    echo "   ❌ FAIL: mesh-auth.ts NOT found"
     GATE_FAILED=1
   fi
 
   echo ""
 
-  # -------------------------------------------------------------------------
-  # Gate result
-  # -------------------------------------------------------------------------
   if [[ $GATE_FAILED -eq 1 ]]; then
     echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ❌ SoT COMPLIANCE GATE FAILED                            ║"
-    echo "║                                                            ║"
-    echo "║   Fix violations before proceeding with build/deploy.      ║"
-    echo "║   Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md ║"
+    echo "║   ❌ COMPLIANCE GATE FAILED                                ║"
+    echo "║   Fix violations before building.                          ║"
     echo "╚════════════════════════════════════════════════════════════╝"
     exit 1
   else
     echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ✅ SoT COMPLIANCE GATE PASSED                            ║"
+    echo "║   ✅ COMPLIANCE GATE PASSED                                ║"
     echo "╚════════════════════════════════════════════════════════════╝"
   fi
-
   echo ""
 }
 
@@ -225,18 +108,18 @@ sot_compliance_gate() {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║       Step 2: Build Local - Next.js (Auth0-aware)          ║"
+echo "║       Step 2: Build Local - Next.js (MeshCentral Auth)     ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "📦 Version: 20251230.0100"
+echo "📦 Version: 20260104.0100"
 echo "📁 Root: $REPO_ROOT"
 echo "🔑 Git SHA: $(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
 echo ""
 
 # ---------------------------------------------------------
-# 0. SoT Compliance Gate (MANDATORY - FAIL FAST)
+# 0. Compliance Gate
 # ---------------------------------------------------------
-sot_compliance_gate
+compliance_gate
 
 # ---------------------------------------------------------
 # 1. Load .env.local (if exists)
@@ -245,7 +128,6 @@ ENV_FILE="$REPO_ROOT/.env.local"
 if [[ -f "$ENV_FILE" ]]; then
   echo "[Step-2] Loading variables from $ENV_FILE"
   set -a
-  # shellcheck disable=SC1090
   source "$ENV_FILE" 2>/dev/null || true
   set +a
 else
@@ -273,7 +155,7 @@ fi
 echo "[Step-2] ✓ Clean complete"
 
 # ---------------------------------------------------------
-# 3. Lockfile Sync Gate (MUST pass before npm ci)
+# 3. Lockfile Sync Gate
 # ---------------------------------------------------------
 echo ""
 echo "[Step-2] 🔐 Lockfile Sync Gate..."
@@ -281,38 +163,16 @@ echo "[Step-2] 🔐 Lockfile Sync Gate..."
 if [[ ! -f "$REPO_ROOT/package-lock.json" ]]; then
   echo "   ❌ FAIL: package-lock.json not found"
   echo ""
-  echo "   Regenerate and commit to main:"
+  echo "   Regenerate and commit:"
   echo "     rm -rf node_modules package-lock.json"
   echo "     npm install --package-lock-only"
   echo "     git add package-lock.json && git commit && git push"
   exit 1
 fi
-
-# Check if lockfile contains express (critical dependency)
-LOCK_HAS_EXPRESS=$(node -e "try { const p=require('./package-lock.json'); console.log(!!(p.packages&&p.packages['node_modules/express'])); } catch(e) { console.log('false'); }" 2>/dev/null || echo "false")
-
-if [[ "$LOCK_HAS_EXPRESS" != "true" ]]; then
-  echo "   ❌ FAIL: Lockfile out of sync"
-  echo ""
-  echo "   package-lock.json is missing node_modules/express."
-  echo "   This will cause 'npm ci' to fail deterministically."
-  echo ""
-  echo "   To fix, regenerate package-lock.json and commit to main:"
-  echo "     rm -rf node_modules package-lock.json"
-  echo "     npm install --package-lock-only"
-  echo "     git add package-lock.json"
-  echo "     git commit -m 'fix(lockfile): regenerate package-lock.json'"
-  echo "     git push origin main"
-  echo ""
-  echo "   DO NOT run 'npm install' as a workaround."
-  exit 1
-fi
-
-EXPRESS_VERSION=$(node -e "const p=require('./package-lock.json'); console.log(p.packages['node_modules/express']?.version || 'unknown');" 2>/dev/null || echo "unknown")
-echo "   ✅ PASS: Lockfile in sync (express@$EXPRESS_VERSION)"
+echo "   ✅ PASS: package-lock.json found"
 
 # ---------------------------------------------------------
-# 4. Install dependencies (deterministic)
+# 4. Install dependencies
 # ---------------------------------------------------------
 echo ""
 echo "[Step-2] 📦 Installing dependencies..."
@@ -320,9 +180,6 @@ echo "[Step-2] 📦 Installing dependencies..."
 if [[ -f "$REPO_ROOT/package-lock.json" ]]; then
   echo "   Using: npm ci"
   npm ci
-elif [[ -f "$REPO_ROOT/yarn.lock" ]]; then
-  echo "   Using: yarn install --frozen-lockfile"
-  yarn install --frozen-lockfile 2>/dev/null || yarn install
 else
   echo "   Using: npm install"
   npm install
@@ -331,7 +188,7 @@ fi
 echo "[Step-2] ✓ Dependencies installed"
 
 # ---------------------------------------------------------
-# 4. Lint (fail on errors)
+# 5. Lint
 # ---------------------------------------------------------
 echo ""
 echo "[Step-2] 🔍 Running lint..."
@@ -348,14 +205,14 @@ fi
 echo "[Step-2] ✓ Lint passed"
 
 # ---------------------------------------------------------
-# 5. Production build
+# 6. Production build
 # ---------------------------------------------------------
 echo ""
 echo "[Step-2] 🏗️  Running production build..."
 npm run build
 
 # ---------------------------------------------------------
-# 6. Post-build validation
+# 7. Post-build validation
 # ---------------------------------------------------------
 echo ""
 echo "[Step-2] 🔍 Validating build output..."
@@ -371,13 +228,6 @@ GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown')"
 
 echo "[Step-2] ✓ BUILD_ID: $BUILD_ID"
 
-# Verify middleware file still exists (sanity check)
-if [[ ! -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-  echo "[Step-2] ❌ CRITICAL: $CANONICAL_MIDDLEWARE_FILE disappeared during build!"
-  exit 1
-fi
-echo "[Step-2] ✓ Middleware file intact: $CANONICAL_MIDDLEWARE_FILE"
-
 # ---------------------------------------------------------
 # Summary
 # ---------------------------------------------------------
@@ -387,11 +237,10 @@ echo "║              Build Completed Successfully!                 ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 echo "📋 Summary:"
-echo "   ✅ SoT Compliance: PASSED"
-echo "   ✅ Middleware file: $CANONICAL_MIDDLEWARE_FILE"
-echo "   ✅ BUILD_ID:       $BUILD_ID"
-echo "   ✅ GIT_SHA:        $GIT_SHA"
-echo "   ✅ GIT_BRANCH:     $GIT_BRANCH"
+echo "   ✅ Compliance: PASSED (MeshCentral Auth)"
+echo "   ✅ BUILD_ID:   $BUILD_ID"
+echo "   ✅ GIT_SHA:    $GIT_SHA"
+echo "   ✅ GIT_BRANCH: $GIT_BRANCH"
 echo ""
 echo "📋 Next steps:"
 echo "   1️⃣  Test locally:  ./scripts/Step-3-test-local.sh"

@@ -5,7 +5,7 @@
 BWB Remote Access is a web application for managing remote devices via MeshCentral. The application provides:
 - User authentication via MeshCentral credentials
 - Device listing and remote session management
-- Role-based access control (RBAC)
+- Role-based access control (RBAC) using `mesh_users.user_type`
 - Multi-domain support (mesh.bwb.pt, zonetech.bwb.pt, zsangola.bwb.pt)
 
 ## Core Requirements
@@ -15,10 +15,12 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 - [x] Session management via encrypted cookies (7-day rolling TTL)
 - [x] Multi-domain support based on request host
 - [x] Protected routes redirect to login
+- [x] username = email (enforced)
 
-### User Management
-- [x] Supabase user mirroring on first login
-- [x] Role assignments (SUPERADMIN, DOMAIN_ADMIN, AGENT, USER)
+### User Management (mesh_users table)
+- [x] User records in `public.mesh_users` table
+- [x] User types: siteadmin, minisiteadmin, agent, colaborador, inactivo, candidato
+- [x] Default type for new users: candidato
 - [x] Admin can create/edit/deactivate users
 
 ### Device Management
@@ -35,27 +37,36 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 - **Authentication**: MeshCentral credential validation
 - **Session**: Encrypted cookies (AES-256-GCM)
 
+### Database Tables (from remote_schema.sql)
+- `public.mesh_users` - User identity and roles
+- `public.mesh_groups` - Device groups
+- `public.mesh_group_permissions` - User permissions on groups
+- `public.profiles` - Basic user profiles (minimal)
+
 ### Key Files
 ```
-/middleware.ts           - Route protection
-/src/lib/mesh-auth.ts    - Authentication logic
-/src/lib/rbac-mesh.ts    - Role-based access control
-/src/lib/user-mirror.ts  - Supabase user management
+/middleware.ts              - Route protection
+/src/lib/mesh-auth.ts       - Authentication logic (uses mesh_users)
+/src/lib/rbac-mesh.ts       - Role-based access control (user_type)
+/src/lib/user-mirror.ts     - Supabase user management (mesh_users)
+/src/lib/supabase-admin.ts  - Supabase admin client
 ```
 
 ## What's Implemented
 
-### December 2025 - Auth0 Removal & MeshCentral Integration
+### January 2026 - Auth0 Removal Complete
 
 **Completed:**
-- Removed Auth0 dependency completely
-- Implemented MeshCentral credential validation (3-step browser flow)
-- Created encrypted cookie session management
-- Built new RBAC system
-- Updated all protected routes and middleware
-- Created new login page
-- Updated admin user management routes
-- Cleaned up all Auth0 references from codebase
+- ✅ Removed Auth0 dependency completely
+- ✅ Removed all @auth0/nextjs-auth0 references
+- ✅ Implemented MeshCentral credential validation (3-step browser flow)
+- ✅ Created encrypted cookie session management
+- ✅ Built RBAC system using mesh_users.user_type
+- ✅ Updated all protected routes and middleware
+- ✅ Created new login page
+- ✅ Updated admin user management to use mesh_users table
+- ✅ Updated deploy scripts (Step-2, Step-3, Step-4) - removed Auth0 checks
+- ✅ Added Supabase migration phase to deploy script
 
 **Environment Variables Required:**
 - `SESSION_SECRET` (required) - 32-byte hex for session encryption
@@ -63,21 +74,47 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 - `SUPABASE_SERVICE_ROLE_KEY` - For server-side operations
 - `MESHCENTRAL_URL` - MeshCentral base URL (optional)
 - `MESHCENTRAL_LOGIN_TOKEN_KEY` - For remote sessions (optional)
+- `APP_BASE_URL` - Production base URL
+
+## User Types (RBAC)
+
+| Type | Description | Permissions |
+|------|-------------|-------------|
+| siteadmin | Global super admin | All domains, all users |
+| minisiteadmin | Domain super admin | Own domain, all users in domain |
+| agent | Agent/technician | Manage collaborators |
+| colaborador | Active collaborator | Standard access |
+| inactivo | Disabled user | No access |
+| candidato | New user | Limited access |
 
 ## Pending / Future Work
 
-### P1 - Testing Required
-- [ ] End-to-end testing of login flow with real MeshCentral credentials
-- [ ] Test user creation and role assignment
+### P0 - Testing Required
+- [ ] End-to-end testing with real MeshCentral credentials
+- [ ] Test user creation flow
 - [ ] Test device listing and remote sessions
 - [ ] Test multi-domain routing
 
-### P2 - Documentation
-- [x] Update authentication architecture docs
-- [ ] Clean up outdated Auth0 references in `/docs/`
-- [ ] Create deployment guide
+### P1 - Supabase Migrations
+- [ ] Verify migrations align with remote_schema.sql
+- [ ] Run `supabase db push` to apply any changes
 
-### P3 - Enhancements
-- [ ] Rate limiting on login endpoint
-- [ ] Session activity logging
-- [ ] Password reset flow guidance
+### P2 - Documentation
+- [x] Updated authentication architecture
+- [ ] Clean up outdated docs in /docs/
+
+## Validation Commands
+
+```bash
+# Build
+npm run build
+
+# Local test
+npm run dev
+
+# Supabase migrations
+supabase db push
+
+# Deploy
+./scripts/Step-4-deploy-tested-build.sh
+```

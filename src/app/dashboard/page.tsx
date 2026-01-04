@@ -24,7 +24,7 @@ export default async function DashboardPage() {
   
   // Get role info
   const isAdmin = canManageUsers(claims);
-  const roleLabel = getAdminRoleLabel(claims) || claims?.role || "Utilizador";
+  const roleLabel = getAdminRoleLabel(claims) || claims?.userType || "Utilizador";
 
   return (
     <DashboardClient

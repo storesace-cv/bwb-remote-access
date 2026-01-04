@@ -1,63 +1,34 @@
 /**
  * API Route: POST /api/admin/users/create
  * 
- * Creates a user record in Supabase.
+ * Creates a user record in mesh_users.
  * With MeshCentral authentication, users authenticate via MeshCentral.
- * This endpoint pre-creates the user record with a role assignment.
+ * This endpoint pre-creates the user record.
  * 
- * Protected by RBAC:
- *   - SuperAdmin can create users in any domain
- *   - Domain Admin can only create users in their current domain
+ * Protected by RBAC.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/require-admin";
 import { isSuperAdmin } from "@/lib/rbac-mesh";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 type ValidDomain = "mesh" | "zonetech" | "zsangola";
 const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
-type ValidRole = "DOMAIN_ADMIN" | "AGENT" | "USER";
-const VALID_ROLES: ValidRole[] = ["DOMAIN_ADMIN", "AGENT", "USER"];
+type UserType = "siteadmin" | "minisiteadmin" | "agent" | "colaborador" | "inactivo" | "candidato";
+const VALID_USER_TYPES: UserType[] = ["agent", "colaborador", "candidato"];
 
 interface CreateUserRequest {
   email: string;
   domain: ValidDomain;
-  role: ValidRole;
+  user_type: UserType;
   display_name?: string;
 }
 
-interface CreateUserResponse {
-  success: boolean;
-  user_id: string;
-  email: string;
-  domain: ValidDomain;
-  role: string;
-  is_new_user: boolean;
-  message: string;
-}
-
-/**
- * Validates email format.
- */
 function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
-}
-
-/**
- * Get Supabase admin client
- */
-function getSupabase() {
-  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
-  
-  if (!url || !key) {
-    throw new Error("Supabase not configured");
-  }
-  
-  return createClient(url, key);
 }
 
 export async function POST(req: NextRequest) {
@@ -83,17 +54,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { email, domain, role, display_name } = body;
+    const { email, domain, user_type, display_name } = body;
 
     // Validate required fields
-    if (!email || !domain || !role) {
+    if (!email || !domain || !user_type) {
       return NextResponse.json(
-        { error: "Missing required fields: email, domain, role" },
+        { error: "Missing required fields: email, domain, user_type" },
         { status: 400 }
       );
     }
 
-    // Normalize email
+    // Normalize email (username = email)
     const normalizedEmail = email.trim().toLowerCase();
 
     // Validate email format
@@ -112,48 +83,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate role
-    if (!VALID_ROLES.includes(role)) {
+    // Validate user_type
+    if (!VALID_USER_TYPES.includes(user_type)) {
       return NextResponse.json(
-        { error: `Invalid role. Must be one of: ${VALID_ROLES.join(", ")}` },
+        { error: `Invalid user_type. Must be one of: ${VALID_USER_TYPES.join(", ")}` },
         { status: 400 }
       );
     }
 
     // RBAC: Domain Admin can only create in their domain
     const superAdmin = isSuperAdmin(claims);
-    if (!superAdmin) {
-      if (claims.domain !== domain) {
-        return NextResponse.json(
-          { error: `Domain Admin can only create users in their domain (${claims.domain})` },
-          { status: 403 }
-        );
-      }
+    if (!superAdmin && claims.domain !== domain) {
+      return NextResponse.json(
+        { error: `Domain Admin can only create users in their domain (${claims.domain})` },
+        { status: 403 }
+      );
     }
 
-    const supabase = getSupabase();
+    const supabase = getSupabaseAdmin();
 
-    // Check if user already exists
+    // Check if user already exists by mesh_username
     const { data: existingUser } = await supabase
-      .from("users")
-      .select("id, role")
-      .eq("email", normalizedEmail)
-      .eq("domain", domain)
-      .single();
+      .from("mesh_users")
+      .select("id, user_type")
+      .eq("mesh_username", normalizedEmail)
+      .maybeSingle();
 
     let userId: string;
     let isNewUser = false;
 
     if (existingUser) {
-      // User exists - update role
+      // User exists - update
       userId = existingUser.id;
       
       const { error: updateError } = await supabase
-        .from("users")
+        .from("mesh_users")
         .update({ 
-          role,
+          user_type,
           display_name: display_name || normalizedEmail.split("@")[0],
-          updated_at: new Date().toISOString(),
+          email: normalizedEmail,
+          deleted_at: null,
         })
         .eq("id", userId);
 
@@ -162,18 +131,33 @@ export async function POST(req: NextRequest) {
         throw new Error("Failed to update user");
       }
     } else {
+      // Need to find an agent for this domain to satisfy FK constraint
+      const { data: domainAgent } = await supabase
+        .from("mesh_users")
+        .select("id")
+        .eq("domain", domain)
+        .eq("user_type", "agent")
+        .limit(1)
+        .maybeSingle();
+
+      if (!domainAgent) {
+        return NextResponse.json(
+          { error: `No agent found for domain ${domain}. Cannot create user.` },
+          { status: 400 }
+        );
+      }
+
       // Create new user
       const { data: newUser, error: createError } = await supabase
-        .from("users")
+        .from("mesh_users")
         .insert({
+          mesh_username: normalizedEmail,
           email: normalizedEmail,
-          username: normalizedEmail,
           domain,
-          role,
-          user_type: "user",
-          profile_code: role === "DOMAIN_ADMIN" ? "DOMAIN_ADMIN" : "USER",
+          user_type,
           display_name: display_name || normalizedEmail.split("@")[0],
-          created_at: new Date().toISOString(),
+          agent_id: domainAgent.id,
+          source: "admin_created",
         })
         .select("id")
         .single();
@@ -182,7 +166,7 @@ export async function POST(req: NextRequest) {
         console.error("Error creating user:", createError);
         if (createError.code === "23505") {
           return NextResponse.json(
-            { error: "A user with this email already exists in this domain" },
+            { error: "A user with this email already exists" },
             { status: 409 }
           );
         }
@@ -193,19 +177,17 @@ export async function POST(req: NextRequest) {
       isNewUser = true;
     }
 
-    const response: CreateUserResponse = {
+    return NextResponse.json({
       success: true,
       user_id: userId,
       email: normalizedEmail,
       domain,
-      role,
+      user_type,
       is_new_user: isNewUser,
       message: isNewUser 
         ? "Utilizador criado com sucesso. Pode entrar com credenciais MeshCentral."
         : "Utilizador atualizado com sucesso.",
-    };
-
-    return NextResponse.json(response, { status: isNewUser ? 201 : 200 });
+    }, { status: isNewUser ? 201 : 200 });
 
   } catch (error) {
     console.error("Error in /api/admin/users/create:", error);

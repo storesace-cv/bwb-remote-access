@@ -2,7 +2,7 @@
  * Admin Users Page
  * 
  * Protected by RBAC: only SuperAdmin or Domain Admin can access.
- * Shows users list from Supabase mirror with create functionality.
+ * Shows users list from mesh_users table.
  */
 
 import Link from "next/link";
@@ -25,7 +25,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const { claims, email } = await requireAdmin();
 
   if (!claims) {
-    return null; // requireAdmin will redirect
+    return null;
   }
 
   const roleLabel = getAdminRoleLabel(claims);
@@ -36,12 +36,10 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   let filterDomain: ValidDomain | null = null;
 
   if (isSuperAdmin) {
-    // SuperAdmin can filter by any domain
     if (params.domain && VALID_DOMAINS.includes(params.domain as ValidDomain)) {
       filterDomain = params.domain as ValidDomain;
     }
   } else if (claims.domain && VALID_DOMAINS.includes(claims.domain as ValidDomain)) {
-    // Domain Admin only sees their domain
     filterDomain = claims.domain as ValidDomain;
   }
 
@@ -52,7 +50,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
         ? [claims.domain as ValidDomain] 
         : []);
 
-  // Fetch users from mirror (including deleted for admin view)
+  // Fetch users from mesh_users table
   let users: Awaited<ReturnType<typeof listMirrorUsers>>["users"] = [];
   let total = 0;
   let fetchError: string | null = null;
@@ -62,7 +60,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       domain: filterDomain,
       limit: 50,
       offset: 0,
-      includeDeleted: true, // Show deactivated users too
+      includeDeleted: true,
     });
     users = result.users;
     total = result.total;
@@ -74,17 +72,15 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   // Transform users for client component
   const clientUsers = users.map((u) => ({
     id: u.id,
-    user_id: u.auth0_user_id || u.id,
+    mesh_username: u.mesh_username,
     email: u.email,
-    display_name: u.display_name,
-    is_superadmin_meshcentral: u.is_superadmin_meshcentral,
-    is_superadmin_rustdesk: u.is_superadmin_rustdesk,
+    display_name: u.display_name || u.name,
+    user_type: u.user_type,
+    domain: u.domain,
+    disabled: u.disabled,
+    siteadmin: u.siteadmin,
     created_at: u.created_at,
     deleted_at: u.deleted_at,
-    domains: u.domains?.map((d) => ({
-      domain: d.domain,
-      role: d.role,
-    })) || [],
   }));
 
   return (
@@ -152,15 +148,12 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           </section>
         )}
 
-        {/* Users List (Client Component) */}
+        {/* Users List */}
         {fetchError ? (
           <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
             <div className="text-center">
               <p className="text-red-400 mb-2">Erro ao carregar utilizadores</p>
               <p className="text-sm text-slate-500">{fetchError}</p>
-              <p className="text-xs text-slate-600 mt-2">
-                Verifica se SUPABASE_SERVICE_ROLE_KEY está configurado e a migration foi aplicada.
-              </p>
             </div>
           </section>
         ) : (
@@ -173,7 +166,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
           />
         )}
 
-        {/* Current Session Info (collapsed) */}
+        {/* Debug info */}
         <details className="mt-6">
           <summary className="text-sm text-slate-500 cursor-pointer hover:text-slate-400">
             Debug: Sessão actual
@@ -193,13 +186,13 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Role</label>
+                <label className="block text-xs text-slate-400 mb-1">User Type</label>
                 <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-xs font-mono text-purple-300">
-                  {claims.role}
+                  {claims.userType}
                 </div>
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1">SuperAdmin</label>
+                <label className="block text-xs text-slate-400 mb-1">Site Admin</label>
                 <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-xs font-mono text-blue-300">
                   {isSuperAdmin ? "Sim" : "Não"}
                 </div>

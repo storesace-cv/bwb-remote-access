@@ -4,20 +4,16 @@
  * Uses service role key for privileged operations.
  * MUST be server-only - never expose to browser.
  * 
- * Environment variables required:
- *   - SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL)
- *   - SUPABASE_SERVICE_ROLE_KEY
+ * IMPORTANT: Uses mesh_users table for user data (NOT app_users or profiles)
  */
 import "server-only";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-// Get Supabase URL from env (prefer non-public, fallback to public)
 const SUPABASE_URL =
   process.env.SUPABASE_URL ||
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
   "";
 
-// Service role key for admin operations
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 let adminClient: SupabaseClient | null = null;
@@ -54,34 +50,69 @@ export function getSupabaseAdmin(): SupabaseClient {
 }
 
 /**
- * Types for app_users table
+ * User type hierarchy from schema
  */
-export interface AppUser {
+export type UserType = 'siteadmin' | 'minisiteadmin' | 'agent' | 'colaborador' | 'inactivo' | 'candidato';
+
+/**
+ * Types for mesh_users table (main user table)
+ */
+export interface MeshUser {
   id: string;
-  auth0_user_id: string;
-  email: string;
+  mesh_username: string;
+  email: string | null;
   display_name: string | null;
-  is_superadmin_meshcentral: boolean;
-  is_superadmin_rustdesk: boolean;
+  name: string | null;
+  user_type: UserType;
+  domain: string;
+  agent_id: string;
+  parent_agent_id: string | null;
+  disabled: boolean;
+  siteadmin: number;
+  domainadmin: number;
+  source: string;
+  created_at: string;
+  deleted_at: string | null;
+}
+
+/**
+ * Types for mesh_groups table
+ */
+export interface MeshGroup {
+  id: string;
+  agent_id: string;
+  owner_user_id: string;
+  parent_group_id: string | null;
+  name: string;
+  description: string | null;
+  path: string;
+  level: number;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
 }
 
 /**
- * Types for app_user_domains table
+ * Types for mesh_group_permissions table  
  */
-export interface AppUserDomain {
+export interface MeshGroupPermission {
   id: string;
-  user_id: string;
-  domain: "mesh" | "zonetech" | "zsangola";
-  role: "DOMAIN_ADMIN" | "AGENT";
+  agent_id: string;
+  collaborator_id: string;
+  group_id: string;
+  permission: 'view' | 'manage';
+  granted_at: string;
+  granted_by: string | null;
+  revoked_at: string | null;
+  revoked_by: string | null;
+  notes: string | null;
   created_at: string;
 }
 
 /**
- * Combined user with domains for listing
+ * Combined user with groups for listing
  */
-export interface AppUserWithDomains extends AppUser {
-  domains: AppUserDomain[];
+export interface MeshUserWithGroups extends MeshUser {
+  groups?: MeshGroup[];
+  permissions?: MeshGroupPermission[];
 }

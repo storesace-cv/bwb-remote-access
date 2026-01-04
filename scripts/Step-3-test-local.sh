@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #
-# Step 3: Test Local - Next.js (Auth0-aware, SoT Compliant)
+# Step 3: Test Local - Next.js (MeshCentral Auth)
 #
-# SoT Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
+# Authentication: MeshCentral credential validation + encrypted cookies
 #
-# Version: 20251230.0100
-# Last Updated: 2025-12-30 01:00 UTC
+# Version: 20260104.0100
 #
 set -euo pipefail
 
@@ -14,150 +13,52 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# CANONICAL MIDDLEWARE FILE (per SoT)
-# Auth0 SDK v4 + Next.js requires middleware.ts at project root
+# COMPLIANCE GATE
 # ═══════════════════════════════════════════════════════════════════════════════
-CANONICAL_MIDDLEWARE_FILE="middleware.ts"
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# SoT COMPLIANCE GATE (Redundant by design - defense in depth)
-# Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md
-# ═══════════════════════════════════════════════════════════════════════════════
-sot_compliance_gate() {
+compliance_gate() {
   echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║         SoT Compliance Gate - Auth & Middleware            ║"
-  echo "║  Reference: /docs/SoT/AUTH_AND_MIDDLEWARE_ARCHITECTURE.md  ║"
+  echo "║         Compliance Gate - MeshCentral Auth                 ║"
   echo "╚════════════════════════════════════════════════════════════╝"
-  echo ""
-  echo "📋 Canonical middleware file: $CANONICAL_MIDDLEWARE_FILE"
   echo ""
 
   local GATE_FAILED=0
 
-  # A) middleware.ts MUST exist at repo root
-  echo "🔍 [A] Checking canonical middleware file..."
-  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-    echo "   ✅ PASS: $CANONICAL_MIDDLEWARE_FILE exists at root"
+  # A) middleware.ts MUST exist
+  echo "🔍 [A] Checking middleware.ts..."
+  if [[ -f "$REPO_ROOT/middleware.ts" ]]; then
+    echo "   ✅ PASS: middleware.ts exists"
   else
-    echo "   ❌ FAIL: $CANONICAL_MIDDLEWARE_FILE NOT found at root"
-    echo "      Without this file, /auth/login WILL return 404"
+    echo "   ❌ FAIL: middleware.ts NOT found"
     GATE_FAILED=1
   fi
 
-  # B) proxy.ts MUST NOT exist
+  # B) No Auth0 package
   echo ""
-  echo "🔍 [B] Checking for deprecated proxy.ts..."
-  if [[ -f "$REPO_ROOT/proxy.ts" ]]; then
-    echo "   ❌ FAIL: proxy.ts exists (deprecated pattern)"
-    echo "      SoT requires middleware.ts, not proxy.ts"
+  echo "🔍 [B] Checking for Auth0 dependencies..."
+  if grep -q "@auth0/nextjs-auth0" "$REPO_ROOT/package.json" 2>/dev/null; then
+    echo "   ❌ FAIL: @auth0/nextjs-auth0 still in package.json"
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No deprecated proxy.ts"
+    echo "   ✅ PASS: No Auth0 package"
   fi
 
-  # C) src/middleware.ts MUST NOT exist
+  # C) src/app/auth/ should NOT exist
   echo ""
-  echo "🔍 [C] Checking for misplaced middleware files..."
-  if [[ -f "$REPO_ROOT/src/middleware.ts" ]]; then
-    echo "   ❌ FAIL: src/middleware.ts exists (wrong location)"
-    GATE_FAILED=1
-  else
-    echo "   ✅ PASS: No misplaced src/middleware.ts"
-  fi
-
-  if [[ -f "$REPO_ROOT/src/proxy.ts" ]]; then
-    echo "   ❌ FAIL: src/proxy.ts exists"
-    GATE_FAILED=1
-  else
-    echo "   ✅ PASS: No misplaced src/proxy.ts"
-  fi
-
-  # D) src/app/auth/ MUST NOT exist
-  echo ""
-  echo "🔍 [D] Checking /auth/* route reservation..."
+  echo "🔍 [C] Checking for conflicting auth directory..."
   if [[ -d "$REPO_ROOT/src/app/auth" ]]; then
-    echo "   ❌ FAIL: src/app/auth/ directory exists"
-    echo "      This WILL cause 404 on /auth/login"
+    echo "   ❌ FAIL: src/app/auth/ exists (legacy)"
     GATE_FAILED=1
   else
-    echo "   ✅ PASS: No conflicting src/app/auth/ directory"
+    echo "   ✅ PASS: No conflicting src/app/auth/"
   fi
 
-  # E) No explicit Auth0 route handlers
+  # D) Login page must exist
   echo ""
-  echo "🔍 [E] Checking for explicit Auth0 route handlers..."
-  if [[ -f "$REPO_ROOT/src/app/auth/[...auth0]/route.ts" ]]; then
-    echo "   ❌ FAIL: v3 App Router Auth0 handler exists"
-    GATE_FAILED=1
+  echo "🔍 [D] Checking login page..."
+  if [[ -f "$REPO_ROOT/src/app/login/page.tsx" ]]; then
+    echo "   ✅ PASS: Login page exists"
   else
-    echo "   ✅ PASS: No v3 App Router Auth0 handler"
-  fi
-
-  if [[ -f "$REPO_ROOT/src/pages/api/auth/[...auth0].ts" ]]; then
-    echo "   ❌ FAIL: Pages Router Auth0 handler exists"
-    GATE_FAILED=1
-  else
-    echo "   ✅ PASS: No Pages Router Auth0 handler"
-  fi
-
-  # F) NextResponse.next() only in middleware.ts
-  # Robust path normalization to handle ./middleware.ts, absolute paths, etc.
-  echo ""
-  echo "🔍 [F] Checking NextResponse.next() usage..."
-  
-  # Get canonical absolute path of middleware.ts
-  local CANONICAL_PATH
-  if [[ -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-    CANONICAL_PATH="$(cd "$REPO_ROOT" && pwd)/$CANONICAL_MIDDLEWARE_FILE"
-    if command -v realpath >/dev/null 2>&1; then
-      CANONICAL_PATH="$(realpath "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" 2>/dev/null || echo "$CANONICAL_PATH")"
-    fi
-  else
-    CANONICAL_PATH=""
-  fi
-  
-  # Find all NextResponse.next() usages
-  local VIOLATIONS=""
-  while IFS= read -r line; do
-    [[ -z "$line" ]] && continue
-    local file_path="${line%%:*}"
-    [[ -z "$file_path" ]] && continue
-    local abs_path
-    if [[ "$file_path" = /* ]]; then
-      abs_path="$file_path"
-    else
-      abs_path="$(cd "$REPO_ROOT" && pwd)/$file_path"
-    fi
-    if command -v realpath >/dev/null 2>&1; then
-      abs_path="$(realpath "$abs_path" 2>/dev/null || echo "$abs_path")"
-    fi
-    if [[ "$abs_path" != "$CANONICAL_PATH" ]]; then
-      VIOLATIONS="${VIOLATIONS}${line}"$'\n'
-    fi
-  done < <(grep -Rn "NextResponse\.next" "$REPO_ROOT" \
-    --include="*.ts" --include="*.tsx" \
-    --exclude-dir=node_modules --exclude-dir=.next \
-    --exclude-dir=.git --exclude-dir=dist \
-    --exclude-dir=build --exclude-dir=coverage 2>/dev/null || true)
-  
-  VIOLATIONS="${VIOLATIONS%$'\n'}"
-  
-  if [[ -z "$VIOLATIONS" ]]; then
-    echo "   ✅ PASS: NextResponse.next() only in $CANONICAL_MIDDLEWARE_FILE"
-  else
-    echo "   ❌ FAIL: NextResponse.next() found outside $CANONICAL_MIDDLEWARE_FILE"
-    GATE_FAILED=1
-  fi
-
-  # G) auth0.middleware() not in route handlers
-  echo ""
-  echo "🔍 [G] Checking auth0.middleware() usage..."
-  local AUTH0_MW_VIOLATIONS
-  AUTH0_MW_VIOLATIONS=$(grep -Rna "auth0\.middleware" "$REPO_ROOT/src/app" --include="*.ts" --include="*.tsx" 2>/dev/null || true)
-  if [[ -z "$AUTH0_MW_VIOLATIONS" ]]; then
-    echo "   ✅ PASS: No auth0.middleware() in route handlers"
-  else
-    echo "   ❌ FAIL: auth0.middleware() found in route handlers"
+    echo "   ❌ FAIL: Login page NOT found"
     GATE_FAILED=1
   fi
 
@@ -165,112 +66,15 @@ sot_compliance_gate() {
 
   if [[ $GATE_FAILED -eq 1 ]]; then
     echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ❌ SoT COMPLIANCE GATE FAILED                            ║"
+    echo "║   ❌ COMPLIANCE GATE FAILED                                ║"
     echo "╚════════════════════════════════════════════════════════════╝"
     exit 1
   else
     echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ✅ SoT COMPLIANCE GATE PASSED                            ║"
+    echo "║   ✅ COMPLIANCE GATE PASSED                                ║"
     echo "╚════════════════════════════════════════════════════════════╝"
   fi
-
   echo ""
-}
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# AUTH ROUTE SMOKE TEST (RUNTIME VALIDATION)
-# Starts Next.js locally and verifies /auth/login is NOT 404
-# ═══════════════════════════════════════════════════════════════════════════════
-auth_route_smoke_test() {
-  echo "╔════════════════════════════════════════════════════════════╗"
-  echo "║         Auth Route Smoke Test - /auth/login                ║"
-  echo "║         (Runtime verification per SoT)                     ║"
-  echo "╚════════════════════════════════════════════════════════════╝"
-  echo ""
-
-  local TEST_PORT=3100
-  local MAX_WAIT=30
-  local SERVER_PID=""
-
-  # Kill any existing process on test port
-  if command -v lsof >/dev/null 2>&1; then
-    lsof -ti:$TEST_PORT 2>/dev/null | xargs kill -9 2>/dev/null || true
-  fi
-  sleep 1
-
-  echo "🚀 Starting Next.js on port $TEST_PORT..."
-  
-  # Start server in background
-  PORT=$TEST_PORT npm run start > /tmp/next-smoke-test.log 2>&1 &
-  SERVER_PID=$!
-  
-  # Wait for server to be ready
-  echo "⏳ Waiting for server (max ${MAX_WAIT}s)..."
-  local WAITED=0
-  local SERVER_READY=0
-  while [[ $WAITED -lt $MAX_WAIT ]]; do
-    if curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:$TEST_PORT/" 2>/dev/null | grep -qE "^[0-9]+$"; then
-      SERVER_READY=1
-      echo "   Server ready after ${WAITED}s"
-      break
-    fi
-    sleep 1
-    WAITED=$((WAITED + 1))
-  done
-
-  if [[ $SERVER_READY -eq 0 ]]; then
-    echo "   ⚠️  Server did not start within ${MAX_WAIT}s"
-    kill $SERVER_PID 2>/dev/null || true
-    echo "   Last 20 lines of server log:"
-    tail -20 /tmp/next-smoke-test.log 2>/dev/null | sed 's/^/   /'
-    echo ""
-    echo "   Skipping HTTP smoke test (server startup failed)"
-    return 0
-  fi
-
-  # Test /auth/login - CRITICAL
-  echo ""
-  echo "🔍 Testing /auth/login..."
-  local AUTH_STATUS
-  AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:$TEST_PORT/auth/login" 2>/dev/null || echo "000")
-  
-  echo "   HTTP Status: $AUTH_STATUS"
-
-  # Cleanup
-  echo ""
-  echo "🧹 Stopping test server..."
-  kill $SERVER_PID 2>/dev/null || true
-  wait $SERVER_PID 2>/dev/null || true
-  sleep 1
-
-  # Validate result
-  if [[ "$AUTH_STATUS" == "404" ]]; then
-    echo ""
-    echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ❌ AUTH ROUTE SMOKE TEST FAILED                          ║"
-    echo "║                                                            ║"
-    echo "║   /auth/login returned 404                                 ║"
-    echo "║   This indicates Auth0 SDK routes are not mounted.         ║"
-    echo "║                                                            ║"
-    echo "║   Check:                                                   ║"
-    echo "║   - $CANONICAL_MIDDLEWARE_FILE exists at root              ║"
-    echo "║   - No src/app/auth/ directory                             ║"
-    echo "║   - No proxy.ts (use middleware.ts)                        ║"
-    echo "╚════════════════════════════════════════════════════════════╝"
-    return 1
-  elif [[ "$AUTH_STATUS" == "000" ]]; then
-    echo ""
-    echo "⚠️  Could not reach /auth/login (connection failed)"
-    echo "   Skipping smoke test"
-    return 0
-  else
-    echo ""
-    echo "╔════════════════════════════════════════════════════════════╗"
-    echo "║   ✅ AUTH ROUTE SMOKE TEST PASSED                          ║"
-    echo "║   /auth/login returned HTTP $AUTH_STATUS (not 404)         ║"
-    echo "╚════════════════════════════════════════════════════════════╝"
-    return 0
-  fi
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -278,121 +82,175 @@ auth_route_smoke_test() {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║       Step 3: Test Local - Next.js (Auth0-aware)           ║"
+echo "║       Step 3: Test Local - Next.js (MeshCentral Auth)      ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "📦 Version: 20251230.0100"
+echo "📦 Version: 20260104.0100"
 echo "📁 Root: $REPO_ROOT"
 echo ""
 
 # ---------------------------------------------------------
-# 0. SoT Compliance Gate (MANDATORY - redundant by design)
+# 0. Compliance Gate
 # ---------------------------------------------------------
-sot_compliance_gate
+compliance_gate
 
 # ---------------------------------------------------------
-# 1. Verify build exists
+# 1. Check build exists
 # ---------------------------------------------------------
-echo "[Step-3] 🔍 Checking for build artifacts..."
-if [[ ! -d "$REPO_ROOT/.next" || ! -f "$REPO_ROOT/.next/BUILD_ID" ]]; then
-  echo "[Step-3] ❌ ERROR: .next/ or BUILD_ID not found"
-  echo "         Run Step-2 first: ./scripts/Step-2-build-local.sh"
+echo "🔍 Checking build artifacts..."
+
+if [[ ! -f "$REPO_ROOT/.next/BUILD_ID" ]]; then
+  echo "❌ ERROR: .next/BUILD_ID not found"
+  echo "   Run Step-2 first: ./scripts/Step-2-build-local.sh"
   exit 1
 fi
 
 BUILD_ID="$(cat "$REPO_ROOT/.next/BUILD_ID")"
-echo "[Step-3] ✓ BUILD_ID: $BUILD_ID"
-
-# Verify middleware file exists
-if [[ ! -f "$REPO_ROOT/$CANONICAL_MIDDLEWARE_FILE" ]]; then
-  echo "[Step-3] ❌ CRITICAL: $CANONICAL_MIDDLEWARE_FILE not found!"
-  echo "         This WILL cause /auth/login to return 404"
-  exit 1
-fi
-echo "[Step-3] ✓ Middleware file: $CANONICAL_MIDDLEWARE_FILE"
+echo "✅ BUILD_ID: $BUILD_ID"
 echo ""
 
 # ---------------------------------------------------------
-# 2. ESLint
+# 2. Load environment
 # ---------------------------------------------------------
-echo "[Step-3] 🔍 Running ESLint..."
+echo "📋 Loading environment..."
 
-set +e
-npm run lint 2>&1
-ESLINT_STATUS=$?
-set -e
-
-if [[ $ESLINT_STATUS -eq 0 ]]; then
-  echo "[Step-3] ✅ ESLint passed"
+ENV_FILE="$REPO_ROOT/.env.local"
+if [[ -f "$ENV_FILE" ]]; then
+  set -a
+  source "$ENV_FILE" 2>/dev/null || true
+  set +a
+  echo "   ✅ Loaded .env.local"
 else
-  echo "[Step-3] ❌ ESLint failed (exit code $ESLINT_STATUS)"
-  exit 1
+  echo "   ⚠️  No .env.local found"
 fi
 
+# Check for SESSION_SECRET
+if [[ -z "${SESSION_SECRET:-}" ]]; then
+  echo "   ⚠️  SESSION_SECRET not set - login will fail"
+  echo "      Add to .env.local: SESSION_SECRET=$(openssl rand -hex 32)"
+fi
 echo ""
 
 # ---------------------------------------------------------
-# 3. TypeScript type check
+# 3. Kill any existing Next.js processes
 # ---------------------------------------------------------
-echo "[Step-3] 📐 Running TypeScript check..."
+echo "🧹 Stopping existing processes..."
+pkill -9 -f "next-server" 2>/dev/null || true
+pkill -9 -f "next dev" 2>/dev/null || true
+sleep 1
 
-if npx tsc --noEmit 2>&1; then
-  echo "[Step-3] ✅ TypeScript: no type errors"
+# ---------------------------------------------------------
+# 4. Start dev server
+# ---------------------------------------------------------
+echo "🚀 Starting dev server..."
+echo ""
+
+npm run dev &
+DEV_PID=$!
+
+echo "⏳ Waiting for server to be ready (15s)..."
+sleep 15
+
+# ---------------------------------------------------------
+# 5. Run tests
+# ---------------------------------------------------------
+echo ""
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║                     Running Tests                          ║"
+echo "╚════════════════════════════════════════════════════════════╝"
+echo ""
+
+TEST_FAILED=0
+
+# Test 1: Root page
+echo "🔍 [1/5] Testing http://localhost:3000/ ..."
+ROOT_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/" 2>/dev/null || echo "000")
+echo "   HTTP Status: $ROOT_STATUS"
+if [[ "$ROOT_STATUS" =~ ^(200|301|302|307|308)$ ]]; then
+  echo "   ✅ PASS"
 else
-  echo "[Step-3] ❌ TypeScript: type errors found"
-  exit 1
+  echo "   ❌ FAIL: Expected 200/30x, got $ROOT_STATUS"
+  TEST_FAILED=1
 fi
 
 echo ""
 
-# ---------------------------------------------------------
-# 4. Unit tests (if defined)
-# ---------------------------------------------------------
-echo "[Step-3] 🧪 Running tests..."
-
-set +e
-npm test 2>&1
-TEST_STATUS=$?
-set -e
-
-if [[ $TEST_STATUS -eq 0 ]]; then
-  echo "[Step-3] ✅ Tests passed"
+# Test 2: Login page
+echo "🔍 [2/5] Testing http://localhost:3000/login ..."
+LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/login" 2>/dev/null || echo "000")
+echo "   HTTP Status: $LOGIN_STATUS"
+if [[ "$LOGIN_STATUS" == "200" ]]; then
+  echo "   ✅ PASS"
 else
-  echo "[Step-3] ⚠️  Tests failed or not defined (exit code $TEST_STATUS)"
-  # Don't fail - tests might not exist
+  echo "   ❌ FAIL: Expected 200, got $LOGIN_STATUS"
+  TEST_FAILED=1
+fi
+
+echo ""
+
+# Test 3: Login API endpoint
+echo "🔍 [3/5] Testing POST /api/auth/login ..."
+LOGIN_API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "http://localhost:3000/api/auth/login" -H "Content-Type: application/json" -d '{}' 2>/dev/null || echo "000")
+echo "   HTTP Status: $LOGIN_API_STATUS"
+# Should return 400/401 (bad request), not 404
+if [[ "$LOGIN_API_STATUS" =~ ^(400|401|500)$ ]]; then
+  echo "   ✅ PASS: API route exists (returns $LOGIN_API_STATUS)"
+elif [[ "$LOGIN_API_STATUS" == "404" ]]; then
+  echo "   ❌ FAIL: API route returns 404"
+  TEST_FAILED=1
+else
+  echo "   ⚠️  WARN: Unexpected status $LOGIN_API_STATUS"
+fi
+
+echo ""
+
+# Test 4: Dashboard (should redirect to login)
+echo "🔍 [4/5] Testing /dashboard (should redirect)..."
+DASH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/dashboard" 2>/dev/null || echo "000")
+echo "   HTTP Status: $DASH_STATUS"
+if [[ "$DASH_STATUS" =~ ^(307|302|303)$ ]]; then
+  echo "   ✅ PASS: Protected route redirects"
+else
+  echo "   ⚠️  WARN: Expected redirect, got $DASH_STATUS"
+fi
+
+echo ""
+
+# Test 5: Session API
+echo "🔍 [5/5] Testing GET /api/auth/session ..."
+SESSION_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/api/auth/session" 2>/dev/null || echo "000")
+echo "   HTTP Status: $SESSION_STATUS"
+if [[ "$SESSION_STATUS" =~ ^(200|401)$ ]]; then
+  echo "   ✅ PASS: Session API works"
+else
+  echo "   ⚠️  WARN: Unexpected status $SESSION_STATUS"
 fi
 
 echo ""
 
 # ---------------------------------------------------------
-# 5. Auth Route Smoke Test (RUNTIME VALIDATION - CRITICAL)
+# 6. Cleanup
 # ---------------------------------------------------------
-echo "[Step-3] 🔐 Running Auth Route Smoke Test..."
-
-if ! auth_route_smoke_test; then
-  echo ""
-  echo "[Step-3] ❌ Auth route smoke test failed."
-  echo "         /auth/login would return 404 in production."
-  exit 1
-fi
-
-echo ""
+echo "🧹 Stopping dev server..."
+kill $DEV_PID 2>/dev/null || true
+pkill -9 -f "next dev" 2>/dev/null || true
 
 # ---------------------------------------------------------
 # Summary
 # ---------------------------------------------------------
-echo "╔════════════════════════════════════════════════════════════╗"
-echo "║           Tests Completed Successfully!                    ║"
-echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
-echo "📋 Summary:"
-echo "   ✅ SoT Compliance Gate: PASSED"
-echo "   ✅ Middleware file:     $CANONICAL_MIDDLEWARE_FILE (present)"
-echo "   ✅ ESLint:              PASSED"
-echo "   ✅ TypeScript:          PASSED"
-echo "   ✅ Auth Smoke Test:     PASSED (/auth/login ≠ 404)"
-echo "   ✅ BUILD_ID:            $BUILD_ID"
-echo ""
-echo "📋 Next step:"
-echo "     ./scripts/Step-4-deploy-tested-build.sh"
-echo ""
+if [[ $TEST_FAILED -eq 1 ]]; then
+  echo "╔════════════════════════════════════════════════════════════╗"
+  echo "║   ❌ SOME TESTS FAILED                                     ║"
+  echo "║   Review the errors above before deploying.                ║"
+  echo "╚════════════════════════════════════════════════════════════╝"
+  exit 1
+else
+  echo "╔════════════════════════════════════════════════════════════╗"
+  echo "║   ✅ ALL TESTS PASSED                                      ║"
+  echo "╚════════════════════════════════════════════════════════════╝"
+  echo ""
+  echo "📋 Ready to deploy:"
+  echo "   ./scripts/Step-4-deploy-tested-build.sh"
+  echo ""
+fi

@@ -1,12 +1,8 @@
 /**
  * API Route: POST /api/admin/users/[id]/reactivate
  * 
- * Reactivates a user by clearing deleted_at in Supabase.
- * No longer uses Auth0 - purely Supabase-based.
- * 
- * RBAC:
- *   - SuperAdmin can reactivate any user
- *   - Domain Admin can only reactivate users in their domain
+ * Reactivates a user by clearing deleted_at and setting user_type to colaborador.
+ * Uses mesh_users table.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -19,7 +15,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: mirrorUserId } = await params;
+    const { id: userId } = await params;
 
     // Check admin access
     const { authorized, claims } = await checkAdminAccess();
@@ -30,9 +26,9 @@ export async function POST(
       );
     }
 
-    // Get the mirror user
-    const mirrorUser = await getMirrorUserById(mirrorUserId);
-    if (!mirrorUser) {
+    // Get the user
+    const user = await getMirrorUserById(userId);
+    if (!user) {
       return NextResponse.json(
         { error: "User not found" },
         { status: 404 }
@@ -41,23 +37,20 @@ export async function POST(
 
     // RBAC: Domain Admin can only reactivate users in their domain
     const superAdmin = isSuperAdmin(claims);
-    if (!superAdmin) {
-      const userInDomain = mirrorUser.domains?.some((d: { domain: string }) => d.domain === claims.domain);
-      if (!userInDomain) {
-        return NextResponse.json(
-          { error: "You can only reactivate users in your domain" },
-          { status: 403 }
-        );
-      }
+    if (!superAdmin && user.domain !== claims.domain) {
+      return NextResponse.json(
+        { error: "You can only reactivate users in your domain" },
+        { status: 403 }
+      );
     }
 
-    // Clear deleted_at in Supabase
-    const updatedUser = await setMirrorUserDeleted(mirrorUserId, false);
+    // Clear deleted_at
+    const updatedUser = await setMirrorUserDeleted(userId, false);
 
     return NextResponse.json({
       success: true,
       message: "User reactivated successfully",
-      userId: mirrorUserId,
+      userId,
       deletedAt: updatedUser.deleted_at,
     });
 

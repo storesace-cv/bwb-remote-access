@@ -8,7 +8,9 @@
  * 1. User submits email/password
  * 2. App validates against MeshCentral using browser-equivalent login flow
  * 3. If valid, create encrypted session cookie
- * 4. Check/create user in Supabase with default role=USER
+ * 4. Check/create user in Supabase mesh_users table
+ * 
+ * IMPORTANT: Uses public.mesh_users table (NOT public.users which doesn't exist)
  */
 
 import { cookies } from "next/headers";
@@ -22,7 +24,8 @@ import * as crypto from "crypto";
 export interface MeshSession {
   email: string;
   domain: string;
-  meshUserId?: string;
+  userId?: string;        // mesh_users.id (UUID)
+  userType?: string;      // user_type from mesh_users
   authenticated: boolean;
   authenticatedAt: string;
   expiresAt: string;
@@ -33,6 +36,9 @@ export interface AuthResult {
   error?: string;
   session?: MeshSession;
 }
+
+// User types in hierarchy (from schema)
+export type UserType = 'siteadmin' | 'minisiteadmin' | 'agent' | 'colaborador' | 'inactivo' | 'candidato';
 
 // =============================================================================
 // DOMAIN CONFIGURATION
@@ -50,7 +56,6 @@ const DEFAULT_DOMAIN = "mesh.bwb.pt";
  * Get MeshCentral URL for a given domain
  */
 export function getMeshUrl(domain: string): string {
-  // Check if MESH_BASE_URL is set (for dev/testing)
   const envOverride = process.env.MESH_BASE_URL;
   if (envOverride) {
     return envOverride;
@@ -62,10 +67,8 @@ export function getMeshUrl(domain: string): string {
  * Get domain from request host header
  */
 export function getDomainFromHost(host: string): string {
-  // Extract domain from host (remove port if present)
   const domain = host.split(":")[0];
   
-  // Map rustdesk.bwb.pt to mesh.bwb.pt
   if (domain === "rustdesk.bwb.pt" || domain === "localhost") {
     return DEFAULT_DOMAIN;
   }
@@ -87,6 +90,7 @@ export function getShortDomain(fullDomain: string): string {
 
 /**
  * Normalize email: lowercase and trim
+ * IMPORTANT: username MUST equal email in our system
  */
 export function normalizeEmail(email: string): string {
   return email.toLowerCase().trim();
@@ -99,9 +103,6 @@ export function normalizeEmail(email: string): string {
 const SESSION_COOKIE_NAME = "mesh_session";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days in seconds
 
-/**
- * Get session secret for encryption
- */
 function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
   if (!secret) {
@@ -110,9 +111,6 @@ function getSessionSecret(): string {
   return secret;
 }
 
-/**
- * Encrypt session data
- */
 function encryptSession(session: MeshSession): string {
   const secret = getSessionSecret();
   const iv = crypto.randomBytes(16);
@@ -126,14 +124,10 @@ function encryptSession(session: MeshSession): string {
   ]);
   const authTag = cipher.getAuthTag();
   
-  // Combine: iv (16) + authTag (16) + encrypted
   const combined = Buffer.concat([iv, authTag, encrypted]);
   return combined.toString("base64");
 }
 
-/**
- * Decrypt session data
- */
 function decryptSession(encoded: string): MeshSession | null {
   try {
     const secret = getSessionSecret();
@@ -158,9 +152,6 @@ function decryptSession(encoded: string): MeshSession | null {
   }
 }
 
-/**
- * Set session cookie with rolling expiration
- */
 export async function setSessionCookie(session: MeshSession): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, encryptSession(session), {
@@ -172,9 +163,6 @@ export async function setSessionCookie(session: MeshSession): Promise<void> {
   });
 }
 
-/**
- * Get current session from cookie
- */
 export async function getSession(): Promise<MeshSession | null> {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(SESSION_COOKIE_NAME);
@@ -185,7 +173,6 @@ export async function getSession(): Promise<MeshSession | null> {
   
   const session = decryptSession(cookie.value);
   
-  // Check if session is expired
   if (session && new Date(session.expiresAt) < new Date()) {
     return null;
   }
@@ -193,17 +180,11 @@ export async function getSession(): Promise<MeshSession | null> {
   return session;
 }
 
-/**
- * Clear session cookie (logout)
- */
 export async function clearSession(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
-/**
- * Refresh session (rolling expiration)
- */
 export async function refreshSession(): Promise<void> {
   const session = await getSession();
   if (session) {
@@ -216,9 +197,6 @@ export async function refreshSession(): Promise<void> {
 // MESHCENTRAL AUTHENTICATION
 // =============================================================================
 
-/**
- * Parse cookies from Set-Cookie headers
- */
 function parseCookies(headers: Headers): Record<string, string> {
   const cookies: Record<string, string> = {};
   const setCookieHeaders = headers.getSetCookie();
@@ -234,9 +212,6 @@ function parseCookies(headers: Headers): Record<string, string> {
   return cookies;
 }
 
-/**
- * Format cookies for request header
- */
 function formatCookies(cookies: Record<string, string>): string {
   return Object.entries(cookies)
     .map(([name, value]) => `${name}=${value}`)
@@ -244,10 +219,7 @@ function formatCookies(cookies: Record<string, string>): string {
 }
 
 /**
- * Validate credentials against MeshCentral using browser-equivalent flow:
- * 1. GET /login to get initial cookies
- * 2. POST /login with form data
- * 3. GET / to verify logged in (check for <title>MeshCentral</title>)
+ * Validate credentials against MeshCentral using browser-equivalent flow
  */
 export async function validateMeshCredentials(
   baseUrl: string,
@@ -257,7 +229,6 @@ export async function validateMeshCredentials(
   const normalizedEmail = normalizeEmail(email);
   
   try {
-    // Cookie jar to maintain session across requests
     let cookieJar: Record<string, string> = {};
     
     // Step 1: GET /login to get initial cookies
@@ -270,7 +241,6 @@ export async function validateMeshCredentials(
       },
     });
     
-    // Collect cookies from step 1
     const step1Cookies = parseCookies(step1Response.headers);
     cookieJar = { ...cookieJar, ...step1Cookies };
     
@@ -294,18 +264,12 @@ export async function validateMeshCredentials(
       body: formData.toString(),
     });
     
-    // Collect cookies from step 2
     const step2Cookies = parseCookies(step2Response.headers);
     cookieJar = { ...cookieJar, ...step2Cookies };
     
-    // Check if xid cookie is set and not the failure value
     const xid = cookieJar["xid"];
-    if (xid && xid !== "e30=" && xid !== "e30%3D") {
-      // xid is set and not the failure marker - likely successful
-      // Continue to verification step
-    }
     
-    // Step 3: GET / (root) to verify logged in
+    // Step 3: GET / to verify logged in
     const step3Response = await fetch(`${baseUrl}/`, {
       method: "GET",
       redirect: "follow",
@@ -318,13 +282,10 @@ export async function validateMeshCredentials(
     
     const html = await step3Response.text();
     
-    // Success detection: Page contains <title>MeshCentral</title> (dashboard)
-    // Failure detection: Page is login page or contains error
     if (html.includes("<title>MeshCentral</title>") && !html.includes("Login</title>")) {
       return { ok: true };
     }
     
-    // Alternative success check: valid xid cookie present
     if (xid && xid !== "e30=" && xid !== "e30%3D" && xid.length > 10) {
       return { ok: true };
     }
@@ -337,9 +298,6 @@ export async function validateMeshCredentials(
   }
 }
 
-/**
- * Authenticate user against MeshCentral
- */
 export async function authenticateWithMesh(
   email: string,
   password: string,
@@ -373,12 +331,9 @@ export async function authenticateWithMesh(
 }
 
 // =============================================================================
-// SUPABASE USER MANAGEMENT
+// SUPABASE USER MANAGEMENT - Uses mesh_users table
 // =============================================================================
 
-/**
- * Get Supabase client for user management
- */
 function getSupabaseAdmin() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || 
@@ -394,14 +349,18 @@ function getSupabaseAdmin() {
 }
 
 /**
- * Ensure user exists in Supabase after MeshCentral authentication
- * Creates user with default role=USER if not exists
- * Does NOT block login if this fails - just logs the error
+ * Ensure user exists in Supabase mesh_users table after MeshCentral authentication
+ * 
+ * IMPORTANT: 
+ * - Uses public.mesh_users table (NOT public.users which doesn't exist)
+ * - username MUST equal email (normalized)
+ * - Default user_type for new users: 'candidato'
+ * - Does NOT block login if this fails
  */
 export async function ensureSupabaseUser(
   email: string,
   domain: string
-): Promise<{ id?: string; role?: string; user_type?: string } | null> {
+): Promise<{ id?: string; user_type?: string } | null> {
   const supabase = getSupabaseAdmin();
   
   if (!supabase) {
@@ -413,65 +372,106 @@ export async function ensureSupabaseUser(
   const shortDomain = getShortDomain(domain);
   
   try {
-    // Check if user exists
+    // Check if user exists by mesh_username (which equals email)
     const { data: existingUser, error: fetchError } = await supabase
-      .from("users")
-      .select("id, role, user_type")
-      .eq("email", normalizedEmail)
-      .eq("domain", shortDomain)
-      .single();
+      .from("mesh_users")
+      .select("id, user_type, agent_id")
+      .eq("mesh_username", normalizedEmail)
+      .maybeSingle();
     
     if (existingUser) {
-      return existingUser;
+      console.log(`[AUTH] Found existing mesh_user: ${normalizedEmail}, type: ${existingUser.user_type}`);
+      return { id: existingUser.id, user_type: existingUser.user_type };
     }
     
-    // User doesn't exist - create with defaults
-    if (fetchError && fetchError.code === "PGRST116") {
-      // PGRST116 = no rows returned, which is expected for new users
-      const { data: newUser, error: createError } = await supabase
-        .from("users")
-        .insert({
-          email: normalizedEmail,
-          username: normalizedEmail,
-          domain: shortDomain,
-          role: "USER",
-          user_type: "user",
-          profile_code: "USER",
-          created_at: new Date().toISOString(),
-        })
-        .select("id, role, user_type")
-        .single();
-      
-      if (createError) {
-        console.error("[AUTH] Failed to create Supabase user:", createError);
-        return null;
-      }
-      
-      console.log(`[AUTH] Created new Supabase user: ${normalizedEmail} @ ${shortDomain}`);
-      return newUser;
+    // User doesn't exist - create with default user_type='candidato'
+    // Note: agent_id is required - we need to handle this
+    // For now, we'll look for an existing agent for this domain or create a placeholder
+    
+    // First, try to find an agent for this domain
+    const { data: domainAgent } = await supabase
+      .from("mesh_users")
+      .select("id")
+      .eq("domain", shortDomain)
+      .eq("user_type", "agent")
+      .limit(1)
+      .maybeSingle();
+    
+    // If no agent exists, we can't create the user without one
+    // The mesh_users table has agent_id as NOT NULL
+    if (!domainAgent) {
+      console.warn(`[AUTH] No agent found for domain ${shortDomain} - cannot create user record`);
+      console.log(`[AUTH] User ${normalizedEmail} authenticated but not mirrored to DB (no agent)`);
+      return null;
     }
     
-    if (fetchError) {
-      console.error("[AUTH] Error checking Supabase user:", fetchError);
+    const { data: newUser, error: createError } = await supabase
+      .from("mesh_users")
+      .insert({
+        mesh_username: normalizedEmail,  // username = email
+        email: normalizedEmail,
+        domain: shortDomain,
+        user_type: "candidato",          // Default for new users
+        agent_id: domainAgent.id,        // Required FK
+        source: "meshcentral",
+      })
+      .select("id, user_type")
+      .single();
+    
+    if (createError) {
+      console.error("[AUTH] Failed to create mesh_user:", createError);
+      return null;
     }
     
-    return null;
+    console.log(`[AUTH] Created new mesh_user: ${normalizedEmail} @ ${shortDomain}`);
+    return { id: newUser.id, user_type: newUser.user_type };
+    
   } catch (error) {
     console.error("[AUTH] Supabase user mirroring error:", error);
     return null;
   }
 }
 
+/**
+ * Get user by email from mesh_users table
+ */
+export async function getMeshUserByEmail(email: string): Promise<{
+  id: string;
+  mesh_username: string;
+  email: string | null;
+  user_type: UserType;
+  domain: string;
+  agent_id: string;
+} | null> {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return null;
+  
+  const normalizedEmail = normalizeEmail(email);
+  
+  const { data, error } = await supabase
+    .from("mesh_users")
+    .select("id, mesh_username, email, user_type, domain, agent_id")
+    .eq("mesh_username", normalizedEmail)
+    .maybeSingle();
+  
+  if (error || !data) {
+    return null;
+  }
+  
+  return data as {
+    id: string;
+    mesh_username: string;
+    email: string | null;
+    user_type: UserType;
+    domain: string;
+    agent_id: string;
+  };
+}
+
 // =============================================================================
 // FULL LOGIN FLOW
 // =============================================================================
 
-/**
- * Complete login flow:
- * 1. Authenticate with MeshCentral
- * 2. Ensure user exists in Supabase (non-blocking)
- * 3. Create session cookie
- */
 export async function login(
   email: string,
   password: string,
@@ -485,8 +485,14 @@ export async function login(
   }
   
   try {
-    // 2. Ensure user exists in Supabase (non-blocking - don't fail login if this fails)
-    await ensureSupabaseUser(email, domain);
+    // 2. Ensure user exists in Supabase (non-blocking)
+    const userData = await ensureSupabaseUser(email, domain);
+    
+    // Enrich session with user data if available
+    if (userData) {
+      authResult.session.userId = userData.id;
+      authResult.session.userType = userData.user_type;
+    }
     
     // 3. Set session cookie
     await setSessionCookie(authResult.session);
@@ -501,9 +507,6 @@ export async function login(
   }
 }
 
-/**
- * Logout - clear session
- */
 export async function logout(): Promise<void> {
   await clearSession();
 }
