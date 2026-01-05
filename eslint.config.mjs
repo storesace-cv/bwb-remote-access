@@ -12,6 +12,8 @@ export default tseslint.config(
       ".vercel/**",
       "supabase/functions/**", // Ignore Deno functions as they have different env
       "ecosystem.config.js",
+      "postcss.config.js",
+      "tailwind.config.js",
       "androidProvisioner/build/**",
       "src/integrations/supabase/types.ts",
       "src/integrations/supabase/database.types.ts"
