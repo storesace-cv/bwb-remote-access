@@ -374,6 +374,7 @@ export default function DashboardClient({
       setMatchedDevice({ device_id: data.device_id || hybridDeviceIdInput });
       setRegistrationStatus("completed");
     } catch (error) {
+      logError("dashboard", "Hybrid RustDesk ID submission failed", { error });
       console.error("Erro no registo híbrido:", error);
       setHybridSubmitError(error instanceof Error ? error.message : "Erro ao registar");
     } finally {
