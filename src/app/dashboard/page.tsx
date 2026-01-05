@@ -161,13 +161,14 @@ export default function DashboardPage() {
 
   // Check if user is an agent / minisiteadmin / siteadmin
   const checkUserType = useCallback(async () => {
-    if (!jwt || !authUserId) return;
+    if (!jwt || !authUserId || userTypeChecked) return;
 
     // Admin canónico é sempre topo da hierarquia
     if (authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8") {
       setIsAgent(true);
       setIsMinisiteadmin(true);
       setIsSiteadmin(true);
+      setUserTypeChecked(true);
       return;
     }
 
