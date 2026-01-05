@@ -754,10 +754,7 @@ export default function DashboardPage() {
       .map((p: string) => p.trim())
       .filter((p: string) => p.length > 0);
 
-    const groupLabel =
-      device.group_name || parts[0] || "";
-    const subgroupLabel =
-      device.subgroup_name || parts[1] || "";
+    // Extract observations from notes (skip group/subgroup parts)
     const observations =
       parts.length > 2
         ? parts.slice(2).join(" | ")
@@ -1129,10 +1126,14 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-emerald-400">
-                  🎯 Painel de Gestão (Agent){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
+                  🎯 Painel de Gestão ({isSiteadmin ? "Site Admin" : isMinisiteadmin ? "Mini Site Admin" : "Agent"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
-                  Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos
+                  {isSiteadmin 
+                    ? "Como Site Admin, tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
+                    : isMinisiteadmin
+                    ? "Como Mini Site Admin, podes gerir utilizadores e colaboradores do teu domínio"
+                    : "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"}
                 </p>
               </div>
             </div>
@@ -1679,9 +1680,25 @@ export default function DashboardPage() {
 
                             return (
                               <div key={subKey} className="flex flex-col gap-1">
-                                <div className="text-xs text-muted-foreground">
-                                  {groupLabel} · {subgroupLabel}
-                                </div>
+                                {subgroupName ? (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setExpandedSubgroups((prev) => ({
+                                        ...prev,
+                                        [subKey]: !isSubExpanded,
+                                      }))
+                                    }
+                                    className="flex items-center justify-between text-xs text-muted-foreground hover:text-slate-300 transition-colors text-left"
+                                  >
+                                    <span>{groupLabel} · {subgroupLabel}</span>
+                                    <span className="ml-2">{isSubExpanded ? "▼" : "►"}</span>
+                                  </button>
+                                ) : (
+                                  <div className="text-xs text-muted-foreground">
+                                    {groupLabel} · {subgroupLabel}
+                                  </div>
+                                )}
                                 {(isSubExpanded || !subgroupName) && (
                                   <div className="grid gap-3 md:grid-cols-2">
                                     {subBucket.devices.map((d: GroupableDevice) => {
