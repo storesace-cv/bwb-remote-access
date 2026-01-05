@@ -1,167 +1,81 @@
 /**
- * Login Page
+ * Login Gateway Page
  * 
- * MeshCentral-based authentication.
- * User enters email/password, validated against MeshCentral.
+ * First step of login flow - welcome screen with "Entrar" button.
+ * Navigates to /login/credentials for actual authentication.
  */
 
 "use client";
 
-import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Shield, Lock, Server } from "lucide-react";
 
-function LoginForm() {
+export default function LoginGatewayPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo") || "/dashboard";
-  
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        setError(data.error || "Authentication failed");
-        setLoading(false);
-        return;
-      }
-      
-      // Redirect to returnTo or dashboard
-      router.push(returnTo);
-    } catch {
-      setError("Failed to connect to server");
-      setLoading(false);
-    }
+
+  const handleEnter = () => {
+    router.push("/login/credentials");
   };
-  
-  return (
-    <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-slate-700/50">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-        
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-            placeholder="seu.email@exemplo.com"
-            disabled={loading}
-            data-testid="login-email-input"
-          />
-        </div>
-        
-        {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-            placeholder="••••••••"
-            disabled={loading}
-            data-testid="login-password-input"
-          />
-        </div>
-        
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 disabled:bg-emerald-600/50 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-          data-testid="login-submit-button"
-        >
-          {loading ? (
-            <>
-              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-              A entrar...
-            </>
-          ) : (
-            <>
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-              </svg>
-              Entrar
-            </>
-          )}
-        </button>
-      </form>
-      
-      {/* Footer */}
-      <div className="mt-6 text-center">
-        <p className="text-xs text-slate-500">
-          Autenticação via MeshCentral
-        </p>
-      </div>
-    </div>
-  );
-}
 
-function LoginFormSkeleton() {
-  return (
-    <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-slate-700/50 animate-pulse">
-      <div className="space-y-6">
-        <div className="h-12 bg-slate-700 rounded-lg" />
-        <div className="h-12 bg-slate-700 rounded-lg" />
-        <div className="h-12 bg-slate-700 rounded-lg" />
-      </div>
-    </div>
-  );
-}
-
-export default function LoginPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Header */}
         <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600/20 rounded-2xl mb-4">
+            <Server className="w-8 h-8 text-emerald-500" />
+          </div>
           <h1 className="text-3xl font-bold text-white mb-2">
             BWB Remote Access
           </h1>
-          <p className="text-slate-400">
-            Entrar com credenciais MeshCentral
+          <p className="text-slate-400 text-lg">
+            Portal de Suporte Android
           </p>
         </div>
-        
-        {/* Login Form with Suspense */}
-        <Suspense fallback={<LoginFormSkeleton />}>
-          <LoginForm />
-        </Suspense>
+
+        {/* Card */}
+        <div className="bg-slate-800/50 backdrop-blur rounded-2xl p-8 border border-slate-700/50">
+          {/* Info bullets */}
+          <div className="space-y-4 mb-8">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-emerald-600/20 rounded-lg flex items-center justify-center">
+                <Shield className="w-4 h-4 text-emerald-500" />
+              </div>
+              <div>
+                <p className="text-slate-300 text-sm">
+                  Use as suas credenciais MeshCentral
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-emerald-600/20 rounded-lg flex items-center justify-center">
+                <Lock className="w-4 h-4 text-emerald-500" />
+              </div>
+              <div>
+                <p className="text-slate-300 text-sm">
+                  Sessão segura e encriptada
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Enter Button */}
+          <button
+            onClick={handleEnter}
+            className="w-full py-4 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-lg"
+            data-testid="login-enter-button"
+          >
+            Entrar
+          </button>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 text-center">
+          <p className="text-xs text-slate-500">
+            © 2026 BWB Remote Access
+          </p>
+        </div>
       </div>
     </main>
   );
