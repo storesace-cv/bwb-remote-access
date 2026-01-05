@@ -383,3 +383,182 @@ export default function DashboardClient({
       setHybridSubmitLoading(false);
     }
   }, [hybridDeviceIdInput, registrationSession]);
+
+  // Filter and sort devices
+  const filteredDevices = useMemo(() => {
+    let result = [...devices];
+
+    // Apply status filter
+    if (filterStatus === "adopted") {
+      result = result.filter((d) => d.owner);
+    } else if (filterStatus === "unadopted") {
+      result = result.filter((d) => !d.owner);
+    }
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (d) =>
+          d.device_id.toLowerCase().includes(query) ||
+          (d.friendly_name?.toLowerCase().includes(query) ?? false) ||
+          (d.notes?.toLowerCase().includes(query) ?? false)
+      );
+    }
+
+    // Apply sorting
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "date_desc":
+          return new Date(b.last_seen_at || b.created_at || 0).getTime() - new Date(a.last_seen_at || a.created_at || 0).getTime();
+        case "date_asc":
+          return new Date(a.last_seen_at || a.created_at || 0).getTime() - new Date(b.last_seen_at || b.created_at || 0).getTime();
+        case "name_asc":
+          return (a.friendly_name || a.device_id).localeCompare(b.friendly_name || b.device_id);
+        case "name_desc":
+          return (b.friendly_name || b.device_id).localeCompare(a.friendly_name || a.device_id);
+        case "id_asc":
+          return a.device_id.localeCompare(b.device_id);
+        case "id_desc":
+          return b.device_id.localeCompare(a.device_id);
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  }, [devices, filterStatus, searchQuery, sortBy]);
+
+  // Separate adopted and unadopted devices
+  const adoptedDevices = useMemo(() => filteredDevices.filter((d) => d.owner), [filteredDevices]);
+  const unadoptedDevices = useMemo(() => filteredDevices.filter((d) => !d.owner), [filteredDevices]);
+
+  const isDeviceAdopted = (device: GroupableDevice) => Boolean(device.owner);
+
+  // Pagination for adopted devices
+  const totalAdopted = adoptedDevices.length;
+  const adoptedTotalPages = Math.max(1, Math.ceil(totalAdopted / adoptedPageSize));
+
+  useEffect(() => {
+    setCurrentAdoptedPage(1);
+  }, [totalAdopted, adoptedPageSize]);
+
+  const paginatedAdoptedDevices = useMemo(() => {
+    const start = (currentAdoptedPage - 1) * adoptedPageSize;
+    return adoptedDevices.slice(start, start + adoptedPageSize);
+  }, [adoptedDevices, currentAdoptedPage, adoptedPageSize]);
+
+  const grouped = useMemo(() => groupDevices(paginatedAdoptedDevices), [paginatedAdoptedDevices]);
+  const isEditingDevice = adoptingDevice ? isDeviceAdopted(adoptingDevice) : false;
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const selectedGroup = adoptFormData.group_id
+    ? canonicalGroups.find((g) => g.id === adoptFormData.group_id)
+    : null;
+  const availableSubgroups = selectedGroup
+    ? canonicalGroups.filter((g) => g.parent_group_id === selectedGroup.id)
+    : [];
+
+  // Open adopt modal
+  const openAdoptModal = useCallback((device: GroupableDevice) => {
+    setAdoptingDevice(device);
+    setAdoptFormData({
+      friendly_name: device.friendly_name || "",
+      group_id: device.group_id || "",
+      subgroup_id: device.subgroup_id || undefined,
+      rustdesk_password: device.rustdesk_password || "",
+      observations: device.notes || "",
+    });
+    setAdoptError(null);
+    setShowAdoptModal(true);
+  }, []);
+
+  // Close adopt modal
+  const closeAdoptModal = useCallback(() => {
+    setShowAdoptModal(false);
+    setAdoptingDevice(null);
+    setAdoptFormData({
+      friendly_name: "",
+      group_id: "",
+      rustdesk_password: "",
+      observations: "",
+    });
+    setAdoptError(null);
+  }, []);
+
+  // Handle adopt form change
+  const handleAdoptFormChange = useCallback((field: keyof AdoptFormData, value: string) => {
+    setAdoptFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
+
+  // Submit adopt
+  const handleAdoptSubmit = useCallback(async () => {
+    if (!adoptingDevice) return;
+
+    setAdoptLoading(true);
+    setAdoptError(null);
+
+    try {
+      const res = await fetch(`/api/provision/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          device_id: adoptingDevice.device_id,
+          friendly_name: adoptFormData.friendly_name || null,
+          group_id: adoptFormData.group_id || null,
+          subgroup_id: adoptFormData.subgroup_id || null,
+          rustdesk_password: adoptFormData.rustdesk_password || null,
+          notes: adoptFormData.observations || null,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Falha ao adoptar dispositivo");
+      }
+
+      closeAdoptModal();
+      await fetchDevices();
+    } catch (error) {
+      console.error("Erro ao adoptar:", error);
+      setAdoptError(error instanceof Error ? error.message : "Erro desconhecido");
+    } finally {
+      setAdoptLoading(false);
+    }
+  }, [adoptingDevice, adoptFormData, closeAdoptModal, fetchDevices]);
+
+  // Admin reassign modal
+  const openAdminReassignModal = useCallback((device: GroupableDevice) => {
+    setAdminDeviceToManage(device);
+    setAdminReassignForm({ mesh_username: device.mesh_username || "" });
+    setAdminActionError(null);
+    setShowAdminReassignModal(true);
+  }, []);
+
+  const closeAdminReassignModal = useCallback(() => {
+    setShowAdminReassignModal(false);
+    setAdminDeviceToManage(null);
+    setAdminReassignForm({ mesh_username: "" });
+    setAdminActionError(null);
+  }, []);
+
+  // Handle clipboard paste
+  const handlePasteFromClipboard = useCallback(async () => {
+    try {
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        return;
+      }
+      const text = await navigator.clipboard.readText();
+      const cleanedText = text.replace(/\s+/g, "").replace(/\D/g, "");
+      if (cleanedText) {
+        setHybridDeviceIdInput(cleanedText);
+      }
+    } catch (err) {
+      console.warn("Failed to read clipboard:", err);
+    }
+  }, []);
