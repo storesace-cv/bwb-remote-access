@@ -3,20 +3,43 @@
 /**
  * Dashboard Client Component
  * 
- * Handles client-side device management interactions.
- * Session is already validated by the parent Server Component.
+ * Main dashboard with:
+ * - Painel de Gestão (for siteadmin/minisiteadmin/agent)
+ * - Adicionar Dispositivo (for all users)
+ * - Dispositivos Adoptados (device list)
  */
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { AgentPanel } from "@/components/dashboard/AgentPanel";
+import { AddDevicePanel } from "@/components/dashboard/AddDevicePanel";
+import { DeviceList } from "@/components/dashboard/DeviceList";
+import { FiltersBar } from "@/components/dashboard/FiltersBar";
+import { RegistrationModal } from "@/components/dashboard/RegistrationModal";
+
+import type { GroupableDevice } from "@/lib/grouping";
+import type { FilterStatus, SortOption } from "@/types/DeviceDTO";
 
 interface DashboardClientProps {
   userEmail: string;
   userDisplayName: string;
   userDomain: string | null;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
+  isAgent: boolean;
+  isDomainAdmin: boolean;
   roleLabel: string | null;
+  userType: string;
+}
+
+interface RegistrationSession {
+  session_id: string;
+  expires_at: string;
+  expires_in_seconds: number;
 }
 
 export default function DashboardClient({
@@ -24,186 +47,317 @@ export default function DashboardClient({
   userDisplayName,
   userDomain,
   isAdmin,
+  isSuperAdmin,
+  isAgent,
+  isDomainAdmin,
   roleLabel,
+  userType,
 }: DashboardClientProps) {
   const router = useRouter();
+  
+  // Device state
+  const [devices, setDevices] = useState<GroupableDevice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
+  
+  // Filter state
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("date_desc");
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Registration modal state
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [registrationSession, setRegistrationSession] = useState<RegistrationSession | null>(null);
+  const [qrImageUrl, setQrImageUrl] = useState<string>("");
+  const [qrLoading, setQrLoading] = useState(false);
+  const [qrError, setQrError] = useState<string>("");
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [registrationStatus, setRegistrationStatus] = useState<"awaiting" | "completed" | "expired">("awaiting");
+  const [matchedDevice, setMatchedDevice] = useState<{ device_id: string; friendly_name?: string } | null>(null);
+  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Hybrid registration
+  const [hybridDeviceIdInput, setHybridDeviceIdInput] = useState<string>("");
+  const [hybridSubmitLoading, setHybridSubmitLoading] = useState<boolean>(false);
+  const [hybridSubmitError, setHybridSubmitError] = useState<string | null>(null);
+  const [hybridSubmitSuccess, setHybridSubmitSuccess] = useState<string | null>(null);
+
+  // Show agent panel for agent, minisiteadmin, or siteadmin
+  const showAgentPanel = isAgent || isDomainAdmin;
+  
+  // Show add device panel for everyone
+  const showAddDevice = true;
 
   const handleLogout = useCallback(() => {
-    // Clear any legacy tokens
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("rustdesk_jwt");
     }
-    // Redirect to logout endpoint
     router.push("/api/auth/logout");
   }, [router]);
 
+  // Fetch devices
+  const fetchDevices = useCallback(async () => {
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      const response = await fetch("/api/devices/refresh");
+      if (!response.ok) {
+        throw new Error("Falha ao carregar dispositivos");
+      }
+      const data = await response.json();
+      setDevices(data.devices || []);
+    } catch (err) {
+      console.error("Error fetching devices:", err);
+      setErrorMsg(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Refresh devices
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setRefreshError(null);
+    try {
+      const response = await fetch("/api/devices/refresh", { method: "POST" });
+      if (!response.ok) {
+        throw new Error("Falha ao atualizar dispositivos");
+      }
+      const data = await response.json();
+      setDevices(data.devices || []);
+    } catch (err) {
+      console.error("Error refreshing devices:", err);
+      setRefreshError(err instanceof Error ? err.message : "Erro ao atualizar");
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    fetchDevices();
+  }, [fetchDevices]);
+
+  // Filter and sort devices
+  const filteredDevices = devices
+    .filter((device) => {
+      // Status filter
+      if (filterStatus === "adopted" && !device.owner_id) return false;
+      if (filterStatus === "unadopted" && device.owner_id) return false;
+      
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        return (
+          device.device_id.toLowerCase().includes(query) ||
+          (device.friendly_name?.toLowerCase().includes(query) ?? false) ||
+          (device.observations?.toLowerCase().includes(query) ?? false)
+        );
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "date_desc":
+          return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+        case "date_asc":
+          return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
+        case "name_asc":
+          return (a.friendly_name || a.device_id).localeCompare(b.friendly_name || b.device_id);
+        case "name_desc":
+          return (b.friendly_name || b.device_id).localeCompare(a.friendly_name || a.device_id);
+        case "id_asc":
+          return a.device_id.localeCompare(b.device_id);
+        case "id_desc":
+          return b.device_id.localeCompare(a.device_id);
+        default:
+          return 0;
+      }
+    });
+
+  const adoptedCount = devices.filter((d) => d.owner_id).length;
+  const unadoptedCount = devices.filter((d) => !d.owner_id).length;
+
+  // Registration session management
+  const startRegistrationSession = useCallback(async () => {
+    setShowRegistrationModal(true);
+    setQrLoading(true);
+    setQrError("");
+    setRegistrationStatus("awaiting");
+    setMatchedDevice(null);
+    setHybridDeviceIdInput("");
+    setHybridSubmitError(null);
+    setHybridSubmitSuccess(null);
+
+    try {
+      const response = await fetch("/api/provision/start", { method: "POST" });
+      if (!response.ok) {
+        throw new Error("Falha ao iniciar sessão de registo");
+      }
+      const data = await response.json();
+      setRegistrationSession(data);
+      setTimeRemaining(data.expires_in_seconds || 300);
+      
+      // Generate QR code URL
+      const qrResponse = await fetch(`/api/provision/bundle?session_id=${data.session_id}`);
+      if (qrResponse.ok) {
+        const qrData = await qrResponse.json();
+        setQrImageUrl(qrData.qr_url || "");
+      }
+    } catch (err) {
+      console.error("Error starting registration:", err);
+      setQrError(err instanceof Error ? err.message : "Erro ao iniciar registo");
+    } finally {
+      setQrLoading(false);
+    }
+  }, []);
+
+  // Countdown timer
+  useEffect(() => {
+    if (showRegistrationModal && timeRemaining > 0 && registrationStatus === "awaiting") {
+      countdownIntervalRef.current = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            setRegistrationStatus("expired");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+    };
+  }, [showRegistrationModal, timeRemaining, registrationStatus]);
+
+  const handleCloseModal = useCallback(() => {
+    setShowRegistrationModal(false);
+    setRegistrationSession(null);
+    setQrImageUrl("");
+    setTimeRemaining(0);
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+    }
+    // Refresh devices if registration was successful
+    if (registrationStatus === "completed") {
+      fetchDevices();
+    }
+  }, [registrationStatus, fetchDevices]);
+
+  const handleRestartRegistration = useCallback(() => {
+    startRegistrationSession();
+  }, [startRegistrationSession]);
+
+  // Hybrid submission
+  const handleHybridSubmit = useCallback(async () => {
+    if (!hybridDeviceIdInput.trim() || !registrationSession) return;
+    
+    setHybridSubmitLoading(true);
+    setHybridSubmitError(null);
+    setHybridSubmitSuccess(null);
+    
+    try {
+      const response = await fetch("/api/provision/claim", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: registrationSession.session_id,
+          rustdesk_id: hybridDeviceIdInput.trim(),
+        }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Falha ao registar dispositivo");
+      }
+      
+      const data = await response.json();
+      setHybridSubmitSuccess(`Dispositivo ${data.device_id || hybridDeviceIdInput} registado com sucesso!`);
+      setMatchedDevice({ device_id: data.device_id || hybridDeviceIdInput });
+      setRegistrationStatus("completed");
+    } catch (err) {
+      console.error("Error in hybrid submit:", err);
+      setHybridSubmitError(err instanceof Error ? err.message : "Erro ao registar");
+    } finally {
+      setHybridSubmitLoading(false);
+    }
+  }, [hybridDeviceIdInput, registrationSession]);
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Header */}
-        <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Olá, {userDisplayName}
-            </h1>
-            <p className="text-sm text-slate-400 mt-1">
-              {userEmail}
-              {roleLabel && (
-                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-amber-600/20 text-amber-400">
-                  {roleLabel}
-                </span>
-              )}
-            </p>
+        <DashboardHeader
+          userDisplayName={userDisplayName}
+          isAdmin={isAdmin}
+          onLogout={handleLogout}
+        />
+
+        {/* Refresh Error */}
+        {refreshError && (
+          <div className="mb-4 p-3 bg-amber-950/40 border border-amber-900 rounded-md">
+            <p className="text-sm text-amber-400">⚠️ {refreshError}</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/dashboard/profile"
-              className="px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-            >
-              Perfil
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 text-sm rounded-md bg-red-600/20 hover:bg-red-600/30 transition text-red-400"
-            >
-              Terminar Sessão
-            </button>
-          </div>
-        </header>
+        )}
 
-        {/* Quick Actions */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {/* MeshCentral Devices - Always show since user is authenticated */}
-          <Link
-            href="/mesh/devices"
-            className="bg-slate-900/70 border border-cyan-700/50 rounded-xl p-6 hover:bg-slate-800/70 transition group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-cyan-600/20 rounded-lg flex items-center justify-center group-hover:bg-cyan-600/30 transition">
-                <svg
-                  className="w-6 h-6 text-cyan-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-white">
-                  Dispositivos MeshCentral
-                </h3>
-                <p className="text-sm text-slate-400">
-                  {userDomain ? `Domínio: ${userDomain}` : "Ver todos os dispositivos"}
-                </p>
-              </div>
-            </div>
-          </Link>
+        {/* Agent Panel - shown for siteadmin, minisiteadmin, agent */}
+        {showAgentPanel && (
+          <AgentPanel userDomain={userDomain || ""} />
+        )}
 
-          {/* User Management (Admin only) */}
-          {isAdmin && (
-            <Link
-              href="/admin/users"
-              className="bg-slate-900/70 border border-amber-700/50 rounded-xl p-6 hover:bg-slate-800/70 transition group"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-amber-600/20 rounded-lg flex items-center justify-center group-hover:bg-amber-600/30 transition">
-                  <svg
-                    className="w-6 h-6 text-amber-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-medium text-white">
-                    Gestão de Utilizadores
-                  </h3>
-                  <p className="text-sm text-slate-400">
-                    Criar, editar e gerir utilizadores
-                  </p>
-                </div>
-              </div>
-            </Link>
-          )}
+        {/* Add Device Panel - shown for everyone */}
+        {showAddDevice && (
+          <AddDevicePanel onStartRegistration={startRegistrationSession} />
+        )}
 
-          {/* Profile */}
-          <Link
-            href="/dashboard/profile"
-            className="bg-slate-900/70 border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 transition group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center group-hover:bg-slate-600 transition">
-                <svg
-                  className="w-6 h-6 text-slate-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-medium text-white">
-                  Meu Perfil
-                </h3>
-                <p className="text-sm text-slate-400">
-                  Configurações e informações
-                </p>
-              </div>
-            </div>
-          </Link>
-        </section>
+        {/* Filters Bar */}
+        <FiltersBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          filterStatus={filterStatus}
+          onFilterChange={setFilterStatus}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          deviceCount={devices.length}
+          adoptedCount={adoptedCount}
+          unadoptedCount={unadoptedCount}
+          isAdmin={isAdmin}
+        />
 
-        {/* Domain Info */}
-        <section className="bg-slate-900/70 border border-slate-700 rounded-xl p-6">
-          <h2 className="text-lg font-medium text-white mb-4">
-            Informações da Sessão
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">Email</label>
-              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
-                {userEmail}
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">Organização</label>
-              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
-                {userDomain || "Sem organização atribuída"}
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">Função</label>
-              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
-                {roleLabel || "Utilizador"}
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">Autenticação</label>
-              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-emerald-400">
-                ✓ MeshCentral
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Device List */}
+        <DeviceList
+          devices={filteredDevices}
+          loading={loading}
+          errorMsg={errorMsg}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+        />
+
+        {/* Registration Modal */}
+        <RegistrationModal
+          showModal={showRegistrationModal}
+          qrLoading={qrLoading}
+          qrError={qrError}
+          qrImageUrl={qrImageUrl}
+          timeRemaining={timeRemaining}
+          status={registrationStatus}
+          matchedDevice={matchedDevice}
+          hybridDeviceIdInput={hybridDeviceIdInput}
+          hybridSubmitLoading={hybridSubmitLoading}
+          hybridSubmitError={hybridSubmitError}
+          hybridSubmitSuccess={hybridSubmitSuccess}
+          onClose={handleCloseModal}
+          onRestart={handleRestartRegistration}
+          onHybridInputChange={setHybridDeviceIdInput}
+          onHybridSubmit={handleHybridSubmit}
+        />
       </div>
     </main>
   );
