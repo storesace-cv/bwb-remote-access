@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * Dashboard Client Component
- * 
- * This is the original dashboard code adapted to receive auth data as props
- * instead of reading from localStorage. All UI and functionality is preserved.
- */
-
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -15,6 +8,9 @@ import QRCode from "react-qr-code";
 
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
+
+const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
 const buildRustdeskUrl = (device: GroupableDevice): string => {
   const base = `rustdesk://connection/new/${encodeURIComponent(device.device_id)}`;
@@ -58,38 +54,19 @@ interface CanonicalGroup {
   device_count?: number;
 }
 
-interface DashboardClientProps {
-  meshUserId: string | null;
-  authUserId: string | null;
-  userEmail: string;
-  isAgent: boolean;
-  isMinisiteadmin: boolean;
-  isSiteadmin: boolean;
-  userDomain: string;
-  userDisplayName: string;
-}
-
 const ADOPTED_PAGE_SIZE = 20;
 
-export default function DashboardClient({
-  meshUserId,
-  authUserId,
-  userEmail,
-  isAgent: isAgentProp,
-  isMinisiteadmin: isMinisiteadminProp,
-  isSiteadmin: isSiteadminProp,
-  userDomain: userDomainProp,
-  userDisplayName: userDisplayNameProp,
-}: DashboardClientProps) {
+export default function DashboardPage() {
   const router = useRouter();
+  const [jwt, setJwt] = useState<string | null>(null);
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [isAgent, setIsAgent] = useState(false);
+  const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
+  const [isSiteadmin, setIsSiteadmin] = useState(false);
   
-  // Auth state from props
-  const isAgent = isAgentProp;
-  const isMinisiteadmin = isMinisiteadminProp;
-  const isSiteadmin = isSiteadminProp;
-  const userDomain = userDomainProp;
-  const userDisplayName = userDisplayNameProp;
-  const isAdmin = isAgent || isMinisiteadmin || isSiteadmin;
+  // NEW: User profile data
+  const [userDomain, setUserDomain] = useState<string>("");
+  const [userDisplayName, setUserDisplayName] = useState<string>("");
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -131,7 +108,7 @@ export default function DashboardClient({
   const [adoptLoading, setAdoptLoading] = useState(false);
   const [adoptError, setAdoptError] = useState<string | null>(null);
 
-  // Canonical groups state
+  // NEW: Canonical groups state
   const [canonicalGroups, setCanonicalGroups] = useState<CanonicalGroup[]>([]);
   const [groupsLoading, setGroupsLoading] = useState(false);
 
@@ -155,314 +132,900 @@ export default function DashboardClient({
     x86_64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=x86_64",
   };
 
-  // Fetch devices using internal API (session-based auth)
+  // Novo: ler JWT e authUserId do localStorage ao montar o dashboard
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const stored = window.localStorage.getItem("rustdesk_jwt");
+    if (!stored || stored.trim().length === 0) {
+      router.replace("/");
+      return;
+    }
+
+    setJwt(stored);
+
+    try {
+      const parts = stored.split(".");
+      if (parts.length >= 2) {
+        const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+        const payload = JSON.parse(payloadJson) as { sub?: string };
+        if (payload.sub && typeof payload.sub === "string") {
+          setAuthUserId(payload.sub);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao decodificar JWT em /dashboard:", error);
+    }
+  }, [router]);
+
+  // Check if user is an agent / minisiteadmin / siteadmin
+  const checkUserType = useCallback(async () => {
+    if (!jwt || !authUserId) return;
+
+    // Admin canónico é sempre topo da hierarquia
+    if (authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8") {
+      setIsAgent(true);
+      setIsMinisiteadmin(true);
+      setIsSiteadmin(true);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/mesh_users?select=user_type,domain,display_name&auth_user_id=eq.${authUserId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            apikey: anonKey,
+          },
+        }
+      );
+
+      if (res.ok) {
+        const data = (await res.json()) as Array<{
+          user_type: string | null;
+          domain: string;
+          display_name: string | null;
+        }>;
+        if (data.length > 0) {
+          const record = data[0];
+
+          // reset flags antes de aplicar a hierarquia
+          setIsAgent(false);
+          setIsMinisiteadmin(false);
+          setIsSiteadmin(false);
+
+          const role = record.user_type ?? "";
+
+          if (role === "siteadmin") {
+            setIsSiteadmin(true);
+            setIsMinisiteadmin(true);
+            setIsAgent(true);
+          } else if (role === "minisiteadmin") {
+            setIsMinisiteadmin(true);
+            setIsAgent(true);
+          } else if (role === "agent") {
+            setIsAgent(true);
+          }
+
+          // Set domain and display name
+          setUserDomain(record.domain || "");
+          setUserDisplayName(record.display_name || "");
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao verificar tipo de utilizador:", error);
+      setIsAgent(false);
+      setIsMinisiteadmin(false);
+      setIsSiteadmin(false);
+    }
+  }, [jwt, authUserId]);
+
+  useEffect(() => {
+    void checkUserType();
+  }, [checkUserType]);
+
   const fetchDevices = useCallback(async (): Promise<void> => {
+    if (!jwt) {
+      return;
+    }
+
+    if (!supabaseUrl || !anonKey) {
+      setLoading(false);
+      setErrorMsg("Configuração de ligação à Supabase em falta. Contacte o administrador.");
+      setDevices([]);
+      return;
+    }
+
     setLoading(true);
     setErrorMsg(null);
-    
+
     try {
-      // Use internal API that uses session auth
-      const res = await fetch("/api/mesh/devices");
-      
+      const res = await fetch(`${supabaseUrl}/functions/v1/get-devices`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+        },
+      });
+
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || `Erro ${res.status} ao carregar dispositivos`);
+        let message = "Falha ao carregar dispositivos.";
+        try {
+          const errorBody = (await res.json()) as { message?: string; error?: string };
+          if (errorBody.message) {
+            message = errorBody.message;
+          } else if (errorBody.error) {
+            message = errorBody.error;
+          }
+        } catch {
+          // manter mensagem genérica se não conseguir ler o body
+        }
+        setErrorMsg(message);
+        setDevices([]);
+        return;
       }
-      
-      const data = await res.json();
-      const fetchedDevices: GroupableDevice[] = (data.devices || []).map((d: Record<string, unknown>) => ({
-        id: String(d.id ?? ""),
-        device_id: String(d.device_id ?? ""),
-        friendly_name: d.friendly_name as string | null ?? null,
-        group_name: d.group_name as string | null ?? null,
-        subgroup_name: d.subgroup_name as string | null ?? null,
-        notes: d.notes as string | null ?? null,
-        last_seen_at: d.last_seen_at as string | null ?? null,
-        rustdesk_password: d.rustdesk_password as string | null ?? null,
-        owner_email: d.owner_email as string | null ?? null,
-        owner: d.owner as string | null ?? null,
-        mesh_username: d.mesh_username as string | null ?? null,
-        group_id: d.group_id as string | null ?? null,
-        subgroup_id: d.subgroup_id as string | null ?? null,
-        created_at: d.created_at as string | null ?? null,
-        updated_at: d.updated_at as string | null ?? null,
-        from_provisioning_code: Boolean(d.from_provisioning_code),
-      }));
-      
-      setDevices(fetchedDevices);
-    } catch (error) {
-      console.error("Erro ao carregar dispositivos:", error);
-      setErrorMsg(error instanceof Error ? error.message : "Erro desconhecido");
+
+      let body: unknown;
+      try {
+        body = await res.json();
+      } catch {
+        setErrorMsg("Resposta inesperada do servidor ao carregar dispositivos.");
+        setDevices([]);
+        return;
+      }
+
+      let devicesList: GroupableDevice[] = [];
+
+      if (Array.isArray(body)) {
+        devicesList = body as GroupableDevice[];
+      } else if (
+        body &&
+        typeof body === "object" &&
+        Array.isArray((body as { devices?: unknown }).devices)
+      ) {
+        devicesList = (body as { devices: GroupableDevice[] }).devices;
+      }
+
+      setDevices(devicesList);
+    } catch (err: unknown) {
+      let message = "Erro inesperado ao carregar dispositivos.";
+      if (err instanceof TypeError && err.message === "Failed to fetch") {
+        message =
+          "Falha ao comunicar com o servidor de dispositivos. Verifique a configuração ou contacte o administrador.";
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      setErrorMsg(message);
+      setDevices([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [jwt, supabaseUrl, anonKey]);
 
-  // Load devices on mount
+  // Carregar devices automaticamente assim que tivermos um JWT válido
   useEffect(() => {
+    if (!jwt) return;
     void fetchDevices();
-  }, [fetchDevices]);
+  }, [jwt, fetchDevices]);
 
-  // Fetch mesh users for admin reassign (siteadmin only)
-  const fetchMeshUsers = useCallback(async (): Promise<void> => {
-    if (!isSiteadmin || meshUsersLoading || meshUsers.length > 0) return;
-    
+  // Carregar lista de utilizadores (mesh_users) para o admin canónico,
+  // via Edge Function admin-list-mesh-users
+  const loadMeshUsers = useCallback(async () => {
+    if (typeof window === "undefined") return;
+    if (!jwt) return;
+    if (authUserId !== "9ebfa3dd-392c-489d-882f-8a1762cb36e8") return;
+    if (meshUsersLoading || meshUsers.length > 0) return;
+
     setMeshUsersLoading(true);
     try {
-      const res = await fetch("/api/admin/users");
-      if (res.ok) {
-        const data = await res.json();
-        const users: MeshUserOption[] = (data.users || []).map((u: Record<string, unknown>) => ({
-          id: String(u.id ?? ""),
-          mesh_username: u.meshUsername as string | null ?? null,
-          display_name: u.displayName as string | null ?? null,
-        }));
-        setMeshUsers(users);
+      const res = await fetch(`${supabaseUrl}/functions/v1/admin-list-mesh-users`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+        },
+      });
+
+      if (!res.ok) {
+        let message = "Erro ao carregar lista de utilizadores (mesh_users).";
+        try {
+          const data = (await res.json()) as { message?: string; error?: string };
+          message = data.message || data.error || message;
+        } catch {
+          // manter mensagem genérica se não conseguirmos ler o body
+        }
+        setAdminActionError(message);
+        return;
       }
-    } catch (error) {
-      console.error("Erro ao carregar utilizadores mesh:", error);
+
+      const data = (await res.json()) as unknown;
+
+      if (Array.isArray(data)) {
+        const normalized = (data as Array<{ id: string; mesh_username?: string | null; display_name?: string | null }>).map(
+          (item) => ({
+            id: item.id,
+            mesh_username: item.mesh_username ?? null,
+            display_name: item.display_name ?? null,
+          }),
+        );
+        setMeshUsers(normalized);
+      } else {
+        setAdminActionError("Resposta inesperada ao carregar mesh_users (não é uma lista).");
+      }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Erro inesperado ao carregar lista de utilizadores.";
+      setAdminActionError(message);
     } finally {
       setMeshUsersLoading(false);
     }
-  }, [isSiteadmin, meshUsersLoading, meshUsers.length]);
+  }, [jwt, authUserId, meshUsersLoading, meshUsers.length]);
 
   useEffect(() => {
-    if (isSiteadmin) {
-      void fetchMeshUsers();
-    }
-  }, [isSiteadmin, fetchMeshUsers]);
+    void loadMeshUsers();
+  }, [loadMeshUsers]);
 
-  // Logout handler
   const handleLogout = useCallback(() => {
-    // Clear any legacy tokens
-    if (typeof window !== "undefined") {
-      try {
-        window.localStorage.removeItem("rustdesk_jwt");
-      } catch {
-        // Ignore localStorage errors
-      }
+    try {
+      if (typeof window === "undefined") return;
+      window.localStorage.removeItem("rustdesk_jwt");
+      window.location.href = "/";
+      return;
+    } catch {
+      // Se não conseguirmos limpar o localStorage, continuamos o logout mesmo assim.
     }
-    router.push("/api/auth/logout");
+    router.push("/");
   }, [router]);
 
-  // Refresh devices
-  const handleRefresh = useCallback(async () => {
-    setRefreshing(true);
+  const handleRefreshStatus = useCallback(async () => {
+    if (!jwt) return;
+
     setRefreshError(null);
+    setRefreshing(true);
+
     try {
+      const res = await fetch("/api/devices/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      let json: { message?: string; error?: string } | null = null;
+
+      try {
+        json = (await res.json()) as { message?: string; error?: string };
+      } catch {
+        json = null;
+      }
+
+      if (!res.ok) {
+        const message =
+          json?.message ??
+          (json?.error === "sync_api_not_configured"
+            ? "Sincronização on-demand com RustDesk não está configurada neste ambiente."
+            : "Falha ao sincronizar com RustDesk.");
+        setRefreshError(message);
+        return;
+      }
+
       await fetchDevices();
-    } catch (error) {
-      setRefreshError(error instanceof Error ? error.message : "Erro ao atualizar");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Erro inesperado ao sincronizar com RustDesk.";
+      setRefreshError(message);
     } finally {
       setRefreshing(false);
     }
-  }, [fetchDevices]);
+  }, [jwt]);
 
-  // Start registration session
-  const startRegistrationSession = useCallback(async () => {
-    if (!meshUserId) {
-      setQrError("Utilizador não configurado para provisioning");
+  const checkForDevice = useCallback(async () => {
+    if (!jwt || !registrationSession) return;
+
+    setCheckingDevice(true);
+    setQrError("");
+
+    try {
+      const statusRes = await fetch(
+        `${supabaseUrl}/functions/v1/check-registration-status?session_id=${registrationSession.session_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            apikey: anonKey,
+          },
+        }
+      );
+
+      if (!statusRes.ok) {
+        throw new Error("Erro ao verificar status de registro");
+      }
+
+      const statusData = await statusRes.json();
+
+      if (statusData.status === "completed") {
+        setRegistrationStatus("completed");
+        setMatchedDevice(statusData.device_id);
+
+        if (countdownIntervalRef.current) {
+          clearInterval(countdownIntervalRef.current);
+        }
+
+        setTimeout(() => {
+          fetchDevices();
+        }, 1000);
+      } else if (statusData.status === "expired") {
+        setRegistrationStatus("expired");
+        if (countdownIntervalRef.current) {
+          clearInterval(countdownIntervalRef.current);
+        }
+      } else {
+        setQrError("Dispositivo ainda não detectado. Certifique-se de ter escaneado o QR code na app RustDesk.");
+      }
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Erro ao verificar dispositivo:", errorMsg);
+      setQrError(errorMsg);
+    } finally {
+      setCheckingDevice(false);
+    }
+  }, [jwt, registrationSession]);
+
+  useEffect(() => {
+    // Mantém a referência a checkForDevice activa para futura extensão sem alterar o comportamento actual.
+    if (!checkForDevice) {
       return;
     }
+  }, [checkForDevice]);
+
+  useEffect(() => {
+    // Placeholder para futuros indicadores visuais de "a procurar dispositivo".
+    if (checkingDevice) {
+      // Sem comportamento adicional por agora.
+    }
+  }, [checkingDevice]);
+
+  const startRegistrationSession = useCallback(async () => {
+    if (!jwt) return;
 
     setShowRegistrationModal(true);
     setQrLoading(true);
     setQrError("");
-    setQrImageUrl("");
     setRegistrationStatus("awaiting");
     setMatchedDevice(null);
+    setTimeRemaining(300);
+    setCheckingDevice(false);
     setHybridDeviceIdInput("");
     setHybridSubmitError(null);
-    setHybridSubmitSuccess(null);
+    setHybridSubmitLoading(false);
 
     try {
-      const res = await fetch("/api/provision/codes", {
+      const sessionRes = await fetch(`${supabaseUrl}/functions/v1/start-registration-session`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          user_id: authUserId,
-          mesh_user_id: meshUserId,
+          geolocation: null,
         }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Falha ao iniciar sessão de registo");
+      if (!sessionRes.ok) {
+        const error = await sessionRes.json();
+        throw new Error(error.message || "Erro ao iniciar sessão");
       }
 
-      const data = await res.json();
-      setRegistrationSession({
-        session_id: data.session_id || data.code,
-        expires_at: data.expires_at || "",
-        expires_in_seconds: data.expires_in_seconds || 300,
+      const sessionData = await sessionRes.json();
+      setRegistrationSession(sessionData);
+      setTimeRemaining(sessionData.expires_in_seconds);
+
+      const qrRes = await fetch(`${supabaseUrl}/functions/v1/generate-qr-image`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+        },
       });
-      setTimeRemaining(data.expires_in_seconds || 300);
 
-      // Generate QR if available
-      if (data.qr_url) {
-        setQrImageUrl(data.qr_url);
-      } else if (data.config_url) {
-        setQrImageUrl(data.config_url);
+      if (!qrRes.ok) {
+        throw new Error("Erro ao gerar QR code");
       }
-    } catch (error) {
-      console.error("Erro ao iniciar sessão de registo:", error);
-      setQrError(error instanceof Error ? error.message : "Erro desconhecido");
-    } finally {
-      setQrLoading(false);
-    }
-  }, [meshUserId, authUserId]);
 
-  // Countdown timer
-  useEffect(() => {
-    if (showRegistrationModal && timeRemaining > 0 && registrationStatus === "awaiting") {
+      const blob = await qrRes.blob();
+      const url = URL.createObjectURL(blob);
+      setQrImageUrl(url);
+
       countdownIntervalRef.current = setInterval(() => {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
+            if (countdownIntervalRef.current) {
+              clearInterval(countdownIntervalRef.current);
+            }
             setRegistrationStatus("expired");
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Erro ao iniciar registro:", errorMsg);
+      setQrError(errorMsg);
+    } finally {
+      setQrLoading(false);
     }
-    return () => {
-      if (countdownIntervalRef.current) {
-        clearInterval(countdownIntervalRef.current);
-      }
-    };
-  }, [showRegistrationModal, timeRemaining, registrationStatus]);
+  }, [jwt]);
 
-  // Close registration modal
+  const handleRestartRegistration = useCallback(() => {
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
+
+    if (qrImageUrl) {
+      URL.revokeObjectURL(qrImageUrl);
+    }
+
+    setRegistrationSession(null);
+    setQrImageUrl("");
+    setQrError("");
+    setRegistrationStatus("awaiting");
+    setMatchedDevice(null);
+    setTimeRemaining(0);
+    setCheckingDevice(false);
+    setHybridDeviceIdInput("");
+    setHybridSubmitError(null);
+    setHybridSubmitSuccess(null);
+    setHybridSubmitLoading(false);
+
+    void startRegistrationSession();
+  }, [qrImageUrl, startRegistrationSession]);
+
   const closeRegistrationModal = useCallback(() => {
     setShowRegistrationModal(false);
     setRegistrationSession(null);
     setQrImageUrl("");
+    setQrError("");
+    setRegistrationStatus("awaiting");
+    setMatchedDevice(null);
     setTimeRemaining(0);
+    setCheckingDevice(false);
+    setHybridDeviceIdInput("");
+    setHybridSubmitError(null);
+    setHybridSubmitSuccess(null);
+    setHybridSubmitLoading(false);
+
     if (countdownIntervalRef.current) {
       clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
     }
-    if (registrationStatus === "completed") {
-      void fetchDevices();
-    }
-  }, [registrationStatus, fetchDevices]);
 
-  // Hybrid submit (manual RustDesk ID entry)
+    if (qrImageUrl) {
+      URL.revokeObjectURL(qrImageUrl);
+    }
+  }, [countdownIntervalRef, qrImageUrl]);
+
   const handleHybridSubmit = useCallback(async () => {
-    if (!hybridDeviceIdInput.trim() || !registrationSession) return;
+    if (!jwt) {
+      setHybridSubmitError("Sessão inválida. Por favor, faça login novamente.");
+      setHybridSubmitSuccess(null);
+      return;
+    }
 
-    setHybridSubmitLoading(true);
     setHybridSubmitError(null);
     setHybridSubmitSuccess(null);
 
+    const raw = hybridDeviceIdInput;
+    const sanitized = raw.replace(/\s+/g, "");
+
+    if (!sanitized) {
+      setHybridSubmitError("Por favor, introduza o ID RustDesk.");
+      return;
+    }
+
+    if (!/^\d+$/.test(sanitized)) {
+      setHybridSubmitError("O ID RustDesk deve conter apenas dígitos.");
+      return;
+    }
+
     try {
-      const res = await fetch("/api/provision/claim", {
+      setHybridSubmitLoading(true);
+
+      const response = await fetch(`${supabaseUrl}/functions/v1/register-device`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          session_id: registrationSession.session_id,
-          rustdesk_id: hybridDeviceIdInput.trim(),
+          device_id: sanitized,
+          last_seen: new Date().toISOString(),
+          observations: "QR-hybrid adoption",
         }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Falha ao registar dispositivo");
+      if (!response.ok) {
+        let message = "Não foi possível associar o dispositivo. Tente novamente.";
+        try {
+          const errorBody = (await response.json()) as { message?: string; error?: string };
+          if (errorBody.message) {
+            message = errorBody.message;
+          } else if (errorBody.error) {
+            message = errorBody.error;
+          }
+        } catch {
+          // manter mensagem genérica se não conseguir ler o body
+        }
+        setHybridSubmitError(message);
+        setHybridSubmitSuccess(null);
+        return;
       }
 
-      const data = await res.json();
-      setHybridSubmitSuccess(`Dispositivo ${data.device_id || hybridDeviceIdInput} registado com sucesso!`);
-      setMatchedDevice({ device_id: data.device_id || hybridDeviceIdInput });
-      setRegistrationStatus("completed");
+      await fetchDevices();
+      setHybridSubmitError(null);
+      setHybridSubmitSuccess("Dispositivo associado com sucesso. A lista foi atualizada.");
     } catch (error) {
       logError("dashboard", "Hybrid RustDesk ID submission failed", { error });
-      console.error("Erro no registo híbrido:", error);
-      setHybridSubmitError(error instanceof Error ? error.message : "Erro ao registar");
+      setHybridSubmitError("Ocorreu um erro ao comunicar com o servidor. Tente novamente.");
+      setHybridSubmitSuccess(null);
     } finally {
       setHybridSubmitLoading(false);
     }
-  }, [hybridDeviceIdInput, registrationSession]);
+  }, [jwt, hybridDeviceIdInput, fetchDevices]);
 
-  // Fetch canonical groups for adopt modal
   const fetchCanonicalGroups = useCallback(async () => {
+    if (!jwt) return;
+
     setGroupsLoading(true);
     try {
-      const res = await fetch("/api/groups");
+      const res = await fetch(`${supabaseUrl}/functions/v1/admin-list-groups`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+        },
+      });
+
       if (!res.ok) {
         console.error("Failed to fetch canonical groups:", res.status);
         return;
       }
+
       const data = (await res.json()) as { groups?: CanonicalGroup[] };
       setCanonicalGroups(Array.isArray(data.groups) ? data.groups : []);
     } catch (err) {
-      logError("dashboard", "Error fetching canonical groups", { error: err });
       console.error("Error fetching canonical groups:", err);
     } finally {
       setGroupsLoading(false);
     }
+  }, [jwt]);
+
+  useEffect(() => {
+    if (jwt) {
+      void fetchCanonicalGroups();
+    }
+  }, [jwt, fetchCanonicalGroups]);
+
+  const openAdoptModal = useCallback((device: GroupableDevice) => {
+    setAdoptingDevice(device);
+    
+    // Try to match legacy group/subgroup to canonical groups
+    let matchedGroupId = "";
+    let matchedSubgroupId: string | undefined;
+
+    if (device.group_id) {
+      matchedGroupId = device.group_id;
+      if (device.subgroup_id) {
+        matchedSubgroupId = device.subgroup_id;
+      }
+    } else if (device.group_name) {
+      // Legacy: try to find canonical group by normalized name
+      const normalized = device.group_name.trim().toLowerCase().replace(/\s+/g, ' ');
+      const matchedGroup = canonicalGroups.find(g => 
+        g.name.trim().toLowerCase().replace(/\s+/g, ' ') === normalized && !g.parent_group_id
+      );
+      if (matchedGroup) {
+        matchedGroupId = matchedGroup.id;
+        
+        // Try to match subgroup
+        if (device.subgroup_name) {
+          const subNormalized = device.subgroup_name.trim().toLowerCase().replace(/\s+/g, ' ');
+          const matchedSubgroup = canonicalGroups.find(g =>
+            g.name.trim().toLowerCase().replace(/\s+/g, ' ') === subNormalized && 
+            g.parent_group_id === matchedGroup.id
+          );
+          if (matchedSubgroup) {
+            matchedSubgroupId = matchedSubgroup.id;
+          }
+        }
+      }
+    }
+
+    const notesRaw = device.notes ?? "";
+    const parts = notesRaw
+      .split("|")
+      .map((p: string) => p.trim())
+      .filter((p: string) => p.length > 0);
+
+    const groupLabel =
+      device.group_name || parts[0] || "";
+    const subgroupLabel =
+      device.subgroup_name || parts[1] || "";
+    const observations =
+      parts.length > 2
+        ? parts.slice(2).join(" | ")
+        : "";
+
+    setAdoptFormData({
+      friendly_name: device.friendly_name || "",
+      group_id: matchedGroupId,
+      subgroup_id: matchedSubgroupId,
+      rustdesk_password: device.rustdesk_password || "",
+      observations,
+    });
+    setAdoptError(null);
+    setShowAdoptModal(true);
+  }, [canonicalGroups]);
+
+  const closeAdoptModal = useCallback(() => {
+    setShowAdoptModal(false);
+    setAdoptingDevice(null);
+    setAdoptFormData({
+      friendly_name: "",
+      group_id: "",
+      subgroup_id: undefined,
+      rustdesk_password: "",
+      observations: "",
+    });
+    setAdoptError(null);
   }, []);
 
-  // Load canonical groups on mount
-  useEffect(() => {
-    void fetchCanonicalGroups();
-  }, [fetchCanonicalGroups]);
+  const handleAdoptSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  // Check registration status periodically while awaiting
-  useEffect(() => {
-    if (!showRegistrationModal || !registrationSession || registrationStatus !== "awaiting" || checkingDevice) {
+    if (!jwt || !adoptingDevice) return;
+
+    if (!adoptFormData.group_id.trim()) {
+      setAdoptError("Grupo é obrigatório");
       return;
     }
 
-    const checkInterval = setInterval(async () => {
-      setCheckingDevice(true);
-      try {
-        const res = await fetch(`/api/provision/status?session_id=${registrationSession.session_id}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.status === "completed" && data.device_id) {
-            setMatchedDevice({ device_id: data.device_id, friendly_name: data.friendly_name });
-            setRegistrationStatus("completed");
-            setCheckingDevice(false);
-          }
+    setAdoptLoading(true);
+    setAdoptError(null);
+
+    try {
+      const observations = adoptFormData.observations.trim();
+      const rustdeskPasswordTrimmed = adoptFormData.rustdesk_password.trim();
+
+      const payload: Record<string, unknown> = {
+        device_id: adoptingDevice.device_id,
+        friendly_name: adoptFormData.friendly_name.trim() || null,
+        group_id: adoptFormData.group_id,
+        subgroup_id: adoptFormData.subgroup_id?.trim() || null,
+        observations: observations.length > 0 ? observations : null,
+        rustdesk_password: rustdeskPasswordTrimmed.length > 0 ? rustdeskPasswordTrimmed : null,
+      };
+
+      const res = await fetch(`${supabaseUrl}/functions/v1/register-device`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        let errorMessage = "Erro ao guardar dispositivo";
+        try {
+          const error = await res.json();
+          errorMessage = error.message || error.error || errorMessage;
+        } catch {
+          // Ignore parsing errors
         }
-      } catch (err) {
-        console.error("Error checking registration status:", err);
-      } finally {
-        setCheckingDevice(false);
+        throw new Error(errorMessage);
       }
-    }, 5000);
 
-    return () => clearInterval(checkInterval);
-  }, [showRegistrationModal, registrationSession, registrationStatus, checkingDevice]);
+      await fetchDevices();
+      closeAdoptModal();
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Erro ao guardar device:", errorMsg);
+      setAdoptError(errorMsg);
+    } finally {
+      setAdoptLoading(false);
+    }
+  }, [jwt, adoptingDevice, adoptFormData, fetchDevices, closeAdoptModal]);
 
-  // Filter and sort devices
-  const filteredDevices = useMemo(() => {
-    let result = [...devices];
+  const openAdminReassignModal = useCallback(
+    (device: GroupableDevice) => {
+      setAdminDeviceToManage(device);
+      setAdminReassignForm({
+        mesh_username: "",
+      });
+      setAdminActionError(null);
+      if (!meshUsersLoading && meshUsers.length === 0) {
+        void loadMeshUsers();
+      }
+      setShowAdminReassignModal(true);
+    },
+    [meshUsersLoading, meshUsers.length, loadMeshUsers],
+  );
 
-    // Apply status filter
-    if (filterStatus === "adopted") {
-      result = result.filter((d) => d.owner);
-    } else if (filterStatus === "unadopted") {
-      result = result.filter((d) => !d.owner);
+  const closeAdminReassignModal = useCallback(() => {
+    setShowAdminReassignModal(false);
+    setAdminDeviceToManage(null);
+    setAdminReassignForm({ mesh_username: "" });
+    setAdminActionError(null);
+  }, []);
+
+  const handleAdminReassignSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!jwt || !adminDeviceToManage) return;
+
+    if (!adminReassignForm.mesh_username.trim()) {
+      setAdminActionError("mesh_username de destino é obrigatório");
+      return;
     }
 
-    // Apply search filter
+    setAdminActionLoading(true);
+    setAdminActionError(null);
+
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/admin-update-device`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          device_id: adminDeviceToManage.device_id,
+          target_mesh_username: adminReassignForm.mesh_username.trim(),
+        }),
+      });
+
+      if (!res.ok) {
+        let errorMessage = "Erro ao reatribuir dispositivo";
+        try {
+          const error = await res.json();
+          errorMessage = error.message || error.error || errorMessage;
+        } catch {
+          // Ignorar erros ao parsear resposta de erro; mantemos a mensagem padrão.
+        }
+        throw new Error(errorMessage);
+      }
+
+      await fetchDevices();
+      closeAdminReassignModal();
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Erro ao reatribuir device (admin):", errorMsg);
+      setAdminActionError(errorMsg);
+    } finally {
+      setAdminActionLoading(false);
+    }
+  }, [jwt, adminDeviceToManage, adminReassignForm, fetchDevices, closeAdminReassignModal]);
+
+  const handleAdminDeleteDevice = useCallback(async (device: GroupableDevice) => {
+    if (!jwt) return;
+    const confirmed = window.confirm(
+      `Tem a certeza que pretende apagar o dispositivo ${device.device_id}?`,
+    );
+    if (!confirmed) return;
+
+    setAdminActionLoading(true);
+    setAdminActionError(null);
+
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/admin-delete-device`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ device_id: device.device_id }),
+      });
+
+      if (!res.ok) {
+        let errorMessage = "Erro ao apagar dispositivo";
+        try {
+          const error = await res.json();
+          errorMessage = error.message || error.error || errorMessage;
+        } catch {
+          // Ignorar erros ao parsear resposta de erro; mantemos a mensagem padrão.
+        }
+        throw new Error(errorMessage);
+      }
+
+      await fetchDevices();
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Erro ao apagar device (admin):", errorMsg);
+      setAdminActionError(errorMsg);
+    } finally {
+      setAdminActionLoading(false);
+    }
+  }, [jwt, fetchDevices]);
+
+  const handleDeleteDevice = useCallback(async (device: GroupableDevice) => {
+    if (!jwt) return;
+    const confirmed = window.confirm(
+      `Tem a certeza que pretende apagar o dispositivo ${device.device_id}?`,
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/remove-device`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ device_id: device.device_id }),
+      });
+
+      if (!res.ok) {
+        let errorMessage = "Erro ao apagar dispositivo";
+        try {
+          const error = await res.json();
+          errorMessage = error.message || error.error || errorMessage;
+        } catch {
+          // Ignorar erros ao parsear resposta de erro; mantemos a mensagem padrão.
+        }
+        throw new Error(errorMessage);
+      }
+
+      await fetchDevices();
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      console.error("Erro ao apagar device:", errorMsg);
+      setErrorMsg(errorMsg);
+    }
+  }, [jwt, fetchDevices]);
+
+  const isDeviceAdopted = useCallback((device: GroupableDevice): boolean => {
+    return device.owner !== null &&
+      device.notes !== null &&
+      device.notes.trim().length > 0;
+  }, []);
+
+  const getFilteredAndSortedDevices = useCallback(() => {
+    let filtered = [...devices];
+
+    if (filterStatus === "adopted") {
+      filtered = filtered.filter(d => isDeviceAdopted(d));
+    } else if (filterStatus === "unadopted") {
+      filtered = filtered.filter(d => !isDeviceAdopted(d));
+    }
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (d) =>
-          d.device_id.toLowerCase().includes(query) ||
-          (d.friendly_name?.toLowerCase().includes(query) ?? false) ||
-          (d.notes?.toLowerCase().includes(query) ?? false)
+      filtered = filtered.filter(d =>
+        d.device_id.toLowerCase().includes(query) ||
+        (d.notes?.toLowerCase().includes(query)) ||
+        (d.friendly_name?.toLowerCase().includes(query))
       );
     }
 
-    // Apply sorting
-    result.sort((a, b) => {
+    filtered.sort((a, b) => {
       switch (sortBy) {
         case "date_desc":
-          return new Date(b.last_seen_at || b.created_at || 0).getTime() - new Date(a.last_seen_at || a.created_at || 0).getTime();
+          return new Date(b.last_seen_at || b.created_at || 0).getTime() -
+            new Date(a.last_seen_at || a.created_at || 0).getTime();
         case "date_asc":
-          return new Date(a.last_seen_at || a.created_at || 0).getTime() - new Date(b.last_seen_at || b.created_at || 0).getTime();
+          return new Date(a.last_seen_at || a.created_at || 0).getTime() -
+            new Date(b.last_seen_at || b.created_at || 0).getTime();
         case "name_asc":
           return (a.friendly_name || a.device_id).localeCompare(b.friendly_name || b.device_id);
         case "name_desc":
@@ -476,20 +1039,20 @@ export default function DashboardClient({
       }
     });
 
-    return result;
-  }, [devices, filterStatus, searchQuery, sortBy]);
+    return filtered;
+  }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
-  // Separate adopted and unadopted devices
-  const adoptedDevices = useMemo(() => filteredDevices.filter((d) => d.owner), [filteredDevices]);
-  const unadoptedDevices = useMemo(() => filteredDevices.filter((d) => !d.owner), [filteredDevices]);
+  const filteredDevices = getFilteredAndSortedDevices();
+  const isAdmin = authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
+  const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
+  const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
+  const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
 
-  const isDeviceAdopted = (device: GroupableDevice) => Boolean(device.owner);
-
-  // Pagination for adopted devices
   const totalAdopted = adoptedDevices.length;
   const adoptedTotalPages = Math.max(1, Math.ceil(totalAdopted / adoptedPageSize));
 
   useEffect(() => {
+    // sempre que a lista mudar ou o tamanho de página for alterado, garantir que a página actual é válida
     setCurrentAdoptedPage(1);
   }, [totalAdopted, adoptedPageSize]);
 
@@ -507,143 +1070,12 @@ export default function DashboardClient({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const selectedGroup = adoptFormData.group_id
-    ? canonicalGroups.find((g) => g.id === adoptFormData.group_id)
+  const selectedGroup = adoptFormData.group_id 
+    ? canonicalGroups.find(g => g.id === adoptFormData.group_id)
     : null;
-  const availableSubgroups = selectedGroup
-    ? canonicalGroups.filter((g) => g.parent_group_id === selectedGroup.id)
+  const availableSubgroups = selectedGroup 
+    ? canonicalGroups.filter(g => g.parent_group_id === selectedGroup.id)
     : [];
-
-  // Open adopt modal
-  const openAdoptModal = useCallback((device: GroupableDevice) => {
-    setAdoptingDevice(device);
-    setAdoptFormData({
-      friendly_name: device.friendly_name || "",
-      group_id: device.group_id || "",
-      subgroup_id: device.subgroup_id || undefined,
-      rustdesk_password: device.rustdesk_password || "",
-      observations: device.notes || "",
-    });
-    setAdoptError(null);
-    setShowAdoptModal(true);
-  }, []);
-
-  // Close adopt modal
-  const closeAdoptModal = useCallback(() => {
-    setShowAdoptModal(false);
-    setAdoptingDevice(null);
-    setAdoptFormData({
-      friendly_name: "",
-      group_id: "",
-      rustdesk_password: "",
-      observations: "",
-    });
-    setAdoptError(null);
-  }, []);
-
-  // Handle adopt form change
-  const handleAdoptFormChange = useCallback((field: keyof AdoptFormData, value: string) => {
-    setAdoptFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
-
-  // Submit adopt
-  const handleAdoptSubmit = useCallback(async () => {
-    if (!adoptingDevice) return;
-
-    setAdoptLoading(true);
-    setAdoptError(null);
-
-    try {
-      const res = await fetch(`/api/provision/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          device_id: adoptingDevice.device_id,
-          friendly_name: adoptFormData.friendly_name || null,
-          group_id: adoptFormData.group_id || null,
-          subgroup_id: adoptFormData.subgroup_id || null,
-          rustdesk_password: adoptFormData.rustdesk_password || null,
-          notes: adoptFormData.observations || null,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Falha ao adoptar dispositivo");
-      }
-
-      closeAdoptModal();
-      await fetchDevices();
-    } catch (error) {
-      console.error("Erro ao adoptar:", error);
-      setAdoptError(error instanceof Error ? error.message : "Erro desconhecido");
-    } finally {
-      setAdoptLoading(false);
-    }
-  }, [adoptingDevice, adoptFormData, closeAdoptModal, fetchDevices]);
-
-  // Admin reassign modal
-  const openAdminReassignModal = useCallback((device: GroupableDevice) => {
-    setAdminDeviceToManage(device);
-    setAdminReassignForm({ mesh_username: device.mesh_username || "" });
-    setAdminActionError(null);
-    setShowAdminReassignModal(true);
-  }, []);
-
-  const closeAdminReassignModal = useCallback(() => {
-    setShowAdminReassignModal(false);
-    setAdminDeviceToManage(null);
-    setAdminReassignForm({ mesh_username: "" });
-    setAdminActionError(null);
-  }, []);
-
-  // Handle admin reassign submit
-  const handleAdminReassignSubmit = useCallback(async () => {
-    if (!adminDeviceToManage || !adminReassignForm.mesh_username) return;
-
-    setAdminActionLoading(true);
-    setAdminActionError(null);
-
-    try {
-      const res = await fetch(`/api/admin/devices/${adminDeviceToManage.device_id}/reassign`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          new_owner_username: adminReassignForm.mesh_username,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Falha ao reatribuir dispositivo");
-      }
-
-      closeAdminReassignModal();
-      await fetchDevices();
-    } catch (error) {
-      logError("dashboard", "Admin reassign failed", { error });
-      console.error("Erro ao reatribuir:", error);
-      setAdminActionError(error instanceof Error ? error.message : "Erro desconhecido");
-    } finally {
-      setAdminActionLoading(false);
-    }
-  }, [adminDeviceToManage, adminReassignForm, closeAdminReassignModal, fetchDevices]);
-
-  // Handle clipboard paste
-  const handlePasteFromClipboard = useCallback(async () => {
-    try {
-      if (!navigator.clipboard || !navigator.clipboard.readText) {
-        return;
-      }
-      const text = await navigator.clipboard.readText();
-      const cleanedText = text.replace(/\s+/g, "").replace(/\D/g, "");
-      if (cleanedText) {
-        setHybridDeviceIdInput(cleanedText);
-      }
-    } catch (err) {
-      console.warn("Failed to read clipboard:", err);
-    }
-  }, []);
 
   return (
     <main className="min-h-screen flex flex-col bg-slate-950">
@@ -655,9 +1087,9 @@ export default function DashboardClient({
               <p className="text-sm text-slate-400">
                 © jorge peixinho - Business with Brains
               </p>
-              {userEmail && (
-                <p className="text-xs text-slate-500" title={userEmail}>
-                  {userDisplayName || userEmail}
+              {userDisplayName && (
+                <p className="text-xs text-slate-500">
+                  {userDisplayName}
                 </p>
               )}
             </div>
@@ -665,7 +1097,7 @@ export default function DashboardClient({
           <div className="flex items-center gap-3">
             {isAdmin && (
               <Link
-                href="/admin/users"
+                href="/dashboard/users"
                 className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
               >
                 Gestão de Utilizadores
@@ -692,13 +1124,12 @@ export default function DashboardClient({
           </div>
         )}
 
-        {/* Agent Panel - shown for agent, minisiteadmin, siteadmin */}
         {isAgent && (
           <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-emerald-400">
-                  🎯 Painel de Gestão (Agent){userDomain && ` | ${userDomain}`}
+                  🎯 Painel de Gestão (Agent){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
                   Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos
@@ -746,133 +1177,136 @@ export default function DashboardClient({
           </section>
         )}
 
-        {/* Add Device Panel - shown for everyone */}
-        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-semibold text-sky-400">📱 Adicionar Dispositivo</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
-              type="button"
-              onClick={startRegistrationSession}
-              className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
-                  📷
-                </div>
-                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+        {!isAdmin && (
+          <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-sky-400">📱 Adicionar Dispositivo</h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
+                </p>
               </div>
-              <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
-              <p className="text-xs text-slate-400">
-                Gera um QR code para dispositivos móveis com câmara (smartphones, tablets Android)
-              </p>
-              <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
-                <span>Abrir modal QR</span>
-                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </button>
-
-            <Link
-              href="/provisioning"
-              className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 block"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
-                  🔢
-                </div>
-                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-              <h3 className="font-medium text-white mb-1">Provisionamento sem QR</h3>
-              <p className="text-xs text-slate-400">
-                Gera código de 4 dígitos para Android TV, boxes e dispositivos sem câmara
-              </p>
-              <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
-                <span>Ir para Provisioning</span>
-                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </Link>
-          </div>
-
-          {/* APK Download Section */}
-          <div className="mt-4 space-y-4">
-            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-              <button
-                type="button"
-                onClick={() => setSelectedRustdeskAbi("arm64")}
-                className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
-                  selectedRustdeskAbi === "arm64"
-                    ? "bg-emerald-600 border-emerald-500 text-white"
-                    : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                }`}
-              >
-                arm64‑v8a (recomendado)
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedRustdeskAbi("armeabi")}
-                className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
-                  selectedRustdeskAbi === "armeabi"
-                    ? "bg-emerald-600 border-emerald-500 text-white"
-                    : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                }`}
-              >
-                armeabi‑v7a (32‑bit)
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedRustdeskAbi("x86_64")}
-                className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
-                  selectedRustdeskAbi === "x86_64"
-                    ? "bg-emerald-600 border-emerald-500 text-white"
-                    : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                }`}
-              >
-                x86_64 (Android TV)
-              </button>
             </div>
 
-            {selectedRustdeskAbi && (
-              <div className="flex flex-col items-center space-y-2">
-                <div className="bg-white p-3 rounded-md shadow-sm">
-                  <QRCode
-                    value={RUSTDESK_APK_URLS[selectedRustdeskAbi]}
-                    size={128}
-                    bgColor="#ffffff"
-                    fgColor="#020617"
-                  />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={startRegistrationSession}
+                className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
+                    📷
+                  </div>
+                  <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
-                <p className="text-xs font-semibold text-slate-100">
-                  {selectedRustdeskAbi === "arm64" && "arm64‑v8a (a maioria dos dispositivos Android recentes)"}
-                  {selectedRustdeskAbi === "armeabi" && "armeabi‑v7a (dispositivos mais antigos, 32‑bit)"}
-                  {selectedRustdeskAbi === "x86_64" && "x86_64 (Android TV / boxes e ambientes x86_64)"}
+                <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
+                <p className="text-xs text-slate-400">
+                  Gera um QR code para dispositivos móveis com câmara (smartphones, tablets Android)
                 </p>
-                <p className="text-[11px] text-center text-slate-400">
-                  Aponta a câmara do dispositivo Android para este QR code para descarregar o APK correspondente.
-                </p>
-                <p className="text-[10px] text-center text-slate-500 break-all">
-                  {RUSTDESK_APK_URLS[selectedRustdeskAbi]}
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
+                <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
+                  <span>Abrir modal QR</span>
+                  <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </button>
 
-        {/* Search and Filter Bar */}
+              <Link
+                href="/provisioning"
+                className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 block"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
+                    🔢
+                  </div>
+                  <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-white mb-1">Provisionamento sem QR</h3>
+                <p className="text-xs text-slate-400">
+                  Gera código de 4 dígitos para Android TV, boxes e dispositivos sem câmara
+                </p>
+                <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
+                  <span>Ir para Provisioning</span>
+                  <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </Link>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                <button
+                  type="button"
+                  onClick={() => setSelectedRustdeskAbi("arm64")}
+                  className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
+                    selectedRustdeskAbi === "arm64"
+                      ? "bg-emerald-600 border-emerald-500 text-white"
+                      : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                  }`}
+                >
+                  arm64‑v8a (recomendado)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRustdeskAbi("armeabi")}
+                  className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
+                    selectedRustdeskAbi === "armeabi"
+                      ? "bg-emerald-600 border-emerald-500 text-white"
+                      : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                  }`}
+                >
+                  armeabi‑v7a (dispositivos mais antigos, 32‑bit)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRustdeskAbi("x86_64")}
+                  className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
+                    selectedRustdeskAbi === "x86_64"
+                      ? "bg-emerald-600 border-emerald-500 text-white"
+                      : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                  }`}
+                >
+                  x86_64 (Android TV / x86)
+                </button>
+              </div>
+
+              {selectedRustdeskAbi ? (
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="bg-white p-3 rounded-md shadow-sm">
+                    <QRCode
+                      value={RUSTDESK_APK_URLS[selectedRustdeskAbi]}
+                      size={128}
+                      bgColor="#ffffff"
+                      fgColor="#020617"
+                    />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-100">
+                    {selectedRustdeskAbi === "arm64" && "arm64‑v8a (a maioria dos dispositivos Android recentes)"}
+                    {selectedRustdeskAbi === "armeabi" && "armeabi‑v7a (dispositivos mais antigos, 32‑bit)"}
+                    {selectedRustdeskAbi === "x86_64" && "x86_64 (Android TV / boxes e ambientes x86_64)"}
+                  </p>
+                  <p className="text-[11px] text-center text-slate-400">
+                    Aponta a câmara do dispositivo Android para este QR code para descarregar o APK correspondente.
+                  </p>
+                  <p className="text-[10px] text-center text-slate-500 break-all">
+                    {RUSTDESK_APK_URLS[selectedRustdeskAbi]}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xs text-slate-400 text-center">
+                  Escolhe primeiro o tipo de processador para ver o QR‑code correspondente.
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
         <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 mb-6 backdrop-blur-sm">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -931,390 +1365,751 @@ export default function DashboardClient({
                       : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
-                  Adoptados ({adoptedDevices.length})
+                  Adoptados ({devices.filter(d => isDeviceAdopted(d)).length})
                 </button>
-                <button
-                  onClick={() => setFilterStatus("unadopted")}
-                  className={`px-3 py-1.5 text-xs rounded-md transition ${
-                    filterStatus === "unadopted"
-                      ? "bg-amber-600 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  Por adoptar ({unadoptedDevices.length})
-                </button>
+                {!isAdmin && (
+                  <button
+                    onClick={() => setFilterStatus("unadopted")}
+                    className={`px-3 py-1.5 text-xs rounded-md transition ${
+                      filterStatus === "unadopted"
+                        ? "bg-amber-600 text-white"
+                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    }`}
+                  >
+                    Por adoptar ({devices.filter(d => !isDeviceAdopted(d)).length})
+                  </button>
+                )}
               </div>
             </div>
           )}
         </section>
 
-        {/* Adopted Devices List */}
-        <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium text-white">✅ Dispositivos Adoptados</h2>
-            <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
-              <div className="flex items-center gap-2 text-xs text-slate-300">
-                <span className="hidden sm:inline">Por página:</span>
-                <select
-                  value={adoptedPageSize}
-                  onChange={(e) => {
-                    const value = Number.parseInt(e.target.value, 10);
-                    setAdoptedPageSize(Number.isNaN(value) ? ADOPTED_PAGE_SIZE : value);
-                    setCurrentAdoptedPage(1);
-                  }}
-                  className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 text-slate-100 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                >
-                  <option value={5}>5</option>
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                </select>
+        {!isAdmin && unadoptedDevices.length > 0 && (
+          <section className="bg-amber-950/30 border border-amber-800/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-medium text-amber-400">
+                  ⚠️ Dispositivos por adoptar
+                </h2>
+                <p className="text-sm text-amber-300/70 mt-1">
+                  Estes dispositivos conectaram mas ainda precisam de informações
+                  adicionais (grupo, nome, etc.)
+                </p>
               </div>
-              <div className="flex items-center gap-3">
-                {adoptedTotalPages > 1 && (
-                  <div className="flex items-center gap-2 text-xs text-slate-300">
-                    <button
-                      type="button"
-                      onClick={() => setCurrentAdoptedPage((prev) => Math.max(1, prev - 1))}
-                      disabled={currentAdoptedPage === 1}
-                      className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
-                    >
-                      Anterior
-                    </button>
-                    <span>
-                      Página {currentAdoptedPage} de {adoptedTotalPages}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setCurrentAdoptedPage((prev) => Math.min(adoptedTotalPages, prev + 1))}
-                      disabled={currentAdoptedPage === adoptedTotalPages}
-                      className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
-                    >
-                      Próxima
-                    </button>
-                  </div>
-                )}
-                <button
-                  type="button"
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="px-3 py-1.5 text-xs rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-60 text-slate-100 flex items-center gap-1"
-                >
-                  {refreshing ? (
-                    <>
-                      <span className="h-3 w-3 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
-                      <span>A sincronizar…</span>
-                    </>
-                  ) : (
-                    <>🔄 Atualizar estado</>
-                  )}
-                </button>
-                {loading && <span className="text-xs text-slate-400">A carregar…</span>}
-              </div>
+              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-amber-600 text-white">
+                {unadoptedDevices.length}
+              </span>
             </div>
-          </div>
 
-          {errorMsg && <p className="text-sm text-amber-400 mb-3">{errorMsg}</p>}
+            <div className="grid gap-3 md:grid-cols-2">
+              {unadoptedDevices.map((device: GroupableDevice) => {
+                const fromProvisioningCode = !!device.from_provisioning_code;
+                const tagLabel = fromProvisioningCode ? "PM" : "QR";
+                const tagClassName = fromProvisioningCode
+                  ? "bg-white text-black border border-slate-300"
+                  : "bg-sky-600/80 text-white border border-sky-500";
+                const notesParts = (device.notes ?? "")
+                  .split("|")
+                  .map((p: string) => p.trim())
+                  .filter((p: string) => p.length > 0);
 
-          {adoptedDevices.length === 0 && !loading && !errorMsg && (
-            <div className="text-center py-12">
-              <p className="text-slate-400">Sem dispositivos adoptados.</p>
-              <p className="text-xs text-slate-500 mt-1">
-                Adopta um dispositivo da lista "Por adoptar" ou regista um novo.
-              </p>
-            </div>
-          )}
-
-          {/* Grouped devices */}
-          {grouped.groups.length > 0 && (
-            <div className="space-y-4 mt-2">
-              {grouped.groups.map((groupBucket) => {
-                const groupName = groupBucket.name ?? "";
-                const groupKey = groupName || "__semgrupo__";
-                const isGroupExpanded = expandedGroups[groupKey] ?? true;
+                const groupLabel =
+                  device.group_name || notesParts[0] || "";
+                const subgroupLabel =
+                  device.subgroup_name || notesParts[1] || "";
+                const observations =
+                  notesParts.length > 2
+                    ? notesParts.slice(2).join(" | ")
+                    : "";
 
                 return (
-                  <div key={groupKey} className="border border-slate-700 rounded-xl overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedGroups((prev) => ({ ...prev, [groupKey]: !isGroupExpanded }))}
-                      className="w-full flex items-center justify-between px-4 py-2 bg-slate-800/70 hover:bg-slate-800 text-left"
-                    >
-                      <span className="font-medium text-sm text-white">{groupName || "Sem grupo"}</span>
-                      <span className="text-xs text-slate-400">{isGroupExpanded ? "▼" : "▶"}</span>
-                    </button>
-
-                    {isGroupExpanded && (
-                      <div className="px-4 py-3 space-y-3">
-                        {groupBucket.subgroups.map((subBucket) => {
-                          const subgroupName = subBucket.name ?? "";
-                          const groupLabel = groupBucket.name ?? "Sem grupo";
-                          const subgroupLabel = subgroupName || "Sem subgrupo";
-                          const subKey = `${groupKey}::${subgroupName || "__nosub__"}`;
-                          const isSubExpanded = expandedSubgroups[subKey] ?? false;
-
-                          return (
-                            <div key={subKey} className="flex flex-col gap-1">
-                              <div className="text-xs text-slate-500">
-                                {groupLabel} / {subgroupLabel}
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => setExpandedSubgroups((prev) => ({ ...prev, [subKey]: !isSubExpanded }))}
-                                className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-left"
-                              >
-                                <span className="text-xs text-slate-300">
-                                  {subgroupName || "Sem subgrupo"}
-                                  <span className="ml-2 text-slate-500">({subBucket.devices.length} dispositivos)</span>
-                                </span>
-                                <span className="text-xs text-slate-500">{isSubExpanded ? "▼" : "▶"}</span>
-                              </button>
-
-                              {isSubExpanded && (
-                                <div className="mt-2 grid gap-2 md:grid-cols-2">
-                                  {subBucket.devices.map((device) => (
-                                    <div
-                                      key={device.id}
-                                      className="border border-slate-700/30 rounded-lg px-3 py-2 bg-slate-900/50"
-                                    >
-                                      <div className="flex justify-between items-start">
-                                        <div className="flex-1">
-                                          <div className="flex items-center gap-2 mb-1">
-                                            <span className="font-semibold text-slate-100 text-sm">{device.device_id}</span>
-                                            {device.friendly_name && (
-                                              <span className="text-xs text-slate-400">({device.friendly_name})</span>
-                                            )}
-                                          </div>
-                                          <p className="text-xs text-slate-500">
-                                            Visto: {new Date(device.last_seen_at || device.created_at || "").toLocaleString("pt-PT")}
-                                          </p>
-                                        </div>
-                                        <div className="flex gap-1 ml-2">
-                                          <a
-                                            href={buildRustdeskUrl(device)}
-                                            className="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-500 transition text-white"
-                                          >
-                                            🔗 Conectar
-                                          </a>
-                                          <button
-                                            onClick={() => openAdoptModal(device)}
-                                            className="px-2 py-1 text-xs rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-                                          >
-                                            ✏️
-                                          </button>
-                                          {isSiteadmin && (
-                                            <button
-                                              onClick={() => openAdminReassignModal(device)}
-                                              className="px-2 py-1 text-xs rounded-md bg-amber-600/80 hover:bg-amber-500 transition text-white"
-                                            >
-                                              👤
-                                            </button>
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
+                  <div
+                    key={device.id}
+                    className="border border-amber-700/50 rounded-lg px-4 py-3 bg-slate-950/50"
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-amber-100 text-sm">
+                            {device.device_id}
+                          </span>
+                          {device.friendly_name && (
+                            <span className="text-xs text-amber-300/70">
+                              ({device.friendly_name})
+                            </span>
+                          )}
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${tagClassName}`}
+                          >
+                            {tagLabel}
+                          </span>
+                        </div>
+                        {(groupLabel || subgroupLabel) && (
+                          <p className="text-xs text-slate-400">
+                            {groupLabel}
+                            {groupLabel && subgroupLabel ? " | " : ""}
+                            {subgroupLabel}
+                          </p>
+                        )}
+                        {observations && (
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            Obs: {observations}
+                          </p>
+                        )}
+                        <p className="text-xs text-slate-500 mt-1">
+                          Visto:{" "}
+                          {new Date(
+                            device.last_seen_at || device.created_at || "",
+                          ).toLocaleString("pt-PT")}
+                        </p>
+                        {device.owner && (
+                          <p className="text-xs text-emerald-400 mt-1">
+                            ✓ Associado ao utilizador
+                          </p>
+                        )}
                       </div>
-                    )}
+                      <button
+                        onClick={() => openAdoptModal(device)}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 transition text-white"
+                      >
+                        ✓ Adoptar
+                      </button>
+                    </div>
                   </div>
                 );
               })}
             </div>
-          )}
-        </section>
+          </section>
+        )}
 
-        {/* Unadopted Devices Section */}
-        {unadoptedDevices.length > 0 && (
-          <section className="mt-6 bg-slate-900/70 border border-amber-700/40 rounded-2xl p-6 backdrop-blur-sm">
-            <h2 className="text-lg font-medium text-amber-400 mb-4">⏳ Dispositivos por Adoptar</h2>
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-              {unadoptedDevices.map((device) => (
+        {isAdmin && adminUnassignedDevices.length > 0 && (
+          <section className="bg-purple-950/30 border border-purple-800/60 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-medium text-purple-200">
+                  🧩 Dispositivos sem Utilizador Atribuido
+                </h2>
+                <p className="text-sm text-purple-200/70 mt-1">
+                  Dispositivos que não foi possível associar com segurança a nenhum utilizador. Pode reatribuir manualmente ou apagar.
+                </p>
+              </div>
+              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-purple-600 text-white">
+                {adminUnassignedDevices.length}
+              </span>
+            </div>
+
+            {adminActionError && (
+              <div className="mb-4 p-3 bg-red-950/40 border border-red-900 rounded-md">
+                <p className="text-sm text-red-400">{adminActionError}</p>
+              </div>
+            )}
+
+            <div className="grid gap-3 md:grid-cols-2">
+              {adminUnassignedDevices.map((device: GroupableDevice) => (
                 <div
                   key={device.id}
-                  className="border border-slate-700/50 rounded-lg p-3 bg-slate-900/50 hover:border-amber-600/50 transition"
+                  className="border border-purple-800/60 rounded-lg px-4 py-3 bg-slate-950/60"
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
-                      <p className="font-mono text-sm text-slate-200">{device.device_id}</p>
-                      {device.friendly_name && (
-                        <p className="text-xs text-slate-400 mt-0.5">{device.friendly_name}</p>
-                      )}
-                      <p className="text-xs text-slate-500 mt-1">
-                        Visto: {new Date(device.last_seen_at || device.created_at || "").toLocaleString("pt-PT")}
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-purple-100 text-sm">
+                          {device.device_id}
+                        </span>
+                        {device.friendly_name && (
+                          <span className="text-xs text-purple-200/80">
+                            ({device.friendly_name})
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1">
+                        Visto:{" "}
+                        {new Date(
+                          device.last_seen_at || device.created_at ||
+                          "",
+                        ).toLocaleString("pt-PT")}
                       </p>
                     </div>
-                    <button
-                      onClick={() => openAdoptModal(device)}
-                      className="px-3 py-1.5 text-xs rounded-md bg-amber-600 hover:bg-amber-500 transition text-white ml-2"
-                    >
-                      Adoptar
-                    </button>
+                    <div className="flex flex-col gap-2 ml-2">
+                      <button
+                        type="button"
+                        onClick={() => openAdminReassignModal(device)}
+                        disabled={adminActionLoading}
+                        className="px-3 py-1.5 text-xs rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                      >
+                        Reatribuir
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleAdminDeleteDevice(device)}
+                        disabled={adminActionLoading}
+                        className="px-3 py-1.5 text-xs rounded-md bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                      >
+                        Apagar
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </section>
         )}
-      </div>
 
-      {/* Registration Modal */}
-      {showRegistrationModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+        {(!isAdmin || adoptedDevices.length > 0) && (
+          <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">📱 Registar Dispositivo</h2>
-              <button
-                onClick={closeRegistrationModal}
-                className="text-slate-400 hover:text-white transition"
-              >
-                ✕
-              </button>
-            </div>
-
-            {registrationStatus === "completed" ? (
-              <div className="text-center py-8">
-                <div className="text-4xl mb-4">✅</div>
-                <h3 className="text-lg font-medium text-emerald-400 mb-2">Dispositivo Registado!</h3>
-                <p className="text-sm text-slate-400">
-                  {matchedDevice?.device_id || "O dispositivo foi associado com sucesso."}
-                </p>
-                <button
-                  onClick={closeRegistrationModal}
-                  className="mt-6 px-6 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white transition"
-                >
-                  Fechar
-                </button>
-              </div>
-            ) : registrationStatus === "expired" ? (
-              <div className="text-center py-8">
-                <div className="text-4xl mb-4">⏰</div>
-                <h3 className="text-lg font-medium text-amber-400 mb-2">Sessão Expirada</h3>
-                <p className="text-sm text-slate-400 mb-4">
-                  O tempo para registar o dispositivo expirou.
-                </p>
-                <button
-                  onClick={startRegistrationSession}
-                  className="px-6 py-2 bg-sky-600 hover:bg-sky-500 rounded-lg text-white transition"
-                >
-                  Tentar Novamente
-                </button>
-              </div>
-            ) : (
-              <>
-                {/* QR Code Section */}
-                <div className="flex flex-col items-center">
-                  {qrLoading ? (
-                    <div className="w-48 h-48 flex items-center justify-center bg-slate-800 rounded-lg">
-                      <div className="h-8 w-8 rounded-full border-2 border-slate-600 border-t-emerald-500 animate-spin" />
-                    </div>
-                  ) : qrError && !hybridSubmitSuccess ? (
-                    <div className="w-48 h-48 flex items-center justify-center bg-red-950/30 rounded-lg border border-red-800">
-                      <p className="text-xs text-red-400 text-center px-4">{qrError}</p>
-                    </div>
-                  ) : qrImageUrl ? (
-                    <div className="bg-white p-3 rounded-lg">
-                      <Image
-                        src={qrImageUrl}
-                        alt="QR Code"
-                        width={192}
-                        height={192}
-                        className="w-48 h-48"
-                        unoptimized
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-48 h-48 flex items-center justify-center bg-slate-800 rounded-lg">
-                      <p className="text-xs text-slate-400 text-center px-4">Use o método manual abaixo</p>
+              <h2 className="text-lg font-medium text-white">✅ Dispositivos Adoptados</h2>
+              <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="hidden sm:inline">Por página:</span>
+                  <select
+                    value={adoptedPageSize}
+                    onChange={(e) => {
+                      const value = Number.parseInt(e.target.value, 10);
+                      setAdoptedPageSize(Number.isNaN(value) ? ADOPTED_PAGE_SIZE : value);
+                    }}
+                    className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 text-slate-100 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-3">
+                  {adoptedTotalPages > 1 && (
+                    <div className="flex items-center gap-2 text-xs text-slate-300">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCurrentAdoptedPage((prev: number) => Math.max(1, prev - 1))
+                        }
+                        disabled={currentAdoptedPage === 1}
+                        className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
+                      >
+                        Anterior
+                      </button>
+                      <span>
+                        Página {currentAdoptedPage} de {adoptedTotalPages}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCurrentAdoptedPage((prev: number) =>
+                            Math.min(adoptedTotalPages, prev + 1),
+                          )
+                        }
+                        disabled={currentAdoptedPage === adoptedTotalPages}
+                        className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
+                      >
+                        Próxima
+                      </button>
                     </div>
                   )}
+                  <button
+                    type="button"
+                    onClick={handleRefreshStatus}
+                    disabled={refreshing}
+                    className="px-3 py-1.5 text-xs rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-60 text-slate-100 flex items-center gap-1"
+                  >
+                    {refreshing ? (
+                      <>
+                        <span className="h-3 w-3 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
+                        <span>A sincronizar…</span>
+                      </>
+                    ) : (
+                      <>🔄 Atualizar estado</>
+                    )}
+                  </button>
+                  {loading && (
+                    <span className="text-xs text-slate-400">A carregar…</span>
+                  )}
+                </div>
+              </div>
+            </div>
 
-                  <div className="mt-4 text-center">
-                    <p className="text-sm text-slate-400">Tempo restante:</p>
-                    <p className={`text-2xl font-mono font-bold ${timeRemaining < 60 ? "text-amber-400" : "text-emerald-400"}`}>
+            {errorMsg && (
+              <p className="text-sm text-amber-400 mb-3">{errorMsg}</p>
+            )}
+
+            {adoptedDevices.length === 0 && !loading && !errorMsg && (
+              <p className="text-sm text-slate-400">
+                Sem dispositivos adoptados.
+              </p>
+            )}
+
+            {grouped.groups.length > 0 && (
+              <div className="space-y-4 mt-2">
+                {grouped.groups.map((groupBucket) => {
+                  const groupName = groupBucket.name ?? "";
+                  const groupKey = groupName || "__semgrupo__";
+                  const isGroupExpanded = expandedGroups[groupKey] ?? true;
+
+                  return (
+                    <div
+                      key={groupKey}
+                      className="border border-slate-700 rounded-xl overflow-hidden"
+                    >
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setExpandedGroups((prev) => ({
+                            ...prev,
+                            [groupKey]: !isGroupExpanded,
+                          }))
+                        }
+                        className="w-full flex items-center justify-between px-4 py-2 bg-slate-800/70 hover:bg-slate-800 text-left"
+                      >
+                        <span className="font-medium text-sm text-white">
+                          {groupName}
+                        </span>
+                        <span className="text-xs text-slate-400">
+                          {isGroupExpanded ? "▼" : "►"}
+                        </span>
+                      </button>
+
+                      {isGroupExpanded && (
+                        <div className="px-4 py-3 space-y-3">
+                          {groupBucket.subgroups.map((subBucket) => {
+                            const subgroupName = subBucket.name ?? "";
+                            const groupLabel = groupBucket.name ?? "Sem grupo";
+                            const subgroupLabel = subgroupName || "Sem subgrupo";
+                            const subKey = `${groupKey}::${subgroupName || "__nosub__"}`;
+                            const isSubExpanded =
+                              expandedSubgroups[subKey] ?? false;
+
+                            return (
+                              <div key={subKey} className="flex flex-col gap-1">
+                                <div className="text-xs text-muted-foreground">
+                                  {groupLabel} · {subgroupLabel}
+                                </div>
+                                {(isSubExpanded || !subgroupName) && (
+                                  <div className="grid gap-3 md:grid-cols-2">
+                                    {subBucket.devices.map((d: GroupableDevice) => {
+                                      const fromProvisioningCode =
+                                        !!d.from_provisioning_code;
+                                      const tagLabel = fromProvisioningCode ? "PM" : "QR";
+                                      const tagClassName = fromProvisioningCode
+                                        ? "bg-white text-black border border-slate-300"
+                                        : "bg-sky-600/80 text-white border border-sky-500";
+
+                                      const notesParts = (d.notes ?? "")
+                                        .split("|")
+                                        .map((p: string) => p.trim())
+                                        .filter((p: string) => p.length > 0);
+
+                                      const groupLabelDevice =
+                                        d.group_name || notesParts[0] || "";
+                                      const subgroupLabelDevice =
+                                        d.subgroup_name || notesParts[1] || "";
+
+                                      const observations =
+                                        notesParts.length > 2
+                                          ? notesParts.slice(2).join(" | ")
+                                          : "";
+
+                                      const groupLine =
+                                        groupLabelDevice || subgroupLabelDevice
+                                          ? `${groupLabelDevice}${
+                                              groupLabelDevice && subgroupLabelDevice
+                                                ? " | "
+                                                : ""
+                                            }${subgroupLabelDevice}`
+                                          : "";
+
+                                      return (
+                                        <div
+                                          key={d.id}
+                                          className="border border-slate-700 rounded-lg px-3 py-2 bg-slate-950/50 text-xs"
+                                        >
+                                          <div className="flex justify-between items-start mb-1">
+                                            <div>
+                                              <div className="flex items-center gap-2">
+                                                <span className="font-semibold text-white">
+                                                  {d.friendly_name || d.device_id}
+                                                </span>
+                                                {d.mesh_username && (
+                                                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
+                                                    {d.mesh_username}
+                                                  </span>
+                                                )}
+                                                {fromProvisioningCode && (
+                                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white text-black border border-slate-300">
+                                                    PM
+                                                  </span>
+                                                )}
+                                                <span
+                                                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${tagClassName}`}
+                                                >
+                                                  {tagLabel}
+                                                </span>
+                                              </div>
+                                              <p className="text-[11px] text-slate-400 mt-0.5">
+                                                ID: {d.device_id}
+                                              </p>
+                                              {groupLine && (
+                                                <p className="text-[11px] text-slate-400 mt-0.5">
+                                                  {groupLine}
+                                                </p>
+                                              )}
+                                              {observations && (
+                                                <p className="text-[11px] text-slate-500 mt-0.5">
+                                                  Obs: {observations}
+                                                </p>
+                                              )}
+                                              <p className="text-[11px] text-slate-500 mt-0.5">
+                                                Visto:{" "}
+                                                {new Date(
+                                                  d.last_seen_at ||
+                                                    d.created_at ||
+                                                    "",
+                                                ).toLocaleString("pt-PT")}
+                                              </p>
+                                            </div>
+                                            <div className="flex items-stretch gap-2 ml-2">
+                                              <div className="flex flex-col gap-1">
+                                                {!isAdmin && (
+                                                  <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                      openAdoptModal(d)
+                                                    }
+                                                    className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[10px] text-white"
+                                                  >
+                                                    Editar
+                                                  </button>
+                                                )}
+                                                <button
+                                                  type="button"
+                                                  onClick={() =>
+                                                    handleDeleteDevice(d)
+                                                  }
+                                                  className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[10px] text-white"
+                                                >
+                                                  Apagar
+                                                </button>
+                                              </div>
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  const url = buildRustdeskUrl(d);
+                                                  if (typeof window !== "undefined") {
+                                                    window.location.href = url;
+                                                  }
+                                                }}
+                                                className="w-9 h-9 flex items-center justify-center rounded-md bg-sky-600 hover:bg-sky-500 text-white shadow-sm"
+                                                aria-label="Abrir no RustDesk"
+                                              >
+                                                <Image
+                                                  src="/rustdesk-logo.svg"
+                                                  alt="RustDesk"
+                                                  width={18}
+                                                  height={18}
+                                                />
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        )}
+
+      </div>
+
+      {showRegistrationModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+            {registrationStatus === "awaiting" && (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-white">Escanear QR Code</h3>
+                  <button
+                    onClick={closeRegistrationModal}
+                    className="text-slate-400 hover:text-white transition"
+                    disabled={qrLoading || hybridSubmitLoading}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="flex flex-col items-center mb-4">
+                  {qrLoading ? (
+                    <div className="w-64 h-64 rounded-lg bg-slate-800 flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-600 border-t-emerald-500"></div>
+                    </div>
+                  ) : qrError && !qrImageUrl ? (
+                    <div className="w-64 h-64 rounded-lg bg-slate-800 flex items-center justify-center text-center p-4">
+                      <div>
+                        <p className="text-red-400 font-semibold mb-2">Erro</p>
+                        <p className="text-xs text-slate-400">{qrError}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={qrImageUrl}
+                      alt="RustDesk QR"
+                      width={256}
+                      height={256}
+                      className="rounded-lg bg-white p-3"
+                    />
+                  )}
+                </div>
+
+                <div className="bg-slate-800/50 rounded-lg p-4 mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-slate-400">Tempo restante:</span>
+                    <span className="text-2xl font-bold text-emerald-400 font-mono">
                       {formatTime(timeRemaining)}
-                    </p>
+                    </span>
                   </div>
+                  <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-emerald-500 h-full transition-all duration-1000"
+                      style={{ width: `${(timeRemaining / 300) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
 
-                  <p className="text-xs text-slate-500 text-center mt-4">
-                    Abra a app RustDesk no dispositivo e escaneie este QR code para configurar automaticamente.
+                <div className="mt-4 space-y-2">
+                  <label className="block text-sm font-medium text-slate-700">
+                    ID RustDesk do dispositivo
+                  </label>
+                  <form
+                    className="flex gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      void handleHybridSubmit();
+                    }}
+                  >
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:cursor-not-allowed disabled:bg-slate-100"
+                      placeholder="Ex.: 123 456 789"
+                      value={hybridDeviceIdInput}
+                      onChange={(e) => setHybridDeviceIdInput(e.target.value)}
+                      disabled={qrLoading || hybridSubmitLoading}
+                    />
+                    <button
+                      type="submit"
+                      className="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      disabled={qrLoading || hybridSubmitLoading}
+                    >
+                      {hybridSubmitLoading ? "A enviar..." : "ENVIAR"}
+                    </button>
+                  </form>
+                  <p className="text-xs text-slate-500">
+                    Podes escrever o ID com ou sem espaços, mas apenas dígitos são aceites.
                   </p>
                 </div>
 
-                {/* Hybrid Manual Entry Section */}
-                <div className="mt-6 pt-6 border-t border-slate-700">
-                  <div className="mb-4">
-                    <p className="text-sm text-slate-300 text-center font-medium mb-1">
-                      📋 Introduza o RustDesk ID do dispositivo:
-                    </p>
-                    <p className="text-xs text-slate-500 text-center">
-                      O ID aparece no canto superior esquerdo da app RustDesk (ex: 123456789)
-                    </p>
+                {hybridSubmitError && (
+                  <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                    {hybridSubmitError}
                   </div>
+                )}
 
-                  <div className="flex gap-2 mb-3">
-                    <input
-                      type="text"
-                      value={hybridDeviceIdInput}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, "");
-                        setHybridDeviceIdInput(value);
-                      }}
-                      placeholder="RustDesk ID (ex: 123456789)"
-                      maxLength={12}
-                      className="flex-1 px-3 py-2.5 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
-                    />
-                    <button
-                      type="button"
-                      onClick={handlePasteFromClipboard}
-                      className="px-3 py-2.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg text-white transition whitespace-nowrap"
-                      title="Colar RustDesk ID da área de transferência"
-                    >
-                      📋 PASTE
-                    </button>
+                {hybridSubmitSuccess && (
+                  <div className="mt-3 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                    {hybridSubmitSuccess}
                   </div>
+                )}
 
+                <div className="mt-6 flex justify-end gap-2">
                   <button
                     type="button"
-                    onClick={handleHybridSubmit}
-                    disabled={hybridSubmitLoading || !hybridDeviceIdInput.trim()}
-                    className="w-full px-4 py-3 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white transition flex items-center justify-center gap-2"
+                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    onClick={handleRestartRegistration}
+                    disabled={qrLoading || hybridSubmitLoading}
                   >
-                    {hybridSubmitLoading ? (
-                      <>
-                        <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                        A REGISTAR...
-                      </>
-                    ) : (
-                      <>📤 ENVIAR RUSTDESK ID</>
-                    )}
+                    Tentar novamente
                   </button>
+                  <button
+                    type="button"
+                    className="rounded-md bg-slate-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    onClick={closeRegistrationModal}
+                    disabled={qrLoading || hybridSubmitLoading}
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </>
+            )}
 
-                  {hybridSubmitError && (
-                    <div className="mt-3 p-2 bg-red-950/40 border border-red-800 rounded-lg">
-                      <p className="text-xs text-red-400 text-center">{hybridSubmitError}</p>
-                    </div>
-                  )}
-                  {hybridSubmitSuccess && (
-                    <div className="mt-3 p-2 bg-emerald-950/40 border border-emerald-800 rounded-lg">
-                      <p className="text-xs text-emerald-400 text-center">{hybridSubmitSuccess}</p>
-                    </div>
-                  )}
+            {registrationStatus === "completed" && matchedDevice && (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-emerald-400">✅ Dispositivo Detectado!</h3>
+                  <button
+                    onClick={closeRegistrationModal}
+                    className="text-slate-400 hover:text-white transition"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-                  {hybridDeviceIdInput && (
-                    <p className="text-xs text-slate-500 text-center mt-2">
-                      {hybridDeviceIdInput.length < 6 ? (
-                        <span className="text-amber-400">⚠️ O ID deve ter pelo menos 6 dígitos</span>
-                      ) : hybridDeviceIdInput.length > 12 ? (
-                        <span className="text-amber-400">⚠️ O ID deve ter no máximo 12 dígitos</span>
-                      ) : (
-                        <span className="text-emerald-400">✓ Formato válido ({hybridDeviceIdInput.length} dígitos)</span>
-                      )}
+                <div className="bg-emerald-950/30 border border-emerald-800/50 rounded-lg p-4 mb-4">
+                  <p className="text-sm text-slate-300">
+                    <span className="font-semibold">ID:</span> {matchedDevice.device_id}
+                  </p>
+                  {matchedDevice.friendly_name && (
+                    <p className="text-sm text-slate-300">
+                      <span className="font-semibold">Nome:</span> {matchedDevice.friendly_name}
                     </p>
                   )}
+                  <p className="text-xs text-amber-400 mt-2">
+                    ⚠️ O dispositivo aparecerá em &quot;Dispositivos por adoptar&quot;. Clica em &quot;Adoptar&quot; para adicionar informações adicionais.
+                  </p>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowRegistrationModal(false);
+                      setRegistrationSession(null);
+                      setQrImageUrl("");
+                      setQrError("");
+                      setRegistrationStatus("awaiting");
+                      setMatchedDevice(null);
+                      setTimeRemaining(0);
+                      setCheckingDevice(false);
+                      setHybridDeviceIdInput("");
+                      setHybridSubmitError(null);
+                      setHybridSubmitSuccess(null);
+                      setHybridSubmitLoading(false);
+
+                      if (countdownIntervalRef.current) {
+                        clearInterval(countdownIntervalRef.current);
+                        countdownIntervalRef.current = null;
+                      }
+
+                      if (qrImageUrl) {
+                        URL.revokeObjectURL(qrImageUrl);
+                      }
+                    }}
+                    className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                  >
+                    Tentar Novamente
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowRegistrationModal(false);
+                      setRegistrationSession(null);
+                      setQrImageUrl("");
+                      setQrError("");
+                      setRegistrationStatus("awaiting");
+                      setMatchedDevice(null);
+                      setTimeRemaining(0);
+                      setCheckingDevice(false);
+                      setHybridDeviceIdInput("");
+                      setHybridSubmitError(null);
+                      setHybridSubmitSuccess(null);
+                      setHybridSubmitLoading(false);
+
+                      if (countdownIntervalRef.current) {
+                        clearInterval(countdownIntervalRef.current);
+                        countdownIntervalRef.current = null;
+                      }
+
+                      if (qrImageUrl) {
+                        URL.revokeObjectURL(qrImageUrl);
+                      }
+                    }}
+                    className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </>
+            )}
+
+            {registrationStatus === "expired" && (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-amber-400">⏱️ Tempo Esgotado</h3>
+                  <button
+                    onClick={closeRegistrationModal}
+                    className="text-slate-400 hover:text-white transition"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="bg-amber-950/30 border border-amber-800/50 rounded-lg p-4 mb-4">
+                  <p className="text-sm text-slate-300">
+                    A sessão de registro expirou. Por favor, tente novamente.
+                  </p>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowRegistrationModal(false);
+                      setRegistrationSession(null);
+                      setQrImageUrl("");
+                      setQrError("");
+                      setRegistrationStatus("awaiting");
+                      setMatchedDevice(null);
+                      setTimeRemaining(0);
+                      setCheckingDevice(false);
+                      setHybridDeviceIdInput("");
+                      setHybridSubmitError(null);
+                      setHybridSubmitSuccess(null);
+                      setHybridSubmitLoading(false);
+
+                      if (countdownIntervalRef.current) {
+                        clearInterval(countdownIntervalRef.current);
+                        countdownIntervalRef.current = null;
+                      }
+
+                      if (qrImageUrl) {
+                        URL.revokeObjectURL(qrImageUrl);
+                      }
+                    }}
+                    className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                  >
+                    Tentar Novamente
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowRegistrationModal(false);
+                      setRegistrationSession(null);
+                      setQrImageUrl("");
+                      setQrError("");
+                      setRegistrationStatus("awaiting");
+                      setMatchedDevice(null);
+                      setTimeRemaining(0);
+                      setCheckingDevice(false);
+                      setHybridDeviceIdInput("");
+                      setHybridSubmitError(null);
+                      setHybridSubmitSuccess(null);
+                      setHybridSubmitLoading(false);
+
+                      if (countdownIntervalRef.current) {
+                        clearInterval(countdownIntervalRef.current);
+                        countdownIntervalRef.current = null;
+                      }
+
+                      if (qrImageUrl) {
+                        URL.revokeObjectURL(qrImageUrl);
+                      }
+                    }}
+                    className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                  >
+                    Fechar
+                  </button>
                 </div>
               </>
             )}
@@ -1322,50 +2117,56 @@ export default function DashboardClient({
         </div>
       )}
 
-      {/* Adopt/Edit Modal */}
-      {showAdoptModal && adoptingDevice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl max-h-[90vh] overflow-y-auto">
+      {showAdoptModal && adoptingDevice && !isAdmin && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">
-                {isEditingDevice ? "✏️ Editar Dispositivo" : "📱 Adoptar Dispositivo"}
-              </h2>
-              <button onClick={closeAdoptModal} className="text-slate-400 hover:text-white transition">
+              <h3 className="text-lg font-semibold text-white">
+                {isEditingDevice ? "Editar Dispositivo" : "Adoptar Dispositivo"}
+              </h3>
+              <button
+                onClick={closeAdoptModal}
+                className="text-slate-400 hover:text-white transition"
+                disabled={adoptLoading}
+              >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">RustDesk ID</label>
-                <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white font-mono">
-                  {adoptingDevice.device_id}
-                </div>
-              </div>
+            <div className="mb-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+              <p className="text-xs text-slate-400 mb-1">Device ID:</p>
+              <p className="text-sm font-mono text-white">{adoptingDevice.device_id}</p>
+            </div>
 
+            <form onSubmit={handleAdoptSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Nome amigável</label>
+                <label className="block text-sm font-medium text-slate-200 mb-1">
+                  Nome do Dispositivo <span className="text-slate-500">(opcional)</span>
+                </label>
                 <input
                   type="text"
                   value={adoptFormData.friendly_name}
-                  onChange={(e) => handleAdoptFormChange("friendly_name", e.target.value)}
-                  placeholder="Ex: Tablet Loja 1"
+                  onChange={(e) =>
+                    setAdoptFormData({ ...adoptFormData, friendly_name: e.target.value })
+                  }
+                  placeholder="Ex: Tablet Sala, Samsung A54, etc."
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   disabled={adoptLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">
+                <label className="block text-sm font-medium text-slate-200 mb-1">
                   Grupo <span className="text-red-400">*</span>
                 </label>
                 <select
                   value={adoptFormData.group_id}
-                  onChange={(e) => {
-                    setAdoptFormData({ ...adoptFormData, group_id: e.target.value, subgroup_id: undefined });
-                  }}
+                  onChange={(e) =>
+                    setAdoptFormData({ ...adoptFormData, group_id: e.target.value })
+                  }
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   disabled={adoptLoading}
+                  required
                 >
                   {groupsLoading && (
                     <option value="">A carregar lista de grupos...</option>
@@ -1391,7 +2192,7 @@ export default function DashboardClient({
 
               {availableSubgroups.length > 0 && (
                 <div>
-                  <label className="block text-xs text-slate-400 mb-1">
+                  <label className="block text-sm font-medium text-slate-200 mb-1">
                     Subgrupo <span className="text-slate-500">(opcional)</span>
                   </label>
                   <select
@@ -1416,26 +2217,30 @@ export default function DashboardClient({
               )}
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">
+                <label className="block text-sm font-medium text-slate-200 mb-1">
                   Observações <span className="text-slate-500">(opcional)</span>
                 </label>
                 <textarea
                   value={adoptFormData.observations}
-                  onChange={(e) => handleAdoptFormChange("observations", e.target.value)}
+                  onChange={(e) =>
+                    setAdoptFormData({ ...adoptFormData, observations: e.target.value })
+                  }
                   placeholder="Notas adicionais sobre o equipamento, localização, etc."
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none min-h-[72px]"
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 min-h-[72px]"
                   disabled={adoptLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">
+                <label className="block text-sm font-medium text-slate-200 mb-1">
                   Password RustDesk <span className="text-slate-500">(opcional)</span>
                 </label>
                 <input
                   type="text"
                   value={adoptFormData.rustdesk_password}
-                  onChange={(e) => handleAdoptFormChange("rustdesk_password", e.target.value)}
+                  onChange={(e) =>
+                    setAdoptFormData({ ...adoptFormData, rustdesk_password: e.target.value })
+                  }
                   placeholder="Se preenchido, o link abre com ?password=..."
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   disabled={adoptLoading}
@@ -1443,109 +2248,124 @@ export default function DashboardClient({
               </div>
 
               {adoptError && (
-                <div className="p-2 bg-red-950/40 border border-red-800 rounded-lg">
-                  <p className="text-xs text-red-400">{adoptError}</p>
+                <div className="p-3 bg-red-950/40 border border-red-900 rounded-md">
+                  <p className="text-sm text-red-400">{adoptError}</p>
                 </div>
               )}
 
               <div className="flex gap-3 pt-2">
                 <button
+                  type="submit"
+                  disabled={adoptLoading}
+                  className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                >
+                  {adoptLoading
+                    ? "A processar..."
+                    : isEditingDevice
+                      ? "Guardar Alterações"
+                      : "✓ Adoptar Dispositivo"}
+                </button>
+                <button
+                  type="button"
                   onClick={closeAdoptModal}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 text-white transition"
+                  disabled={adoptLoading}
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
                 >
                   Cancelar
                 </button>
-                <button
-                  onClick={handleAdoptSubmit}
-                  disabled={adoptLoading || !adoptFormData.group_id}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
-                >
-                  {adoptLoading ? (
-                    <>
-                      <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                      A guardar...
-                    </>
-                  ) : (
-                    <>{isEditingDevice ? "Guardar" : "Adoptar"}</>
-                  )}
-                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Admin Reassign Modal */}
-      {showAdminReassignModal && adminDeviceToManage && isSiteadmin && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+      {showAdminReassignModal && adminDeviceToManage && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">👤 Reatribuir Dispositivo</h2>
-              <button onClick={closeAdminReassignModal} className="text-slate-400 hover:text-white transition">
+              <h3 className="text-lg font-semibold text-white">
+                Reatribuir Dispositivo
+              </h3>
+              <button
+                onClick={closeAdminReassignModal}
+                className="text-slate-400 hover:text-white transition"
+                disabled={adminActionLoading}
+              >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">Dispositivo</label>
-                <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white font-mono">
-                  {adminDeviceToManage.device_id}
-                </div>
-              </div>
+            <div className="mb-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
+              <p className="text-xs text-slate-400 mb-1">Device ID:</p>
+              <p className="text-sm font-mono text-white">
+                {adminDeviceToManage.device_id}
+              </p>
+            </div>
 
+            <form onSubmit={handleAdminReassignSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Proprietário actual</label>
-                <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-slate-300">
-                  {adminDeviceToManage.mesh_username || "Nenhum"}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">Novo proprietário</label>
+                <label className="block text-sm font-medium text-slate-200 mb-1">
+                  Utilizador de destino (mesh_username) <span className="text-red-400">*</span>
+                </label>
                 <select
                   value={adminReassignForm.mesh_username}
-                  onChange={(e) => setAdminReassignForm({ mesh_username: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  onChange={(e) =>
+                    setAdminReassignForm({
+                      ...adminReassignForm,
+                      mesh_username: e.target.value,
+                    })}
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={adminActionLoading || meshUsersLoading}
+                  required
                 >
-                  <option value="">Selecione um utilizador...</option>
-                  {meshUsers.map((u) => (
-                    <option key={u.id} value={u.mesh_username || ""}>
-                      {u.display_name || u.mesh_username || u.id}
-                    </option>
-                  ))}
+                  {meshUsersLoading && (
+                    <option value="">A carregar lista de utilizadores...</option>
+                  )}
+                  {!meshUsersLoading && meshUsers.length === 0 && (
+                    <option value="">Nenhum utilizador encontrado em mesh_users</option>
+                  )}
+                  {!meshUsersLoading && meshUsers.length > 0 && (
+                    <>
+                      <option value="">Selecione um utilizador...</option>
+                      {meshUsers.map((user) => (
+                        <option key={user.id} value={user.mesh_username ?? ""}>
+                          {user.display_name
+                            ? `${user.display_name} (${user.mesh_username ?? "sem username"})`
+                            : user.mesh_username ?? user.id}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
+                <p className="text-xs text-slate-500 mt-1">
+                  O utilizador destino deve existir na tabela mesh_users.
+                </p>
               </div>
 
               {adminActionError && (
-                <div className="p-2 bg-red-950/40 border border-red-800 rounded-lg">
-                  <p className="text-xs text-red-400">{adminActionError}</p>
+                <div className="p-3 bg-red-950/40 border border-red-900 rounded-md">
+                  <p className="text-sm text-red-400">{adminActionError}</p>
                 </div>
               )}
 
               <div className="flex gap-3 pt-2">
                 <button
+                  type="submit"
+                  disabled={adminActionLoading}
+                  className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
+                >
+                  {adminActionLoading ? "A processar..." : "Reatribuir"}
+                </button>
+                <button
+                  type="button"
                   onClick={closeAdminReassignModal}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 text-white transition"
+                  disabled={adminActionLoading}
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
                 >
                   Cancelar
                 </button>
-                <button
-                  onClick={handleAdminReassignSubmit}
-                  disabled={adminActionLoading || !adminReassignForm.mesh_username}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
-                >
-                  {adminActionLoading ? (
-                    <>
-                      <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                      A reatribuir...
-                    </>
-                  ) : (
-                    "Reatribuir"
-                  )}
-                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
