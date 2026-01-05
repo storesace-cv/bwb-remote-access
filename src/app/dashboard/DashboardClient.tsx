@@ -16,9 +16,6 @@ import QRCode from "react-qr-code";
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
 
-const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-
 const buildRustdeskUrl = (device: GroupableDevice): string => {
   const base = `rustdesk://connection/new/${encodeURIComponent(device.device_id)}`;
   const password = device.rustdesk_password?.trim();
@@ -377,12 +374,65 @@ export default function DashboardClient({
       setMatchedDevice({ device_id: data.device_id || hybridDeviceIdInput });
       setRegistrationStatus("completed");
     } catch (error) {
+      logError("dashboard", "Hybrid RustDesk ID submission failed", { error });
       console.error("Erro no registo híbrido:", error);
       setHybridSubmitError(error instanceof Error ? error.message : "Erro ao registar");
     } finally {
       setHybridSubmitLoading(false);
     }
   }, [hybridDeviceIdInput, registrationSession]);
+
+  // Fetch canonical groups for adopt modal
+  const fetchCanonicalGroups = useCallback(async () => {
+    setGroupsLoading(true);
+    try {
+      const res = await fetch("/api/groups");
+      if (!res.ok) {
+        console.error("Failed to fetch canonical groups:", res.status);
+        return;
+      }
+      const data = (await res.json()) as { groups?: CanonicalGroup[] };
+      setCanonicalGroups(Array.isArray(data.groups) ? data.groups : []);
+    } catch (err) {
+      logError("dashboard", "Error fetching canonical groups", { error: err });
+      console.error("Error fetching canonical groups:", err);
+    } finally {
+      setGroupsLoading(false);
+    }
+  }, []);
+
+  // Load canonical groups on mount
+  useEffect(() => {
+    void fetchCanonicalGroups();
+  }, [fetchCanonicalGroups]);
+
+  // Check registration status periodically while awaiting
+  useEffect(() => {
+    if (!showRegistrationModal || !registrationSession || registrationStatus !== "awaiting" || checkingDevice) {
+      return;
+    }
+
+    const checkInterval = setInterval(async () => {
+      setCheckingDevice(true);
+      try {
+        const res = await fetch(`/api/provision/status?session_id=${registrationSession.session_id}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "completed" && data.device_id) {
+            setMatchedDevice({ device_id: data.device_id, friendly_name: data.friendly_name });
+            setRegistrationStatus("completed");
+            setCheckingDevice(false);
+          }
+        }
+      } catch (err) {
+        console.error("Error checking registration status:", err);
+      } finally {
+        setCheckingDevice(false);
+      }
+    }, 5000);
+
+    return () => clearInterval(checkInterval);
+  }, [showRegistrationModal, registrationSession, registrationStatus, checkingDevice]);
 
   // Filter and sort devices
   const filteredDevices = useMemo(() => {
@@ -547,6 +597,38 @@ export default function DashboardClient({
     setAdminActionError(null);
   }, []);
 
+  // Handle admin reassign submit
+  const handleAdminReassignSubmit = useCallback(async () => {
+    if (!adminDeviceToManage || !adminReassignForm.mesh_username) return;
+
+    setAdminActionLoading(true);
+    setAdminActionError(null);
+
+    try {
+      const res = await fetch(`/api/admin/devices/${adminDeviceToManage.device_id}/reassign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          new_owner_username: adminReassignForm.mesh_username,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Falha ao reatribuir dispositivo");
+      }
+
+      closeAdminReassignModal();
+      await fetchDevices();
+    } catch (error) {
+      logError("dashboard", "Admin reassign failed", { error });
+      console.error("Erro ao reatribuir:", error);
+      setAdminActionError(error instanceof Error ? error.message : "Erro desconhecido");
+    } finally {
+      setAdminActionLoading(false);
+    }
+  }, [adminDeviceToManage, adminReassignForm, closeAdminReassignModal, fetchDevices]);
+
   // Handle clipboard paste
   const handlePasteFromClipboard = useCallback(async () => {
     try {
@@ -573,9 +655,9 @@ export default function DashboardClient({
               <p className="text-sm text-slate-400">
                 © jorge peixinho - Business with Brains
               </p>
-              {userDisplayName && (
-                <p className="text-xs text-slate-500">
-                  {userDisplayName}
+              {userEmail && (
+                <p className="text-xs text-slate-500" title={userEmail}>
+                  {userDisplayName || userEmail}
                 </p>
               )}
             </div>
@@ -1243,7 +1325,7 @@ export default function DashboardClient({
       {/* Adopt/Edit Modal */}
       {showAdoptModal && adoptingDevice && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-white">
                 {isEditingDevice ? "✏️ Editar Dispositivo" : "📱 Adoptar Dispositivo"}
@@ -1269,28 +1351,94 @@ export default function DashboardClient({
                   onChange={(e) => handleAdoptFormChange("friendly_name", e.target.value)}
                   placeholder="Ex: Tablet Loja 1"
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={adoptLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Password RustDesk (opcional)</label>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Grupo <span className="text-red-400">*</span>
+                </label>
+                <select
+                  value={adoptFormData.group_id}
+                  onChange={(e) => {
+                    setAdoptFormData({ ...adoptFormData, group_id: e.target.value, subgroup_id: undefined });
+                  }}
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={adoptLoading}
+                >
+                  {groupsLoading && (
+                    <option value="">A carregar lista de grupos...</option>
+                  )}
+                  {!groupsLoading && canonicalGroups.length === 0 && (
+                    <option value="">Nenhum grupo encontrado</option>
+                  )}
+                  {!groupsLoading && canonicalGroups.length > 0 && (
+                    <>
+                      <option value="">Selecione um grupo...</option>
+                      {canonicalGroups
+                        .filter(g => !g.parent_group_id)
+                        .map((group) => (
+                          <option key={group.id} value={group.id}>
+                            {group.name}
+                          </option>
+                        ))}
+                    </>
+                  )}
+                </select>
+                <p className="text-xs text-slate-500 mt-1">Campo obrigatório</p>
+              </div>
+
+              {availableSubgroups.length > 0 && (
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">
+                    Subgrupo <span className="text-slate-500">(opcional)</span>
+                  </label>
+                  <select
+                    value={adoptFormData.subgroup_id || ""}
+                    onChange={(e) =>
+                      setAdoptFormData({ ...adoptFormData, subgroup_id: e.target.value || undefined })
+                    }
+                    className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    disabled={adoptLoading}
+                  >
+                    <option value="">Nenhum subgrupo</option>
+                    {availableSubgroups.map((subgroup) => (
+                      <option key={subgroup.id} value={subgroup.id}>
+                        {subgroup.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Seleccione um subgrupo dentro de {selectedGroup?.name}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Observações <span className="text-slate-500">(opcional)</span>
+                </label>
+                <textarea
+                  value={adoptFormData.observations}
+                  onChange={(e) => handleAdoptFormChange("observations", e.target.value)}
+                  placeholder="Notas adicionais sobre o equipamento, localização, etc."
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none min-h-[72px]"
+                  disabled={adoptLoading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Password RustDesk <span className="text-slate-500">(opcional)</span>
+                </label>
                 <input
                   type="text"
                   value={adoptFormData.rustdesk_password}
                   onChange={(e) => handleAdoptFormChange("rustdesk_password", e.target.value)}
-                  placeholder="Password para conexão automática"
+                  placeholder="Se preenchido, o link abre com ?password=..."
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">Observações</label>
-                <textarea
-                  value={adoptFormData.observations}
-                  onChange={(e) => handleAdoptFormChange("observations", e.target.value)}
-                  placeholder="Notas adicionais..."
-                  rows={3}
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                  disabled={adoptLoading}
                 />
               </div>
 
@@ -1309,7 +1457,7 @@ export default function DashboardClient({
                 </button>
                 <button
                   onClick={handleAdoptSubmit}
-                  disabled={adoptLoading}
+                  disabled={adoptLoading || !adoptFormData.group_id}
                   className="flex-1 px-4 py-2 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
                 >
                   {adoptLoading ? (
@@ -1383,10 +1531,18 @@ export default function DashboardClient({
                   Cancelar
                 </button>
                 <button
+                  onClick={handleAdminReassignSubmit}
                   disabled={adminActionLoading || !adminReassignForm.mesh_username}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white transition"
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
                 >
-                  Reatribuir
+                  {adminActionLoading ? (
+                    <>
+                      <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                      A reatribuir...
+                    </>
+                  ) : (
+                    "Reatribuir"
+                  )}
                 </button>
               </div>
             </div>
