@@ -377,6 +377,8 @@ rsync -avz -e "ssh $SSH_COMMON_OPTS" \
   "$REPO_ROOT/package.json" \
   "$REPO_ROOT/next.config.mjs" \
   "$REPO_ROOT/tsconfig.json" \
+  "$REPO_ROOT/postcss.config.js" \
+  "$REPO_ROOT/tailwind.config.js" \
   "$REMOTE_TARGET:$REMOTE_DIR/"
 
 # Lockfile
