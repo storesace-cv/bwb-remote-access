@@ -164,6 +164,7 @@ export async function setMirrorUserDeleted(
 /**
  * Creates or updates a user in mesh_users.
  * Username MUST equal email.
+ * Domain MUST be one of the valid domains.
  */
 export async function upsertMirrorUser(params: {
   email: string;
@@ -174,6 +175,11 @@ export async function upsertMirrorUser(params: {
 }): Promise<MeshUser> {
   const supabase = getSupabaseAdmin();
   const normalizedEmail = params.email.toLowerCase().trim();
+
+  // SECURITY: Validate domain to prevent invalid data in DB
+  if (!isValidDomain(params.domain)) {
+    throw new Error(`Invalid domain: ${params.domain}. Must be one of: ${VALID_DOMAINS.join(", ")}`);
+  }
 
   // Check if user exists
   const { data: existing } = await supabase
