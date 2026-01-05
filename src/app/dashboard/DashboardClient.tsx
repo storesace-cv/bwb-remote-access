@@ -655,9 +655,9 @@ export default function DashboardClient({
               <p className="text-sm text-slate-400">
                 © jorge peixinho - Business with Brains
               </p>
-              {userDisplayName && (
-                <p className="text-xs text-slate-500">
-                  {userDisplayName}
+              {userEmail && (
+                <p className="text-xs text-slate-500" title={userEmail}>
+                  {userDisplayName || userEmail}
                 </p>
               )}
             </div>
