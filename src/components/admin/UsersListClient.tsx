@@ -6,11 +6,11 @@
  * Handles client-side interactions for the users list:
  * - Create user modal
  * - Refresh functionality
- * - User type change
+ * - User type change (with hierarchy enforcement)
  * - Deactivate/Reactivate
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import CreateUserForm from "./CreateUserForm";
 
 type ValidDomain = "mesh" | "zonetech" | "zsangola";
@@ -35,6 +35,7 @@ interface UsersListClientProps {
   allowedDomains: ValidDomain[];
   filterDomain: ValidDomain | null;
   currentUserEmail: string | null;
+  currentUserType?: UserType;
 }
 
 const USER_TYPE_LABELS: Record<UserType, string> = {
@@ -55,18 +56,47 @@ const USER_TYPE_COLORS: Record<UserType, string> = {
   candidato: "bg-orange-600/20 text-orange-400",
 };
 
+// User type hierarchy (lower index = higher privilege)
+const USER_TYPE_HIERARCHY: UserType[] = [
+  "siteadmin",
+  "minisiteadmin",
+  "agent",
+  "colaborador",
+  "inactivo",
+  "candidato",
+];
+
 export default function UsersListClient({
   initialUsers,
   initialTotal,
   allowedDomains,
   filterDomain,
   currentUserEmail,
+  currentUserType,
 }: UsersListClientProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [total, setTotal] = useState(initialTotal);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [allowedTypes, setAllowedTypes] = useState<UserType[]>([]);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+
+  // Fetch allowed types on mount
+  useEffect(() => {
+    async function fetchAllowedTypes() {
+      try {
+        const response = await fetch("/api/admin/users/allowed-types");
+        if (response.ok) {
+          const data = await response.json();
+          setAllowedTypes(data.allowedTypes || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch allowed types:", error);
+      }
+    }
+    fetchAllowedTypes();
+  }, []);
 
   const refreshUsers = useCallback(async () => {
     setIsRefreshing(true);
@@ -164,6 +194,45 @@ export default function UsersListClient({
     }
   };
 
+  const handleChangeType = async (userId: string, newType: UserType) => {
+    setActionInProgress(userId);
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/role`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_type: newType }),
+      });
+      
+      if (response.ok) {
+        showMessage("success", `Tipo alterado para ${USER_TYPE_LABELS[newType]}`);
+        await refreshUsers();
+      } else {
+        const error = await response.json();
+        showMessage("error", error.error || "Falha ao alterar tipo");
+      }
+    } catch {
+      showMessage("error", "Erro ao alterar tipo de utilizador");
+    } finally {
+      setActionInProgress(null);
+      setEditingUserId(null);
+    }
+  };
+
+  // Check if current user can modify a target user
+  const canModifyUser = (targetUser: User): boolean => {
+    if (!currentUserType) return false;
+    const currentIndex = USER_TYPE_HIERARCHY.indexOf(currentUserType);
+    const targetIndex = USER_TYPE_HIERARCHY.indexOf(targetUser.user_type);
+    // Can only modify users with lower privilege (higher index)
+    return targetIndex > currentIndex;
+  };
+
+  // Get types that can be assigned to a specific user
+  const getAssignableTypes = (targetUser: User): UserType[] => {
+    if (!canModifyUser(targetUser)) return [];
+    return allowedTypes;
+  };
+
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
@@ -233,6 +302,8 @@ export default function UsersListClient({
                 const isDeleted = !!user.deleted_at;
                 const isInactive = user.user_type === "inactivo" || user.disabled;
                 const isSelf = user.email === currentUserEmail || user.mesh_username === currentUserEmail;
+                const assignableTypes = getAssignableTypes(user);
+                const canChangeType = !isSelf && assignableTypes.length > 0;
 
                 return (
                   <tr
@@ -253,13 +324,34 @@ export default function UsersListClient({
                       </div>
                     </td>
                     <td className="py-3">
-                      <span
-                        className={`px-2 py-1 text-xs rounded ${
-                          USER_TYPE_COLORS[user.user_type] || "bg-slate-700 text-slate-300"
-                        }`}
-                      >
-                        {USER_TYPE_LABELS[user.user_type] || user.user_type}
-                      </span>
+                      {editingUserId === user.id ? (
+                        <select
+                          value={user.user_type}
+                          onChange={(e) => handleChangeType(user.id, e.target.value as UserType)}
+                          onBlur={() => setEditingUserId(null)}
+                          autoFocus
+                          className="px-2 py-1 text-xs rounded bg-slate-700 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          disabled={actionInProgress === user.id}
+                        >
+                          {assignableTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {USER_TYPE_LABELS[type]}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <button
+                          onClick={() => canChangeType && setEditingUserId(user.id)}
+                          disabled={!canChangeType}
+                          className={`px-2 py-1 text-xs rounded ${
+                            USER_TYPE_COLORS[user.user_type] || "bg-slate-700 text-slate-300"
+                          } ${canChangeType ? "cursor-pointer hover:ring-2 hover:ring-emerald-500/50" : "cursor-default"}`}
+                          title={canChangeType ? "Clique para alterar tipo" : isSelf ? "Não pode alterar o próprio tipo" : "Sem permissão para alterar"}
+                        >
+                          {USER_TYPE_LABELS[user.user_type] || user.user_type}
+                          {canChangeType && <span className="ml-1 opacity-50">▼</span>}
+                        </button>
+                      )}
                     </td>
                     <td className="py-3">
                       <span className="text-xs text-cyan-400 font-mono">
