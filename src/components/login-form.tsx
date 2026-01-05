@@ -50,6 +50,11 @@ export function LoginForm() {
         return;
       }
 
+      // Store JWT in localStorage for edge functions
+      if (data.token && typeof window !== "undefined") {
+        window.localStorage.setItem("rustdesk_jwt", data.token);
+      }
+
       // Redirect to dashboard
       router.push("/dashboard");
     } catch {
