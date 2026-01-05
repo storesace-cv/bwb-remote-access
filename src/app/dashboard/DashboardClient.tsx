@@ -16,9 +16,6 @@ import QRCode from "react-qr-code";
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
 
-const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-
 const buildRustdeskUrl = (device: GroupableDevice): string => {
   const base = `rustdesk://connection/new/${encodeURIComponent(device.device_id)}`;
   const password = device.rustdesk_password?.trim();
