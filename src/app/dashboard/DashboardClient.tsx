@@ -382,6 +382,58 @@ export default function DashboardClient({
     }
   }, [hybridDeviceIdInput, registrationSession]);
 
+  // Fetch canonical groups for adopt modal
+  const fetchCanonicalGroups = useCallback(async () => {
+    setGroupsLoading(true);
+    try {
+      const res = await fetch("/api/groups");
+      if (!res.ok) {
+        console.error("Failed to fetch canonical groups:", res.status);
+        return;
+      }
+      const data = (await res.json()) as { groups?: CanonicalGroup[] };
+      setCanonicalGroups(Array.isArray(data.groups) ? data.groups : []);
+    } catch (err) {
+      logError("dashboard", "Error fetching canonical groups", { error: err });
+      console.error("Error fetching canonical groups:", err);
+    } finally {
+      setGroupsLoading(false);
+    }
+  }, []);
+
+  // Load canonical groups on mount
+  useEffect(() => {
+    void fetchCanonicalGroups();
+  }, [fetchCanonicalGroups]);
+
+  // Check registration status periodically while awaiting
+  useEffect(() => {
+    if (!showRegistrationModal || !registrationSession || registrationStatus !== "awaiting" || checkingDevice) {
+      return;
+    }
+
+    const checkInterval = setInterval(async () => {
+      setCheckingDevice(true);
+      try {
+        const res = await fetch(`/api/provision/status?session_id=${registrationSession.session_id}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "completed" && data.device_id) {
+            setMatchedDevice({ device_id: data.device_id, friendly_name: data.friendly_name });
+            setRegistrationStatus("completed");
+            setCheckingDevice(false);
+          }
+        }
+      } catch (err) {
+        console.error("Error checking registration status:", err);
+      } finally {
+        setCheckingDevice(false);
+      }
+    }, 5000);
+
+    return () => clearInterval(checkInterval);
+  }, [showRegistrationModal, registrationSession, registrationStatus, checkingDevice]);
+
   // Filter and sort devices
   const filteredDevices = useMemo(() => {
     let result = [...devices];
