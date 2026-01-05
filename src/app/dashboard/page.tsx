@@ -63,6 +63,8 @@ export default function DashboardPage() {
   const [isAgent, setIsAgent] = useState(false);
   const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
   const [isSiteadmin, setIsSiteadmin] = useState(false);
+  const [userTypeChecked, setUserTypeChecked] = useState(false);
+  const [initialDevicesLoaded, setInitialDevicesLoaded] = useState(false);
   
   // NEW: User profile data
   const [userDomain, setUserDomain] = useState<string>("");
@@ -160,13 +162,14 @@ export default function DashboardPage() {
 
   // Check if user is an agent / minisiteadmin / siteadmin
   const checkUserType = useCallback(async () => {
-    if (!jwt || !authUserId) return;
+    if (!jwt || !authUserId || userTypeChecked) return;
 
     // Admin canónico é sempre topo da hierarquia
     if (authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8") {
       setIsAgent(true);
       setIsMinisiteadmin(true);
       setIsSiteadmin(true);
+      setUserTypeChecked(true);
       return;
     }
 
@@ -211,6 +214,9 @@ export default function DashboardPage() {
           // Set domain and display name
           setUserDomain(record.domain || "");
           setUserDisplayName(record.display_name || "");
+          
+          // Mark as checked to avoid loop
+          setUserTypeChecked(true);
         }
       }
     } catch (error) {
@@ -218,8 +224,9 @@ export default function DashboardPage() {
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
+      setUserTypeChecked(true); // Mark as checked even on error
     }
-  }, [jwt, authUserId]);
+  }, [jwt, authUserId, userTypeChecked]);
 
   useEffect(() => {
     void checkUserType();
@@ -305,9 +312,10 @@ export default function DashboardPage() {
 
   // Carregar devices automaticamente assim que tivermos um JWT válido
   useEffect(() => {
-    if (!jwt) return;
+    if (!jwt || initialDevicesLoaded) return;
+    setInitialDevicesLoaded(true);
     void fetchDevices();
-  }, [jwt, fetchDevices]);
+  }, [jwt, fetchDevices, initialDevicesLoaded]);
 
   // Carregar lista de utilizadores (mesh_users) para o admin canónico,
   // via Edge Function admin-list-mesh-users
