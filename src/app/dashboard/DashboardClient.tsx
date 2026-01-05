@@ -1531,10 +1531,18 @@ export default function DashboardClient({
                   Cancelar
                 </button>
                 <button
+                  onClick={handleAdminReassignSubmit}
                   disabled={adminActionLoading || !adminReassignForm.mesh_username}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white transition"
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
                 >
-                  Reatribuir
+                  {adminActionLoading ? (
+                    <>
+                      <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                      A reatribuir...
+                    </>
+                  ) : (
+                    "Reatribuir"
+                  )}
                 </button>
               </div>
             </div>
