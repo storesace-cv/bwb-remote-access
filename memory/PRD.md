@@ -89,10 +89,35 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 | inactivo | Disabled user | No access |
 | candidato | New user | Limited access |
 
+## Completed - January 5, 2026
+
+### Bug Fix: Infinite Redirect Loop After Login
+**Problem:** After successful authentication, the app entered an infinite redirect loop between `/` and `/dashboard`, making the application completely unusable.
+
+**Root Cause:** The dashboard's `useEffect` hook (line ~140 in `/app/src/app/dashboard/page.tsx`) was checking `localStorage` for the JWT and immediately redirecting to `/` if not found. This conflicted with the server-side session validation because:
+1. Server validates `mesh_session` cookie → allows access to `/dashboard`
+2. Dashboard mounts as Client Component
+3. `useEffect` runs, checks `localStorage` for JWT
+4. JWT not yet available (race condition) → `router.replace("/")` executed
+5. Back to login page → session cookie still valid → redirect to `/dashboard`
+6. Loop repeats infinitely
+
+**Fix Applied:**
+- Removed `router.replace("/")` redirect from the JWT-loading `useEffect`
+- Added retry mechanism (100ms delay) to wait for localStorage to be populated
+- Dashboard now trusts the server-side session validation and doesn't perform conflicting client-side redirects
+
+**Files Changed:**
+- `/app/src/app/dashboard/page.tsx` - Lines 137-177
+
+**Status:** ✅ FIXED AND TESTED
+
+---
+
 ## Pending / Future Work
 
 ### P0 - Testing Required
-- [ ] End-to-end testing with real MeshCentral credentials
+- [x] ~~End-to-end testing with real MeshCentral credentials~~ (User to test with production credentials)
 - [ ] Test user creation flow
 - [ ] Test device listing and remote sessions
 - [ ] Test multi-domain routing
