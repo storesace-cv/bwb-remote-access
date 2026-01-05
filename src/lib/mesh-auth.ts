@@ -423,20 +423,20 @@ export async function ensureSupabaseUser(
     }
     
     // User doesn't exist - create with default user_type='candidato'
-    // First, try to find an agent for this domain
-    const { data: domainAgent } = await supabase
+    // First, try to find an agent/admin for this domain to be the parent
+    const { data: domainAdmin } = await supabase
       .from("mesh_users")
       .select("id")
       .eq("domain", shortDomain)
-      .eq("user_type", "agent")
+      .in("user_type", ["siteadmin", "minisiteadmin", "agent"])
       .limit(1)
       .maybeSingle();
     
-    // If no agent exists, we can't create the user without one
+    // If no admin exists, we can't create the user without one
     // The mesh_users table has agent_id as NOT NULL
-    if (!domainAgent) {
-      console.warn(`[AUTH] No agent found for domain ${shortDomain} - cannot create user record`);
-      console.log(`[AUTH] User ${normalizedEmail} authenticated but not mirrored to DB (no agent)`);
+    if (!domainAdmin) {
+      console.warn(`[AUTH] No admin/agent found for domain ${shortDomain} - cannot create user record`);
+      console.log(`[AUTH] User ${normalizedEmail} authenticated but not mirrored to DB (no admin)`);
       return null;
     }
     
@@ -450,7 +450,7 @@ export async function ensureSupabaseUser(
         email: normalizedEmail,
         domain: shortDomain,
         user_type: "candidato",          // Default for new users
-        agent_id: domainAgent.id,        // Required FK
+        agent_id: domainAdmin.id,        // Parent admin/agent
         source: "meshcentral",
         auth_user_id: authUserId,        // Stable UUID for this user
       })
