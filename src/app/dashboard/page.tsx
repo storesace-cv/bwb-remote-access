@@ -213,6 +213,9 @@ export default function DashboardPage() {
           // Set domain and display name
           setUserDomain(record.domain || "");
           setUserDisplayName(record.display_name || "");
+          
+          // Mark as checked to avoid loop
+          setUserTypeChecked(true);
         }
       }
     } catch (error) {
@@ -220,8 +223,9 @@ export default function DashboardPage() {
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
+      setUserTypeChecked(true); // Mark as checked even on error
     }
-  }, [jwt, authUserId]);
+  }, [jwt, authUserId, userTypeChecked]);
 
   useEffect(() => {
     void checkUserType();
