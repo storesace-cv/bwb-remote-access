@@ -105,7 +105,7 @@ export async function POST(req: Request) {
 
     const authResult = await validateMeshCredentials(email, password, fullDomain);
 
-    if (!authResult.success) {
+    if (!authResult.ok) {
       logWarn("login", "MeshCentral authentication failed", {
         requestId,
         clientIp,
