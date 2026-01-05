@@ -1,5 +1,7 @@
 # BWB Remote Access - Product Requirements Document
 
+**Last Updated:** January 4, 2026
+
 ## Overview
 
 BWB Remote Access is a web application for managing remote devices via MeshCentral. The application provides:
