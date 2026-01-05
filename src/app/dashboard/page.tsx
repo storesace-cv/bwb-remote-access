@@ -312,9 +312,10 @@ export default function DashboardPage() {
 
   // Carregar devices automaticamente assim que tivermos um JWT válido
   useEffect(() => {
-    if (!jwt) return;
+    if (!jwt || initialDevicesLoaded) return;
+    setInitialDevicesLoaded(true);
     void fetchDevices();
-  }, [jwt, fetchDevices]);
+  }, [jwt, fetchDevices, initialDevicesLoaded]);
 
   // Carregar lista de utilizadores (mesh_users) para o admin canónico,
   // via Edge Function admin-list-mesh-users
