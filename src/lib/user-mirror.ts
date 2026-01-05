@@ -14,6 +14,14 @@ type ValidDomain = "mesh" | "zonetech" | "zsangola";
 const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 /**
+ * Validates that a domain is one of the allowed domains.
+ * Guards against invalid domain values being written to the database.
+ */
+function isValidDomain(domain: string): domain is ValidDomain {
+  return VALID_DOMAINS.includes(domain as ValidDomain);
+}
+
+/**
  * Lists users from mesh_users table with optional domain filter.
  */
 export async function listMirrorUsers(options: {
@@ -156,6 +164,7 @@ export async function setMirrorUserDeleted(
 /**
  * Creates or updates a user in mesh_users.
  * Username MUST equal email.
+ * Domain MUST be one of the valid domains.
  */
 export async function upsertMirrorUser(params: {
   email: string;
@@ -166,6 +175,11 @@ export async function upsertMirrorUser(params: {
 }): Promise<MeshUser> {
   const supabase = getSupabaseAdmin();
   const normalizedEmail = params.email.toLowerCase().trim();
+
+  // SECURITY: Validate domain to prevent invalid data in DB
+  if (!isValidDomain(params.domain)) {
+    throw new Error(`Invalid domain: ${params.domain}. Must be one of: ${VALID_DOMAINS.join(", ")}`);
+  }
 
   // Check if user exists
   const { data: existing } = await supabase

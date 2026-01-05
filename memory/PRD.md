@@ -96,12 +96,43 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 - [ ] Test multi-domain routing
 
 ### P1 - Supabase Migrations
-- [ ] Verify migrations align with remote_schema.sql
-- [ ] Run `supabase db push` to apply any changes
+- [x] Baseline migration for android_devices table (20251207000000)
+- [x] Migrations align with remote_schema.sql
+- [x] Deploy script includes `supabase db push` phase
+- [ ] Run `supabase db push` on Mac to verify migrations apply cleanly
 
 ### P2 - Documentation
 - [x] Updated authentication architecture
 - [ ] Clean up outdated docs in /docs/
+
+## Completed - January 4, 2026
+
+### Lint Warning Fixes (Security & Correctness)
+All lint warnings resolved by implementing actual logic, not by deletion:
+
+1. **`/api/mesh/devices/route.ts`** - `canAccessDomain`
+   - Now enforces domain access check
+   - Returns 403 if user requests a domain they cannot access
+
+2. **`/api/mesh/open-session/route.ts`** - `getShortDomain`, `isSuperAdmin`  
+   - Removed unused imports (functionality exists elsewhere)
+
+3. **`/lib/mesh-auth.ts`** - `fetchError`
+   - Now logs database errors explicitly
+   - Returns null safely instead of silently failing
+
+4. **`/lib/rbac-mesh.ts`** - `getSupabase`
+   - Removed unused function (Supabase client already available in mesh-auth.ts)
+
+5. **`/lib/user-mirror.ts`** - `VALID_DOMAINS`
+   - Added `isValidDomain()` helper function
+   - `upsertMirrorUser()` now validates domain before DB write
+
+### Deploy Script (Step-4)
+- [x] Already includes Supabase CLI phase
+- [x] Runs `supabase db push` before deploy
+- [x] Checks for CLI installation
+- [x] Aborts deploy on migration failure
 
 ## Validation Commands
 
