@@ -789,3 +789,292 @@ export default function DashboardClient({
             )}
           </div>
         </section>
+
+        {/* Search and Filter Bar */}
+        <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 mb-6 backdrop-blur-sm">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="🔍 Procurar por ID, nome ou notas..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="px-4 py-2 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="date_desc">📅 Mais recentes</option>
+              <option value="date_asc">📅 Mais antigos</option>
+              <option value="name_asc">🔤 Nome A-Z</option>
+              <option value="name_desc">🔤 Nome Z-A</option>
+              <option value="id_asc">🔢 ID crescente</option>
+              <option value="id_desc">🔢 ID decrescente</option>
+            </select>
+
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`px-4 py-2 text-sm rounded-lg transition ${
+                showFilters
+                  ? "bg-emerald-600 text-white"
+                  : "bg-slate-800 border border-slate-600 text-slate-300 hover:bg-slate-700"
+              }`}
+            >
+              🔧 Filtros
+            </button>
+          </div>
+
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t border-slate-700/50">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setFilterStatus("all")}
+                  className={`px-3 py-1.5 text-xs rounded-md transition ${
+                    filterStatus === "all"
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  }`}
+                >
+                  Todos ({devices.length})
+                </button>
+                <button
+                  onClick={() => setFilterStatus("adopted")}
+                  className={`px-3 py-1.5 text-xs rounded-md transition ${
+                    filterStatus === "adopted"
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  }`}
+                >
+                  Adoptados ({adoptedDevices.length})
+                </button>
+                <button
+                  onClick={() => setFilterStatus("unadopted")}
+                  className={`px-3 py-1.5 text-xs rounded-md transition ${
+                    filterStatus === "unadopted"
+                      ? "bg-amber-600 text-white"
+                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  }`}
+                >
+                  Por adoptar ({unadoptedDevices.length})
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* Adopted Devices List */}
+        <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium text-white">✅ Dispositivos Adoptados</h2>
+            <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <div className="flex items-center gap-2 text-xs text-slate-300">
+                <span className="hidden sm:inline">Por página:</span>
+                <select
+                  value={adoptedPageSize}
+                  onChange={(e) => {
+                    const value = Number.parseInt(e.target.value, 10);
+                    setAdoptedPageSize(Number.isNaN(value) ? ADOPTED_PAGE_SIZE : value);
+                    setCurrentAdoptedPage(1);
+                  }}
+                  className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 text-slate-100 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                >
+                  <option value={5}>5</option>
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-3">
+                {adoptedTotalPages > 1 && (
+                  <div className="flex items-center gap-2 text-xs text-slate-300">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentAdoptedPage((prev) => Math.max(1, prev - 1))}
+                      disabled={currentAdoptedPage === 1}
+                      className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
+                    >
+                      Anterior
+                    </button>
+                    <span>
+                      Página {currentAdoptedPage} de {adoptedTotalPages}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentAdoptedPage((prev) => Math.min(adoptedTotalPages, prev + 1))}
+                      disabled={currentAdoptedPage === adoptedTotalPages}
+                      className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
+                    >
+                      Próxima
+                    </button>
+                  </div>
+                )}
+                <button
+                  type="button"
+                  onClick={handleRefresh}
+                  disabled={refreshing}
+                  className="px-3 py-1.5 text-xs rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-60 text-slate-100 flex items-center gap-1"
+                >
+                  {refreshing ? (
+                    <>
+                      <span className="h-3 w-3 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
+                      <span>A sincronizar…</span>
+                    </>
+                  ) : (
+                    <>🔄 Atualizar estado</>
+                  )}
+                </button>
+                {loading && <span className="text-xs text-slate-400">A carregar…</span>}
+              </div>
+            </div>
+          </div>
+
+          {errorMsg && <p className="text-sm text-amber-400 mb-3">{errorMsg}</p>}
+
+          {adoptedDevices.length === 0 && !loading && !errorMsg && (
+            <div className="text-center py-12">
+              <p className="text-slate-400">Sem dispositivos adoptados.</p>
+              <p className="text-xs text-slate-500 mt-1">
+                Adopta um dispositivo da lista "Por adoptar" ou regista um novo.
+              </p>
+            </div>
+          )}
+
+          {/* Grouped devices */}
+          {grouped.groups.length > 0 && (
+            <div className="space-y-4 mt-2">
+              {grouped.groups.map((groupBucket) => {
+                const groupName = groupBucket.name ?? "";
+                const groupKey = groupName || "__semgrupo__";
+                const isGroupExpanded = expandedGroups[groupKey] ?? true;
+
+                return (
+                  <div key={groupKey} className="border border-slate-700 rounded-xl overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedGroups((prev) => ({ ...prev, [groupKey]: !isGroupExpanded }))}
+                      className="w-full flex items-center justify-between px-4 py-2 bg-slate-800/70 hover:bg-slate-800 text-left"
+                    >
+                      <span className="font-medium text-sm text-white">{groupName || "Sem grupo"}</span>
+                      <span className="text-xs text-slate-400">{isGroupExpanded ? "▼" : "▶"}</span>
+                    </button>
+
+                    {isGroupExpanded && (
+                      <div className="px-4 py-3 space-y-3">
+                        {groupBucket.subgroups.map((subBucket) => {
+                          const subgroupName = subBucket.name ?? "";
+                          const groupLabel = groupBucket.name ?? "Sem grupo";
+                          const subgroupLabel = subgroupName || "Sem subgrupo";
+                          const subKey = `${groupKey}::${subgroupName || "__nosub__"}`;
+                          const isSubExpanded = expandedSubgroups[subKey] ?? false;
+
+                          return (
+                            <div key={subKey} className="flex flex-col gap-1">
+                              <div className="text-xs text-slate-500">
+                                {groupLabel} / {subgroupLabel}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setExpandedSubgroups((prev) => ({ ...prev, [subKey]: !isSubExpanded }))}
+                                className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-slate-800/50 hover:bg-slate-800 text-left"
+                              >
+                                <span className="text-xs text-slate-300">
+                                  {subgroupName || "Sem subgrupo"}
+                                  <span className="ml-2 text-slate-500">({subBucket.devices.length} dispositivos)</span>
+                                </span>
+                                <span className="text-xs text-slate-500">{isSubExpanded ? "▼" : "▶"}</span>
+                              </button>
+
+                              {isSubExpanded && (
+                                <div className="mt-2 grid gap-2 md:grid-cols-2">
+                                  {subBucket.devices.map((device) => (
+                                    <div
+                                      key={device.id}
+                                      className="border border-slate-700/30 rounded-lg px-3 py-2 bg-slate-900/50"
+                                    >
+                                      <div className="flex justify-between items-start">
+                                        <div className="flex-1">
+                                          <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-semibold text-slate-100 text-sm">{device.device_id}</span>
+                                            {device.friendly_name && (
+                                              <span className="text-xs text-slate-400">({device.friendly_name})</span>
+                                            )}
+                                          </div>
+                                          <p className="text-xs text-slate-500">
+                                            Visto: {new Date(device.last_seen_at || device.created_at || "").toLocaleString("pt-PT")}
+                                          </p>
+                                        </div>
+                                        <div className="flex gap-1 ml-2">
+                                          <a
+                                            href={buildRustdeskUrl(device)}
+                                            className="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-500 transition text-white"
+                                          >
+                                            🔗 Conectar
+                                          </a>
+                                          <button
+                                            onClick={() => openAdoptModal(device)}
+                                            className="px-2 py-1 text-xs rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
+                                          >
+                                            ✏️
+                                          </button>
+                                          {isSiteadmin && (
+                                            <button
+                                              onClick={() => openAdminReassignModal(device)}
+                                              className="px-2 py-1 text-xs rounded-md bg-amber-600/80 hover:bg-amber-500 transition text-white"
+                                            >
+                                              👤
+                                            </button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Unadopted Devices Section */}
+        {unadoptedDevices.length > 0 && (
+          <section className="mt-6 bg-slate-900/70 border border-amber-700/40 rounded-2xl p-6 backdrop-blur-sm">
+            <h2 className="text-lg font-medium text-amber-400 mb-4">⏳ Dispositivos por Adoptar</h2>
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {unadoptedDevices.map((device) => (
+                <div
+                  key={device.id}
+                  className="border border-slate-700/50 rounded-lg p-3 bg-slate-900/50 hover:border-amber-600/50 transition"
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <p className="font-mono text-sm text-slate-200">{device.device_id}</p>
+                      {device.friendly_name && (
+                        <p className="text-xs text-slate-400 mt-0.5">{device.friendly_name}</p>
+                      )}
+                      <p className="text-xs text-slate-500 mt-1">
+                        Visto: {new Date(device.last_seen_at || device.created_at || "").toLocaleString("pt-PT")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => openAdoptModal(device)}
+                      className="px-3 py-1.5 text-xs rounded-md bg-amber-600 hover:bg-amber-500 transition text-white ml-2"
+                    >
+                      Adoptar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
