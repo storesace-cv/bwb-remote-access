@@ -1,38 +1,49 @@
 /**
- * Dashboard Page
+ * Dashboard Page - Server Component
  * 
- * Main dashboard showing devices and user info.
- * Requires MeshCentral session.
+ * Validates MeshCentral session and passes auth data to client component.
+ * The client component contains the original dashboard UI logic.
  */
 
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/mesh-auth";
-import { getUserClaims, getAdminRoleLabel, canManageUsers } from "@/lib/rbac-mesh";
+import { getSession, getMeshUserByEmail } from "@/lib/mesh-auth";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
   const session = await getSession();
   
   if (!session?.authenticated) {
-    redirect("/login");
+    redirect("/");
   }
 
-  const claims = await getUserClaims(session);
-  const userEmail = session.email;
-  const userDisplayName = session.email.split("@")[0];
-  const userDomain = session.domain;
+  // Get user data from mesh_users table
+  const meshUser = await getMeshUserByEmail(session.email);
   
-  // Get role info
-  const isAdmin = canManageUsers(claims);
-  const roleLabel = getAdminRoleLabel(claims) || claims?.userType || "Utilizador";
+  // Determine roles based on user_type
+  const userType = meshUser?.user_type || "candidato";
+  const isSiteadmin = userType === "siteadmin";
+  const isMinisiteadmin = userType === "minisiteadmin" || isSiteadmin;
+  const isAgent = userType === "agent" || isMinisiteadmin;
+  
+  // Get user info
+  const userDomain = meshUser?.domain || session.domain || "";
+  const userDisplayName = session.email.split("@")[0];
+  const meshUserId = meshUser?.id || null;
+  const authUserId = meshUser?.agent_id || null;
 
   return (
     <DashboardClient
-      userEmail={userEmail}
-      userDisplayName={userDisplayName}
+      // Auth data
+      meshUserId={meshUserId}
+      authUserId={authUserId}
+      userEmail={session.email}
+      // Role flags
+      isAgent={isAgent}
+      isMinisiteadmin={isMinisiteadmin}
+      isSiteadmin={isSiteadmin}
+      // User info
       userDomain={userDomain}
-      isAdmin={isAdmin}
-      roleLabel={roleLabel}
+      userDisplayName={userDisplayName}
     />
   );
 }
