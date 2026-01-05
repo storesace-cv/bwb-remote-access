@@ -8,7 +8,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { validateMeshCentralCredentials, ensureSupabaseUser, ensureProfileExists, getSupabaseJWT } from "@/lib/mesh-auth";
+import { validateMeshCredentials, ensureSupabaseUser, ensureProfileExists, getSupabaseJWT } from "@/lib/mesh-auth";
 import {
   correlationId,
   initializeDebugLogger,
