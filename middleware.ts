@@ -5,6 +5,7 @@
  * Session is stored in a cookie (mesh_session).
  * 
  * Protected routes redirect to /login if no session.
+ * Authenticated users are redirected away from login pages.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -16,10 +17,16 @@ import { NextRequest, NextResponse } from "next/server";
 const PUBLIC_ROUTES = [
   "/",
   "/login",
+  "/login/credentials",
   "/auth-error",
   "/api/auth/login",
   "/api/auth/logout",
   "/api/auth/session",
+];
+
+const LOGIN_ROUTES = [
+  "/login",
+  "/login/credentials",
 ];
 
 const PROTECTED_ROUTE_PREFIXES = [
@@ -65,7 +72,17 @@ function isStaticAsset(pathname: string): boolean {
 }
 
 function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route + "/"));
+  // Check exact matches first
+  if (PUBLIC_ROUTES.includes(pathname)) return true;
+  
+  // Check prefix matches for API routes
+  if (pathname.startsWith("/api/auth/")) return true;
+  
+  return false;
+}
+
+function isLoginRoute(pathname: string): boolean {
+  return LOGIN_ROUTES.includes(pathname);
 }
 
 function isProtectedRoute(pathname: string): boolean {
@@ -91,12 +108,19 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. PUBLIC ROUTES → Pass through
+  // 2. AUTHENTICATED USERS ON LOGIN PAGES → Redirect to dashboard
+  if (isLoginRoute(pathname) && hasSession(request)) {
+    const baseUrl = getPublicBaseUrl(request);
+    const dashboardUrl = new URL("/dashboard", baseUrl);
+    return NextResponse.redirect(dashboardUrl, { status: 302 });
+  }
+
+  // 3. PUBLIC ROUTES → Pass through
   if (isPublicRoute(pathname)) {
     return NextResponse.next();
   }
 
-  // 3. PROTECTED ROUTES → Check session
+  // 4. PROTECTED ROUTES → Check session
   if (isProtectedRoute(pathname)) {
     if (!hasSession(request)) {
       const baseUrl = getPublicBaseUrl(request);
@@ -109,7 +133,7 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. DEFAULT → Pass through
+  // 5. DEFAULT → Pass through
   return NextResponse.next();
 }
 
