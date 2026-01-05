@@ -109,6 +109,32 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 
 ## Completed - January 4, 2026
 
+### Two-Step Login UX Implementation
+Implemented two-step login flow with explicit domain selection:
+
+1. **Gateway Page (`/login`)**
+   - Title: "BWB Remote Access"
+   - Subtitle: "Portal de Suporte Android"
+   - Info bullets: MeshCentral credentials, secure session
+   - Single "Entrar" button → navigates to `/login/credentials`
+
+2. **Credentials Page (`/login/credentials`)**
+   - Domain dropdown (mesh | zonetech | zsangola)
+   - Email field
+   - Password field
+   - "Entrar" submit button
+   - Footer: "Autenticação via MeshCentral"
+   - Auto-selects domain based on hostname
+
+3. **Backend Changes**
+   - `/api/auth/login` now accepts explicit `domain` parameter
+   - Strict domain validation against allowlist
+   - Domain stored in session for all subsequent requests
+
+4. **Middleware Updates**
+   - Both `/login` and `/login/credentials` are public routes
+   - Authenticated users redirected away from login pages
+
 ### Lint Warning Fixes (Security & Correctness)
 All lint warnings resolved by implementing actual logic, not by deletion:
 
