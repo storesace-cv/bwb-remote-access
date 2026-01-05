@@ -597,6 +597,38 @@ export default function DashboardClient({
     setAdminActionError(null);
   }, []);
 
+  // Handle admin reassign submit
+  const handleAdminReassignSubmit = useCallback(async () => {
+    if (!adminDeviceToManage || !adminReassignForm.mesh_username) return;
+
+    setAdminActionLoading(true);
+    setAdminActionError(null);
+
+    try {
+      const res = await fetch(`/api/admin/devices/${adminDeviceToManage.device_id}/reassign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          new_owner_username: adminReassignForm.mesh_username,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Falha ao reatribuir dispositivo");
+      }
+
+      closeAdminReassignModal();
+      await fetchDevices();
+    } catch (error) {
+      logError("dashboard", "Admin reassign failed", { error });
+      console.error("Erro ao reatribuir:", error);
+      setAdminActionError(error instanceof Error ? error.message : "Erro desconhecido");
+    } finally {
+      setAdminActionLoading(false);
+    }
+  }, [adminDeviceToManage, adminReassignForm, closeAdminReassignModal, fetchDevices]);
+
   // Handle clipboard paste
   const handlePasteFromClipboard = useCallback(async () => {
     try {
