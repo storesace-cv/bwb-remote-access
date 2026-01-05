@@ -533,6 +533,142 @@ export async function ensureProfileExists(
 }
 
 /**
+ * Mirror user to Supabase Auth and get a JWT token.
+ * This allows the frontend to call Supabase Edge Functions.
+ * 
+ * Flow:
+ * 1. Check if user exists in Supabase Auth
+ * 2. If not, create with admin API
+ * 3. Sign in to get JWT
+ * 
+ * Uses a deterministic password based on email + secret to avoid storing passwords.
+ */
+export async function getSupabaseJWT(
+  email: string,
+  authUserId: string
+): Promise<{ token: string; error?: string } | null> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey || !supabaseAnonKey) {
+    console.log("[AUTH] Supabase not configured for JWT generation");
+    return null;
+  }
+  
+  const normalizedEmail = normalizeEmail(email);
+  
+  // Generate a deterministic password for this user
+  // This allows us to sign in without storing the actual password
+  const sessionSecret = process.env.SESSION_SECRET || "default-secret-change-me";
+  const deterministicPassword = crypto
+    .createHmac("sha256", sessionSecret)
+    .update(`supabase-auth-${normalizedEmail}-${authUserId}`)
+    .digest("hex");
+  
+  try {
+    // Create admin client
+    const adminClient = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+    
+    // Try to find user by ID using admin API
+    const { data: userData, error: getUserError } = await adminClient.auth.admin.getUserById(authUserId);
+    
+    let userId = userData?.user?.id;
+    
+    if (!userId || getUserError) {
+      // User doesn't exist in Supabase Auth - create them
+      console.log(`[AUTH] Creating Supabase Auth user for: ${normalizedEmail}`);
+      
+      const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
+        id: authUserId, // Use same UUID as mesh_users.auth_user_id
+        email: normalizedEmail,
+        password: deterministicPassword,
+        email_confirm: true, // Auto-confirm email
+        user_metadata: {
+          source: "meshcentral",
+        },
+      });
+      
+      if (createError) {
+        // If user already exists (by email), try to get their ID
+        if (createError.message?.includes("already been registered")) {
+          console.log(`[AUTH] User already exists in Auth, attempting sign in`);
+        } else {
+          console.error("[AUTH] Failed to create Supabase Auth user:", createError);
+          return { token: "", error: createError.message };
+        }
+      } else {
+        userId = newUser?.user?.id;
+        console.log(`[AUTH] Created Supabase Auth user: ${userId}`);
+      }
+    }
+    
+    // Now sign in to get a JWT
+    // Create a client with anon key for sign-in
+    const anonClient = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+    
+    const { data: signInData, error: signInError } = await anonClient.auth.signInWithPassword({
+      email: normalizedEmail,
+      password: deterministicPassword,
+    });
+    
+    if (signInError) {
+      // If sign-in fails, the password might be wrong (user was created before our system)
+      // Try to update the password and sign in again
+      console.log(`[AUTH] Sign in failed, attempting password reset: ${signInError.message}`);
+      
+      if (userId) {
+        const { error: updateError } = await adminClient.auth.admin.updateUserById(userId, {
+          password: deterministicPassword,
+        });
+        
+        if (!updateError) {
+          // Try sign in again
+          const { data: retryData, error: retryError } = await anonClient.auth.signInWithPassword({
+            email: normalizedEmail,
+            password: deterministicPassword,
+          });
+          
+          if (retryError) {
+            console.error("[AUTH] Sign in retry failed:", retryError);
+            return { token: "", error: retryError.message };
+          }
+          
+          if (retryData?.session?.access_token) {
+            console.log(`[AUTH] JWT obtained successfully after password reset`);
+            return { token: retryData.session.access_token };
+          }
+        }
+      }
+      
+      return { token: "", error: signInError.message };
+    }
+    
+    if (!signInData?.session?.access_token) {
+      console.error("[AUTH] Sign in succeeded but no access token");
+      return { token: "", error: "No access token received" };
+    }
+    
+    console.log(`[AUTH] JWT obtained successfully for: ${normalizedEmail}`);
+    return { token: signInData.session.access_token };
+    
+  } catch (error) {
+    console.error("[AUTH] Error getting Supabase JWT:", error);
+    return { token: "", error: error instanceof Error ? error.message : "Unknown error" };
+  }
+}
+
+/**
  * Get user by email from mesh_users table
  */
 export async function getMeshUserByEmail(email: string): Promise<{

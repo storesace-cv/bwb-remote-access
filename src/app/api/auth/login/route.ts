@@ -2,14 +2,18 @@
  * Login API Route
  * 
  * Authenticates user via MeshCentral and creates session.
+ * Also mirrors user to Supabase Auth and returns JWT for edge functions.
+ * 
  * POST /api/auth/login
  * 
  * Body: { email, password, domain }
  * domain MUST be one of: mesh | zonetech | zsangola
+ * 
+ * Returns: { success, token, email, domain, fullDomain }
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { login, getDomainFromHost } from "@/lib/mesh-auth";
+import { login, getDomainFromHost, ensureSupabaseUser, ensureProfileExists, getSupabaseJWT } from "@/lib/mesh-auth";
 import { isValidDomain, type ValidDomain, VALID_DOMAINS } from "@/lib/domain";
 
 export async function POST(request: NextRequest) {
@@ -73,9 +77,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Return success with domain info
+    // Mirror user to Supabase tables
+    const meshUser = await ensureSupabaseUser(email, fullDomain);
+    
+    let token = "";
+    
+    if (meshUser?.auth_user_id) {
+      // Ensure profile exists
+      await ensureProfileExists(meshUser.auth_user_id, email);
+      
+      // Get JWT from Supabase Auth
+      const jwtResult = await getSupabaseJWT(email, meshUser.auth_user_id);
+      if (jwtResult?.token) {
+        token = jwtResult.token;
+        console.log(`[API] JWT obtained for user: ${email}`);
+      } else {
+        console.warn(`[API] Could not get JWT for user: ${email}`, jwtResult?.error);
+      }
+    }
+
+    // Return success with token
     return NextResponse.json({
       success: true,
+      token,
       email,
       domain,
       fullDomain,
