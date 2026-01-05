@@ -1676,9 +1676,25 @@ export default function DashboardPage() {
 
                             return (
                               <div key={subKey} className="flex flex-col gap-1">
-                                <div className="text-xs text-muted-foreground">
-                                  {groupLabel} · {subgroupLabel}
-                                </div>
+                                {subgroupName ? (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setExpandedSubgroups((prev) => ({
+                                        ...prev,
+                                        [subKey]: !isSubExpanded,
+                                      }))
+                                    }
+                                    className="flex items-center justify-between text-xs text-muted-foreground hover:text-slate-300 transition-colors text-left"
+                                  >
+                                    <span>{groupLabel} · {subgroupLabel}</span>
+                                    <span className="ml-2">{isSubExpanded ? "▼" : "►"}</span>
+                                  </button>
+                                ) : (
+                                  <div className="text-xs text-muted-foreground">
+                                    {groupLabel} · {subgroupLabel}
+                                  </div>
+                                )}
                                 {(isSubExpanded || !subgroupName) && (
                                   <div className="grid gap-3 md:grid-cols-2">
                                     {subBucket.devices.map((d: GroupableDevice) => {
