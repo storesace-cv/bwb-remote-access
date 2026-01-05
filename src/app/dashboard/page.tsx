@@ -7,7 +7,7 @@
 
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/mesh-auth";
-import { getUserClaims, getAdminRoleLabel, canManageUsers } from "@/lib/rbac-mesh";
+import { getUserClaims, getAdminRoleLabel, canManageUsers, isSuperAdmin, isAgent, isDomainAdmin } from "@/lib/rbac-mesh";
 import DashboardClient from "./DashboardClient";
 
 export default async function DashboardPage() {
@@ -23,16 +23,24 @@ export default async function DashboardPage() {
   const userDomain = session.domain;
   
   // Get role info
-  const isAdmin = canManageUsers(claims);
+  const canManage = canManageUsers(claims);
+  const superAdmin = isSuperAdmin(claims);
+  const agentRole = isAgent(claims);
+  const domainAdmin = isDomainAdmin(claims);
   const roleLabel = getAdminRoleLabel(claims) || claims?.userType || "Utilizador";
+  const userType = claims?.userType || "candidato";
 
   return (
     <DashboardClient
       userEmail={userEmail}
       userDisplayName={userDisplayName}
       userDomain={userDomain}
-      isAdmin={isAdmin}
+      isAdmin={canManage}
+      isSuperAdmin={superAdmin}
+      isAgent={agentRole}
+      isDomainAdmin={domainAdmin}
       roleLabel={roleLabel}
+      userType={userType}
     />
   );
 }
