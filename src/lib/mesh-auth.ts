@@ -575,13 +575,7 @@ export async function getSupabaseJWT(
       },
     });
     
-    // Check if user exists in Supabase Auth
-    const { data: existingUsers, error: listError } = await adminClient.auth.admin.listUsers({
-      page: 1,
-      perPage: 1,
-    });
-    
-    // Try to find user by email using admin API
+    // Try to find user by ID using admin API
     const { data: userData, error: getUserError } = await adminClient.auth.admin.getUserById(authUserId);
     
     let userId = userData?.user?.id;
