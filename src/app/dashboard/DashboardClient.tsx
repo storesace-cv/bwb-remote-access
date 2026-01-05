@@ -157,3 +157,229 @@ export default function DashboardClient({
     armeabi: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=armeabi-v7a",
     x86_64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=x86_64",
   };
+
+  // Fetch devices using internal API (session-based auth)
+  const fetchDevices = useCallback(async (): Promise<void> => {
+    setLoading(true);
+    setErrorMsg(null);
+    
+    try {
+      // Use internal API that uses session auth
+      const res = await fetch("/api/mesh/devices");
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || `Erro ${res.status} ao carregar dispositivos`);
+      }
+      
+      const data = await res.json();
+      const fetchedDevices: GroupableDevice[] = (data.devices || []).map((d: Record<string, unknown>) => ({
+        id: String(d.id ?? ""),
+        device_id: String(d.device_id ?? ""),
+        friendly_name: d.friendly_name as string | null ?? null,
+        group_name: d.group_name as string | null ?? null,
+        subgroup_name: d.subgroup_name as string | null ?? null,
+        notes: d.notes as string | null ?? null,
+        last_seen_at: d.last_seen_at as string | null ?? null,
+        rustdesk_password: d.rustdesk_password as string | null ?? null,
+        owner_email: d.owner_email as string | null ?? null,
+        owner: d.owner as string | null ?? null,
+        mesh_username: d.mesh_username as string | null ?? null,
+        group_id: d.group_id as string | null ?? null,
+        subgroup_id: d.subgroup_id as string | null ?? null,
+        created_at: d.created_at as string | null ?? null,
+        updated_at: d.updated_at as string | null ?? null,
+        from_provisioning_code: Boolean(d.from_provisioning_code),
+      }));
+      
+      setDevices(fetchedDevices);
+    } catch (error) {
+      console.error("Erro ao carregar dispositivos:", error);
+      setErrorMsg(error instanceof Error ? error.message : "Erro desconhecido");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load devices on mount
+  useEffect(() => {
+    void fetchDevices();
+  }, [fetchDevices]);
+
+  // Fetch mesh users for admin reassign (siteadmin only)
+  const fetchMeshUsers = useCallback(async (): Promise<void> => {
+    if (!isSiteadmin || meshUsersLoading || meshUsers.length > 0) return;
+    
+    setMeshUsersLoading(true);
+    try {
+      const res = await fetch("/api/admin/users");
+      if (res.ok) {
+        const data = await res.json();
+        const users: MeshUserOption[] = (data.users || []).map((u: Record<string, unknown>) => ({
+          id: String(u.id ?? ""),
+          mesh_username: u.meshUsername as string | null ?? null,
+          display_name: u.displayName as string | null ?? null,
+        }));
+        setMeshUsers(users);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar utilizadores mesh:", error);
+    } finally {
+      setMeshUsersLoading(false);
+    }
+  }, [isSiteadmin, meshUsersLoading, meshUsers.length]);
+
+  useEffect(() => {
+    if (isSiteadmin) {
+      void fetchMeshUsers();
+    }
+  }, [isSiteadmin, fetchMeshUsers]);
+
+  // Logout handler
+  const handleLogout = useCallback(() => {
+    // Clear any legacy tokens
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem("rustdesk_jwt");
+      } catch {
+        // Ignore localStorage errors
+      }
+    }
+    router.push("/api/auth/logout");
+  }, [router]);
+
+  // Refresh devices
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setRefreshError(null);
+    try {
+      await fetchDevices();
+    } catch (error) {
+      setRefreshError(error instanceof Error ? error.message : "Erro ao atualizar");
+    } finally {
+      setRefreshing(false);
+    }
+  }, [fetchDevices]);
+
+  // Start registration session
+  const startRegistrationSession = useCallback(async () => {
+    if (!meshUserId) {
+      setQrError("Utilizador não configurado para provisioning");
+      return;
+    }
+
+    setShowRegistrationModal(true);
+    setQrLoading(true);
+    setQrError("");
+    setQrImageUrl("");
+    setRegistrationStatus("awaiting");
+    setMatchedDevice(null);
+    setHybridDeviceIdInput("");
+    setHybridSubmitError(null);
+    setHybridSubmitSuccess(null);
+
+    try {
+      const res = await fetch("/api/provision/codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: authUserId,
+          mesh_user_id: meshUserId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Falha ao iniciar sessão de registo");
+      }
+
+      const data = await res.json();
+      setRegistrationSession({
+        session_id: data.session_id || data.code,
+        expires_at: data.expires_at || "",
+        expires_in_seconds: data.expires_in_seconds || 300,
+      });
+      setTimeRemaining(data.expires_in_seconds || 300);
+
+      // Generate QR if available
+      if (data.qr_url) {
+        setQrImageUrl(data.qr_url);
+      } else if (data.config_url) {
+        setQrImageUrl(data.config_url);
+      }
+    } catch (error) {
+      console.error("Erro ao iniciar sessão de registo:", error);
+      setQrError(error instanceof Error ? error.message : "Erro desconhecido");
+    } finally {
+      setQrLoading(false);
+    }
+  }, [meshUserId, authUserId]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (showRegistrationModal && timeRemaining > 0 && registrationStatus === "awaiting") {
+      countdownIntervalRef.current = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            setRegistrationStatus("expired");
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+    };
+  }, [showRegistrationModal, timeRemaining, registrationStatus]);
+
+  // Close registration modal
+  const closeRegistrationModal = useCallback(() => {
+    setShowRegistrationModal(false);
+    setRegistrationSession(null);
+    setQrImageUrl("");
+    setTimeRemaining(0);
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+    }
+    if (registrationStatus === "completed") {
+      void fetchDevices();
+    }
+  }, [registrationStatus, fetchDevices]);
+
+  // Hybrid submit (manual RustDesk ID entry)
+  const handleHybridSubmit = useCallback(async () => {
+    if (!hybridDeviceIdInput.trim() || !registrationSession) return;
+
+    setHybridSubmitLoading(true);
+    setHybridSubmitError(null);
+    setHybridSubmitSuccess(null);
+
+    try {
+      const res = await fetch("/api/provision/claim", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: registrationSession.session_id,
+          rustdesk_id: hybridDeviceIdInput.trim(),
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Falha ao registar dispositivo");
+      }
+
+      const data = await res.json();
+      setHybridSubmitSuccess(`Dispositivo ${data.device_id || hybridDeviceIdInput} registado com sucesso!`);
+      setMatchedDevice({ device_id: data.device_id || hybridDeviceIdInput });
+      setRegistrationStatus("completed");
+    } catch (error) {
+      console.error("Erro no registo híbrido:", error);
+      setHybridSubmitError(error instanceof Error ? error.message : "Erro ao registar");
+    } finally {
+      setHybridSubmitLoading(false);
+    }
+  }, [hybridDeviceIdInput, registrationSession]);
