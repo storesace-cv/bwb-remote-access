@@ -14,6 +14,14 @@ type ValidDomain = "mesh" | "zonetech" | "zsangola";
 const VALID_DOMAINS: ValidDomain[] = ["mesh", "zonetech", "zsangola"];
 
 /**
+ * Validates that a domain is one of the allowed domains.
+ * Guards against invalid domain values being written to the database.
+ */
+function isValidDomain(domain: string): domain is ValidDomain {
+  return VALID_DOMAINS.includes(domain as ValidDomain);
+}
+
+/**
  * Lists users from mesh_users table with optional domain filter.
  */
 export async function listMirrorUsers(options: {

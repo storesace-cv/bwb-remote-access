@@ -14,8 +14,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, getShortDomain } from "@/lib/mesh-auth";
-import { getUserClaims, isSuperAdmin, canAccessDomain, type ValidDomain, VALID_DOMAINS } from "@/lib/rbac-mesh";
+import { getSession } from "@/lib/mesh-auth";
+import { getUserClaims, canAccessDomain, type ValidDomain, VALID_DOMAINS } from "@/lib/rbac-mesh";
 import {
   generateMeshCentralSession,
   isMeshCentralSessionConfigured,

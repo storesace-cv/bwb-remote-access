@@ -11,7 +11,6 @@
  */
 
 import { MeshSession, getShortDomain, getMeshUserByEmail, type UserType } from "./mesh-auth";
-import { createClient } from "@supabase/supabase-js";
 
 // Valid domains
 export type ValidDomain = "mesh" | "zonetech" | "zsangola";
@@ -39,19 +38,6 @@ export interface UserClaims {
   isSiteAdmin: boolean;    // siteadmin or minisiteadmin
   isAgent: boolean;        // agent user type
   authenticated: boolean;
-}
-
-function getSupabase() {
-  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || 
-              process.env.SUPABASE_KEY || 
-              process.env.SUPABASE_ANON_KEY;
-  
-  if (!url || !key) {
-    return null;
-  }
-  
-  return createClient(url, key);
 }
 
 /**

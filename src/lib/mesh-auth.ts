@@ -379,6 +379,13 @@ export async function ensureSupabaseUser(
       .eq("mesh_username", normalizedEmail)
       .maybeSingle();
     
+    // Handle database errors explicitly - don't leak details but log for debugging
+    if (fetchError) {
+      console.error("[AUTH] Database error fetching user:", fetchError.message);
+      // Return null to indicate we couldn't verify/create user, but don't block login
+      return null;
+    }
+    
     if (existingUser) {
       console.log(`[AUTH] Found existing mesh_user: ${normalizedEmail}, type: ${existingUser.user_type}`);
       return { id: existingUser.id, user_type: existingUser.user_type };

@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get("limit") || "50", 10), 200);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
 
-    // Determine domain filter
+    // Determine domain filter with proper authorization check
     let filterDomain: ValidDomain | null = null;
 
     if (isSuperAdmin(claims)) {
@@ -63,6 +63,19 @@ export async function GET(req: NextRequest) {
           offset,
           domain: null,
         });
+      }
+
+      // SECURITY: Enforce domain access - if user requested a specific domain, verify access
+      if (requestedDomain && requestedDomain !== filterDomain) {
+        if (!canAccessDomain(claims, requestedDomain)) {
+          console.warn(
+            `[SECURITY] User ${claims.email} attempted to access domain ${requestedDomain} but belongs to ${claims.domain}`
+          );
+          return NextResponse.json(
+            { error: "Forbidden - you do not have access to this domain" },
+            { status: 403 }
+          );
+        }
       }
     }
 
