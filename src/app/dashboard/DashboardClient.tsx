@@ -1293,7 +1293,7 @@ export default function DashboardClient({
       {/* Adopt/Edit Modal */}
       {showAdoptModal && adoptingDevice && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-white">
                 {isEditingDevice ? "✏️ Editar Dispositivo" : "📱 Adoptar Dispositivo"}
@@ -1319,28 +1319,94 @@ export default function DashboardClient({
                   onChange={(e) => handleAdoptFormChange("friendly_name", e.target.value)}
                   placeholder="Ex: Tablet Loja 1"
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={adoptLoading}
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Password RustDesk (opcional)</label>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Grupo <span className="text-red-400">*</span>
+                </label>
+                <select
+                  value={adoptFormData.group_id}
+                  onChange={(e) => {
+                    setAdoptFormData({ ...adoptFormData, group_id: e.target.value, subgroup_id: undefined });
+                  }}
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={adoptLoading}
+                >
+                  {groupsLoading && (
+                    <option value="">A carregar lista de grupos...</option>
+                  )}
+                  {!groupsLoading && canonicalGroups.length === 0 && (
+                    <option value="">Nenhum grupo encontrado</option>
+                  )}
+                  {!groupsLoading && canonicalGroups.length > 0 && (
+                    <>
+                      <option value="">Selecione um grupo...</option>
+                      {canonicalGroups
+                        .filter(g => !g.parent_group_id)
+                        .map((group) => (
+                          <option key={group.id} value={group.id}>
+                            {group.name}
+                          </option>
+                        ))}
+                    </>
+                  )}
+                </select>
+                <p className="text-xs text-slate-500 mt-1">Campo obrigatório</p>
+              </div>
+
+              {availableSubgroups.length > 0 && (
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">
+                    Subgrupo <span className="text-slate-500">(opcional)</span>
+                  </label>
+                  <select
+                    value={adoptFormData.subgroup_id || ""}
+                    onChange={(e) =>
+                      setAdoptFormData({ ...adoptFormData, subgroup_id: e.target.value || undefined })
+                    }
+                    className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    disabled={adoptLoading}
+                  >
+                    <option value="">Nenhum subgrupo</option>
+                    {availableSubgroups.map((subgroup) => (
+                      <option key={subgroup.id} value={subgroup.id}>
+                        {subgroup.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Seleccione um subgrupo dentro de {selectedGroup?.name}
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Observações <span className="text-slate-500">(opcional)</span>
+                </label>
+                <textarea
+                  value={adoptFormData.observations}
+                  onChange={(e) => handleAdoptFormChange("observations", e.target.value)}
+                  placeholder="Notas adicionais sobre o equipamento, localização, etc."
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none min-h-[72px]"
+                  disabled={adoptLoading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">
+                  Password RustDesk <span className="text-slate-500">(opcional)</span>
+                </label>
                 <input
                   type="text"
                   value={adoptFormData.rustdesk_password}
                   onChange={(e) => handleAdoptFormChange("rustdesk_password", e.target.value)}
-                  placeholder="Password para conexão automática"
+                  placeholder="Se preenchido, o link abre com ?password=..."
                   className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-slate-400 mb-1">Observações</label>
-                <textarea
-                  value={adoptFormData.observations}
-                  onChange={(e) => handleAdoptFormChange("observations", e.target.value)}
-                  placeholder="Notas adicionais..."
-                  rows={3}
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                  disabled={adoptLoading}
                 />
               </div>
 
@@ -1359,7 +1425,7 @@ export default function DashboardClient({
                 </button>
                 <button
                   onClick={handleAdoptSubmit}
-                  disabled={adoptLoading}
+                  disabled={adoptLoading || !adoptFormData.group_id}
                   className="flex-1 px-4 py-2 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
                 >
                   {adoptLoading ? (
