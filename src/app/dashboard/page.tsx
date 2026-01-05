@@ -754,10 +754,7 @@ export default function DashboardPage() {
       .map((p: string) => p.trim())
       .filter((p: string) => p.length > 0);
 
-    const groupLabel =
-      device.group_name || parts[0] || "";
-    const subgroupLabel =
-      device.subgroup_name || parts[1] || "";
+    // Extract observations from notes (skip group/subgroup parts)
     const observations =
       parts.length > 2
         ? parts.slice(2).join(" | ")
