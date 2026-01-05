@@ -1078,3 +1078,321 @@ export default function DashboardClient({
           </section>
         )}
       </div>
+
+      {/* Registration Modal */}
+      {showRegistrationModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">📱 Registar Dispositivo</h2>
+              <button
+                onClick={closeRegistrationModal}
+                className="text-slate-400 hover:text-white transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            {registrationStatus === "completed" ? (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">✅</div>
+                <h3 className="text-lg font-medium text-emerald-400 mb-2">Dispositivo Registado!</h3>
+                <p className="text-sm text-slate-400">
+                  {matchedDevice?.device_id || "O dispositivo foi associado com sucesso."}
+                </p>
+                <button
+                  onClick={closeRegistrationModal}
+                  className="mt-6 px-6 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white transition"
+                >
+                  Fechar
+                </button>
+              </div>
+            ) : registrationStatus === "expired" ? (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-4">⏰</div>
+                <h3 className="text-lg font-medium text-amber-400 mb-2">Sessão Expirada</h3>
+                <p className="text-sm text-slate-400 mb-4">
+                  O tempo para registar o dispositivo expirou.
+                </p>
+                <button
+                  onClick={startRegistrationSession}
+                  className="px-6 py-2 bg-sky-600 hover:bg-sky-500 rounded-lg text-white transition"
+                >
+                  Tentar Novamente
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* QR Code Section */}
+                <div className="flex flex-col items-center">
+                  {qrLoading ? (
+                    <div className="w-48 h-48 flex items-center justify-center bg-slate-800 rounded-lg">
+                      <div className="h-8 w-8 rounded-full border-2 border-slate-600 border-t-emerald-500 animate-spin" />
+                    </div>
+                  ) : qrError && !hybridSubmitSuccess ? (
+                    <div className="w-48 h-48 flex items-center justify-center bg-red-950/30 rounded-lg border border-red-800">
+                      <p className="text-xs text-red-400 text-center px-4">{qrError}</p>
+                    </div>
+                  ) : qrImageUrl ? (
+                    <div className="bg-white p-3 rounded-lg">
+                      <Image
+                        src={qrImageUrl}
+                        alt="QR Code"
+                        width={192}
+                        height={192}
+                        className="w-48 h-48"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-48 h-48 flex items-center justify-center bg-slate-800 rounded-lg">
+                      <p className="text-xs text-slate-400 text-center px-4">Use o método manual abaixo</p>
+                    </div>
+                  )}
+
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-slate-400">Tempo restante:</p>
+                    <p className={`text-2xl font-mono font-bold ${timeRemaining < 60 ? "text-amber-400" : "text-emerald-400"}`}>
+                      {formatTime(timeRemaining)}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-slate-500 text-center mt-4">
+                    Abra a app RustDesk no dispositivo e escaneie este QR code para configurar automaticamente.
+                  </p>
+                </div>
+
+                {/* Hybrid Manual Entry Section */}
+                <div className="mt-6 pt-6 border-t border-slate-700">
+                  <div className="mb-4">
+                    <p className="text-sm text-slate-300 text-center font-medium mb-1">
+                      📋 Introduza o RustDesk ID do dispositivo:
+                    </p>
+                    <p className="text-xs text-slate-500 text-center">
+                      O ID aparece no canto superior esquerdo da app RustDesk (ex: 123456789)
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      value={hybridDeviceIdInput}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        setHybridDeviceIdInput(value);
+                      }}
+                      placeholder="RustDesk ID (ex: 123456789)"
+                      maxLength={12}
+                      className="flex-1 px-3 py-2.5 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={handlePasteFromClipboard}
+                      className="px-3 py-2.5 text-xs font-semibold bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded-lg text-white transition whitespace-nowrap"
+                      title="Colar RustDesk ID da área de transferência"
+                    >
+                      📋 PASTE
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleHybridSubmit}
+                    disabled={hybridSubmitLoading || !hybridDeviceIdInput.trim()}
+                    className="w-full px-4 py-3 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white transition flex items-center justify-center gap-2"
+                  >
+                    {hybridSubmitLoading ? (
+                      <>
+                        <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                        A REGISTAR...
+                      </>
+                    ) : (
+                      <>📤 ENVIAR RUSTDESK ID</>
+                    )}
+                  </button>
+
+                  {hybridSubmitError && (
+                    <div className="mt-3 p-2 bg-red-950/40 border border-red-800 rounded-lg">
+                      <p className="text-xs text-red-400 text-center">{hybridSubmitError}</p>
+                    </div>
+                  )}
+                  {hybridSubmitSuccess && (
+                    <div className="mt-3 p-2 bg-emerald-950/40 border border-emerald-800 rounded-lg">
+                      <p className="text-xs text-emerald-400 text-center">{hybridSubmitSuccess}</p>
+                    </div>
+                  )}
+
+                  {hybridDeviceIdInput && (
+                    <p className="text-xs text-slate-500 text-center mt-2">
+                      {hybridDeviceIdInput.length < 6 ? (
+                        <span className="text-amber-400">⚠️ O ID deve ter pelo menos 6 dígitos</span>
+                      ) : hybridDeviceIdInput.length > 12 ? (
+                        <span className="text-amber-400">⚠️ O ID deve ter no máximo 12 dígitos</span>
+                      ) : (
+                        <span className="text-emerald-400">✓ Formato válido ({hybridDeviceIdInput.length} dígitos)</span>
+                      )}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Adopt/Edit Modal */}
+      {showAdoptModal && adoptingDevice && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">
+                {isEditingDevice ? "✏️ Editar Dispositivo" : "📱 Adoptar Dispositivo"}
+              </h2>
+              <button onClick={closeAdoptModal} className="text-slate-400 hover:text-white transition">
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">RustDesk ID</label>
+                <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white font-mono">
+                  {adoptingDevice.device_id}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Nome amigável</label>
+                <input
+                  type="text"
+                  value={adoptFormData.friendly_name}
+                  onChange={(e) => handleAdoptFormChange("friendly_name", e.target.value)}
+                  placeholder="Ex: Tablet Loja 1"
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Password RustDesk (opcional)</label>
+                <input
+                  type="text"
+                  value={adoptFormData.rustdesk_password}
+                  onChange={(e) => handleAdoptFormChange("rustdesk_password", e.target.value)}
+                  placeholder="Password para conexão automática"
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Observações</label>
+                <textarea
+                  value={adoptFormData.observations}
+                  onChange={(e) => handleAdoptFormChange("observations", e.target.value)}
+                  placeholder="Notas adicionais..."
+                  rows={3}
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                />
+              </div>
+
+              {adoptError && (
+                <div className="p-2 bg-red-950/40 border border-red-800 rounded-lg">
+                  <p className="text-xs text-red-400">{adoptError}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={closeAdoptModal}
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 text-white transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleAdoptSubmit}
+                  disabled={adoptLoading}
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white transition flex items-center justify-center gap-2"
+                >
+                  {adoptLoading ? (
+                    <>
+                      <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                      A guardar...
+                    </>
+                  ) : (
+                    <>{isEditingDevice ? "Guardar" : "Adoptar"}</>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Reassign Modal */}
+      {showAdminReassignModal && adminDeviceToManage && isSiteadmin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="bg-slate-900 rounded-2xl border border-slate-700 p-6 w-full max-w-md mx-4 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">👤 Reatribuir Dispositivo</h2>
+              <button onClick={closeAdminReassignModal} className="text-slate-400 hover:text-white transition">
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Dispositivo</label>
+                <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white font-mono">
+                  {adminDeviceToManage.device_id}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Proprietário actual</label>
+                <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-slate-300">
+                  {adminDeviceToManage.mesh_username || "Nenhum"}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Novo proprietário</label>
+                <select
+                  value={adminReassignForm.mesh_username}
+                  onChange={(e) => setAdminReassignForm({ mesh_username: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                >
+                  <option value="">Selecione um utilizador...</option>
+                  {meshUsers.map((u) => (
+                    <option key={u.id} value={u.mesh_username || ""}>
+                      {u.display_name || u.mesh_username || u.id}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {adminActionError && (
+                <div className="p-2 bg-red-950/40 border border-red-800 rounded-lg">
+                  <p className="text-xs text-red-400">{adminActionError}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={closeAdminReassignModal}
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 text-white transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  disabled={adminActionLoading || !adminReassignForm.mesh_username}
+                  className="flex-1 px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white transition"
+                >
+                  Reatribuir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
