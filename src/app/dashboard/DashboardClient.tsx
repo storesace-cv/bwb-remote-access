@@ -562,3 +562,230 @@ export default function DashboardClient({
       console.warn("Failed to read clipboard:", err);
     }
   }, []);
+
+  return (
+    <main className="min-h-screen flex flex-col bg-slate-950">
+      <div className="w-full max-w-5xl mx-auto px-4 py-8">
+        <header className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-xl font-semibold text-white">BWB | Suporte Android</h1>
+            <div className="flex flex-col">
+              <p className="text-sm text-slate-400">
+                © jorge peixinho - Business with Brains
+              </p>
+              {userDisplayName && (
+                <p className="text-xs text-slate-500">
+                  {userDisplayName}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            {isAdmin && (
+              <Link
+                href="/admin/users"
+                className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
+              >
+                Gestão de Utilizadores
+              </Link>
+            )}
+            <Link
+              href="/dashboard/profile"
+              className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
+            >
+              Perfil
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1.5 text-sm rounded-md bg-red-600 hover:bg-red-500 transition text-white"
+            >
+              Sair
+            </button>
+          </div>
+        </header>
+
+        {refreshError && (
+          <div className="mb-4 p-3 bg-amber-950/40 border border-amber-900 rounded-md">
+            <p className="text-sm text-amber-400">⚠️ {refreshError}</p>
+          </div>
+        )}
+
+        {/* Agent Panel - shown for agent, minisiteadmin, siteadmin */}
+        {isAgent && (
+          <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-emerald-400">
+                  🎯 Painel de Gestão (Agent){userDomain && ` | ${userDomain}`}
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Link
+                href="/dashboard/collaborators"
+                className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
+                    👥
+                  </div>
+                  <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-white mb-1">Colaboradores</h3>
+                <p className="text-xs text-slate-400">
+                  Criar e gerir colaboradores que terão acesso aos teus dispositivos
+                </p>
+              </Link>
+
+              <Link
+                href="/dashboard/groups"
+                className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
+                    📦
+                  </div>
+                  <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
+                <p className="text-xs text-slate-400">
+                  Organizar dispositivos em grupos e gerir permissões dos colaboradores
+                </p>
+              </Link>
+            </div>
+          </section>
+        )}
+
+        {/* Add Device Panel - shown for everyone */}
+        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-sky-400">📱 Adicionar Dispositivo</h2>
+              <p className="text-xs text-slate-400 mt-1">
+                Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={startRegistrationSession}
+              className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
+                  📷
+                </div>
+                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+              <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
+              <p className="text-xs text-slate-400">
+                Gera um QR code para dispositivos móveis com câmara (smartphones, tablets Android)
+              </p>
+              <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
+                <span>Abrir modal QR</span>
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </button>
+
+            <Link
+              href="/provisioning"
+              className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 block"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
+                  🔢
+                </div>
+                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+              <h3 className="font-medium text-white mb-1">Provisionamento sem QR</h3>
+              <p className="text-xs text-slate-400">
+                Gera código de 4 dígitos para Android TV, boxes e dispositivos sem câmara
+              </p>
+              <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
+                <span>Ir para Provisioning</span>
+                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </Link>
+          </div>
+
+          {/* APK Download Section */}
+          <div className="mt-4 space-y-4">
+            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+              <button
+                type="button"
+                onClick={() => setSelectedRustdeskAbi("arm64")}
+                className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
+                  selectedRustdeskAbi === "arm64"
+                    ? "bg-emerald-600 border-emerald-500 text-white"
+                    : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                }`}
+              >
+                arm64‑v8a (recomendado)
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedRustdeskAbi("armeabi")}
+                className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
+                  selectedRustdeskAbi === "armeabi"
+                    ? "bg-emerald-600 border-emerald-500 text-white"
+                    : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                }`}
+              >
+                armeabi‑v7a (32‑bit)
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedRustdeskAbi("x86_64")}
+                className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
+                  selectedRustdeskAbi === "x86_64"
+                    ? "bg-emerald-600 border-emerald-500 text-white"
+                    : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
+                }`}
+              >
+                x86_64 (Android TV)
+              </button>
+            </div>
+
+            {selectedRustdeskAbi && (
+              <div className="flex flex-col items-center space-y-2">
+                <div className="bg-white p-3 rounded-md shadow-sm">
+                  <QRCode
+                    value={RUSTDESK_APK_URLS[selectedRustdeskAbi]}
+                    size={128}
+                    bgColor="#ffffff"
+                    fgColor="#020617"
+                  />
+                </div>
+                <p className="text-xs font-semibold text-slate-100">
+                  {selectedRustdeskAbi === "arm64" && "arm64‑v8a (a maioria dos dispositivos Android recentes)"}
+                  {selectedRustdeskAbi === "armeabi" && "armeabi‑v7a (dispositivos mais antigos, 32‑bit)"}
+                  {selectedRustdeskAbi === "x86_64" && "x86_64 (Android TV / boxes e ambientes x86_64)"}
+                </p>
+                <p className="text-[11px] text-center text-slate-400">
+                  Aponta a câmara do dispositivo Android para este QR code para descarregar o APK correspondente.
+                </p>
+                <p className="text-[10px] text-center text-slate-500 break-all">
+                  {RUSTDESK_APK_URLS[selectedRustdeskAbi]}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
