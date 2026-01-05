@@ -175,14 +175,15 @@ fi
 
 echo ""
 
-# Test 2: Login page
+# Test 2: Login page (now redirects to /)
 echo "🔍 [2/5] Testing http://localhost:3000/login ..."
 LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/login" 2>/dev/null || echo "000")
 echo "   HTTP Status: $LOGIN_STATUS"
-if [[ "$LOGIN_STATUS" == "200" ]]; then
+# /login redirects to / (307), which is expected behavior
+if [[ "$LOGIN_STATUS" =~ ^(200|307)$ ]]; then
   echo "   ✅ PASS"
 else
-  echo "   ❌ FAIL: Expected 200, got $LOGIN_STATUS"
+  echo "   ❌ FAIL: Expected 200 or 307, got $LOGIN_STATUS"
   TEST_FAILED=1
 fi
 

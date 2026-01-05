@@ -349,18 +349,27 @@ function getSupabaseAdmin() {
 }
 
 /**
- * Ensure user exists in Supabase mesh_users table after MeshCentral authentication
+ * Generate a stable UUID for user identity.
+ * This is only called ONCE per user and then persisted.
+ */
+function generateUserUUID(): string {
+  return crypto.randomUUID();
+}
+
+/**
+ * Ensure user exists in Supabase mesh_users table after MeshCentral authentication.
+ * Also ensures auth_user_id is set (generates once if missing).
  * 
  * IMPORTANT: 
- * - Uses public.mesh_users table (NOT public.users which doesn't exist)
+ * - Uses public.mesh_users table
  * - username MUST equal email (normalized)
  * - Default user_type for new users: 'candidato'
- * - Does NOT block login if this fails
+ * - Guarantees auth_user_id is always set
  */
 export async function ensureSupabaseUser(
   email: string,
   domain: string
-): Promise<{ id?: string; user_type?: string } | null> {
+): Promise<{ id: string; auth_user_id: string; user_type: string } | null> {
   const supabase = getSupabaseAdmin();
   
   if (!supabase) {
@@ -375,26 +384,45 @@ export async function ensureSupabaseUser(
     // Check if user exists by mesh_username (which equals email)
     const { data: existingUser, error: fetchError } = await supabase
       .from("mesh_users")
-      .select("id, user_type, agent_id")
+      .select("id, user_type, agent_id, auth_user_id")
       .eq("mesh_username", normalizedEmail)
       .maybeSingle();
     
-    // Handle database errors explicitly - don't leak details but log for debugging
+    // Handle database errors explicitly
     if (fetchError) {
       console.error("[AUTH] Database error fetching user:", fetchError.message);
-      // Return null to indicate we couldn't verify/create user, but don't block login
       return null;
     }
     
     if (existingUser) {
-      console.log(`[AUTH] Found existing mesh_user: ${normalizedEmail}, type: ${existingUser.user_type}`);
-      return { id: existingUser.id, user_type: existingUser.user_type };
+      // User exists - check if auth_user_id needs to be set
+      let authUserId = existingUser.auth_user_id;
+      
+      if (!authUserId) {
+        // Generate auth_user_id ONCE and persist it
+        authUserId = generateUserUUID();
+        console.log(`[AUTH] Generating auth_user_id for existing user: ${normalizedEmail}`);
+        
+        const { error: updateError } = await supabase
+          .from("mesh_users")
+          .update({ auth_user_id: authUserId })
+          .eq("id", existingUser.id);
+        
+        if (updateError) {
+          console.error("[AUTH] Failed to set auth_user_id:", updateError.message);
+          // Continue anyway - we can try again next login
+        }
+      }
+      
+      console.log(`[AUTH] Found existing mesh_user: ${normalizedEmail}, auth_user_id: ${authUserId}`);
+      return { 
+        id: existingUser.id, 
+        auth_user_id: authUserId,
+        user_type: existingUser.user_type 
+      };
     }
     
     // User doesn't exist - create with default user_type='candidato'
-    // Note: agent_id is required - we need to handle this
-    // For now, we'll look for an existing agent for this domain or create a placeholder
-    
     // First, try to find an agent for this domain
     const { data: domainAgent } = await supabase
       .from("mesh_users")
@@ -412,6 +440,9 @@ export async function ensureSupabaseUser(
       return null;
     }
     
+    // Generate auth_user_id for the new user
+    const authUserId = generateUserUUID();
+    
     const { data: newUser, error: createError } = await supabase
       .from("mesh_users")
       .insert({
@@ -421,8 +452,9 @@ export async function ensureSupabaseUser(
         user_type: "candidato",          // Default for new users
         agent_id: domainAgent.id,        // Required FK
         source: "meshcentral",
+        auth_user_id: authUserId,        // Stable UUID for this user
       })
-      .select("id, user_type")
+      .select("id, user_type, auth_user_id")
       .single();
     
     if (createError) {
@@ -430,12 +462,73 @@ export async function ensureSupabaseUser(
       return null;
     }
     
-    console.log(`[AUTH] Created new mesh_user: ${normalizedEmail} @ ${shortDomain}`);
-    return { id: newUser.id, user_type: newUser.user_type };
+    console.log(`[AUTH] Created new mesh_user: ${normalizedEmail} @ ${shortDomain}, auth_user_id: ${authUserId}`);
+    return { 
+      id: newUser.id, 
+      auth_user_id: newUser.auth_user_id,
+      user_type: newUser.user_type 
+    };
     
   } catch (error) {
     console.error("[AUTH] Supabase user mirroring error:", error);
     return null;
+  }
+}
+
+/**
+ * Upsert user into public.profiles table.
+ * Uses mesh_users.auth_user_id as profiles.id for stable identity.
+ * 
+ * Schema from remote_schema.sql:
+ *   profiles.id        uuid NOT NULL (PK)
+ *   profiles.email     text
+ *   profiles.full_name text
+ *   profiles.avatar_url text
+ *   profiles.created_at timestamp with time zone DEFAULT now()
+ */
+export async function ensureProfileExists(
+  authUserId: string,
+  email: string,
+  fullName?: string
+): Promise<boolean> {
+  const supabase = getSupabaseAdmin();
+  
+  if (!supabase) {
+    console.log("[AUTH] Skipping profile mirroring - Supabase not configured");
+    return false;
+  }
+  
+  const normalizedEmail = normalizeEmail(email);
+  
+  try {
+    // Upsert into profiles - idempotent operation
+    const { error: upsertError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: authUserId,
+          email: normalizedEmail,
+          full_name: fullName || normalizedEmail.split("@")[0],
+          // avatar_url: null (optional)
+          // created_at: defaults to now() on insert
+        },
+        {
+          onConflict: "id",
+          ignoreDuplicates: false,
+        }
+      );
+    
+    if (upsertError) {
+      console.error("[AUTH] Failed to upsert profile:", upsertError.message);
+      return false;
+    }
+    
+    console.log(`[AUTH] Profile upserted successfully: ${normalizedEmail} (id: ${authUserId})`);
+    return true;
+    
+  } catch (error) {
+    console.error("[AUTH] Profile mirroring error:", error);
+    return false;
   }
 }
 
@@ -492,8 +585,20 @@ export async function login(
   }
   
   try {
-    // 2. Ensure user exists in Supabase (non-blocking)
+    // 2. Ensure user exists in Supabase mesh_users (with auth_user_id)
     const userData = await ensureSupabaseUser(email, domain);
+    
+    // 3. Mirror to profiles table (uses auth_user_id as profiles.id)
+    if (userData?.auth_user_id) {
+      const profileCreated = await ensureProfileExists(
+        userData.auth_user_id,
+        email
+      );
+      
+      if (profileCreated) {
+        console.log(`[AUTH] User fully mirrored: mesh_users.id=${userData.id}, profiles.id=${userData.auth_user_id}`);
+      }
+    }
     
     // Enrich session with user data if available
     if (userData) {
@@ -501,7 +606,7 @@ export async function login(
       authResult.session.userType = userData.user_type;
     }
     
-    // 3. Set session cookie
+    // 4. Set session cookie
     await setSessionCookie(authResult.session);
     
     return authResult;
