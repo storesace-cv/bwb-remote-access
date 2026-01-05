@@ -101,8 +101,9 @@ export default async function ProfilePage() {
   const userDomain = userData?.domain || session.domain;
   const userCreatedAt = userData?.created_at;
   
-  // Get role info
-  const roleData = userData?.roles as { id: string; name: string; display_name: string; hierarchy_level: number } | null;
+  // Get role info - handle both single object and array from Supabase
+  const rolesRaw = userData?.roles;
+  const roleData = Array.isArray(rolesRaw) ? rolesRaw[0] : rolesRaw;
   const roleName = (roleData?.name || 'colaborador') as RoleName;
   const roleDisplayName = roleData?.display_name || ROLE_DISPLAY_NAMES[roleName] || 'Colaborador';
   const roleColors = ROLE_COLORS[roleName] || ROLE_COLORS.colaborador;
