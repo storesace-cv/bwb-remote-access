@@ -145,8 +145,8 @@ export default function DashboardClient({
   const filteredDevices = devices
     .filter((device) => {
       // Status filter
-      if (filterStatus === "adopted" && !device.owner_id) return false;
-      if (filterStatus === "unadopted" && device.owner_id) return false;
+      if (filterStatus === "adopted" && !device.owner) return false;
+      if (filterStatus === "unadopted" && device.owner) return false;
       
       // Search filter
       if (searchQuery) {
@@ -154,7 +154,7 @@ export default function DashboardClient({
         return (
           device.device_id.toLowerCase().includes(query) ||
           (device.friendly_name?.toLowerCase().includes(query) ?? false) ||
-          (device.observations?.toLowerCase().includes(query) ?? false)
+          (device.notes?.toLowerCase().includes(query) ?? false)
         );
       }
       return true;
@@ -178,8 +178,8 @@ export default function DashboardClient({
       }
     });
 
-  const adoptedCount = devices.filter((d) => d.owner_id).length;
-  const unadoptedCount = devices.filter((d) => !d.owner_id).length;
+  const adoptedCount = devices.filter((d) => d.owner).length;
+  const unadoptedCount = devices.filter((d) => !d.owner).length;
 
   // Registration session management
   const startRegistrationSession = useCallback(async () => {
