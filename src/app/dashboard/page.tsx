@@ -134,31 +134,47 @@ export default function DashboardPage() {
     x86_64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=x86_64",
   };
 
-  // Novo: ler JWT e authUserId do localStorage ao montar o dashboard
+  // Ler JWT e authUserId do localStorage ao montar o dashboard
+  // NOTA: Não redirecionamos para "/" aqui porque a sessão já foi validada pelo servidor
+  // na página raiz. Se não houver JWT, mostramos estado de carregamento e tentamos novamente.
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const stored = window.localStorage.getItem("rustdesk_jwt");
-    if (!stored || stored.trim().length === 0) {
-      router.replace("/");
-      return;
-    }
-
-    setJwt(stored);
-
-    try {
-      const parts = stored.split(".");
-      if (parts.length >= 2) {
-        const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
-        const payload = JSON.parse(payloadJson) as { sub?: string };
-        if (payload.sub && typeof payload.sub === "string") {
-          setAuthUserId(payload.sub);
-        }
+    const loadJwt = () => {
+      const stored = window.localStorage.getItem("rustdesk_jwt");
+      if (!stored || stored.trim().length === 0) {
+        // JWT ainda não está disponível - pode estar em processo de ser guardado
+        // Não redirecionamos, apenas esperamos
+        return false;
       }
-    } catch (error) {
-      console.error("Erro ao decodificar JWT em /dashboard:", error);
+
+      setJwt(stored);
+
+      try {
+        const parts = stored.split(".");
+        if (parts.length >= 2) {
+          const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+          const payload = JSON.parse(payloadJson) as { sub?: string };
+          if (payload.sub && typeof payload.sub === "string") {
+            setAuthUserId(payload.sub);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao decodificar JWT em /dashboard:", error);
+      }
+      return true;
+    };
+
+    // Tentar carregar imediatamente
+    if (!loadJwt()) {
+      // Se não encontrou, tentar novamente após um pequeno delay
+      // (o localStorage pode ainda estar sendo escrito pelo login-form)
+      const retryTimeout = setTimeout(() => {
+        loadJwt();
+      }, 100);
+      return () => clearTimeout(retryTimeout);
     }
-  }, [router]);
+  }, []);
 
   // Check if user is an agent / minisiteadmin / siteadmin
   const checkUserType = useCallback(async () => {
