@@ -1,33 +1,14 @@
 /**
  * Next.js Middleware - Session-based Authentication
  * 
- * Authentication is based on MeshCentral credentials.
- * Session is stored in a cookie (mesh_session).
- * 
- * Protected routes redirect to /login if no session.
- * Authenticated users are redirected away from login pages.
+ * - Root (/) shows login form (handled by page, not middleware)
+ * - Protected routes redirect to / if no session
+ * - Authenticated users on /login redirect to /dashboard
  */
 
 import { NextRequest, NextResponse } from "next/server";
 
-// =============================================================================
-// CONFIGURATION
-// =============================================================================
-
-const PUBLIC_ROUTES = [
-  "/",
-  "/login",
-  "/login/credentials",
-  "/auth-error",
-  "/api/auth/login",
-  "/api/auth/logout",
-  "/api/auth/session",
-];
-
-const LOGIN_ROUTES = [
-  "/login",
-  "/login/credentials",
-];
+const SESSION_COOKIE_NAME = "mesh_session";
 
 const PROTECTED_ROUTE_PREFIXES = [
   "/dashboard",
@@ -36,32 +17,6 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/provisioning",
 ];
 
-const SESSION_COOKIE_NAME = "mesh_session";
-
-// =============================================================================
-// HELPERS
-// =============================================================================
-
-function getPublicBaseUrl(request: NextRequest): string {
-  const forwardedHost = request.headers.get("x-forwarded-host");
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
-  
-  if (forwardedHost) {
-    return `${forwardedProto}://${forwardedHost}`;
-  }
-  
-  const envUrl = process.env.APP_BASE_URL;
-  if (envUrl) {
-    let url = envUrl.trim();
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = `https://${url}`;
-    }
-    return url.replace(/\/$/, "");
-  }
-  
-  return "https://rustdesk.bwb.pt";
-}
-
 function isStaticAsset(pathname: string): boolean {
   if (pathname.startsWith("/_next/")) return true;
   if (pathname.startsWith("/assets/")) return true;
@@ -69,20 +24,6 @@ function isStaticAsset(pathname: string): boolean {
   if (pathname.startsWith("/apk/")) return true;
   if (/\.(png|jpg|jpeg|gif|svg|ico|webp|css|js|map|woff|woff2|ttf|eot|xml|txt|json|pdf)$/.test(pathname)) return true;
   return false;
-}
-
-function isPublicRoute(pathname: string): boolean {
-  // Check exact matches first
-  if (PUBLIC_ROUTES.includes(pathname)) return true;
-  
-  // Check prefix matches for API routes
-  if (pathname.startsWith("/api/auth/")) return true;
-  
-  return false;
-}
-
-function isLoginRoute(pathname: string): boolean {
-  return LOGIN_ROUTES.includes(pathname);
 }
 
 function isProtectedRoute(pathname: string): boolean {
@@ -96,44 +37,43 @@ function hasSession(request: NextRequest): boolean {
   return !!sessionCookie?.value;
 }
 
-// =============================================================================
-// MIDDLEWARE
-// =============================================================================
+function getPublicBaseUrl(request: NextRequest): string {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+  
+  return process.env.APP_BASE_URL?.replace(/\/$/, "") || "https://rustdesk.bwb.pt";
+}
 
 export default async function middleware(request: NextRequest) {
-  const { pathname, search } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
-  // 1. STATIC ASSETS → Pass through
+  // 1. Static assets → pass through
   if (isStaticAsset(pathname)) {
     return NextResponse.next();
   }
 
-  // 2. AUTHENTICATED USERS ON LOGIN PAGES → Redirect to dashboard
-  if (isLoginRoute(pathname) && hasSession(request)) {
+  // 2. API routes → pass through
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
+
+  // 3. /login with session → redirect to dashboard
+  if (pathname === "/login" && hasSession(request)) {
     const baseUrl = getPublicBaseUrl(request);
-    const dashboardUrl = new URL("/dashboard", baseUrl);
-    return NextResponse.redirect(dashboardUrl, { status: 302 });
+    return NextResponse.redirect(new URL("/dashboard", baseUrl), { status: 302 });
   }
 
-  // 3. PUBLIC ROUTES → Pass through
-  if (isPublicRoute(pathname)) {
-    return NextResponse.next();
+  // 4. Protected routes without session → redirect to root
+  if (isProtectedRoute(pathname) && !hasSession(request)) {
+    const baseUrl = getPublicBaseUrl(request);
+    return NextResponse.redirect(new URL("/", baseUrl), { status: 302 });
   }
 
-  // 4. PROTECTED ROUTES → Check session
-  if (isProtectedRoute(pathname)) {
-    if (!hasSession(request)) {
-      const baseUrl = getPublicBaseUrl(request);
-      const loginUrl = new URL("/login", baseUrl);
-      const returnTo = pathname + (search || "");
-      loginUrl.searchParams.set("returnTo", returnTo);
-      return NextResponse.redirect(loginUrl, { status: 302 });
-    }
-    
-    return NextResponse.next();
-  }
-
-  // 5. DEFAULT → Pass through
+  // 5. Everything else → pass through
   return NextResponse.next();
 }
 
