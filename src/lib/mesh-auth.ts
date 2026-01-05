@@ -585,8 +585,20 @@ export async function login(
   }
   
   try {
-    // 2. Ensure user exists in Supabase (non-blocking)
+    // 2. Ensure user exists in Supabase mesh_users (with auth_user_id)
     const userData = await ensureSupabaseUser(email, domain);
+    
+    // 3. Mirror to profiles table (uses auth_user_id as profiles.id)
+    if (userData?.auth_user_id) {
+      const profileCreated = await ensureProfileExists(
+        userData.auth_user_id,
+        email
+      );
+      
+      if (profileCreated) {
+        console.log(`[AUTH] User fully mirrored: mesh_users.id=${userData.id}, profiles.id=${userData.auth_user_id}`);
+      }
+    }
     
     // Enrich session with user data if available
     if (userData) {
@@ -594,7 +606,7 @@ export async function login(
       authResult.session.userType = userData.user_type;
     }
     
-    // 3. Set session cookie
+    // 4. Set session cookie
     await setSessionCookie(authResult.session);
     
     return authResult;
