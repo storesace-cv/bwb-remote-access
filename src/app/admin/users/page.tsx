@@ -163,6 +163,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
             allowedDomains={allowedDomains}
             filterDomain={filterDomain}
             currentUserEmail={email}
+            currentUserType={claims.userType}
           />
         )}
 
