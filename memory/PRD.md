@@ -1,6 +1,6 @@
 # BWB Remote Access - Product Requirements Document
 
-**Last Updated:** January 4, 2026
+**Last Updated:** January 5, 2026
 
 ## Overview
 
