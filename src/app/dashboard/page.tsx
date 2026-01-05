@@ -64,6 +64,7 @@ export default function DashboardPage() {
   const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
   const [isSiteadmin, setIsSiteadmin] = useState(false);
   const [userTypeChecked, setUserTypeChecked] = useState(false);
+  const [initialDevicesLoaded, setInitialDevicesLoaded] = useState(false);
   
   // NEW: User profile data
   const [userDomain, setUserDomain] = useState<string>("");
