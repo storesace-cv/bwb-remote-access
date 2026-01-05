@@ -27,9 +27,9 @@ export default async function DashboardPage() {
   
   // Get user info
   const userDomain = meshUser?.domain || session.domain || "";
-  const userDisplayName = meshUser?.display_name || meshUser?.name || session.email.split("@")[0];
+  const userDisplayName = session.email.split("@")[0];
   const meshUserId = meshUser?.id || null;
-  const authUserId = meshUser?.auth_user_id || null;
+  const authUserId = meshUser?.agent_id || null;
 
   return (
     <DashboardClient
