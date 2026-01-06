@@ -148,6 +148,9 @@ export default function UsersManagementPage() {
                   const userType = data[0].user_type;
                   setCurrentUserType(userType);
                   
+                  // Guardar no localStorage para uso posterior
+                  window.localStorage.setItem("mesh_user_type", userType);
+                  
                   // Verificar se tem permissão
                   if (!ALLOWED_USER_TYPES.includes(userType)) {
                     router.replace("/dashboard");
