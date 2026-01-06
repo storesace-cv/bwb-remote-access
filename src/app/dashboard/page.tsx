@@ -269,16 +269,8 @@ export default function DashboardPage() {
               displayName: role.display_name || role.name || "",
             });
             
-            // Set permissions from roles table
-            setUserPermissions({
-              can_access_management_panel: role.can_access_management_panel ?? false,
-              can_scan_qr: role.can_scan_qr ?? false,
-              can_provision_without_qr: role.can_provision_without_qr ?? false,
-              can_view_devices: role.can_view_devices ?? false,
-              can_adopt_devices: role.can_adopt_devices ?? false,
-              can_create_users: role.can_create_users ?? false,
-              can_view_users: role.can_view_users ?? false,
-            });
+            // Set all permissions from roles table
+            setUserPermissions(role as RolePermissions);
 
             console.log("[Dashboard] Permissions set from role:", role.name);
           }
@@ -287,17 +279,9 @@ export default function DashboardPage() {
         }
       } else {
         console.warn("[Dashboard] User has no role_id assigned");
-        // Default to colaborador permissions
+        // Default to null permissions (restricted access)
         setUserRole({ name: "colaborador", displayName: "Colaborador" });
-        setUserPermissions({
-          can_access_management_panel: false,
-          can_scan_qr: true,
-          can_provision_without_qr: true,
-          can_view_devices: true,
-          can_adopt_devices: true,
-          can_create_users: false,
-          can_view_users: false,
-        });
+        setUserPermissions(null);
       }
 
       setUserTypeChecked(true);
