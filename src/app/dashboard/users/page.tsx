@@ -8,7 +8,6 @@ import { ToastContainer, useToast } from "@/components/ui/toast";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-const ADMIN_AUTH_USER_ID = "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
 // Roles que podem aceder à gestão de utilizadores
 const ALLOWED_USER_TYPES = ["siteadmin", "minisiteadmin", "agent"];
 
