@@ -1151,8 +1151,8 @@ export default function DashboardPage() {
   }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
   const filteredDevices = getFilteredAndSortedDevices();
-  // isAdmin should be true for siteadmin users, not a hardcoded UUID
-  const isAdmin = isSiteadmin;
+  // isAdmin is true for siteadmin users (using role from roles table)
+  const isAdmin = userRole.name === "siteadmin";
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
   const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
