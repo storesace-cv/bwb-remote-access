@@ -417,47 +417,18 @@ export default function UsersManagementPage() {
   };
 
   const openEditModal = async (user: AdminUser) => {
-    const displayName =
-      user.user_metadata?.display_name ??
-      user.mesh_display_name ??
-      "";
-
-    const confirmed = Boolean(user.email_confirmed_at);
-    const banned = Boolean(user.banned_until);
-
-    // Buscar user_type do mesh_users se existir
-    let isAgent = false;
-    try {
-      if (jwt && user.id) {
-        const res = await fetch(
-          `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-              apikey: anonKey,
-            },
-          }
-        );
-        if (res.ok) {
-          const data = await res.json() as Array<{ user_type?: string | null }>;
-          if (data.length > 0 && data[0].user_type === "agent") {
-            isAgent = true;
-          }
-        }
-      }
-    } catch (err) {
-      console.error("Erro ao buscar user_type:", err);
-    }
+    // Verificar se é agent pelo user_type
+    const isAgent = user.user_type === "agent";
 
     setEditForm({
       id: user.id,
-      email: user.email ?? "",
+      email: user.email ?? user.mesh_username ?? "",
       password: "",
-      display_name: displayName,
+      display_name: user.display_name ?? "",
       mesh_username: user.mesh_username ?? "",
-      mesh_user_id: user.mesh_user_id ?? "",
-      email_confirm: confirmed,
-      ban: banned,
+      mesh_user_id: user.id,
+      email_confirm: true, // mesh_users já está confirmado
+      ban: false,
       is_agent: isAgent,
     });
     setEditError(null);
