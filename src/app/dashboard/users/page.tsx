@@ -1015,17 +1015,8 @@ export default function UsersManagementPage() {
                     );
                   }
 
-                  const metadataDisplay =
-                    current.user_metadata?.display_name ?? "";
-                  const baseName =
-                    (current.mesh_display_name ?? "").trim().length > 0
-                      ? (current.mesh_display_name ?? "").trim()
-                      : metadataDisplay.trim().length > 0
-                      ? metadataDisplay.trim()
-                      : current.mesh_username;
-
-                  const domainRaw =
-                    (current.mesh_domain ?? "").trim();
+                  const baseName = current.display_name?.trim() || current.mesh_username || "";
+                  const domainRaw = (current.domain ?? "").trim();
 
                   const formatted =
                     domainRaw.length > 0
