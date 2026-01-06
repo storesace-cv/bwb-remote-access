@@ -165,7 +165,7 @@ export default async function ProfilePage() {
             <div className="flex-1">
               <h2 className="text-2xl font-semibold text-white">{userDisplayName}</h2>
               <p className="text-slate-400">{userEmail}</p>
-              <span className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded-full ${roleColors.bg} ${roleColors.text}`}>
+              <span className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded-full ${roleColors.bg} ${roleColors.text}`} data-testid="profile-role-badge">
                 {roleDisplayName}
               </span>
             </div>
@@ -173,8 +173,8 @@ export default async function ProfilePage() {
         </section>
 
         {/* SECTION 1: Dados da Conta RustDesk (App) */}
-        <section className="bg-slate-900/70 border border-emerald-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2">
+        <section className="bg-slate-900/70 border border-emerald-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="profile-rustdesk-section">
+          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2" data-testid="profile-rustdesk-title">
             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
@@ -235,8 +235,8 @@ export default async function ProfilePage() {
         </section>
 
         {/* SECTION 2: Dados MeshCentral */}
-        <section className="bg-slate-900/70 border border-cyan-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2">
+        <section className="bg-slate-900/70 border border-cyan-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="profile-meshcentral-section">
+          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2" data-testid="profile-meshcentral-title">
             <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
             </svg>
