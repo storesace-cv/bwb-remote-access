@@ -439,13 +439,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!jwt || !userTypeChecked) return;
-    // Só carrega se o utilizador tiver acesso ao painel de gestão
-    const canAccessPanel = userRole.name === "siteadmin" || userRole.name === "minisiteadmin" || userRole.name === "agent";
-    if (!canAccessPanel) return;
+    // Usar permissão da tabela roles em vez de verificação hardcoded
+    if (!userPermissions?.can_access_management_panel) return;
     if (hasFetchedMeshUsersRef.current) return;
     hasFetchedMeshUsersRef.current = true;
     void loadMeshUsers();
-  }, [jwt, userTypeChecked, userRole.name, loadMeshUsers]);
+  }, [jwt, userTypeChecked, userPermissions?.can_access_management_panel, loadMeshUsers]);
 
   const handleLogout = useCallback(() => {
     try {
