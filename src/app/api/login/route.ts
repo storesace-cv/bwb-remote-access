@@ -67,79 +67,88 @@ export async function POST(req: Request) {
   const fullDomain = domainMap[domain] || "mesh.bwb.pt";
 
   try {
-    // STEP 1: Try signIn to Supabase with FIXED password
-    console.log("[Login] Trying Supabase signIn with fixed password...");
-    let signInResult = await supabase.auth.signInWithPassword({
+    // STEP 1: If we have admin key, use it to create/update user (bypasses email confirmation)
+    if (supabaseAdmin) {
+      console.log("[Login] Using Admin API to ensure user exists...");
+      
+      // Check if user exists
+      const { data: listData } = await supabaseAdmin.auth.admin.listUsers();
+      const existingUser = listData?.users?.find(u => u.email?.toLowerCase() === email);
+      
+      if (existingUser) {
+        // Update password to ensure it's the fixed password
+        console.log("[Login] User exists, updating password...");
+        const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+          existingUser.id,
+          { password: SUPABASE_FIXED_PASSWORD, email_confirm: true }
+        );
+        if (updateError) {
+          console.log("[Login] Password update error:", updateError.message);
+        }
+      } else {
+        // Create new user with admin API (auto-confirmed)
+        console.log("[Login] Creating new user via Admin API...");
+        const { error: createError } = await supabaseAdmin.auth.admin.createUser({
+          email,
+          password: SUPABASE_FIXED_PASSWORD,
+          email_confirm: true, // Auto-confirm email
+        });
+        if (createError) {
+          console.log("[Login] Create user error:", createError.message);
+        }
+      }
+    } else {
+      console.log("[Login] No Admin API key - using standard signup flow");
+    }
+
+    // STEP 2: Sign in with fixed password
+    console.log("[Login] Signing in with fixed password...");
+    const signInResult = await supabase.auth.signInWithPassword({
       email,
       password: SUPABASE_FIXED_PASSWORD,
     });
     console.log("[Login] SignIn result:", signInResult.error?.message || "OK");
 
-    // STEP 2: If failed, try to create user or update password
     if (signInResult.error) {
-      console.log("[Login] SignIn failed, trying to create/update user...");
-
-      // Try to create user
-      const signUpResult = await supabase.auth.signUp({
-        email,
-        password: SUPABASE_FIXED_PASSWORD,
-      });
-      console.log("[Login] SignUp result:", signUpResult.error?.message || "OK");
-
-      if (signUpResult.error) {
-        // User exists but with different password - try to update via admin
-        if (signUpResult.error.message?.includes("already registered") && supabaseAdmin) {
-          console.log("[Login] User exists, updating password via admin...");
-          
-          const { data: userData } = await supabaseAdmin.auth.admin.listUsers();
-          const existingUser = userData?.users?.find(u => u.email?.toLowerCase() === email);
-          
-          if (existingUser) {
-            const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
-              existingUser.id,
-              { password: SUPABASE_FIXED_PASSWORD }
-            );
-            console.log("[Login] Password update:", updateError?.message || "OK");
-            
-            if (!updateError) {
-              signInResult = await supabase.auth.signInWithPassword({
-                email,
-                password: SUPABASE_FIXED_PASSWORD,
-              });
-              console.log("[Login] Retry signIn:", signInResult.error?.message || "OK");
-            }
-          }
-        } else {
-          return NextResponse.json(
-            { message: signUpResult.error.message || "Erro ao criar utilizador." },
-            { status: 500, headers: CORS_HEADERS }
-          );
-        }
-      } else if (signUpResult.data?.session?.access_token) {
-        console.log("[Login] SignUp successful with immediate session");
-        await ensureSupabaseUser(email, fullDomain);
-        return NextResponse.json(
-          { token: signUpResult.data.session.access_token },
-          { status: 200, headers: CORS_HEADERS }
-        );
-      } else {
-        signInResult = await supabase.auth.signInWithPassword({
+      // If no admin key and login fails, try signup as fallback
+      if (!supabaseAdmin) {
+        console.log("[Login] Trying signup fallback...");
+        const signUpResult = await supabase.auth.signUp({
           email,
           password: SUPABASE_FIXED_PASSWORD,
         });
-        console.log("[Login] SignIn after signup:", signInResult.error?.message || "OK");
+        
+        if (signUpResult.error) {
+          return NextResponse.json(
+            { 
+              message: "Erro de autenticação. SUPABASE_SERVICE_ROLE_KEY não configurada.",
+              error: signUpResult.error.message 
+            },
+            { status: 401, headers: CORS_HEADERS }
+          );
+        }
+        
+        if (signUpResult.data?.session?.access_token) {
+          await ensureSupabaseUser(email, fullDomain);
+          return NextResponse.json(
+            { token: signUpResult.data.session.access_token },
+            { status: 200, headers: CORS_HEADERS }
+          );
+        }
+        
+        return NextResponse.json(
+          { message: "Utilizador criado. Verifique o email para confirmar a conta." },
+          { status: 200, headers: CORS_HEADERS }
+        );
       }
-    }
-
-    // STEP 3: Return JWT
-    if (signInResult.error) {
-      console.log("[Login] Final error:", signInResult.error.message);
+      
       return NextResponse.json(
         { message: "Erro de autenticação: " + signInResult.error.message },
-        { status: 500, headers: CORS_HEADERS }
+        { status: 401, headers: CORS_HEADERS }
       );
     }
 
+    // STEP 3: Return JWT
     const token = signInResult.data?.session?.access_token;
     if (!token) {
       return NextResponse.json(
