@@ -1211,7 +1211,7 @@ export default function DashboardPage() {
         )}
 
         {/* Painel de Gestão - visível se tem permissão can_access_management_panel */}
-        {userPermissions.can_access_management_panel && (
+        {userPermissions?.can_access_management_panel && (
           <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -1219,53 +1219,99 @@ export default function DashboardPage() {
                   🎯 Painel de Gestão ({userRole.displayName || "Utilizador"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
-                  {userRole.name === "siteadmin"
-                    ? "Como Site Admin, tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
-                    : userRole.name === "minisiteadmin"
-                    ? "Como Mini Site Admin, podes gerir utilizadores e colaboradores do teu domínio"
-                    : userRole.name === "agent"
-                    ? "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"
+                  {userPermissions?.can_access_all_domains
+                    ? "Tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
+                    : userPermissions?.can_access_own_domain_only
+                    ? "Podes gerir utilizadores e colaboradores do teu domínio"
                     : "Tens acesso ao painel de gestão"}
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link
-                href="/dashboard/collaborators"
-                className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
-                    👥
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Colaboradores - visível se pode ver utilizadores */}
+              {userPermissions?.can_view_users && (
+                <Link
+                  href="/dashboard/collaborators"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
+                      👥
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
-                  <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Colaboradores</h3>
-                <p className="text-xs text-slate-400">
-                  Criar e gerir colaboradores que terão acesso aos teus dispositivos
-                </p>
-              </Link>
+                  <h3 className="font-medium text-white mb-1">Colaboradores</h3>
+                  <p className="text-xs text-slate-400">
+                    Criar e gerir colaboradores que terão acesso aos teus dispositivos
+                  </p>
+                </Link>
+              )}
 
-              <Link
-                href="/dashboard/groups"
-                className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
-                    📦
+              {/* Grupos - visível se pode ver grupos */}
+              {userPermissions?.can_view_groups && (
+                <Link
+                  href="/dashboard/groups"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
+                      📦
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
-                  <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
-                <p className="text-xs text-slate-400">
-                  Organizar dispositivos em grupos e gerir permissões dos colaboradores
-                </p>
-              </Link>
+                  <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
+                  <p className="text-xs text-slate-400">
+                    Organizar dispositivos em grupos e gerir permissões dos colaboradores
+                  </p>
+                </Link>
+              )}
+
+              {/* Gestão de Utilizadores - visível se pode ver utilizadores */}
+              {userPermissions?.can_view_users && (
+                <Link
+                  href="/dashboard/users"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-amber-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-amber-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-amber-600/20 flex items-center justify-center text-xl">
+                      🔑
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <h3 className="font-medium text-white mb-1">Gestão de Utilizadores</h3>
+                  <p className="text-xs text-slate-400">
+                    Gerir utilizadores, criar contas e atribuir roles
+                  </p>
+                </Link>
+              )}
+
+              {/* Gestão de Roles - visível apenas se pode gerir roles */}
+              {userPermissions?.can_manage_roles && (
+                <Link
+                  href="/dashboard/roles"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-purple-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-purple-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
+                      ⚙️
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <h3 className="font-medium text-white mb-1">Gestão de Roles</h3>
+                  <p className="text-xs text-slate-400">
+                    Configurar permissões de cada role do sistema
+                  </p>
+                </Link>
+              )}
             </div>
           </section>
         )}
