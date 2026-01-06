@@ -412,20 +412,19 @@ export default function DashboardPage() {
     void fetchDevices();
   }, [jwt, fetchDevices, initialDevicesLoaded]);
 
-  // Carregar lista de utilizadores (mesh_users) para o admin canónico,
+  // Carregar lista de utilizadores (mesh_users) para utilizadores com acesso
   // via Edge Function admin-list-mesh-users
   const loadMeshUsers = useCallback(async () => {
     if (typeof window === "undefined") return;
-    if (!jwt) return;
-    if (authUserId !== "9ebfa3dd-392c-489d-882f-8a1762cb36e8") return;
-    if (meshUsersLoading || meshUsers.length > 0) return;
+    const currentJwt = window.localStorage.getItem("rustdesk_jwt");
+    if (!currentJwt) return;
 
     setMeshUsersLoading(true);
     try {
       const res = await fetch(`${supabaseUrl}/functions/v1/admin-list-mesh-users`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${currentJwt}`,
           apikey: anonKey,
         },
       });
@@ -465,11 +464,20 @@ export default function DashboardPage() {
     } finally {
       setMeshUsersLoading(false);
     }
-  }, [jwt, authUserId, meshUsersLoading, meshUsers.length]);
+  }, []);
+
+  // Ref para evitar chamadas duplicadas de loadMeshUsers
+  const hasFetchedMeshUsersRef = useRef(false);
 
   useEffect(() => {
+    if (!jwt || !userTypeChecked) return;
+    // Só carrega se o utilizador tiver acesso ao painel de gestão
+    const canAccessPanel = userRole.name === "siteadmin" || userRole.name === "minisiteadmin" || userRole.name === "agent";
+    if (!canAccessPanel) return;
+    if (hasFetchedMeshUsersRef.current) return;
+    hasFetchedMeshUsersRef.current = true;
     void loadMeshUsers();
-  }, [loadMeshUsers]);
+  }, [jwt, userTypeChecked, userRole.name, loadMeshUsers]);
 
   const handleLogout = useCallback(() => {
     try {

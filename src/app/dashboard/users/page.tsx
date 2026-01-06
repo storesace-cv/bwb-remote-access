@@ -9,6 +9,8 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 const ADMIN_AUTH_USER_ID = "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
+// Roles que podem aceder à gestão de utilizadores
+const ALLOWED_USER_TYPES = ["siteadmin", "minisiteadmin", "agent"];
 
 function fetchWithTimeout(url: string, options: RequestInit, timeout = 30000): Promise<Response> {
   return Promise.race([
@@ -19,21 +21,16 @@ function fetchWithTimeout(url: string, options: RequestInit, timeout = 30000): P
   ]);
 }
 
+// Interface para utilizadores da tabela mesh_users (retornado por admin-list-mesh-users)
 interface AdminUser {
   id: string;
+  mesh_username?: string | null;
+  display_name?: string | null;
+  domain?: string | null;
+  user_type?: string | null;
+  auth_user_id?: string | null;
   email?: string | null;
   created_at?: string | null;
-  last_sign_in_at?: string | null;
-  email_confirmed_at?: string | null;
-  banned_until?: string | null;
-  user_metadata?: {
-    display_name?: string;
-    [key: string]: unknown;
-  } | null;
-  mesh_username?: string | null;
-  mesh_display_name?: string | null;
-  mesh_domain?: string | null;
-  mesh_user_id?: string | null;
 }
 
 interface MeshUserOption {
@@ -70,6 +67,8 @@ export default function UsersManagementPage() {
   const { toasts, removeToast, showSuccess, showError } = useToast();
   const [jwt, setJwt] = useState<string | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [currentUserType, setCurrentUserType] = useState<string | null>(null);
+  const [accessChecked, setAccessChecked] = useState(false);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(false);
@@ -107,6 +106,7 @@ export default function UsersManagementPage() {
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
 
+  // Verificar acesso baseado no user_type
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -118,18 +118,61 @@ export default function UsersManagementPage() {
 
     setJwt(stored);
 
+    // Decodificar JWT para obter auth_user_id
     try {
       const parts = stored.split(".");
       if (parts.length >= 2) {
         const payloadJson = atob(
           parts[1].replace(/-/g, "+").replace(/_/g, "/"),
         );
-        const payload = JSON.parse(payloadJson) as { sub?: string };
+        const payload = JSON.parse(payloadJson) as { sub?: string; email?: string };
         if (payload.sub && typeof payload.sub === "string") {
           setAuthUserId(payload.sub);
-          if (payload.sub !== ADMIN_AUTH_USER_ID) {
-            router.replace("/dashboard");
-          }
+          
+          // Buscar user_type da tabela mesh_users
+          const checkAccess = async () => {
+            try {
+              const res = await fetch(
+                `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${payload.sub}`,
+                {
+                  headers: {
+                    apikey: anonKey,
+                    Authorization: `Bearer ${stored}`,
+                  },
+                }
+              );
+              
+              if (res.ok) {
+                const data = await res.json() as Array<{ user_type?: string }>;
+                if (data.length > 0 && data[0].user_type) {
+                  const userType = data[0].user_type;
+                  setCurrentUserType(userType);
+                  
+                  // Guardar no localStorage para uso posterior
+                  window.localStorage.setItem("mesh_user_type", userType);
+                  
+                  // Verificar se tem permissão
+                  if (!ALLOWED_USER_TYPES.includes(userType)) {
+                    router.replace("/dashboard");
+                    return;
+                  }
+                } else {
+                  // Sem registo na mesh_users, redirecionar
+                  router.replace("/dashboard");
+                  return;
+                }
+              } else {
+                router.replace("/dashboard");
+                return;
+              }
+            } catch {
+              router.replace("/dashboard");
+              return;
+            }
+            setAccessChecked(true);
+          };
+          
+          void checkAccess();
         }
       }
     } catch (error) {
@@ -195,8 +238,9 @@ export default function UsersManagementPage() {
     setErrorMsg(null);
 
     try {
+      // Usar admin-list-mesh-users que suporta siteadmin, minisiteadmin e agent
       const res = await fetchWithTimeout(
-        `${supabaseUrl}/functions/v1/admin-list-auth-users?page=1&per_page=200`,
+        `${supabaseUrl}/functions/v1/admin-list-mesh-users`,
         {
           method: "GET",
           headers: {
@@ -239,8 +283,30 @@ export default function UsersManagementPage() {
         return;
       }
 
-      const data = (await res.json()) as { users?: AdminUser[] };
-      setUsers(Array.isArray(data.users) ? data.users : []);
+      // admin-list-mesh-users retorna { users: [...] }
+      const data = await res.json() as { users?: AdminUser[] };
+      const allUsers = Array.isArray(data.users) ? data.users : [];
+      
+      // Filtrar utilizadores: não mostrar utilizadores com perfil igual ou superior
+      // Hierarquia: siteadmin (3) > minisiteadmin (2) > agent (1) > user (0)
+      const userTypeHierarchy: Record<string, number> = {
+        "siteadmin": 3,
+        "minisiteadmin": 2,
+        "agent": 1,
+        "user": 0,
+      };
+      
+      // Obter o nível do utilizador actual
+      const myUserType = window.localStorage.getItem("mesh_user_type") ?? "user";
+      const myLevel = userTypeHierarchy[myUserType] ?? 0;
+      
+      // Filtrar: só mostrar utilizadores com nível inferior
+      const filteredUsers = allUsers.filter(u => {
+        const theirLevel = userTypeHierarchy[u.user_type ?? "user"] ?? 0;
+        return theirLevel < myLevel;
+      });
+      
+      setUsers(filteredUsers);
     } catch (err: unknown) {
       console.error("[Users Page] Fetch error:", err);
 
@@ -251,7 +317,7 @@ export default function UsersManagementPage() {
             "Timeout ao carregar utilizadores. O servidor demorou muito tempo a responder. Tente novamente.";
         } else if (err.message.includes("Failed to fetch")) {
           message =
-            "Erro de rede ao carregar utilizadores. Verifique a sua ligação à internet e que o Edge Function 'admin-list-auth-users' está implementado corretamente.";
+            "Erro de rede ao carregar utilizadores. Verifique a sua ligação à internet.";
         } else {
           message = `Erro: ${err.message}`;
         }
@@ -268,8 +334,7 @@ export default function UsersManagementPage() {
   const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!jwt) return;
-    if (authUserId !== ADMIN_AUTH_USER_ID) return;
+    if (!jwt || !accessChecked) return;
     
     // Evitar chamadas repetidas
     if (hasFetchedRef.current) return;
@@ -277,7 +342,7 @@ export default function UsersManagementPage() {
     
     void fetchUsers();
     void loadMeshUsers();
-  }, [jwt, authUserId, fetchUsers, loadMeshUsers]);
+  }, [jwt, accessChecked, fetchUsers, loadMeshUsers]);
 
   const openCreateModal = () => {
     setCreateForm({
@@ -377,47 +442,18 @@ export default function UsersManagementPage() {
   };
 
   const openEditModal = async (user: AdminUser) => {
-    const displayName =
-      user.user_metadata?.display_name ??
-      user.mesh_display_name ??
-      "";
-
-    const confirmed = Boolean(user.email_confirmed_at);
-    const banned = Boolean(user.banned_until);
-
-    // Buscar user_type do mesh_users se existir
-    let isAgent = false;
-    try {
-      if (jwt && user.id) {
-        const res = await fetch(
-          `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-              apikey: anonKey,
-            },
-          }
-        );
-        if (res.ok) {
-          const data = await res.json() as Array<{ user_type?: string | null }>;
-          if (data.length > 0 && data[0].user_type === "agent") {
-            isAgent = true;
-          }
-        }
-      }
-    } catch (err) {
-      console.error("Erro ao buscar user_type:", err);
-    }
+    // Verificar se é agent pelo user_type
+    const isAgent = user.user_type === "agent";
 
     setEditForm({
       id: user.id,
-      email: user.email ?? "",
+      email: user.email ?? user.mesh_username ?? "",
       password: "",
-      display_name: displayName,
+      display_name: user.display_name ?? "",
       mesh_username: user.mesh_username ?? "",
-      mesh_user_id: user.mesh_user_id ?? "",
-      email_confirm: confirmed,
-      ban: banned,
+      mesh_user_id: user.id,
+      email_confirm: true, // mesh_users já está confirmado
+      ban: false,
       is_agent: isAgent,
     });
     setEditError(null);
@@ -553,21 +589,14 @@ export default function UsersManagementPage() {
     }
   };
 
-  const computeStatus = (user: AdminUser): string => {
-    const isBanned = Boolean(user.banned_until);
-    const isConfirmed = Boolean(user.email_confirmed_at);
-    if (isBanned) return "Bloqueado";
-    if (isConfirmed) return "Ativo";
-    return "Pendente";
-  };
+  // Verificar se o utilizador tem permissão para aceder
+  const hasAccess = accessChecked && currentUserType && ALLOWED_USER_TYPES.includes(currentUserType);
 
-  const isAdmin = authUserId === ADMIN_AUTH_USER_ID;
-
-  if (!jwt || !isAdmin) {
+  if (!jwt || !hasAccess) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-slate-950">
         <p className="text-sm text-slate-400">
-          A aceder... (apenas disponível para o admin canónico)
+          A verificar permissões de acesso...
         </p>
       </main>
     );
@@ -636,10 +665,9 @@ export default function UsersManagementPage() {
                   <th className="px-2 py-1.5 font-medium">Email</th>
                   <th className="px-2 py-1.5 font-medium">Nome</th>
                   <th className="px-2 py-1.5 font-medium">Mesh Username</th>
-                  <th className="px-2 py-1.5 font-medium">Dominio</th>
+                  <th className="px-2 py-1.5 font-medium">Domínio</th>
+                  <th className="px-2 py-1.5 font-medium">Tipo</th>
                   <th className="px-2 py-1.5 font-medium">Criado em</th>
-                  <th className="px-2 py-1.5 font-medium">Último login</th>
-                  <th className="px-2 py-1.5 font-medium">Estado</th>
                   <th className="px-2 py-1.5 font-medium text-right">
                     Ações
                   </th>
@@ -649,7 +677,7 @@ export default function UsersManagementPage() {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={7}
                       className="px-2 py-4 text-center text-slate-400"
                     >
                       A carregar utilizadores…
@@ -658,7 +686,7 @@ export default function UsersManagementPage() {
                 ) : users.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={7}
                       className="px-2 py-4 text-center text-slate-500"
                     >
                       Sem utilizadores para mostrar.
@@ -666,41 +694,28 @@ export default function UsersManagementPage() {
                   </tr>
                 ) : (
                   users.map((user) => {
-                    const displayName =
-                      user.user_metadata?.display_name ??
-                      user.mesh_display_name ??
-                      "";
                     return (
                       <tr
                         key={user.id}
                         className="border-b border-slate-800 last:border-0"
                       >
                         <td className="px-2 py-2 align-top">
-                          {user.email ?? "—"}
+                          {user.email ?? user.mesh_username ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top">
-                          {displayName || "—"}
+                          {user.display_name ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top font-mono text-[11px]">
                           {user.mesh_username ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top">
-                          {(() => {
-                            const raw =
-                              ((user.mesh_domain ?? "").trim().length > 0
-                                ? user.mesh_domain?.trim()
-                                : "") ?? "";
-                            return raw.length > 0 ? `[${raw}]` : "—";
-                          })()}
+                          {user.domain ? `[${user.domain}]` : "—"}
+                        </td>
+                        <td className="px-2 py-2 align-top">
+                          {user.user_type ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top">
                           {formatDate(user.created_at)}
-                        </td>
-                        <td className="px-2 py-2 align-top">
-                          {formatDate(user.last_sign_in_at)}
-                        </td>
-                        <td className="px-2 py-2 align-top">
-                          {computeStatus(user)}
                         </td>
                         <td className="px-2 py-2 align-top text-right">
                           <div className="inline-flex items-center gap-2">
@@ -1024,17 +1039,8 @@ export default function UsersManagementPage() {
                     );
                   }
 
-                  const metadataDisplay =
-                    current.user_metadata?.display_name ?? "";
-                  const baseName =
-                    (current.mesh_display_name ?? "").trim().length > 0
-                      ? (current.mesh_display_name ?? "").trim()
-                      : metadataDisplay.trim().length > 0
-                      ? metadataDisplay.trim()
-                      : current.mesh_username;
-
-                  const domainRaw =
-                    (current.mesh_domain ?? "").trim();
+                  const baseName = current.display_name?.trim() || current.mesh_username || "";
+                  const domainRaw = (current.domain ?? "").trim();
 
                   const formatted =
                     domainRaw.length > 0
