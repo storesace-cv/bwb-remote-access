@@ -1128,10 +1128,12 @@ export default function DashboardPage() {
   const filteredDevices = getFilteredAndSortedDevices();
   // Usar permissão can_access_all_domains para definir se pode ver todos os dispositivos
   const canAccessAllDomains = userPermissions?.can_access_all_domains ?? false;
+  // isAdmin baseado na permissão can_access_all_domains (substitui verificação hardcoded por role name)
+  const isAdmin = canAccessAllDomains;
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
   // Só mostra dispositivos não atribuídos para quem pode aceder a todos os domínios
-  const adminUnassignedDevices = canAccessAllDomains ? unadoptedDevices : [];
+  const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
 
   const totalAdopted = adoptedDevices.length;
   const adoptedTotalPages = Math.max(1, Math.ceil(totalAdopted / adoptedPageSize));
