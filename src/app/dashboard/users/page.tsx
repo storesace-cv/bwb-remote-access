@@ -605,13 +605,14 @@ export default function UsersManagementPage() {
     return "Pendente";
   };
 
-  const isAdmin = authUserId === ADMIN_AUTH_USER_ID;
+  // Verificar se o utilizador tem permissão para aceder
+  const hasAccess = accessChecked && currentUserType && ALLOWED_USER_TYPES.includes(currentUserType);
 
-  if (!jwt || !isAdmin) {
+  if (!jwt || !hasAccess) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-slate-950">
         <p className="text-sm text-slate-400">
-          A aceder... (apenas disponível para o admin canónico)
+          A verificar permissões de acesso...
         </p>
       </main>
     );
