@@ -296,9 +296,9 @@ export default function UsersManagementPage() {
         "user": 0,
       };
       
-      // Obter o nível do utilizador actual (currentUserType vem do estado)
-      const currentUserTypeFromState = window.localStorage.getItem("mesh_user_type");
-      const myLevel = userTypeHierarchy[currentUserTypeFromState ?? "user"] ?? 0;
+      // Obter o nível do utilizador actual
+      const myUserType = window.localStorage.getItem("mesh_user_type") ?? "user";
+      const myLevel = userTypeHierarchy[myUserType] ?? 0;
       
       // Filtrar: só mostrar utilizadores com nível inferior
       const filteredUsers = allUsers.filter(u => {
