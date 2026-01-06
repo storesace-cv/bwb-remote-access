@@ -21,21 +21,16 @@ function fetchWithTimeout(url: string, options: RequestInit, timeout = 30000): P
   ]);
 }
 
+// Interface para utilizadores da tabela mesh_users (retornado por admin-list-mesh-users)
 interface AdminUser {
   id: string;
+  mesh_username?: string | null;
+  display_name?: string | null;
+  domain?: string | null;
+  user_type?: string | null;
+  auth_user_id?: string | null;
   email?: string | null;
   created_at?: string | null;
-  last_sign_in_at?: string | null;
-  email_confirmed_at?: string | null;
-  banned_until?: string | null;
-  user_metadata?: {
-    display_name?: string;
-    [key: string]: unknown;
-  } | null;
-  mesh_username?: string | null;
-  mesh_display_name?: string | null;
-  mesh_domain?: string | null;
-  mesh_user_id?: string | null;
 }
 
 interface MeshUserOption {
