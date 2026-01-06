@@ -2,7 +2,9 @@
  * Profile Page
  * 
  * Displays user profile information from session and database.
- * Shows role/permissions and account details.
+ * Shows role/permissions and account details in two sections:
+ * - RustDesk App data (from Supabase)
+ * - MeshCentral data (from session)
  */
 
 import { redirect } from "next/navigation";
@@ -11,8 +13,8 @@ import { getSession } from "@/lib/mesh-auth";
 import { createClient } from "@supabase/supabase-js";
 import { ROLE_DISPLAY_NAMES, ROLE_COLORS, type RoleName } from "@/lib/rbac";
 
-// Get user data from Supabase by mesh_users.id
-async function getUserDataById(userId: string) {
+// Get user data from Supabase - try by email (mesh_username)
+async function getUserData(email: string) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
@@ -22,8 +24,9 @@ async function getUserDataById(userId: string) {
   }
   
   const supabase = createClient(supabaseUrl, supabaseKey);
+  const normalizedEmail = email.toLowerCase().trim();
   
-  // Get user with role
+  // Get user with role - query by mesh_username (which equals email)
   const { data, error } = await supabase
     .from("mesh_users")
     .select(`
@@ -35,15 +38,10 @@ async function getUserDataById(userId: string) {
       domain,
       created_at,
       auth_user_id,
-      role_id,
-      roles:role_id (
-        id,
-        name,
-        display_name,
-        hierarchy_level
-      )
+      user_type,
+      role_id
     `)
-    .eq("id", userId)
+    .eq("mesh_username", normalizedEmail)
     .maybeSingle();
   
   if (error) {
@@ -51,7 +49,26 @@ async function getUserDataById(userId: string) {
     return null;
   }
   
-  return data;
+  if (!data) {
+    console.warn("[Profile] User not found for email:", normalizedEmail);
+    return null;
+  }
+  
+  // Now get the role data separately if role_id exists
+  let roleData = null;
+  if (data.role_id) {
+    const { data: role, error: roleError } = await supabase
+      .from("roles")
+      .select("id, name, display_name, hierarchy_level")
+      .eq("id", data.role_id)
+      .maybeSingle();
+    
+    if (!roleError && role) {
+      roleData = role;
+    }
+  }
+  
+  return { ...data, role: roleData };
 }
 
 export default async function ProfilePage() {
@@ -61,20 +78,48 @@ export default async function ProfilePage() {
     redirect("/");
   }
 
-  // Get user data from database
-  const userData = session.userId ? await getUserDataById(session.userId) : null;
+  // Get user data from database by email
+  const userData = await getUserData(session.email);
   
-  // Fallback values from session
-  const userEmail = userData?.email || session.email;
+  // User info
+  const userEmail = userData?.email || userData?.mesh_username || session.email;
   const userDisplayName = userData?.display_name || userData?.full_name || session.email.split("@")[0];
-  const userDomain = userData?.domain || session.domain;
+  const userMeshUsername = userData?.mesh_username || session.email;
   const userCreatedAt = userData?.created_at;
   
-  // Get role info - handle both single object and array from Supabase
-  const rolesRaw = userData?.roles;
-  const roleData = Array.isArray(rolesRaw) ? rolesRaw[0] : rolesRaw;
-  const roleName = (roleData?.name || 'colaborador') as RoleName;
-  const roleDisplayName = roleData?.display_name || ROLE_DISPLAY_NAMES[roleName] || 'Colaborador';
+  // Domain info
+  const userDomainShort = userData?.domain || session.domain; // mesh, zonetech, zsangola
+  const userDomainFull = session.domain; // mesh.bwb.pt, etc.
+  
+  // Role info - from the role table or fallback to user_type
+  const roleData = userData?.role;
+  const userType = userData?.user_type;
+  
+  // Determine role name - prefer role table, fallback to user_type
+  let roleName: RoleName = 'colaborador';
+  let roleDisplayName = 'Colaborador';
+  
+  if (roleData?.name) {
+    roleName = roleData.name as RoleName;
+    roleDisplayName = roleData.display_name || ROLE_DISPLAY_NAMES[roleName] || roleData.name;
+  } else if (userType) {
+    // Fallback to user_type field
+    const typeMap: Record<string, RoleName> = {
+      'siteadmin': 'siteadmin',
+      'minisiteadmin': 'minisiteadmin', 
+      'agent': 'agent',
+      'colaborador': 'colaborador',
+      'ATIVO': 'colaborador',
+      'collaborator': 'colaborador',
+      'inactivo': 'inactivo',
+      'INATIVO': 'inactivo',
+      'candidato': 'colaborador',
+      'CANDIDATO': 'colaborador',
+    };
+    roleName = typeMap[userType] || 'colaborador';
+    roleDisplayName = ROLE_DISPLAY_NAMES[roleName] || 'Colaborador';
+  }
+  
   const roleColors = ROLE_COLORS[roleName] || ROLE_COLORS.colaborador;
 
   return (
@@ -94,7 +139,7 @@ export default async function ProfilePage() {
           </Link>
         </header>
 
-        {/* User Card */}
+        {/* User Card - Header with Avatar, Name, Email, Role */}
         <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 mb-6 backdrop-blur-sm">
           <div className="flex items-start gap-6">
             {/* Avatar */}
@@ -120,23 +165,31 @@ export default async function ProfilePage() {
             <div className="flex-1">
               <h2 className="text-2xl font-semibold text-white">{userDisplayName}</h2>
               <p className="text-slate-400">{userEmail}</p>
-              <span className={`inline-block mt-2 px-3 py-1 text-sm rounded-full ${roleColors.bg} ${roleColors.text}`}>
+              <span className={`inline-block mt-2 px-3 py-1 text-sm font-medium rounded-full ${roleColors.bg} ${roleColors.text}`} data-testid="profile-role-badge">
                 {roleDisplayName}
               </span>
             </div>
           </div>
         </section>
 
-        {/* Account Details - RustDesk/App Data */}
-        <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2">
+        {/* SECTION 1: Dados da Conta RustDesk (App) */}
+        <section className="bg-slate-900/70 border border-emerald-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="profile-rustdesk-section">
+          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2" data-testid="profile-rustdesk-title">
             <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
             Dados da Conta RustDesk
           </h2>
+          <p className="text-xs text-slate-500 mb-4">Informação armazenada na aplicação BWB Remote Access</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Nome de Utilizador</label>
+              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
+                {userMeshUsername}
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs text-slate-400 mb-1">Email</label>
               <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
@@ -145,16 +198,16 @@ export default async function ProfilePage() {
             </div>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Domínio</label>
-              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
-                {userDomain}
+              <label className="block text-xs text-slate-400 mb-1">Perfil</label>
+              <div className={`px-3 py-2 bg-slate-800 border rounded-md text-sm font-medium ${roleColors.text} ${roleColors.border}`}>
+                {roleDisplayName}
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-slate-400 mb-1">Perfil</label>
-              <div className={`px-3 py-2 bg-slate-800 border rounded-md text-sm ${roleColors.text} ${roleColors.border}`}>
-                {roleDisplayName}
+              <label className="block text-xs text-slate-400 mb-1">Domínio</label>
+              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
+                {userDomainShort}
               </div>
             </div>
 
@@ -171,19 +224,41 @@ export default async function ProfilePage() {
                 }
               </div>
             </div>
+
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Estado da Conta</label>
+              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-emerald-400">
+                {roleName === 'inactivo' ? '✗ Inactiva' : '✓ Activa'}
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* MeshCentral Account Details */}
-        <section className="bg-slate-900/70 border border-cyan-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2">
+        {/* SECTION 2: Dados MeshCentral */}
+        <section className="bg-slate-900/70 border border-cyan-700/50 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="profile-meshcentral-section">
+          <h2 className="text-lg font-medium mb-4 text-white flex items-center gap-2" data-testid="profile-meshcentral-title">
             <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
             </svg>
             Dados MeshCentral
           </h2>
+          <p className="text-xs text-slate-500 mb-4">Informação da autenticação e servidor MeshCentral</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Conta MeshCentral</label>
+              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
+                {session.email}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Servidor</label>
+              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
+                {userDomainFull}
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs text-slate-400 mb-1">Autenticação</label>
               <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-emerald-400">
@@ -194,14 +269,7 @@ export default async function ProfilePage() {
             <div>
               <label className="block text-xs text-slate-400 mb-1">Sessão</label>
               <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-emerald-400">
-                ✓ Ativa
-              </div>
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-xs text-slate-400 mb-1">Servidor MeshCentral</label>
-              <div className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-md text-sm text-white">
-                {userDomain}
+                ✓ Activa
               </div>
             </div>
           </div>
@@ -219,7 +287,7 @@ export default async function ProfilePage() {
           </div>
         </section>
 
-        {/* Security Notice */}
+        {/* Security Section */}
         <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
           <h2 className="text-lg font-medium mb-4 text-white">Segurança</h2>
           

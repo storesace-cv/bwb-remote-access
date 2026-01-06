@@ -177,70 +177,112 @@ export default function DashboardPage() {
   }, []);
 
   // Check if user is an agent / minisiteadmin / siteadmin
+  // Uses the new RBAC system with roles table
   const checkUserType = useCallback(async () => {
-    if (!jwt || !authUserId || userTypeChecked) return;
-
-    // Admin canónico é sempre topo da hierarquia
-    if (authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8") {
-      setIsAgent(true);
-      setIsMinisiteadmin(true);
-      setIsSiteadmin(true);
-      setUserTypeChecked(true);
-      return;
-    }
+    if (!jwt || userTypeChecked) return;
 
     try {
-      const res = await fetch(
-        `${supabaseUrl}/rest/v1/mesh_users?select=user_type,domain,display_name&auth_user_id=eq.${authUserId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            apikey: anonKey,
-          },
+      // First, decode email from JWT to find user
+      let userEmail = "";
+      try {
+        const parts = jwt.split(".");
+        if (parts.length >= 2) {
+          const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+          const payload = JSON.parse(payloadJson) as { email?: string; sub?: string };
+          userEmail = payload.email || "";
         }
-      );
+      } catch {
+        console.warn("Could not decode email from JWT");
+      }
+
+      // Query mesh_users with role information
+      // Try by auth_user_id first, then by email/mesh_username
+      let queryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id,roles:role_id(name,hierarchy_level,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_create_users)`;
+      
+      if (authUserId) {
+        queryUrl += `&auth_user_id=eq.${authUserId}`;
+      } else if (userEmail) {
+        queryUrl += `&mesh_username=eq.${userEmail.toLowerCase()}`;
+      } else {
+        console.warn("No auth_user_id or email to query user");
+        setUserTypeChecked(true);
+        return;
+      }
+
+      const res = await fetch(queryUrl, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          apikey: anonKey,
+        },
+      });
 
       if (res.ok) {
-        const data = (await res.json()) as Array<{
-          user_type: string | null;
-          domain: string;
-          display_name: string | null;
-        }>;
+        const data = await res.json();
+        
+        // If no result by auth_user_id, try by email
+        if (data.length === 0 && authUserId && userEmail) {
+          const emailRes = await fetch(
+            `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id,roles:role_id(name,hierarchy_level,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_create_users)&mesh_username=eq.${userEmail.toLowerCase()}`,
+            {
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+                apikey: anonKey,
+              },
+            }
+          );
+          if (emailRes.ok) {
+            const emailData = await emailRes.json();
+            if (emailData.length > 0) {
+              data.push(...emailData);
+            }
+          }
+        }
+
         if (data.length > 0) {
           const record = data[0];
-
-          // reset flags antes de aplicar a hierarquia
+          const roleData = Array.isArray(record.roles) ? record.roles[0] : record.roles;
+          
+          // Reset flags
           setIsAgent(false);
           setIsMinisiteadmin(false);
           setIsSiteadmin(false);
 
-          const role = record.user_type ?? "";
+          // Determine role from roles table or fallback to user_type
+          const roleName = roleData?.name || record.user_type || "";
 
-          if (role === "siteadmin") {
+          if (roleName === "siteadmin") {
             setIsSiteadmin(true);
             setIsMinisiteadmin(true);
             setIsAgent(true);
-          } else if (role === "minisiteadmin") {
+          } else if (roleName === "minisiteadmin") {
             setIsMinisiteadmin(true);
             setIsAgent(true);
-          } else if (role === "agent") {
+          } else if (roleName === "agent") {
             setIsAgent(true);
           }
 
           // Set domain and display name
           setUserDomain(record.domain || "");
-          setUserDisplayName(record.display_name || "");
+          setUserDisplayName(record.display_name || record.mesh_username || "");
           
-          // Mark as checked to avoid loop
+          setUserTypeChecked(true);
+        } else {
+          // No user found - set as colaborador (basic user)
+          setIsAgent(false);
+          setIsMinisiteadmin(false);
+          setIsSiteadmin(false);
           setUserTypeChecked(true);
         }
+      } else {
+        console.error("Failed to fetch user type:", res.status);
+        setUserTypeChecked(true);
       }
     } catch (error) {
       console.error("Erro ao verificar tipo de utilizador:", error);
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
-      setUserTypeChecked(true); // Mark as checked even on error
+      setUserTypeChecked(true);
     }
   }, [jwt, authUserId, userTypeChecked]);
 
@@ -1064,7 +1106,8 @@ export default function DashboardPage() {
   }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
   const filteredDevices = getFilteredAndSortedDevices();
-  const isAdmin = authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
+  // isAdmin should be true for siteadmin users, not a hardcoded UUID
+  const isAdmin = isSiteadmin;
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
   const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
@@ -1127,6 +1170,7 @@ export default function DashboardPage() {
             <Link
               href="/dashboard/profile"
               className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
+              data-testid="dashboard-profile-link"
             >
               Perfil
             </Link>
@@ -1202,29 +1246,31 @@ export default function DashboardPage() {
           </section>
         )}
 
-        {!isAdmin && (
-          <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-semibold text-sky-400">📱 Adicionar Dispositivo</h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
-                </p>
-              </div>
+        {/* Secção Adicionar Dispositivo - visível para todos os utilizadores */}
+        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="add-device-section">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-lg font-semibold text-sky-400" data-testid="add-device-title">📱 Adicionar Dispositivo</h2>
+              <p className="text-xs text-slate-400 mt-1">
+                Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
+              </p>
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={startRegistrationSession}
-                className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
-                    📷
-                  </div>
-                  <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={startRegistrationSession}
+              disabled={!jwt}
+              className={`group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left ${!jwt ? 'opacity-50 cursor-not-allowed' : ''}`}
+              data-testid="scan-qr-button"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
+                  📷
+                </div>
+                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
                 <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
@@ -1242,6 +1288,7 @@ export default function DashboardPage() {
               <Link
                 href="/provisioning"
                 className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 block"
+                data-testid="provisioning-link"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
@@ -1330,7 +1377,6 @@ export default function DashboardPage() {
               )}
             </div>
           </section>
-        )}
 
         <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 mb-6 backdrop-blur-sm">
           <div className="flex flex-col md:flex-row gap-4">
