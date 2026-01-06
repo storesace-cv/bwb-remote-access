@@ -4,12 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ToastContainer, useToast } from "@/components/ui/toast";
+import { RolePermissions, getAllRoles } from "@/lib/permissions-service";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-// Roles que podem aceder à gestão de utilizadores
-const ALLOWED_USER_TYPES = ["siteadmin", "minisiteadmin", "agent"];
 
 function fetchWithTimeout(url: string, options: RequestInit, timeout = 30000): Promise<Response> {
   return Promise.race([
