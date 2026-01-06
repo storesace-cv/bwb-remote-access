@@ -1106,7 +1106,8 @@ export default function DashboardPage() {
   }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
   const filteredDevices = getFilteredAndSortedDevices();
-  const isAdmin = authUserId === "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
+  // isAdmin should be true for siteadmin users, not a hardcoded UUID
+  const isAdmin = isSiteadmin;
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
   const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
