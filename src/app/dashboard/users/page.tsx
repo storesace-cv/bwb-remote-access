@@ -627,7 +627,7 @@ export default function UsersManagementPage() {
               Gestão de Utilizadores
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Administração de contas em Authentication → Users (Supabase).
+              A gerir como: <span className="text-emerald-400">{currentUserType}</span>
             </p>
           </div>
           <div className="flex items-center gap-3">
