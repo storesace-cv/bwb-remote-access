@@ -61,8 +61,10 @@ export async function POST(req: Request) {
 
   try {
     // STEP 1: Validate against MeshCentral
-    console.log("[Login] Validating MeshCentral...");
-    const meshResult = await validateMeshCredentials(email, password, fullDomain);
+    // validateMeshCredentials expects (baseUrl, email, password)
+    const meshUrl = `https://${fullDomain}`;
+    console.log("[Login] Validating MeshCentral at:", meshUrl);
+    const meshResult = await validateMeshCredentials(meshUrl, email, password);
 
     if (!meshResult.ok) {
       console.log("[Login] MeshCentral FAILED:", meshResult.error);
