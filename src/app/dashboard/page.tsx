@@ -1126,11 +1126,12 @@ export default function DashboardPage() {
   }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
   const filteredDevices = getFilteredAndSortedDevices();
-  // isAdmin is true for siteadmin users (using role from roles table)
-  const isAdmin = userRole.name === "siteadmin";
+  // Usar permissão can_access_all_domains para definir se pode ver todos os dispositivos
+  const canAccessAllDomains = userPermissions?.can_access_all_domains ?? false;
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
-  const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
+  // Só mostra dispositivos não atribuídos para quem pode aceder a todos os domínios
+  const adminUnassignedDevices = canAccessAllDomains ? unadoptedDevices : [];
 
   const totalAdopted = adoptedDevices.length;
   const adoptedTotalPages = Math.max(1, Math.ceil(totalAdopted / adoptedPageSize));
