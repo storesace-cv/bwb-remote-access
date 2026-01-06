@@ -604,8 +604,8 @@ export default function UsersManagementPage() {
     }
   };
 
-  // Verificar se o utilizador tem permissão para aceder
-  const hasAccess = accessChecked && currentUserType && ALLOWED_USER_TYPES.includes(currentUserType);
+  // Verificar se o utilizador tem permissão para aceder (baseado na verificação anterior no useEffect)
+  const hasAccess = accessChecked;
 
   if (!jwt || !hasAccess) {
     return (
