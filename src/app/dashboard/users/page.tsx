@@ -699,7 +699,7 @@ export default function UsersManagementPage() {
                 ) : users.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={7}
                       className="px-2 py-4 text-center text-slate-500"
                     >
                       Sem utilizadores para mostrar.
@@ -707,41 +707,28 @@ export default function UsersManagementPage() {
                   </tr>
                 ) : (
                   users.map((user) => {
-                    const displayName =
-                      user.user_metadata?.display_name ??
-                      user.mesh_display_name ??
-                      "";
                     return (
                       <tr
                         key={user.id}
                         className="border-b border-slate-800 last:border-0"
                       >
                         <td className="px-2 py-2 align-top">
-                          {user.email ?? "—"}
+                          {user.email ?? user.mesh_username ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top">
-                          {displayName || "—"}
+                          {user.display_name ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top font-mono text-[11px]">
                           {user.mesh_username ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top">
-                          {(() => {
-                            const raw =
-                              ((user.mesh_domain ?? "").trim().length > 0
-                                ? user.mesh_domain?.trim()
-                                : "") ?? "";
-                            return raw.length > 0 ? `[${raw}]` : "—";
-                          })()}
+                          {user.domain ? `[${user.domain}]` : "—"}
+                        </td>
+                        <td className="px-2 py-2 align-top">
+                          {user.user_type ?? "—"}
                         </td>
                         <td className="px-2 py-2 align-top">
                           {formatDate(user.created_at)}
-                        </td>
-                        <td className="px-2 py-2 align-top">
-                          {formatDate(user.last_sign_in_at)}
-                        </td>
-                        <td className="px-2 py-2 align-top">
-                          {computeStatus(user)}
                         </td>
                         <td className="px-2 py-2 align-top text-right">
                           <div className="inline-flex items-center gap-2">
