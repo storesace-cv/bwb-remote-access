@@ -5,12 +5,13 @@
  * 1. Aceita email/password
  * 2. Usa Admin API para criar/atualizar utilizador (evita confirmação de email)
  * 3. Faz signIn no Supabase com password FIXA
- * 4. Retorna JWT
+ * 4. Define cookie de sessão para middleware
+ * 5. Retorna JWT
  */
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { ensureSupabaseUser } from "@/lib/mesh-auth";
+import { ensureSupabaseUser, setSessionCookie, type MeshSession } from "@/lib/mesh-auth";
 
 export const runtime = "nodejs";
 
