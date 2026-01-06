@@ -321,7 +321,7 @@ export default function UsersManagementPage() {
     
     void fetchUsers();
     void loadMeshUsers();
-  }, [jwt, authUserId, fetchUsers, loadMeshUsers]);
+  }, [jwt, accessChecked, fetchUsers, loadMeshUsers]);
 
   const openCreateModal = () => {
     setCreateForm({
