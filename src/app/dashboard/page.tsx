@@ -1180,7 +1180,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {isAdmin && (
+            {userPermissions?.can_view_users && (
               <Link
                 href="/dashboard/users"
                 className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
