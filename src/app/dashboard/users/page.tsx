@@ -564,14 +564,6 @@ export default function UsersManagementPage() {
     }
   };
 
-  const computeStatus = (user: AdminUser): string => {
-    const isBanned = Boolean(user.banned_until);
-    const isConfirmed = Boolean(user.email_confirmed_at);
-    if (isBanned) return "Bloqueado";
-    if (isConfirmed) return "Ativo";
-    return "Pendente";
-  };
-
   // Verificar se o utilizador tem permissão para aceder
   const hasAccess = accessChecked && currentUserType && ALLOWED_USER_TYPES.includes(currentUserType);
 
