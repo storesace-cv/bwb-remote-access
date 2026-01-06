@@ -64,6 +64,8 @@ export default function UsersManagementPage() {
   const { toasts, removeToast, showSuccess, showError } = useToast();
   const [jwt, setJwt] = useState<string | null>(null);
   const [currentUserType, setCurrentUserType] = useState<string | null>(null);
+  const [currentHierarchyLevel, setCurrentHierarchyLevel] = useState<number>(999);
+  const [allRoles, setAllRoles] = useState<RolePermissions[]>([]);
   const [accessChecked, setAccessChecked] = useState(false);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
