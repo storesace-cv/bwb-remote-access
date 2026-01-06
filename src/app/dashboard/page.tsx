@@ -466,9 +466,18 @@ export default function DashboardPage() {
     }
   }, []);
 
+  // Ref para evitar chamadas duplicadas de loadMeshUsers
+  const hasFetchedMeshUsersRef = useRef(false);
+
   useEffect(() => {
+    if (!jwt || !userTypeChecked) return;
+    // Só carrega se o utilizador tiver acesso ao painel de gestão
+    const canAccessPanel = userRole.name === "siteadmin" || userRole.name === "minisiteadmin" || userRole.name === "agent";
+    if (!canAccessPanel) return;
+    if (hasFetchedMeshUsersRef.current) return;
+    hasFetchedMeshUsersRef.current = true;
     void loadMeshUsers();
-  }, [loadMeshUsers]);
+  }, [jwt, userTypeChecked, userRole.name, loadMeshUsers]);
 
   const handleLogout = useCallback(() => {
     try {
