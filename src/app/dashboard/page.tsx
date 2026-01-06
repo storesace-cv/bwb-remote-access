@@ -176,8 +176,9 @@ export default function DashboardPage() {
         if (parts.length >= 2) {
           const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
           const payload = JSON.parse(payloadJson) as { sub?: string };
-          if (payload.sub && typeof payload.sub === "string") {
-            setAuthUserId(payload.sub);
+          // JWT decodificado com sucesso - o sub contém o auth_user_id
+          if (!payload.sub) {
+            console.warn("JWT não contém sub (auth_user_id)");
           }
         }
       } catch (error) {
