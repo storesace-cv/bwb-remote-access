@@ -282,7 +282,28 @@ export default function UsersManagementPage() {
 
       // admin-list-mesh-users retorna { users: [...] }
       const data = await res.json() as { users?: AdminUser[] };
-      setUsers(Array.isArray(data.users) ? data.users : []);
+      const allUsers = Array.isArray(data.users) ? data.users : [];
+      
+      // Filtrar utilizadores: não mostrar utilizadores com perfil igual ou superior
+      // Hierarquia: siteadmin (3) > minisiteadmin (2) > agent (1) > user (0)
+      const userTypeHierarchy: Record<string, number> = {
+        "siteadmin": 3,
+        "minisiteadmin": 2,
+        "agent": 1,
+        "user": 0,
+      };
+      
+      // Obter o nível do utilizador actual (currentUserType vem do estado)
+      const currentUserTypeFromState = window.localStorage.getItem("mesh_user_type");
+      const myLevel = userTypeHierarchy[currentUserTypeFromState ?? "user"] ?? 0;
+      
+      // Filtrar: só mostrar utilizadores com nível inferior
+      const filteredUsers = allUsers.filter(u => {
+        const theirLevel = userTypeHierarchy[u.user_type ?? "user"] ?? 0;
+        return theirLevel < myLevel;
+      });
+      
+      setUsers(filteredUsers);
     } catch (err: unknown) {
       console.error("[Users Page] Fetch error:", err);
 
