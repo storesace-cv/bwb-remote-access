@@ -280,8 +280,9 @@ export default function UsersManagementPage() {
         return;
       }
 
-      const data = (await res.json()) as { users?: AdminUser[] };
-      setUsers(Array.isArray(data.users) ? data.users : []);
+      // admin-list-mesh-users retorna array diretamente
+      const data = await res.json();
+      setUsers(Array.isArray(data) ? data : []);
     } catch (err: unknown) {
       console.error("[Users Page] Fetch error:", err);
 
@@ -292,7 +293,7 @@ export default function UsersManagementPage() {
             "Timeout ao carregar utilizadores. O servidor demorou muito tempo a responder. Tente novamente.";
         } else if (err.message.includes("Failed to fetch")) {
           message =
-            "Erro de rede ao carregar utilizadores. Verifique a sua ligação à internet e que o Edge Function 'admin-list-auth-users' está implementado corretamente.";
+            "Erro de rede ao carregar utilizadores. Verifique a sua ligação à internet.";
         } else {
           message = `Erro: ${err.message}`;
         }
