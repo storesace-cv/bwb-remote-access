@@ -7,7 +7,7 @@
 BWB Remote Access is a web application for managing remote devices via MeshCentral. The application provides:
 - User authentication via MeshCentral credentials
 - Device listing and remote session management
-- Role-based access control (RBAC) using `mesh_users.user_type`
+- Role-based access control (RBAC) with granular permissions
 - Multi-domain support (mesh.bwb.pt, zonetech.bwb.pt, zsangola.bwb.pt)
 
 ## Core Requirements
@@ -18,12 +18,15 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 - [x] Multi-domain support based on request host
 - [x] Protected routes redirect to login
 - [x] username = email (enforced)
+- [x] JWT generation for client-side API calls
 
-### User Management (mesh_users table)
+### User Management (mesh_users + roles tables)
 - [x] User records in `public.mesh_users` table
-- [x] User types: siteadmin, minisiteadmin, agent, colaborador, inactivo, candidato
-- [x] Default type for new users: candidato
-- [x] Admin can create/edit/deactivate users
+- [x] **NEW: roles table with granular permissions**
+- [x] Roles: siteadmin, minisiteadmin, agent, colaborador, inactivo
+- [x] Default role for new users: colaborador
+- [x] Role hierarchy: siteadmin > minisiteadmin > agent > colaborador > inactivo
+- [x] Admin can create/edit/deactivate users based on hierarchy
 
 ### Device Management
 - [x] List devices from Supabase mirror
@@ -39,36 +42,56 @@ BWB Remote Access is a web application for managing remote devices via MeshCentr
 - **Authentication**: MeshCentral credential validation
 - **Session**: Encrypted cookies (AES-256-GCM)
 
-### Database Tables (from remote_schema.sql)
-- `public.mesh_users` - User identity and roles
+### Database Tables
+- `public.mesh_users` - User identity, linked to roles via role_id
+- `public.roles` - **NEW: Role definitions with 24 granular permissions**
 - `public.mesh_groups` - Device groups
 - `public.mesh_group_permissions` - User permissions on groups
-- `public.profiles` - Basic user profiles (minimal)
 
 ### Key Files
 ```
-/middleware.ts              - Route protection
-/src/lib/mesh-auth.ts       - Authentication logic (uses mesh_users)
-/src/lib/rbac-mesh.ts       - Role-based access control (user_type)
-/src/lib/user-mirror.ts     - Supabase user management (mesh_users)
-/src/lib/supabase-admin.ts  - Supabase admin client
+/middleware.ts                    - Route protection
+/src/lib/mesh-auth.ts             - Authentication logic
+/src/lib/rbac.ts                  - NEW: RBAC types and functions
+/src/app/dashboard/page.tsx       - Main dashboard with RBAC-based UI
+/src/app/dashboard/profile/page.tsx - User profile with role display
 ```
 
 ## What's Implemented
 
-### January 2026 - Auth0 Removal Complete
+### January 5, 2026 - RBAC System + Dashboard Fixes
+
+**RBAC System:**
+- ✅ Created `roles` table with 24 granular permissions
+- ✅ Created TypeScript RBAC library (`/src/lib/rbac.ts`)
+- ✅ Migration script: `/app/supabase/migrations/20260105_rbac_fix.sql`
+- ✅ Role hierarchy functions (can_manage_user, get_assignable_roles)
+
+**Dashboard Fixes:**
+- ✅ Fixed infinite redirect loop after login
+- ✅ "Adicionar Dispositivo" section now visible for ALL users
+- ✅ "Escanear QR Code" button functional (shows loading state when JWT not ready)
+- ✅ "Provisionamento sem QR" link works correctly
+- ✅ "Painel de Gestão" shows for agent+ users based on RBAC
+- ✅ Removed hardcoded admin UUID check
+
+**Profile Page:**
+- ✅ Shows correct role from database (not hardcoded "Utilizador")
+- ✅ Two sections: "Dados da Conta RustDesk" and "Dados MeshCentral"
+- ✅ Role badge with dynamic colors based on role
+
+**Testing:**
+- ✅ Added data-testid attributes to key interactive elements
+- ✅ Code review verification passed for all features
+- ✅ Build and lint passing
+
+### Previous Work - Auth0 Removal Complete
 
 **Completed:**
 - ✅ Removed Auth0 dependency completely
-- ✅ Removed all @auth0/nextjs-auth0 references
-- ✅ Implemented MeshCentral credential validation (3-step browser flow)
+- ✅ Implemented MeshCentral credential validation
 - ✅ Created encrypted cookie session management
-- ✅ Built RBAC system using mesh_users.user_type
 - ✅ Updated all protected routes and middleware
-- ✅ Created new login page
-- ✅ Updated admin user management to use mesh_users table
-- ✅ Updated deploy scripts (Step-2, Step-3, Step-4) - removed Auth0 checks
-- ✅ Added Supabase migration phase to deploy script
 
 **Environment Variables Required:**
 - `SESSION_SECRET` (required) - 32-byte hex for session encryption
