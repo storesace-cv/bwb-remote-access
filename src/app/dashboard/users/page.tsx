@@ -123,18 +123,58 @@ export default function UsersManagementPage() {
 
     setJwt(stored);
 
+    // Decodificar JWT para obter auth_user_id
     try {
       const parts = stored.split(".");
       if (parts.length >= 2) {
         const payloadJson = atob(
           parts[1].replace(/-/g, "+").replace(/_/g, "/"),
         );
-        const payload = JSON.parse(payloadJson) as { sub?: string };
+        const payload = JSON.parse(payloadJson) as { sub?: string; email?: string };
         if (payload.sub && typeof payload.sub === "string") {
           setAuthUserId(payload.sub);
-          if (payload.sub !== ADMIN_AUTH_USER_ID) {
-            router.replace("/dashboard");
-          }
+          
+          // Buscar user_type da tabela mesh_users
+          const checkAccess = async () => {
+            try {
+              const res = await fetch(
+                `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${payload.sub}`,
+                {
+                  headers: {
+                    apikey: anonKey,
+                    Authorization: `Bearer ${stored}`,
+                  },
+                }
+              );
+              
+              if (res.ok) {
+                const data = await res.json() as Array<{ user_type?: string }>;
+                if (data.length > 0 && data[0].user_type) {
+                  const userType = data[0].user_type;
+                  setCurrentUserType(userType);
+                  
+                  // Verificar se tem permissão
+                  if (!ALLOWED_USER_TYPES.includes(userType)) {
+                    router.replace("/dashboard");
+                    return;
+                  }
+                } else {
+                  // Sem registo na mesh_users, redirecionar
+                  router.replace("/dashboard");
+                  return;
+                }
+              } else {
+                router.replace("/dashboard");
+                return;
+              }
+            } catch {
+              router.replace("/dashboard");
+              return;
+            }
+            setAccessChecked(true);
+          };
+          
+          void checkAccess();
         }
       }
     } catch (error) {
