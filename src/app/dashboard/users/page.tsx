@@ -116,65 +116,93 @@ export default function UsersManagementPage() {
 
     setJwt(stored);
 
-    // Decodificar JWT para obter auth_user_id
-    try {
-      const parts = stored.split(".");
-      if (parts.length >= 2) {
-        const payloadJson = atob(
-          parts[1].replace(/-/g, "+").replace(/_/g, "/"),
-        );
-        const payload = JSON.parse(payloadJson) as { sub?: string; email?: string };
-        if (payload.sub && typeof payload.sub === "string") {
-          // Buscar user_type da tabela mesh_users
-          const checkAccess = async () => {
-            try {
-              const res = await fetch(
-                `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${payload.sub}`,
-                {
-                  headers: {
-                    apikey: anonKey,
-                    Authorization: `Bearer ${stored}`,
-                  },
-                }
-              );
-              
-              if (res.ok) {
-                const data = await res.json() as Array<{ user_type?: string }>;
-                if (data.length > 0 && data[0].user_type) {
-                  const userType = data[0].user_type;
-                  setCurrentUserType(userType);
-                  
-                  // Guardar no localStorage para uso posterior
-                  window.localStorage.setItem("mesh_user_type", userType);
-                  
-                  // Verificar se tem permissão
-                  if (!ALLOWED_USER_TYPES.includes(userType)) {
-                    router.replace("/dashboard");
-                    return;
-                  }
-                } else {
-                  // Sem registo na mesh_users, redirecionar
-                  router.replace("/dashboard");
-                  return;
-                }
-              } else {
-                router.replace("/dashboard");
-                return;
-              }
-            } catch {
-              router.replace("/dashboard");
-              return;
-            }
-            setAccessChecked(true);
-          };
-          
-          void checkAccess();
+    // Verificar acesso baseado na permissão can_view_users da tabela roles
+    const checkAccess = async () => {
+      try {
+        const parts = stored.split(".");
+        if (parts.length < 2) {
+          router.replace("/dashboard");
+          return;
         }
+
+        const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+        const payload = JSON.parse(payloadJson) as { sub?: string };
+        
+        if (!payload.sub) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        // Buscar user_type da tabela mesh_users
+        const userRes = await fetch(
+          `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${payload.sub}`,
+          {
+            headers: {
+              apikey: anonKey,
+              Authorization: `Bearer ${stored}`,
+            },
+          }
+        );
+
+        if (!userRes.ok) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const userData = await userRes.json() as Array<{ user_type?: string }>;
+        if (!userData.length || !userData[0].user_type) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const userType = userData[0].user_type;
+        setCurrentUserType(userType);
+        window.localStorage.setItem("mesh_user_type", userType);
+
+        // Buscar role para verificar can_view_users e obter hierarchy_level
+        const roleRes = await fetch(
+          `${supabaseUrl}/rest/v1/roles?select=*&name=eq.${userType}`,
+          {
+            headers: {
+              apikey: anonKey,
+              Authorization: `Bearer ${stored}`,
+            },
+          }
+        );
+
+        if (!roleRes.ok) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const roleData = await roleRes.json() as RolePermissions[];
+        if (!roleData.length) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const role = roleData[0];
+        
+        // Verificar permissão can_view_users da tabela roles
+        if (!role.can_view_users) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        setCurrentHierarchyLevel(role.hierarchy_level);
+
+        // Carregar todas as roles para filtragem por hierarquia
+        const roles = await getAllRoles(stored);
+        setAllRoles(roles);
+
+        setAccessChecked(true);
+      } catch (err) {
+        console.error("Erro ao verificar acesso:", err);
+        router.replace("/dashboard");
       }
-    } catch (error) {
-      console.error("Erro ao decodificar JWT em /dashboard/users:", error);
-      router.replace("/");
-    }
+    };
+
+    void checkAccess();
   }, [router]);
 
   const loadMeshUsers = useCallback(async () => {
