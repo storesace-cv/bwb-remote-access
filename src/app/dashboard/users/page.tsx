@@ -292,7 +292,8 @@ export default function UsersManagementPage() {
       is_agent: false,
     });
     setCreateError(null);
-    if (!meshUsersLoading && meshUsers.length === 0) {
+    // Só carrega se ainda não tiver dados
+    if (meshUsers.length === 0 && !meshUsersLoading) {
       void loadMeshUsers();
     }
     setCreateModalOpen(true);
