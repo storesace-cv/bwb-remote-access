@@ -188,7 +188,9 @@ export default function UsersManagementPage() {
   }, []);
 
   const fetchUsers = useCallback(async () => {
-    if (!jwt) return;
+    const currentJwt = window.localStorage.getItem("rustdesk_jwt");
+    if (!currentJwt) return;
+    
     setLoading(true);
     setErrorMsg(null);
 
@@ -198,7 +200,7 @@ export default function UsersManagementPage() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${currentJwt}`,
             apikey: anonKey,
           },
         },
@@ -260,7 +262,7 @@ export default function UsersManagementPage() {
     } finally {
       setLoading(false);
     }
-  }, [jwt, router]);
+  }, [router]);
 
   // Ref para evitar chamadas duplicadas
   const fetchInProgress = useState<boolean>(false);
