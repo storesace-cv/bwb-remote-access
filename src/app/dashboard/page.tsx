@@ -568,7 +568,13 @@ export default function DashboardPage() {
   }, [checkingDevice]);
 
   const startRegistrationSession = useCallback(async () => {
-    if (!jwt) return;
+    console.log("[Dashboard] startRegistrationSession called, jwt exists:", !!jwt);
+    
+    if (!jwt) {
+      console.error("[Dashboard] No JWT available - cannot start registration");
+      setQrError("Sessão não disponível. Por favor faça login novamente.");
+      return;
+    }
 
     setShowRegistrationModal(true);
     setQrLoading(true);
@@ -582,6 +588,7 @@ export default function DashboardPage() {
     setHybridSubmitLoading(false);
 
     try {
+      console.log("[Dashboard] Calling start-registration-session edge function");
       const sessionRes = await fetch(`${supabaseUrl}/functions/v1/start-registration-session`, {
         method: "POST",
         headers: {
@@ -596,6 +603,7 @@ export default function DashboardPage() {
 
       if (!sessionRes.ok) {
         const error = await sessionRes.json();
+        console.error("[Dashboard] Registration session error:", error);
         throw new Error(error.message || "Erro ao iniciar sessão");
       }
 
