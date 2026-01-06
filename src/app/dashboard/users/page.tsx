@@ -313,8 +313,7 @@ export default function UsersManagementPage() {
   const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!jwt) return;
-    if (authUserId !== ADMIN_AUTH_USER_ID) return;
+    if (!jwt || !accessChecked) return;
     
     // Evitar chamadas repetidas
     if (hasFetchedRef.current) return;
