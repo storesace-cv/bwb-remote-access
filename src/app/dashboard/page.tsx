@@ -1279,7 +1279,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {isAgent && (
+        {/* Painel de Gestão - visível se tem permissão can_access_management_panel */}
+        {userPermissions.can_access_management_panel && (
           <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
