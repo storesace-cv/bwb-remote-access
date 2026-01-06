@@ -349,7 +349,6 @@ SELECT
   u.domain,
   u.auth_user_id,
   u.created_at,
-  u.updated_at,
   r.id AS role_id,
   r.name AS role_name,
   r.display_name AS role_display_name,
@@ -358,7 +357,7 @@ SELECT
   r.can_create_users
 FROM mesh_users u
 LEFT JOIN roles r ON u.role_id = r.id
-WHERE u.role_id != 'a0000000-0000-0000-0000-000000000005'; -- Excluir inactivos da view principal
+WHERE u.role_id IS NULL OR u.role_id != 'a0000000-0000-0000-0000-000000000005'; -- Excluir inactivos da view principal
 
 COMMENT ON VIEW user_management_view IS 'View para UI de gestão de utilizadores com dados de role';
 
