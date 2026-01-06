@@ -65,6 +65,8 @@ export default function DashboardPage() {
     name: string;
     displayName: string;
   }>({ name: "", displayName: "" });
+  // Permissões carregadas da tabela roles
+  const [userPermissions, setUserPermissions] = useState<RolePermissions | null>(null);
   
   const [userTypeChecked, setUserTypeChecked] = useState(false);
   const [initialDevicesLoaded, setInitialDevicesLoaded] = useState(false);
