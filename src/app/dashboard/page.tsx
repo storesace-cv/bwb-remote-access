@@ -8,6 +8,7 @@ import QRCode from "react-qr-code";
 
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
+import { RolePermissions, getCurrentUserPermissions } from "@/lib/permissions-service";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -59,12 +60,13 @@ const ADOPTED_PAGE_SIZE = 20;
 export default function DashboardPage() {
   const router = useRouter();
   const [jwt, setJwt] = useState<string | null>(null);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
   // User role from roles table
   const [userRole, setUserRole] = useState<{
     name: string;
     displayName: string;
   }>({ name: "", displayName: "" });
+  // Permissões carregadas da tabela roles
+  const [userPermissions, setUserPermissions] = useState<RolePermissions | null>(null);
   
   const [userTypeChecked, setUserTypeChecked] = useState(false);
   const [initialDevicesLoaded, setInitialDevicesLoaded] = useState(false);
@@ -131,25 +133,6 @@ export default function DashboardPage() {
   const [currentAdoptedPage, setCurrentAdoptedPage] = useState<number>(1);
   const [adoptedPageSize, setAdoptedPageSize] = useState<number>(ADOPTED_PAGE_SIZE);
 
-  // User permissions from roles table
-  const [userPermissions, setUserPermissions] = useState<{
-    can_access_management_panel: boolean;
-    can_scan_qr: boolean;
-    can_provision_without_qr: boolean;
-    can_view_devices: boolean;
-    can_adopt_devices: boolean;
-    can_create_users: boolean;
-    can_view_users: boolean;
-  }>({
-    can_access_management_panel: false,
-    can_scan_qr: false,
-    can_provision_without_qr: false,
-    can_view_devices: false,
-    can_adopt_devices: false,
-    can_create_users: false,
-    can_view_users: false,
-  });
-
   const RUSTDESK_APK_URLS = {
     arm64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=arm64-v8a",
     armeabi: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=armeabi-v7a",
@@ -177,8 +160,9 @@ export default function DashboardPage() {
         if (parts.length >= 2) {
           const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
           const payload = JSON.parse(payloadJson) as { sub?: string };
-          if (payload.sub && typeof payload.sub === "string") {
-            setAuthUserId(payload.sub);
+          // JWT decodificado com sucesso - o sub contém o auth_user_id
+          if (!payload.sub) {
+            console.warn("JWT não contém sub (auth_user_id)");
           }
         }
       } catch (error) {
@@ -261,7 +245,8 @@ export default function DashboardPage() {
 
       // Fetch permissions from roles table
       if (user.role_id) {
-        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,display_name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
+        // Trazer todas as colunas da tabela roles
+        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=*&id=eq.${user.role_id}`;
         
         console.log("[Dashboard] Fetching role permissions for role_id:", user.role_id);
 
@@ -285,16 +270,8 @@ export default function DashboardPage() {
               displayName: role.display_name || role.name || "",
             });
             
-            // Set permissions from roles table
-            setUserPermissions({
-              can_access_management_panel: role.can_access_management_panel ?? false,
-              can_scan_qr: role.can_scan_qr ?? false,
-              can_provision_without_qr: role.can_provision_without_qr ?? false,
-              can_view_devices: role.can_view_devices ?? false,
-              can_adopt_devices: role.can_adopt_devices ?? false,
-              can_create_users: role.can_create_users ?? false,
-              can_view_users: role.can_view_users ?? false,
-            });
+            // Set all permissions from roles table
+            setUserPermissions(role as RolePermissions);
 
             console.log("[Dashboard] Permissions set from role:", role.name);
           }
@@ -303,17 +280,9 @@ export default function DashboardPage() {
         }
       } else {
         console.warn("[Dashboard] User has no role_id assigned");
-        // Default to colaborador permissions
+        // Default to null permissions (restricted access)
         setUserRole({ name: "colaborador", displayName: "Colaborador" });
-        setUserPermissions({
-          can_access_management_panel: false,
-          can_scan_qr: true,
-          can_provision_without_qr: true,
-          can_view_devices: true,
-          can_adopt_devices: true,
-          can_create_users: false,
-          can_view_users: false,
-        });
+        setUserPermissions(null);
       }
 
       setUserTypeChecked(true);
@@ -471,13 +440,12 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!jwt || !userTypeChecked) return;
-    // Só carrega se o utilizador tiver acesso ao painel de gestão
-    const canAccessPanel = userRole.name === "siteadmin" || userRole.name === "minisiteadmin" || userRole.name === "agent";
-    if (!canAccessPanel) return;
+    // Usar permissão da tabela roles em vez de verificação hardcoded
+    if (!userPermissions?.can_access_management_panel) return;
     if (hasFetchedMeshUsersRef.current) return;
     hasFetchedMeshUsersRef.current = true;
     void loadMeshUsers();
-  }, [jwt, userTypeChecked, userRole.name, loadMeshUsers]);
+  }, [jwt, userTypeChecked, userPermissions?.can_access_management_panel, loadMeshUsers]);
 
   const handleLogout = useCallback(() => {
     try {
@@ -1159,10 +1127,13 @@ export default function DashboardPage() {
   }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
   const filteredDevices = getFilteredAndSortedDevices();
-  // isAdmin is true for siteadmin users (using role from roles table)
-  const isAdmin = userRole.name === "siteadmin";
+  // Usar permissão can_access_all_domains para definir se pode ver todos os dispositivos
+  const canAccessAllDomains = userPermissions?.can_access_all_domains ?? false;
+  // isAdmin baseado na permissão can_access_all_domains (substitui verificação hardcoded por role name)
+  const isAdmin = canAccessAllDomains;
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
+  // Só mostra dispositivos não atribuídos para quem pode aceder a todos os domínios
   const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
 
   const totalAdopted = adoptedDevices.length;
@@ -1212,7 +1183,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {isAdmin && (
+            {userPermissions?.can_view_users && (
               <Link
                 href="/dashboard/users"
                 className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
@@ -1243,7 +1214,7 @@ export default function DashboardPage() {
         )}
 
         {/* Painel de Gestão - visível se tem permissão can_access_management_panel */}
-        {userPermissions.can_access_management_panel && (
+        {userPermissions?.can_access_management_panel && (
           <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -1251,53 +1222,99 @@ export default function DashboardPage() {
                   🎯 Painel de Gestão ({userRole.displayName || "Utilizador"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
-                  {userRole.name === "siteadmin"
-                    ? "Como Site Admin, tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
-                    : userRole.name === "minisiteadmin"
-                    ? "Como Mini Site Admin, podes gerir utilizadores e colaboradores do teu domínio"
-                    : userRole.name === "agent"
-                    ? "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"
+                  {userPermissions?.can_access_all_domains
+                    ? "Tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
+                    : userPermissions?.can_access_own_domain_only
+                    ? "Podes gerir utilizadores e colaboradores do teu domínio"
                     : "Tens acesso ao painel de gestão"}
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link
-                href="/dashboard/collaborators"
-                className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
-                    👥
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Colaboradores - visível se pode ver utilizadores */}
+              {userPermissions?.can_view_users && (
+                <Link
+                  href="/dashboard/collaborators"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
+                      👥
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
-                  <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Colaboradores</h3>
-                <p className="text-xs text-slate-400">
-                  Criar e gerir colaboradores que terão acesso aos teus dispositivos
-                </p>
-              </Link>
+                  <h3 className="font-medium text-white mb-1">Colaboradores</h3>
+                  <p className="text-xs text-slate-400">
+                    Criar e gerir colaboradores que terão acesso aos teus dispositivos
+                  </p>
+                </Link>
+              )}
 
-              <Link
-                href="/dashboard/groups"
-                className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
-                    📦
+              {/* Grupos - visível se pode ver grupos */}
+              {userPermissions?.can_view_groups && (
+                <Link
+                  href="/dashboard/groups"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
+                      📦
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
-                  <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
-                <p className="text-xs text-slate-400">
-                  Organizar dispositivos em grupos e gerir permissões dos colaboradores
-                </p>
-              </Link>
+                  <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
+                  <p className="text-xs text-slate-400">
+                    Organizar dispositivos em grupos e gerir permissões dos colaboradores
+                  </p>
+                </Link>
+              )}
+
+              {/* Gestão de Utilizadores - visível se pode ver utilizadores */}
+              {userPermissions?.can_view_users && (
+                <Link
+                  href="/dashboard/users"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-amber-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-amber-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-amber-600/20 flex items-center justify-center text-xl">
+                      🔑
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <h3 className="font-medium text-white mb-1">Gestão de Utilizadores</h3>
+                  <p className="text-xs text-slate-400">
+                    Gerir utilizadores, criar contas e atribuir roles
+                  </p>
+                </Link>
+              )}
+
+              {/* Gestão de Roles - visível apenas se pode gerir roles */}
+              {userPermissions?.can_manage_roles && (
+                <Link
+                  href="/dashboard/roles"
+                  className="group bg-slate-900/70 border border-slate-700 hover:border-purple-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-purple-900/20"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
+                      ⚙️
+                    </div>
+                    <svg className="w-5 h-5 text-slate-600 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <h3 className="font-medium text-white mb-1">Gestão de Roles</h3>
+                  <p className="text-xs text-slate-400">
+                    Configurar permissões de cada role do sistema
+                  </p>
+                </Link>
+              )}
             </div>
           </section>
         )}

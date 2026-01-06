@@ -4,13 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ToastContainer, useToast } from "@/components/ui/toast";
+import { RolePermissions, getAllRoles } from "@/lib/permissions-service";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const ADMIN_AUTH_USER_ID = "9ebfa3dd-392c-489d-882f-8a1762cb36e8";
-// Roles que podem aceder à gestão de utilizadores
-const ALLOWED_USER_TYPES = ["siteadmin", "minisiteadmin", "agent"];
 
 function fetchWithTimeout(url: string, options: RequestInit, timeout = 30000): Promise<Response> {
   return Promise.race([
@@ -66,8 +63,9 @@ export default function UsersManagementPage() {
   const router = useRouter();
   const { toasts, removeToast, showSuccess, showError } = useToast();
   const [jwt, setJwt] = useState<string | null>(null);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [currentUserType, setCurrentUserType] = useState<string | null>(null);
+  const [currentHierarchyLevel, setCurrentHierarchyLevel] = useState<number>(999);
+  const [allRoles, setAllRoles] = useState<RolePermissions[]>([]);
   const [accessChecked, setAccessChecked] = useState(false);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
@@ -118,67 +116,93 @@ export default function UsersManagementPage() {
 
     setJwt(stored);
 
-    // Decodificar JWT para obter auth_user_id
-    try {
-      const parts = stored.split(".");
-      if (parts.length >= 2) {
-        const payloadJson = atob(
-          parts[1].replace(/-/g, "+").replace(/_/g, "/"),
-        );
-        const payload = JSON.parse(payloadJson) as { sub?: string; email?: string };
-        if (payload.sub && typeof payload.sub === "string") {
-          setAuthUserId(payload.sub);
-          
-          // Buscar user_type da tabela mesh_users
-          const checkAccess = async () => {
-            try {
-              const res = await fetch(
-                `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${payload.sub}`,
-                {
-                  headers: {
-                    apikey: anonKey,
-                    Authorization: `Bearer ${stored}`,
-                  },
-                }
-              );
-              
-              if (res.ok) {
-                const data = await res.json() as Array<{ user_type?: string }>;
-                if (data.length > 0 && data[0].user_type) {
-                  const userType = data[0].user_type;
-                  setCurrentUserType(userType);
-                  
-                  // Guardar no localStorage para uso posterior
-                  window.localStorage.setItem("mesh_user_type", userType);
-                  
-                  // Verificar se tem permissão
-                  if (!ALLOWED_USER_TYPES.includes(userType)) {
-                    router.replace("/dashboard");
-                    return;
-                  }
-                } else {
-                  // Sem registo na mesh_users, redirecionar
-                  router.replace("/dashboard");
-                  return;
-                }
-              } else {
-                router.replace("/dashboard");
-                return;
-              }
-            } catch {
-              router.replace("/dashboard");
-              return;
-            }
-            setAccessChecked(true);
-          };
-          
-          void checkAccess();
+    // Verificar acesso baseado na permissão can_view_users da tabela roles
+    const checkAccess = async () => {
+      try {
+        const parts = stored.split(".");
+        if (parts.length < 2) {
+          router.replace("/dashboard");
+          return;
         }
+
+        const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
+        const payload = JSON.parse(payloadJson) as { sub?: string };
+        
+        if (!payload.sub) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        // Buscar user_type da tabela mesh_users
+        const userRes = await fetch(
+          `${supabaseUrl}/rest/v1/mesh_users?select=user_type&auth_user_id=eq.${payload.sub}`,
+          {
+            headers: {
+              apikey: anonKey,
+              Authorization: `Bearer ${stored}`,
+            },
+          }
+        );
+
+        if (!userRes.ok) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const userData = await userRes.json() as Array<{ user_type?: string }>;
+        if (!userData.length || !userData[0].user_type) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const userType = userData[0].user_type;
+        setCurrentUserType(userType);
+        window.localStorage.setItem("mesh_user_type", userType);
+
+        // Buscar role para verificar can_view_users e obter hierarchy_level
+        const roleRes = await fetch(
+          `${supabaseUrl}/rest/v1/roles?select=*&name=eq.${userType}`,
+          {
+            headers: {
+              apikey: anonKey,
+              Authorization: `Bearer ${stored}`,
+            },
+          }
+        );
+
+        if (!roleRes.ok) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const roleData = await roleRes.json() as RolePermissions[];
+        if (!roleData.length) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        const role = roleData[0];
+        
+        // Verificar permissão can_view_users da tabela roles
+        if (!role.can_view_users) {
+          router.replace("/dashboard");
+          return;
+        }
+
+        setCurrentHierarchyLevel(role.hierarchy_level);
+
+        // Carregar todas as roles para filtragem por hierarquia
+        const roles = await getAllRoles(stored);
+        setAllRoles(roles);
+
+        setAccessChecked(true);
+      } catch (err) {
+        console.error("Erro ao verificar acesso:", err);
+        router.replace("/dashboard");
       }
-    } catch (error) {
-      console.error("Erro ao decodificar JWT em /dashboard/users:", error);
-      router.replace("/");
-    }
+    };
+
+    void checkAccess();
   }, [router]);
 
   const loadMeshUsers = useCallback(async () => {
@@ -285,25 +309,16 @@ export default function UsersManagementPage() {
 
       // admin-list-mesh-users retorna { users: [...] }
       const data = await res.json() as { users?: AdminUser[] };
-      const allUsers = Array.isArray(data.users) ? data.users : [];
+      const allUsersFromApi = Array.isArray(data.users) ? data.users : [];
       
-      // Filtrar utilizadores: não mostrar utilizadores com perfil igual ou superior
-      // Hierarquia: siteadmin (3) > minisiteadmin (2) > agent (1) > user (0)
-      const userTypeHierarchy: Record<string, number> = {
-        "siteadmin": 3,
-        "minisiteadmin": 2,
-        "agent": 1,
-        "user": 0,
-      };
-      
-      // Obter o nível do utilizador actual
-      const myUserType = window.localStorage.getItem("mesh_user_type") ?? "user";
-      const myLevel = userTypeHierarchy[myUserType] ?? 0;
-      
-      // Filtrar: só mostrar utilizadores com nível inferior
-      const filteredUsers = allUsers.filter(u => {
-        const theirLevel = userTypeHierarchy[u.user_type ?? "user"] ?? 0;
-        return theirLevel < myLevel;
+      // Filtrar utilizadores baseado na hierarquia da tabela roles
+      // Só mostrar utilizadores com hierarchy_level MAIOR (menor privilégio) que o nosso
+      const filteredUsers = allUsersFromApi.filter(u => {
+        // Encontrar o role do utilizador na lista de roles carregada
+        const userRole = allRoles.find(r => r.name === u.user_type);
+        if (!userRole) return true; // Se não tem role definido, mostrar
+        // Mostrar apenas utilizadores com hierarchy_level maior (menor privilégio)
+        return userRole.hierarchy_level > currentHierarchyLevel;
       });
       
       setUsers(filteredUsers);
@@ -328,13 +343,13 @@ export default function UsersManagementPage() {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, allRoles, currentHierarchyLevel]);
 
   // Ref para evitar chamadas duplicadas
   const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!jwt || !accessChecked) return;
+    if (!jwt || !accessChecked || allRoles.length === 0) return;
     
     // Evitar chamadas repetidas
     if (hasFetchedRef.current) return;
@@ -589,8 +604,8 @@ export default function UsersManagementPage() {
     }
   };
 
-  // Verificar se o utilizador tem permissão para aceder
-  const hasAccess = accessChecked && currentUserType && ALLOWED_USER_TYPES.includes(currentUserType);
+  // Verificar se o utilizador tem permissão para aceder (baseado na verificação anterior no useEffect)
+  const hasAccess = accessChecked;
 
   if (!jwt || !hasAccess) {
     return (
