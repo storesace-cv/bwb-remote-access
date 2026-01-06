@@ -59,7 +59,6 @@ const ADOPTED_PAGE_SIZE = 20;
 export default function DashboardPage() {
   const router = useRouter();
   const [jwt, setJwt] = useState<string | null>(null);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
   // User role from roles table
   const [userRole, setUserRole] = useState<{
     name: string;
