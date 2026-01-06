@@ -6,74 +6,71 @@ Substituir autenticação Auth0 por um sistema personalizado usando MeshCentral,
 ## Arquitetura de Autenticação
 
 ### Fluxo Actual (Implementado e Funcionando ✅)
-1. **Login Form** (`/src/components/login-form.tsx`) - Envia email/password/domain para `/api/login`
-2. **API Login** (`/src/app/api/login/route.ts`):
-   - Usa Supabase Admin API para criar/atualizar utilizador (com password fixa `Admin1234!`)
-   - **Sincroniza `auth_user_id`** na tabela `mesh_users` com o ID do Supabase Auth
-   - Define cookie de sessão `mesh_session`
-   - Retorna JWT para localStorage
-3. **Middleware** (`/middleware.ts`) - Verifica cookie `mesh_session` para proteger rotas
-4. **Dashboard** - Usa JWT para chamar APIs e Edge Functions do Supabase
+1. **Login Form** - Envia email/password/domain para `/api/login`
+2. **API Login** - Usa Supabase Admin API, sincroniza `auth_user_id`, define cookie de sessão
+3. **Middleware** - Verifica cookie `mesh_session` para proteger rotas
+4. **Dashboard** - Usa JWT e permissões da tabela `roles`
 
-### Sincronização de IDs (CRÍTICO - RESOLVIDO ✅)
-- O `auth_user_id` na tabela `mesh_users` DEVE corresponder ao `id` do utilizador no Supabase Auth
-- Esta sincronização é feita automaticamente em cada login via endpoint `/api/login`
-- Sem esta sincronização, as Edge Functions retornam 403 ou "mesh_users mapping not found"
+## Sistema de Permissões (RBAC) - 100% Baseado na Tabela `roles`
 
-## RBAC - Controlo de Acesso Baseado em Roles (IMPLEMENTADO ✅)
+### ✅ Refatoração Completa Concluída
+- Removidas **todas** as permissões hardcoded
+- Todas as verificações usam agora a tabela `roles` do Supabase
+- Criado serviço centralizado `/lib/permissions-service.ts`
 
-### Hierarquia de User Types
-```
-siteadmin (3) > minisiteadmin (2) > agent (1) > user (0)
-```
+### Tabela `roles` - Campos de Permissão
+| Campo | Descrição |
+|-------|-----------|
+| `can_access_management_panel` | Aceder ao Painel de Gestão |
+| `can_view_users` | Ver lista de utilizadores |
+| `can_create_users` | Criar utilizadores |
+| `can_edit_users` | Editar utilizadores |
+| `can_delete_users` | Eliminar utilizadores |
+| `can_view_groups` | Ver grupos |
+| `can_manage_roles` | Gerir roles (página de administração) |
+| `can_access_all_domains` | Aceder a todos os domínios |
+| `can_access_own_domain_only` | Restrito ao próprio domínio |
+| `hierarchy_level` | Nível hierárquico (0=maior, maior=menor) |
+| ... | (e muitas outras permissões) |
 
-### Permissões
-- **Painel de Gestão**: Visível para `siteadmin`, `minisiteadmin`, `agent`
-- **Gestão de Utilizadores**: Acessível para `siteadmin`, `minisiteadmin`, `agent`
-- **Filtro de Visibilidade**: Cada role só vê utilizadores com nível INFERIOR ao seu
-  - `siteadmin` vê: `minisiteadmin`, `agent`, `user`
-  - `minisiteadmin` vê: `agent`, `user`
-  - `agent` vê: `user`
+### Hierarquia por `hierarchy_level`
+- `0` = Site Admin (maior privilégio)
+- `1` = Mini Site Admin
+- `2` = Agent
+- `3+` = Colaborador/User
+
+### Página de Gestão de Roles (/dashboard/roles)
+- ✅ Criada página completa para `siteadmin`
+- ✅ Permite activar/desactivar permissões de cada role
+- ✅ Organizada por categorias (Painel, Dispositivos, Utilizadores, Grupos, Domínio)
+- ✅ Actualizações em tempo real na base de dados
 
 ## Status das Funcionalidades
 
-### ✅ Funcionando (Testado)
+### ✅ Funcionando
 - [x] Login com email/password
-- [x] Geração de JWT do Supabase Auth
-- [x] Sincronização de `auth_user_id` em cada login
-- [x] Cookie de sessão para middleware
-- [x] Redirecionamento para dashboard
-- [x] Dashboard carrega corretamente (SEM LOOP)
-- [x] "Painel de Gestão" aparece para roles corretos
-- [x] Edge Function `get-devices` - Retorna dispositivos
-- [x] Edge Function `admin-list-groups` - Retorna grupos
-- [x] **QR Code generation** - Modal funciona, QR é gerado
-- [x] **Gestão de Utilizadores** - Lista utilizadores com filtro de hierarquia
-- [x] **RBAC implementado** - Filtragem por user_type
+- [x] Sincronização de `auth_user_id`
+- [x] Dashboard com permissões dinâmicas da tabela `roles`
+- [x] Painel de Gestão baseado em `can_access_management_panel`
+- [x] Gestão de Utilizadores baseada em `can_view_users`
+- [x] Gestão de Roles baseada em `can_manage_roles`
+- [x] Filtragem por hierarquia (`hierarchy_level`)
+- [x] QR Code generation
+- [x] Edge Functions funcionais
 
-### ⚠️ Funcionalidades a Verificar
-- [ ] Provisionamento de dispositivos via QR
-- [ ] Gestão de colaboradores
-- [ ] Edição/Criação de utilizadores
+## Ficheiros Principais
 
-## Edge Functions do Supabase (NÃO MODIFICAR)
-As Edge Functions estão hospedadas no Supabase e funcionam correctamente.
+### Serviço de Permissões (NOVO)
+- `/src/lib/permissions-service.ts` - Serviço centralizado de permissões
 
-## Ficheiros Principais Modificados
-
-### Backend/API
-- `/src/app/api/login/route.ts` - Endpoint de login com sincronização de auth_user_id
-
-### Frontend
-- `/src/app/dashboard/page.tsx` - Dashboard principal (corrigido loop)
-- `/src/app/dashboard/users/page.tsx` - Gestão de Utilizadores (com filtro RBAC)
-
-### Configuração
-- `/.env.local` - Chaves do Supabase
+### Páginas
+- `/src/app/dashboard/page.tsx` - Dashboard principal (usa `userPermissions`)
+- `/src/app/dashboard/users/page.tsx` - Gestão de utilizadores
+- `/src/app/dashboard/roles/page.tsx` - **NOVA** Gestão de roles
 
 ## Credenciais de Teste
 - **siteadmin**: `suporte@bwb.pt` / `Admin123!`
 - **minisiteadmin**: `jorge.peixinho@bwb.pt` / `Admin123!`
 
 ## Data da Última Atualização
-6 de Janeiro de 2026 - Login, Dashboard, RBAC e Gestão de Utilizadores funcionando
+6 de Janeiro de 2026 - RBAC completo e Gestão de Roles implementada
