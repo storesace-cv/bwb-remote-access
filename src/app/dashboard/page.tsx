@@ -177,12 +177,12 @@ export default function DashboardPage() {
   }, []);
 
   // Check if user is an agent / minisiteadmin / siteadmin
-  // Uses the new RBAC system with roles table
+  // Uses email from session/JWT as primary identifier (more reliable than auth_user_id)
   const checkUserType = useCallback(async () => {
     if (!jwt || userTypeChecked) return;
 
     try {
-      // First, decode email from JWT to find user
+      // Decode email from JWT - this is the most reliable identifier
       let userEmail = "";
       try {
         const parts = jwt.split(".");
@@ -190,24 +190,23 @@ export default function DashboardPage() {
           const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
           const payload = JSON.parse(payloadJson) as { email?: string; sub?: string };
           userEmail = payload.email || "";
+          console.log("[Dashboard] JWT decoded - email:", userEmail, "sub:", payload.sub);
         }
-      } catch {
-        console.warn("Could not decode email from JWT");
+      } catch (e) {
+        console.warn("[Dashboard] Could not decode JWT:", e);
       }
 
-      // Query mesh_users with role information
-      // Try by auth_user_id first, then by email/mesh_username
-      let queryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id,roles:role_id(name,hierarchy_level,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_create_users)`;
-      
-      if (authUserId) {
-        queryUrl += `&auth_user_id=eq.${authUserId}`;
-      } else if (userEmail) {
-        queryUrl += `&mesh_username=eq.${userEmail.toLowerCase()}`;
-      } else {
-        console.warn("No auth_user_id or email to query user");
+      // If no email in JWT, try to get from localStorage or session
+      if (!userEmail) {
+        console.warn("[Dashboard] No email in JWT, cannot determine user type");
         setUserTypeChecked(true);
         return;
       }
+
+      // Query mesh_users by mesh_username (email) - this is the reliable identifier
+      const queryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
+      
+      console.log("[Dashboard] Querying user by email:", userEmail.toLowerCase());
 
       const res = await fetch(queryUrl, {
         headers: {
@@ -216,75 +215,88 @@ export default function DashboardPage() {
         },
       });
 
-      if (res.ok) {
-        const data = await res.json();
+      if (!res.ok) {
+        console.error("[Dashboard] Failed to fetch user:", res.status, await res.text());
+        setUserTypeChecked(true);
+        return;
+      }
+
+      const data = await res.json();
+      console.log("[Dashboard] User query result:", data);
+
+      if (data.length > 0) {
+        const record = data[0];
         
-        // If no result by auth_user_id, try by email
-        if (data.length === 0 && authUserId && userEmail) {
-          const emailRes = await fetch(
-            `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id,roles:role_id(name,hierarchy_level,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_create_users)&mesh_username=eq.${userEmail.toLowerCase()}`,
-            {
-              headers: {
-                Authorization: `Bearer ${jwt}`,
-                apikey: anonKey,
-              },
+        // Reset flags
+        setIsAgent(false);
+        setIsMinisiteadmin(false);
+        setIsSiteadmin(false);
+
+        // If user has role_id, fetch the role details
+        let roleName = record.user_type || "";
+        
+        if (record.role_id) {
+          try {
+            const roleRes = await fetch(
+              `${supabaseUrl}/rest/v1/roles?select=name,hierarchy_level&id=eq.${record.role_id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${jwt}`,
+                  apikey: anonKey,
+                },
+              }
+            );
+            if (roleRes.ok) {
+              const roleData = await roleRes.json();
+              if (roleData.length > 0) {
+                roleName = roleData[0].name;
+                console.log("[Dashboard] Role from roles table:", roleName);
+              }
             }
-          );
-          if (emailRes.ok) {
-            const emailData = await emailRes.json();
-            if (emailData.length > 0) {
-              data.push(...emailData);
-            }
+          } catch (roleErr) {
+            console.warn("[Dashboard] Could not fetch role:", roleErr);
           }
         }
 
-        if (data.length > 0) {
-          const record = data[0];
-          const roleData = Array.isArray(record.roles) ? record.roles[0] : record.roles;
-          
-          // Reset flags
-          setIsAgent(false);
-          setIsMinisiteadmin(false);
-          setIsSiteadmin(false);
+        console.log("[Dashboard] Determined role:", roleName, "from user_type:", record.user_type);
 
-          // Determine role from roles table or fallback to user_type
-          const roleName = roleData?.name || record.user_type || "";
-
-          if (roleName === "siteadmin") {
-            setIsSiteadmin(true);
-            setIsMinisiteadmin(true);
-            setIsAgent(true);
-          } else if (roleName === "minisiteadmin") {
-            setIsMinisiteadmin(true);
-            setIsAgent(true);
-          } else if (roleName === "agent") {
-            setIsAgent(true);
-          }
-
-          // Set domain and display name
-          setUserDomain(record.domain || "");
-          setUserDisplayName(record.display_name || record.mesh_username || "");
-          
-          setUserTypeChecked(true);
+        // Set permissions based on role
+        if (roleName === "siteadmin") {
+          setIsSiteadmin(true);
+          setIsMinisiteadmin(true);
+          setIsAgent(true);
+          console.log("[Dashboard] User is SITEADMIN - full access");
+        } else if (roleName === "minisiteadmin") {
+          setIsMinisiteadmin(true);
+          setIsAgent(true);
+          console.log("[Dashboard] User is MINISITEADMIN");
+        } else if (roleName === "agent") {
+          setIsAgent(true);
+          console.log("[Dashboard] User is AGENT");
         } else {
-          // No user found - set as colaborador (basic user)
-          setIsAgent(false);
-          setIsMinisiteadmin(false);
-          setIsSiteadmin(false);
-          setUserTypeChecked(true);
+          console.log("[Dashboard] User is COLABORADOR or other:", roleName);
         }
+
+        // Set domain and display name
+        setUserDomain(record.domain || "");
+        setUserDisplayName(record.display_name || record.mesh_username || "");
+        
+        setUserTypeChecked(true);
       } else {
-        console.error("Failed to fetch user type:", res.status);
+        console.warn("[Dashboard] No user found for email:", userEmail);
+        setIsAgent(false);
+        setIsMinisiteadmin(false);
+        setIsSiteadmin(false);
         setUserTypeChecked(true);
       }
     } catch (error) {
-      console.error("Erro ao verificar tipo de utilizador:", error);
+      console.error("[Dashboard] Error checking user type:", error);
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
       setUserTypeChecked(true);
     }
-  }, [jwt, authUserId, userTypeChecked]);
+  }, [jwt, userTypeChecked]);
 
   useEffect(() => {
     void checkUserType();
@@ -556,7 +568,13 @@ export default function DashboardPage() {
   }, [checkingDevice]);
 
   const startRegistrationSession = useCallback(async () => {
-    if (!jwt) return;
+    console.log("[Dashboard] startRegistrationSession called, jwt exists:", !!jwt);
+    
+    if (!jwt) {
+      console.error("[Dashboard] No JWT available - cannot start registration");
+      setQrError("Sessão não disponível. Por favor faça login novamente.");
+      return;
+    }
 
     setShowRegistrationModal(true);
     setQrLoading(true);
@@ -570,6 +588,7 @@ export default function DashboardPage() {
     setHybridSubmitLoading(false);
 
     try {
+      console.log("[Dashboard] Calling start-registration-session edge function");
       const sessionRes = await fetch(`${supabaseUrl}/functions/v1/start-registration-session`, {
         method: "POST",
         headers: {
@@ -584,6 +603,7 @@ export default function DashboardPage() {
 
       if (!sessionRes.ok) {
         const error = await sessionRes.json();
+        console.error("[Dashboard] Registration session error:", error);
         throw new Error(error.message || "Erro ao iniciar sessão");
       }
 
