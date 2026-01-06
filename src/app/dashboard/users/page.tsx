@@ -280,9 +280,9 @@ export default function UsersManagementPage() {
         return;
       }
 
-      // admin-list-mesh-users retorna array diretamente
-      const data = await res.json();
-      setUsers(Array.isArray(data) ? data : []);
+      // admin-list-mesh-users retorna { users: [...] }
+      const data = await res.json() as { users?: AdminUser[] };
+      setUsers(Array.isArray(data.users) ? data.users : []);
     } catch (err: unknown) {
       console.error("[Users Page] Fetch error:", err);
 
