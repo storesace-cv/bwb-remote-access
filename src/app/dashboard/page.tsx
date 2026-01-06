@@ -1285,14 +1285,16 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-emerald-400">
-                  🎯 Painel de Gestão ({isSiteadmin ? "Site Admin" : isMinisiteadmin ? "Mini Site Admin" : "Agent"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
+                  🎯 Painel de Gestão ({isSiteadmin ? "Site Admin" : isMinisiteadmin ? "Mini Site Admin" : isAgent ? "Agent" : "Utilizador"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
                   {isSiteadmin 
                     ? "Como Site Admin, tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
                     : isMinisiteadmin
                     ? "Como Mini Site Admin, podes gerir utilizadores e colaboradores do teu domínio"
-                    : "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"}
+                    : isAgent
+                    ? "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"
+                    : "Tens acesso ao painel de gestão"}
                 </p>
               </div>
             </div>
