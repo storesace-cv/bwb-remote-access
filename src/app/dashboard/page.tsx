@@ -1374,7 +1374,6 @@ export default function DashboardPage() {
               )}
             </div>
           </section>
-        )}
 
         <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 mb-6 backdrop-blur-sm">
           <div className="flex flex-col md:flex-row gap-4">
