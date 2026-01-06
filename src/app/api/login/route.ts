@@ -1,27 +1,25 @@
 /**
  * Login Route - MeshCentral Authentication + Supabase JWT
  * 
- * Fluxo simplificado:
- * 1. Valida credenciais no MeshCentral
- * 2. Se válido, faz signInWithPassword no Supabase (mesma password)
- * 3. Se utilizador não existe no Supabase, cria-o com signUp
- * 4. Retorna JWT directo do Supabase
+ * Fluxo:
+ * 1. Valida credenciais no MeshCentral (password real do utilizador)
+ * 2. Se válido, faz signInWithPassword no Supabase com PASSWORD FIXA
+ * 3. Se utilizador não existe no Supabase, cria-o com PASSWORD FIXA
+ * 4. Retorna JWT do Supabase
+ * 
+ * A password no Supabase é SEMPRE "Admin1234!" para todos os utilizadores.
+ * A autenticação real é feita pelo MeshCentral.
  */
 
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { validateMeshCredentials, ensureSupabaseUser } from "@/lib/mesh-auth";
-import {
-  correlationId,
-  initializeDebugLogger,
-  logDebug,
-  logInfo,
-  logWarn,
-  maskEmail,
-  safeError,
-} from "@/lib/debugLogger";
 
 export const runtime = "nodejs";
+
+// Password fixa para todos os utilizadores no Supabase
+// A autenticação real é feita no MeshCentral
+const SUPABASE_FIXED_PASSWORD = "Admin1234!";
 
 // Supabase client for auth operations
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://kqwaibgvmzcqeoctukoy.supabase.co";
@@ -49,22 +47,10 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request) {
-  initializeDebugLogger();
-  const requestId = correlationId("login");
-  const clientIp =
-    req.headers.get("x-forwarded-for") ||
-    req.headers.get("x-real-ip") ||
-    "unknown";
-
   let body: LoginRequestBody;
   try {
     body = await req.json();
-  } catch (error) {
-    logWarn("login", "Invalid JSON body received", {
-      requestId,
-      clientIp,
-      error: safeError(error),
-    });
+  } catch {
     return NextResponse.json(
       { message: "Pedido inválido" },
       { status: 400, headers: CORS_HEADERS }
@@ -75,20 +61,9 @@ export async function POST(req: Request) {
   const password = body.password?.toString() ?? "";
   const requestedDomain = body.domain?.toString().trim() || "mesh";
 
-  logInfo("login", "Login request received", {
-    requestId,
-    clientIp,
-    hasEmail: Boolean(email),
-    emailMasked: maskEmail(email),
-    domain: requestedDomain,
-  });
+  console.log("[Login] Request received for:", email, "domain:", requestedDomain);
 
   if (!email || !password) {
-    logWarn("login", "Missing credentials", {
-      requestId,
-      clientIp,
-      emailMasked: maskEmail(email),
-    });
     return NextResponse.json(
       { message: "Email e password são obrigatórios." },
       { status: 400, headers: CORS_HEADERS }
@@ -107,66 +82,52 @@ export async function POST(req: Request) {
     // =========================================
     // STEP 1: Validate against MeshCentral
     // =========================================
-    logInfo("login", "Step 1: Authenticating against MeshCentral", {
-      requestId,
-      emailMasked: maskEmail(email),
-      domain: fullDomain,
-    });
+    console.log("[Login] Step 1: Validating against MeshCentral...");
 
     const authResult = await validateMeshCredentials(email, password, fullDomain);
 
     if (!authResult.ok) {
-      logWarn("login", "MeshCentral authentication failed", {
-        requestId,
-        clientIp,
-        emailMasked: maskEmail(email),
-        error: authResult.error,
-      });
-
+      console.log("[Login] MeshCentral authentication FAILED:", authResult.error);
       return NextResponse.json(
         {
-          message: authResult.error || "Credenciais inválidas ou utilizador não existe.",
+          message: authResult.error || "Credenciais inválidas.",
           error: "invalid_credentials",
         },
         { status: 401, headers: CORS_HEADERS }
       );
     }
 
-    logInfo("login", "MeshCentral authentication successful", {
-      requestId,
-      emailMasked: maskEmail(email),
-    });
+    console.log("[Login] MeshCentral authentication SUCCESS");
 
     // =========================================
-    // STEP 2: Try signInWithPassword in Supabase
+    // STEP 2: SignIn to Supabase with FIXED password
     // =========================================
-    logInfo("login", "Step 2: Attempting Supabase signInWithPassword", {
-      requestId,
-      emailMasked: maskEmail(email),
-    });
+    console.log("[Login] Step 2: Signing into Supabase with fixed password...");
 
     let signInResult = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password: SUPABASE_FIXED_PASSWORD,
     });
 
     // =========================================
-    // STEP 3: If user doesn't exist, create with signUp
+    // STEP 3: If user doesn't exist in Supabase, create with FIXED password
     // =========================================
     if (signInResult.error) {
-      const errorCode = (signInResult.error as { code?: string }).code;
-      const isInvalidCreds = errorCode === "invalid_credentials" || signInResult.error.status === 400;
+      console.log("[Login] Supabase signIn failed:", signInResult.error.message);
+      
+      // Check if it's invalid credentials (user doesn't exist or wrong password)
+      const errorMessage = signInResult.error.message?.toLowerCase() || "";
+      const isInvalidCreds = errorMessage.includes("invalid") || 
+                             errorMessage.includes("credentials") ||
+                             signInResult.error.status === 400;
 
       if (isInvalidCreds) {
-        logInfo("login", "Step 3: User not in Supabase Auth, creating with signUp", {
-          requestId,
-          emailMasked: maskEmail(email),
-        });
+        console.log("[Login] Step 3: Creating user in Supabase with fixed password...");
 
-        // Create user in Supabase Auth with same password
+        // Create user in Supabase Auth with FIXED password
         const signUpResult = await supabase.auth.signUp({
           email,
-          password,
+          password: SUPABASE_FIXED_PASSWORD,
           options: {
             data: {
               full_name: email.split("@")[0],
@@ -175,40 +136,29 @@ export async function POST(req: Request) {
         });
 
         if (signUpResult.error) {
-          logWarn("login", "Supabase signUp failed", {
-            requestId,
-            emailMasked: maskEmail(email),
-            error: signUpResult.error.message,
-          });
+          console.log("[Login] SignUp error:", signUpResult.error.message);
 
-          // If user already exists, try sign in again
+          // If user already exists with different password, we have a problem
           if (signUpResult.error.message?.includes("already registered")) {
-            logInfo("login", "User already exists, retrying signIn", {
-              requestId,
-              emailMasked: maskEmail(email),
-            });
+            console.log("[Login] User exists with different password - need to reset");
             
-            // Maybe password changed - update it via admin API would be needed
-            // For now, return error
+            // Try to update password via admin API would be needed here
+            // For now, return a specific error
             return NextResponse.json(
-              { message: "Password no Supabase difere do MeshCentral. Contacte o administrador." },
+              { message: "Utilizador existe com password diferente. Contacte o administrador." },
               { status: 401, headers: CORS_HEADERS }
             );
           }
 
           return NextResponse.json(
-            { message: "Erro ao criar utilizador no sistema." },
+            { message: "Erro ao criar utilizador." },
             { status: 500, headers: CORS_HEADERS }
           );
         }
 
-        // If signUp was successful and returned a session, use it
+        // If signUp returned a session, use it
         if (signUpResult.data?.session?.access_token) {
-          logInfo("login", "SignUp successful with immediate session", {
-            requestId,
-            emailMasked: maskEmail(email),
-            tokenLength: signUpResult.data.session.access_token.length,
-          });
+          console.log("[Login] SignUp successful with immediate session");
 
           // Ensure user is mirrored to mesh_users table
           await ensureSupabaseUser(email, fullDomain);
@@ -220,37 +170,22 @@ export async function POST(req: Request) {
         }
 
         // SignUp succeeded but no immediate session - try signIn again
-        logInfo("login", "SignUp successful, attempting signIn again", {
-          requestId,
-          emailMasked: maskEmail(email),
-        });
+        console.log("[Login] SignUp successful, trying signIn again...");
 
         signInResult = await supabase.auth.signInWithPassword({
           email,
-          password,
+          password: SUPABASE_FIXED_PASSWORD,
         });
 
         if (signInResult.error) {
-          logWarn("login", "SignIn after SignUp failed", {
-            requestId,
-            emailMasked: maskEmail(email),
-            error: signInResult.error.message,
-          });
-
+          console.log("[Login] SignIn after SignUp failed:", signInResult.error.message);
           return NextResponse.json(
-            { message: "Erro ao autenticar após criação de conta." },
+            { message: "Erro ao autenticar após criação." },
             { status: 500, headers: CORS_HEADERS }
           );
         }
       } else {
-        // Other error (not invalid credentials)
-        logWarn("login", "Supabase signIn failed with unexpected error", {
-          requestId,
-          emailMasked: maskEmail(email),
-          error: signInResult.error.message,
-          errorCode,
-        });
-
+        // Other error
         return NextResponse.json(
           { message: signInResult.error.message || "Erro de autenticação." },
           { status: 500, headers: CORS_HEADERS }
@@ -264,14 +199,9 @@ export async function POST(req: Request) {
     const token = signInResult.data?.session?.access_token;
 
     if (!token) {
-      logWarn("login", "SignIn succeeded but no access_token", {
-        requestId,
-        emailMasked: maskEmail(email),
-        hasSession: Boolean(signInResult.data?.session),
-      });
-
+      console.log("[Login] No token in response");
       return NextResponse.json(
-        { message: "Resposta sem token válido." },
+        { message: "Resposta sem token." },
         { status: 502, headers: CORS_HEADERS }
       );
     }
@@ -279,12 +209,7 @@ export async function POST(req: Request) {
     // Ensure user is mirrored to mesh_users table
     await ensureSupabaseUser(email, fullDomain);
 
-    logDebug("login", "Login completed successfully", {
-      requestId,
-      clientIp,
-      emailMasked: maskEmail(email),
-      tokenLength: token.length,
-    });
+    console.log("[Login] SUCCESS - JWT obtained, length:", token.length);
 
     return NextResponse.json(
       { token },
@@ -292,12 +217,7 @@ export async function POST(req: Request) {
     );
 
   } catch (error) {
-    logWarn("login", "Unexpected error during login", {
-      requestId,
-      clientIp,
-      error: safeError(error),
-    });
-
+    console.error("[Login] Unexpected error:", error);
     return NextResponse.json(
       { message: "Erro interno do servidor." },
       { status: 500, headers: CORS_HEADERS }
