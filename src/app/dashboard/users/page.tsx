@@ -262,12 +262,22 @@ export default function UsersManagementPage() {
     }
   }, [jwt, router]);
 
+  // Ref para evitar chamadas duplicadas
+  const fetchInProgress = useState<boolean>(false);
+  const hasFetched = useState<boolean>(false);
+
   useEffect(() => {
     if (!jwt) return;
     if (authUserId !== ADMIN_AUTH_USER_ID) return;
+    
+    // Evitar chamadas repetidas
+    if (hasFetched[0]) return;
+    hasFetched[1](true);
+    
     void fetchUsers();
     void loadMeshUsers();
-  }, [jwt, authUserId, fetchUsers, loadMeshUsers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jwt, authUserId]);
 
   const openCreateModal = () => {
     setCreateForm({
