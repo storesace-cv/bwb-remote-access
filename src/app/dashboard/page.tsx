@@ -133,25 +133,6 @@ export default function DashboardPage() {
   const [currentAdoptedPage, setCurrentAdoptedPage] = useState<number>(1);
   const [adoptedPageSize, setAdoptedPageSize] = useState<number>(ADOPTED_PAGE_SIZE);
 
-  // User permissions from roles table
-  const [userPermissions, setUserPermissions] = useState<{
-    can_access_management_panel: boolean;
-    can_scan_qr: boolean;
-    can_provision_without_qr: boolean;
-    can_view_devices: boolean;
-    can_adopt_devices: boolean;
-    can_create_users: boolean;
-    can_view_users: boolean;
-  }>({
-    can_access_management_panel: false,
-    can_scan_qr: false,
-    can_provision_without_qr: false,
-    can_view_devices: false,
-    can_adopt_devices: false,
-    can_create_users: false,
-    can_view_users: false,
-  });
-
   const RUSTDESK_APK_URLS = {
     arm64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=arm64-v8a",
     armeabi: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=armeabi-v7a",
