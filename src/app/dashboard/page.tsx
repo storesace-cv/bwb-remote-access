@@ -8,6 +8,7 @@ import QRCode from "react-qr-code";
 
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
+import { RolePermissions, getCurrentUserPermissions } from "@/lib/permissions-service";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
