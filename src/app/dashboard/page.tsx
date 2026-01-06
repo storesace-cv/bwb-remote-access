@@ -60,9 +60,12 @@ export default function DashboardPage() {
   const router = useRouter();
   const [jwt, setJwt] = useState<string | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
-  const [isAgent, setIsAgent] = useState(false);
-  const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
-  const [isSiteadmin, setIsSiteadmin] = useState(false);
+  // User role from roles table
+  const [userRole, setUserRole] = useState<{
+    name: string;
+    displayName: string;
+  }>({ name: "", displayName: "" });
+  
   const [userTypeChecked, setUserTypeChecked] = useState(false);
   const [initialDevicesLoaded, setInitialDevicesLoaded] = useState(false);
   
@@ -221,7 +224,7 @@ export default function DashboardPage() {
       }
 
       // Query mesh_users with role_id
-      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=user_type,domain,display_name,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
+      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=domain,display_name,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
       
       console.log("[Dashboard] Querying user:", userEmail.toLowerCase());
 
@@ -239,7 +242,6 @@ export default function DashboardPage() {
       }
 
       const userData = (await userRes.json()) as Array<{
-        user_type: string | null;
         domain: string;
         display_name: string | null;
         role_id: string | null;
@@ -257,9 +259,9 @@ export default function DashboardPage() {
       setUserDomain(user.domain || "");
       setUserDisplayName(user.display_name || "");
 
-      // If user has role_id, fetch permissions from roles table
+      // Fetch permissions from roles table
       if (user.role_id) {
-        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
+        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,display_name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
         
         console.log("[Dashboard] Fetching role permissions for role_id:", user.role_id);
 
@@ -277,6 +279,12 @@ export default function DashboardPage() {
           if (roleData.length > 0) {
             const role = roleData[0];
             
+            // Set role name and display name
+            setUserRole({
+              name: role.name || "",
+              displayName: role.display_name || role.name || "",
+            });
+            
             // Set permissions from roles table
             setUserPermissions({
               can_access_management_panel: role.can_access_management_panel ?? false,
@@ -288,77 +296,24 @@ export default function DashboardPage() {
               can_view_users: role.can_view_users ?? false,
             });
 
-            // Also set legacy flags for backward compatibility
-            const roleName = role.name;
-            if (roleName === "siteadmin") {
-              setIsSiteadmin(true);
-              setIsMinisiteadmin(true);
-              setIsAgent(true);
-            } else if (roleName === "minisiteadmin") {
-              setIsMinisiteadmin(true);
-              setIsAgent(true);
-            } else if (roleName === "agent") {
-              setIsAgent(true);
-            }
-
-            console.log("[Dashboard] Permissions set from role:", roleName);
+            console.log("[Dashboard] Permissions set from role:", role.name);
           }
         } else {
           console.warn("[Dashboard] Failed to fetch role:", roleRes.status);
         }
       } else {
-        // Fallback to user_type if no role_id
-        console.log("[Dashboard] No role_id, using user_type fallback:", user.user_type);
-        const role = user.user_type ?? "";
-
-        if (role === "siteadmin") {
-          setIsSiteadmin(true);
-          setIsMinisiteadmin(true);
-          setIsAgent(true);
-          setUserPermissions({
-            can_access_management_panel: true,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: true,
-            can_view_users: true,
-          });
-        } else if (role === "minisiteadmin") {
-          setIsMinisiteadmin(true);
-          setIsAgent(true);
-          setUserPermissions({
-            can_access_management_panel: true,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: true,
-            can_view_users: true,
-          });
-        } else if (role === "agent") {
-          setIsAgent(true);
-          setUserPermissions({
-            can_access_management_panel: true,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: true,
-            can_view_users: true,
-          });
-        } else {
-          // colaborador or other
-          setUserPermissions({
-            can_access_management_panel: false,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: false,
-            can_view_users: false,
-          });
-        }
+        console.warn("[Dashboard] User has no role_id assigned");
+        // Default to colaborador permissions
+        setUserRole({ name: "colaborador", displayName: "Colaborador" });
+        setUserPermissions({
+          can_access_management_panel: false,
+          can_scan_qr: true,
+          can_provision_without_qr: true,
+          can_view_devices: true,
+          can_adopt_devices: true,
+          can_create_users: false,
+          can_view_users: false,
+        });
       }
 
       setUserTypeChecked(true);
@@ -1196,8 +1151,8 @@ export default function DashboardPage() {
   }, [devices, filterStatus, searchQuery, sortBy, isDeviceAdopted]);
 
   const filteredDevices = getFilteredAndSortedDevices();
-  // isAdmin should be true for siteadmin users, not a hardcoded UUID
-  const isAdmin = isSiteadmin;
+  // isAdmin is true for siteadmin users (using role from roles table)
+  const isAdmin = userRole.name === "siteadmin";
   const unadoptedDevices = filteredDevices.filter((d: GroupableDevice) => !isDeviceAdopted(d));
   const adoptedDevices = filteredDevices.filter((d: GroupableDevice) => isDeviceAdopted(d));
   const adminUnassignedDevices = isAdmin ? unadoptedDevices : [];
@@ -1285,14 +1240,16 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-emerald-400">
-                  🎯 Painel de Gestão ({isSiteadmin ? "Site Admin" : isMinisiteadmin ? "Mini Site Admin" : "Agent"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
+                  🎯 Painel de Gestão ({userRole.displayName || "Utilizador"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
-                  {isSiteadmin 
+                  {userRole.name === "siteadmin"
                     ? "Como Site Admin, tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
-                    : isMinisiteadmin
+                    : userRole.name === "minisiteadmin"
                     ? "Como Mini Site Admin, podes gerir utilizadores e colaboradores do teu domínio"
-                    : "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"}
+                    : userRole.name === "agent"
+                    ? "Como Agent, podes criar colaboradores e gerir permissões de acesso aos teus dispositivos"
+                    : "Tens acesso ao painel de gestão"}
                 </p>
               </div>
             </div>
