@@ -677,10 +677,9 @@ export default function UsersManagementPage() {
                   <th className="px-2 py-1.5 font-medium">Email</th>
                   <th className="px-2 py-1.5 font-medium">Nome</th>
                   <th className="px-2 py-1.5 font-medium">Mesh Username</th>
-                  <th className="px-2 py-1.5 font-medium">Dominio</th>
+                  <th className="px-2 py-1.5 font-medium">Domínio</th>
+                  <th className="px-2 py-1.5 font-medium">Tipo</th>
                   <th className="px-2 py-1.5 font-medium">Criado em</th>
-                  <th className="px-2 py-1.5 font-medium">Último login</th>
-                  <th className="px-2 py-1.5 font-medium">Estado</th>
                   <th className="px-2 py-1.5 font-medium text-right">
                     Ações
                   </th>
@@ -690,7 +689,7 @@ export default function UsersManagementPage() {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan={8}
+                      colSpan={7}
                       className="px-2 py-4 text-center text-slate-400"
                     >
                       A carregar utilizadores…
