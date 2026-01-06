@@ -245,7 +245,8 @@ export default function DashboardPage() {
 
       // Fetch permissions from roles table
       if (user.role_id) {
-        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,display_name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
+        // Trazer todas as colunas da tabela roles
+        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=*&id=eq.${user.role_id}`;
         
         console.log("[Dashboard] Fetching role permissions for role_id:", user.role_id);
 
