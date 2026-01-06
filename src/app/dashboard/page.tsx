@@ -60,9 +60,12 @@ export default function DashboardPage() {
   const router = useRouter();
   const [jwt, setJwt] = useState<string | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
-  const [isAgent, setIsAgent] = useState(false);
-  const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
-  const [isSiteadmin, setIsSiteadmin] = useState(false);
+  // User role from roles table
+  const [userRole, setUserRole] = useState<{
+    name: string;
+    displayName: string;
+  }>({ name: "", displayName: "" });
+  
   const [userTypeChecked, setUserTypeChecked] = useState(false);
   const [initialDevicesLoaded, setInitialDevicesLoaded] = useState(false);
   
