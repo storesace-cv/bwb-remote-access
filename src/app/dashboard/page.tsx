@@ -224,7 +224,7 @@ export default function DashboardPage() {
       }
 
       // Query mesh_users with role_id
-      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=user_type,domain,display_name,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
+      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=domain,display_name,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
       
       console.log("[Dashboard] Querying user:", userEmail.toLowerCase());
 
@@ -242,7 +242,6 @@ export default function DashboardPage() {
       }
 
       const userData = (await userRes.json()) as Array<{
-        user_type: string | null;
         domain: string;
         display_name: string | null;
         role_id: string | null;
@@ -260,9 +259,9 @@ export default function DashboardPage() {
       setUserDomain(user.domain || "");
       setUserDisplayName(user.display_name || "");
 
-      // If user has role_id, fetch permissions from roles table
+      // Fetch permissions from roles table
       if (user.role_id) {
-        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
+        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,display_name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
         
         console.log("[Dashboard] Fetching role permissions for role_id:", user.role_id);
 
@@ -280,6 +279,12 @@ export default function DashboardPage() {
           if (roleData.length > 0) {
             const role = roleData[0];
             
+            // Set role name and display name
+            setUserRole({
+              name: role.name || "",
+              displayName: role.display_name || role.name || "",
+            });
+            
             // Set permissions from roles table
             setUserPermissions({
               can_access_management_panel: role.can_access_management_panel ?? false,
@@ -291,77 +296,24 @@ export default function DashboardPage() {
               can_view_users: role.can_view_users ?? false,
             });
 
-            // Also set legacy flags for backward compatibility
-            const roleName = role.name;
-            if (roleName === "siteadmin") {
-              setIsSiteadmin(true);
-              setIsMinisiteadmin(true);
-              setIsAgent(true);
-            } else if (roleName === "minisiteadmin") {
-              setIsMinisiteadmin(true);
-              setIsAgent(true);
-            } else if (roleName === "agent") {
-              setIsAgent(true);
-            }
-
-            console.log("[Dashboard] Permissions set from role:", roleName);
+            console.log("[Dashboard] Permissions set from role:", role.name);
           }
         } else {
           console.warn("[Dashboard] Failed to fetch role:", roleRes.status);
         }
       } else {
-        // Fallback to user_type if no role_id
-        console.log("[Dashboard] No role_id, using user_type fallback:", user.user_type);
-        const role = user.user_type ?? "";
-
-        if (role === "siteadmin") {
-          setIsSiteadmin(true);
-          setIsMinisiteadmin(true);
-          setIsAgent(true);
-          setUserPermissions({
-            can_access_management_panel: true,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: true,
-            can_view_users: true,
-          });
-        } else if (role === "minisiteadmin") {
-          setIsMinisiteadmin(true);
-          setIsAgent(true);
-          setUserPermissions({
-            can_access_management_panel: true,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: true,
-            can_view_users: true,
-          });
-        } else if (role === "agent") {
-          setIsAgent(true);
-          setUserPermissions({
-            can_access_management_panel: true,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: true,
-            can_view_users: true,
-          });
-        } else {
-          // colaborador or other
-          setUserPermissions({
-            can_access_management_panel: false,
-            can_scan_qr: true,
-            can_provision_without_qr: true,
-            can_view_devices: true,
-            can_adopt_devices: true,
-            can_create_users: false,
-            can_view_users: false,
-          });
-        }
+        console.warn("[Dashboard] User has no role_id assigned");
+        // Default to colaborador permissions
+        setUserRole({ name: "colaborador", displayName: "Colaborador" });
+        setUserPermissions({
+          can_access_management_panel: false,
+          can_scan_qr: true,
+          can_provision_without_qr: true,
+          can_view_devices: true,
+          can_adopt_devices: true,
+          can_create_users: false,
+          can_view_users: false,
+        });
       }
 
       setUserTypeChecked(true);
