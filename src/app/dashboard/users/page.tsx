@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ToastContainer, useToast } from "@/components/ui/toast";
@@ -265,21 +265,19 @@ export default function UsersManagementPage() {
   }, [router]);
 
   // Ref para evitar chamadas duplicadas
-  const fetchInProgress = useState<boolean>(false);
-  const hasFetched = useState<boolean>(false);
+  const hasFetchedRef = useRef(false);
 
   useEffect(() => {
     if (!jwt) return;
     if (authUserId !== ADMIN_AUTH_USER_ID) return;
     
     // Evitar chamadas repetidas
-    if (hasFetched[0]) return;
-    hasFetched[1](true);
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
     
     void fetchUsers();
     void loadMeshUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jwt, authUserId]);
+  }, [jwt, authUserId, fetchUsers, loadMeshUsers]);
 
   const openCreateModal = () => {
     setCreateForm({
