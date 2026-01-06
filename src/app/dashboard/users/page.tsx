@@ -309,25 +309,16 @@ export default function UsersManagementPage() {
 
       // admin-list-mesh-users retorna { users: [...] }
       const data = await res.json() as { users?: AdminUser[] };
-      const allUsers = Array.isArray(data.users) ? data.users : [];
+      const allUsersFromApi = Array.isArray(data.users) ? data.users : [];
       
-      // Filtrar utilizadores: não mostrar utilizadores com perfil igual ou superior
-      // Hierarquia: siteadmin (3) > minisiteadmin (2) > agent (1) > user (0)
-      const userTypeHierarchy: Record<string, number> = {
-        "siteadmin": 3,
-        "minisiteadmin": 2,
-        "agent": 1,
-        "user": 0,
-      };
-      
-      // Obter o nível do utilizador actual
-      const myUserType = window.localStorage.getItem("mesh_user_type") ?? "user";
-      const myLevel = userTypeHierarchy[myUserType] ?? 0;
-      
-      // Filtrar: só mostrar utilizadores com nível inferior
-      const filteredUsers = allUsers.filter(u => {
-        const theirLevel = userTypeHierarchy[u.user_type ?? "user"] ?? 0;
-        return theirLevel < myLevel;
+      // Filtrar utilizadores baseado na hierarquia da tabela roles
+      // Só mostrar utilizadores com hierarchy_level MAIOR (menor privilégio) que o nosso
+      const filteredUsers = allUsersFromApi.filter(u => {
+        // Encontrar o role do utilizador na lista de roles carregada
+        const userRole = allRoles.find(r => r.name === u.user_type);
+        if (!userRole) return true; // Se não tem role definido, mostrar
+        // Mostrar apenas utilizadores com hierarchy_level maior (menor privilégio)
+        return userRole.hierarchy_level > currentHierarchyLevel;
       });
       
       setUsers(filteredUsers);
