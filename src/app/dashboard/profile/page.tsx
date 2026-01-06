@@ -11,8 +11,8 @@ import { getSession } from "@/lib/mesh-auth";
 import { createClient } from "@supabase/supabase-js";
 import { ROLE_DISPLAY_NAMES, ROLE_COLORS, type RoleName } from "@/lib/rbac";
 
-// Get user data from Supabase
-async function getUserData(authUserId: string) {
+// Get user data from Supabase by mesh_users.id
+async function getUserDataById(userId: string) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
@@ -24,7 +24,7 @@ async function getUserData(authUserId: string) {
   const supabase = createClient(supabaseUrl, supabaseKey);
   
   // Get user with role
-  const { data: userData, error } = await supabase
+  const { data, error } = await supabase
     .from("mesh_users")
     .select(`
       id,
@@ -34,6 +34,7 @@ async function getUserData(authUserId: string) {
       display_name,
       domain,
       created_at,
+      auth_user_id,
       role_id,
       roles:role_id (
         id,
@@ -42,7 +43,7 @@ async function getUserData(authUserId: string) {
         hierarchy_level
       )
     `)
-    .eq("auth_user_id", authUserId)
+    .eq("id", userId)
     .maybeSingle();
   
   if (error) {
@@ -50,7 +51,7 @@ async function getUserData(authUserId: string) {
     return null;
   }
   
-  return userData;
+  return data;
 }
 
 export default async function ProfilePage() {
@@ -60,40 +61,8 @@ export default async function ProfilePage() {
     redirect("/");
   }
 
-  // Get user data from database if we have auth_user_id in session
-  let userData = null;
-  if (session.userId) {
-    // Try to get by mesh_users.id first
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createClient(supabaseUrl, supabaseKey);
-      const { data } = await supabase
-        .from("mesh_users")
-        .select(`
-          id,
-          mesh_username,
-          email,
-          full_name,
-          display_name,
-          domain,
-          created_at,
-          auth_user_id,
-          role_id,
-          roles:role_id (
-            id,
-            name,
-            display_name,
-            hierarchy_level
-          )
-        `)
-        .eq("id", session.userId)
-        .maybeSingle();
-      
-      userData = data;
-    }
-  }
+  // Get user data from database
+  const userData = session.userId ? await getUserDataById(session.userId) : null;
   
   // Fallback values from session
   const userEmail = userData?.email || session.email;
