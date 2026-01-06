@@ -139,9 +139,9 @@ export default function UsersManagementPage() {
   }, [router]);
 
   const loadMeshUsers = useCallback(async () => {
-    if (!jwt) return;
-    if (meshUsersLoading || meshUsers.length > 0) return;
-
+    const currentJwt = window.localStorage.getItem("rustdesk_jwt");
+    if (!currentJwt) return;
+    
     setMeshUsersLoading(true);
     setMeshUsersError(null);
 
@@ -149,7 +149,7 @@ export default function UsersManagementPage() {
       const res = await fetch(`${supabaseUrl}/functions/v1/admin-list-mesh-users`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${currentJwt}`,
           apikey: anonKey,
         },
       });
@@ -185,10 +185,12 @@ export default function UsersManagementPage() {
     } finally {
       setMeshUsersLoading(false);
     }
-  }, [jwt, meshUsersLoading, meshUsers.length]);
+  }, []);
 
   const fetchUsers = useCallback(async () => {
-    if (!jwt) return;
+    const currentJwt = window.localStorage.getItem("rustdesk_jwt");
+    if (!currentJwt) return;
+    
     setLoading(true);
     setErrorMsg(null);
 
@@ -198,7 +200,7 @@ export default function UsersManagementPage() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${currentJwt}`,
             apikey: anonKey,
           },
         },
@@ -260,14 +262,24 @@ export default function UsersManagementPage() {
     } finally {
       setLoading(false);
     }
-  }, [jwt, router]);
+  }, [router]);
+
+  // Ref para evitar chamadas duplicadas
+  const fetchInProgress = useState<boolean>(false);
+  const hasFetched = useState<boolean>(false);
 
   useEffect(() => {
     if (!jwt) return;
     if (authUserId !== ADMIN_AUTH_USER_ID) return;
+    
+    // Evitar chamadas repetidas
+    if (hasFetched[0]) return;
+    hasFetched[1](true);
+    
     void fetchUsers();
     void loadMeshUsers();
-  }, [jwt, authUserId, fetchUsers, loadMeshUsers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jwt, authUserId]);
 
   const openCreateModal = () => {
     setCreateForm({
@@ -280,7 +292,8 @@ export default function UsersManagementPage() {
       is_agent: false,
     });
     setCreateError(null);
-    if (!meshUsersLoading && meshUsers.length === 0) {
+    // Só carrega se ainda não tiver dados
+    if (meshUsers.length === 0 && !meshUsersLoading) {
       void loadMeshUsers();
     }
     setCreateModalOpen(true);
