@@ -32,10 +32,10 @@ Substituir autenticação Auth0 por um sistema personalizado usando MeshCentral,
 - [x] "Painel de Gestão (Mini Site Admin)" aparece para roles corretos
 - [x] Edge Function `get-devices` - Retorna dispositivos (ou array vazio se não houver)
 - [x] Edge Function `admin-list-groups` - Retorna grupos com permissões
+- [x] **QR Code generation** - Modal funciona, QR é gerado com countdown
 
 ### ⚠️ Funcionalidades a Verificar
-- [ ] QR Code generation - Depende de dados em `rustdesk_settings`
-- [ ] Provisionamento de dispositivos
+- [ ] Provisionamento de dispositivos via QR
 - [ ] Gestão de colaboradores
 
 ## Edge Functions do Supabase (NÃO MODIFICAR)
