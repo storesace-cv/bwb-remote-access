@@ -177,12 +177,12 @@ export default function DashboardPage() {
   }, []);
 
   // Check if user is an agent / minisiteadmin / siteadmin
-  // Uses email from session/JWT as primary identifier (more reliable than auth_user_id)
+  // Query mesh_users by email (mesh_username) and check user_type
   const checkUserType = useCallback(async () => {
     if (!jwt || userTypeChecked) return;
 
     try {
-      // Decode email from JWT - this is the most reliable identifier
+      // Decode email from JWT
       let userEmail = "";
       try {
         const parts = jwt.split(".");
@@ -190,23 +190,22 @@ export default function DashboardPage() {
           const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
           const payload = JSON.parse(payloadJson) as { email?: string; sub?: string };
           userEmail = payload.email || "";
-          console.log("[Dashboard] JWT decoded - email:", userEmail, "sub:", payload.sub);
+          console.log("[Dashboard] JWT email:", userEmail, "sub:", payload.sub);
         }
       } catch (e) {
         console.warn("[Dashboard] Could not decode JWT:", e);
       }
 
-      // If no email in JWT, try to get from localStorage or session
       if (!userEmail) {
-        console.warn("[Dashboard] No email in JWT, cannot determine user type");
+        console.warn("[Dashboard] No email in JWT");
         setUserTypeChecked(true);
         return;
       }
 
-      // Query mesh_users by mesh_username (email) - this is the reliable identifier
-      const queryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
+      // Query by mesh_username (email) - this is reliable
+      const queryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=user_type,domain,display_name&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
       
-      console.log("[Dashboard] Querying user by email:", userEmail.toLowerCase());
+      console.log("[Dashboard] Querying user:", userEmail.toLowerCase());
 
       const res = await fetch(queryUrl, {
         headers: {
@@ -216,81 +215,55 @@ export default function DashboardPage() {
       });
 
       if (!res.ok) {
-        console.error("[Dashboard] Failed to fetch user:", res.status, await res.text());
+        console.error("[Dashboard] Query failed:", res.status);
         setUserTypeChecked(true);
         return;
       }
 
-      const data = await res.json();
-      console.log("[Dashboard] User query result:", data);
+      const data = (await res.json()) as Array<{
+        user_type: string | null;
+        domain: string;
+        display_name: string | null;
+      }>;
+
+      console.log("[Dashboard] Query result:", data);
 
       if (data.length > 0) {
         const record = data[0];
-        
+
         // Reset flags
         setIsAgent(false);
         setIsMinisiteadmin(false);
         setIsSiteadmin(false);
 
-        // If user has role_id, fetch the role details
-        let roleName = record.user_type || "";
-        
-        if (record.role_id) {
-          try {
-            const roleRes = await fetch(
-              `${supabaseUrl}/rest/v1/roles?select=name,hierarchy_level&id=eq.${record.role_id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${jwt}`,
-                  apikey: anonKey,
-                },
-              }
-            );
-            if (roleRes.ok) {
-              const roleData = await roleRes.json();
-              if (roleData.length > 0) {
-                roleName = roleData[0].name;
-                console.log("[Dashboard] Role from roles table:", roleName);
-              }
-            }
-          } catch (roleErr) {
-            console.warn("[Dashboard] Could not fetch role:", roleErr);
-          }
-        }
+        const role = record.user_type ?? "";
+        console.log("[Dashboard] user_type:", role);
 
-        console.log("[Dashboard] Determined role:", roleName, "from user_type:", record.user_type);
-
-        // Set permissions based on role
-        if (roleName === "siteadmin") {
+        if (role === "siteadmin") {
           setIsSiteadmin(true);
           setIsMinisiteadmin(true);
           setIsAgent(true);
-          console.log("[Dashboard] User is SITEADMIN - full access");
-        } else if (roleName === "minisiteadmin") {
+          console.log("[Dashboard] → SITEADMIN (full access)");
+        } else if (role === "minisiteadmin") {
           setIsMinisiteadmin(true);
           setIsAgent(true);
-          console.log("[Dashboard] User is MINISITEADMIN");
-        } else if (roleName === "agent") {
+          console.log("[Dashboard] → MINISITEADMIN (isAgent=true)");
+        } else if (role === "agent") {
           setIsAgent(true);
-          console.log("[Dashboard] User is AGENT");
+          console.log("[Dashboard] → AGENT");
         } else {
-          console.log("[Dashboard] User is COLABORADOR or other:", roleName);
+          console.log("[Dashboard] → COLABORADOR or other");
         }
 
-        // Set domain and display name
         setUserDomain(record.domain || "");
-        setUserDisplayName(record.display_name || record.mesh_username || "");
-        
-        setUserTypeChecked(true);
+        setUserDisplayName(record.display_name || "");
       } else {
-        console.warn("[Dashboard] No user found for email:", userEmail);
-        setIsAgent(false);
-        setIsMinisiteadmin(false);
-        setIsSiteadmin(false);
-        setUserTypeChecked(true);
+        console.warn("[Dashboard] No user found for:", userEmail);
       }
+      
+      setUserTypeChecked(true);
     } catch (error) {
-      console.error("[Dashboard] Error checking user type:", error);
+      console.error("[Dashboard] Error:", error);
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
