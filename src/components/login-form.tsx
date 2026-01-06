@@ -34,7 +34,7 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,6 +53,10 @@ export function LoginForm() {
       // Store JWT in localStorage for edge functions
       if (data.token && typeof window !== "undefined") {
         window.localStorage.setItem("rustdesk_jwt", data.token);
+        console.log("[Login] JWT stored in localStorage, length:", data.token.length);
+      } else {
+        console.warn("[Login] No token received from API or token is empty");
+        console.log("[Login] API response:", JSON.stringify(data));
       }
 
       // Redirect to dashboard

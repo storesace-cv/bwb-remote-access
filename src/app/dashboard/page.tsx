@@ -128,6 +128,25 @@ export default function DashboardPage() {
   const [currentAdoptedPage, setCurrentAdoptedPage] = useState<number>(1);
   const [adoptedPageSize, setAdoptedPageSize] = useState<number>(ADOPTED_PAGE_SIZE);
 
+  // User permissions from roles table
+  const [userPermissions, setUserPermissions] = useState<{
+    can_access_management_panel: boolean;
+    can_scan_qr: boolean;
+    can_provision_without_qr: boolean;
+    can_view_devices: boolean;
+    can_adopt_devices: boolean;
+    can_create_users: boolean;
+    can_view_users: boolean;
+  }>({
+    can_access_management_panel: false,
+    can_scan_qr: false,
+    can_provision_without_qr: false,
+    can_view_devices: false,
+    can_adopt_devices: false,
+    can_create_users: false,
+    can_view_users: false,
+  });
+
   const RUSTDESK_APK_URLS = {
     arm64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=arm64-v8a",
     armeabi: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=armeabi-v7a",
@@ -176,13 +195,12 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // Check if user is an agent / minisiteadmin / siteadmin
-  // Uses email from session/JWT as primary identifier (more reliable than auth_user_id)
+  // Check user type and permissions from roles table
   const checkUserType = useCallback(async () => {
     if (!jwt || userTypeChecked) return;
 
     try {
-      // Decode email from JWT - this is the most reliable identifier
+      // Decode email from JWT
       let userEmail = "";
       try {
         const parts = jwt.split(".");
@@ -190,110 +208,162 @@ export default function DashboardPage() {
           const payloadJson = atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"));
           const payload = JSON.parse(payloadJson) as { email?: string; sub?: string };
           userEmail = payload.email || "";
-          console.log("[Dashboard] JWT decoded - email:", userEmail, "sub:", payload.sub);
+          console.log("[Dashboard] JWT email:", userEmail);
         }
       } catch (e) {
         console.warn("[Dashboard] Could not decode JWT:", e);
       }
 
-      // If no email in JWT, try to get from localStorage or session
       if (!userEmail) {
-        console.warn("[Dashboard] No email in JWT, cannot determine user type");
+        console.warn("[Dashboard] No email in JWT");
         setUserTypeChecked(true);
         return;
       }
 
-      // Query mesh_users by mesh_username (email) - this is the reliable identifier
-      const queryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=id,user_type,domain,display_name,mesh_username,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
+      // Query mesh_users with role_id
+      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=user_type,domain,display_name,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
       
-      console.log("[Dashboard] Querying user by email:", userEmail.toLowerCase());
+      console.log("[Dashboard] Querying user:", userEmail.toLowerCase());
 
-      const res = await fetch(queryUrl, {
+      const userRes = await fetch(userQueryUrl, {
         headers: {
           Authorization: `Bearer ${jwt}`,
           apikey: anonKey,
         },
       });
 
-      if (!res.ok) {
-        console.error("[Dashboard] Failed to fetch user:", res.status, await res.text());
+      if (!userRes.ok) {
+        console.error("[Dashboard] User query failed:", userRes.status);
         setUserTypeChecked(true);
         return;
       }
 
-      const data = await res.json();
-      console.log("[Dashboard] User query result:", data);
+      const userData = (await userRes.json()) as Array<{
+        user_type: string | null;
+        domain: string;
+        display_name: string | null;
+        role_id: string | null;
+      }>;
 
-      if (data.length > 0) {
-        const record = data[0];
-        
-        // Reset flags
-        setIsAgent(false);
-        setIsMinisiteadmin(false);
-        setIsSiteadmin(false);
+      console.log("[Dashboard] User data:", userData);
 
-        // If user has role_id, fetch the role details
-        let roleName = record.user_type || "";
+      if (userData.length === 0) {
+        console.warn("[Dashboard] No user found");
+        setUserTypeChecked(true);
+        return;
+      }
+
+      const user = userData[0];
+      setUserDomain(user.domain || "");
+      setUserDisplayName(user.display_name || "");
+
+      // If user has role_id, fetch permissions from roles table
+      if (user.role_id) {
+        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=name,can_access_management_panel,can_scan_qr,can_provision_without_qr,can_view_devices,can_adopt_devices,can_create_users,can_view_users&id=eq.${user.role_id}`;
         
-        if (record.role_id) {
-          try {
-            const roleRes = await fetch(
-              `${supabaseUrl}/rest/v1/roles?select=name,hierarchy_level&id=eq.${record.role_id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${jwt}`,
-                  apikey: anonKey,
-                },
-              }
-            );
-            if (roleRes.ok) {
-              const roleData = await roleRes.json();
-              if (roleData.length > 0) {
-                roleName = roleData[0].name;
-                console.log("[Dashboard] Role from roles table:", roleName);
-              }
+        console.log("[Dashboard] Fetching role permissions for role_id:", user.role_id);
+
+        const roleRes = await fetch(roleQueryUrl, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            apikey: anonKey,
+          },
+        });
+
+        if (roleRes.ok) {
+          const roleData = await roleRes.json();
+          console.log("[Dashboard] Role data:", roleData);
+
+          if (roleData.length > 0) {
+            const role = roleData[0];
+            
+            // Set permissions from roles table
+            setUserPermissions({
+              can_access_management_panel: role.can_access_management_panel ?? false,
+              can_scan_qr: role.can_scan_qr ?? false,
+              can_provision_without_qr: role.can_provision_without_qr ?? false,
+              can_view_devices: role.can_view_devices ?? false,
+              can_adopt_devices: role.can_adopt_devices ?? false,
+              can_create_users: role.can_create_users ?? false,
+              can_view_users: role.can_view_users ?? false,
+            });
+
+            // Also set legacy flags for backward compatibility
+            const roleName = role.name;
+            if (roleName === "siteadmin") {
+              setIsSiteadmin(true);
+              setIsMinisiteadmin(true);
+              setIsAgent(true);
+            } else if (roleName === "minisiteadmin") {
+              setIsMinisiteadmin(true);
+              setIsAgent(true);
+            } else if (roleName === "agent") {
+              setIsAgent(true);
             }
-          } catch (roleErr) {
-            console.warn("[Dashboard] Could not fetch role:", roleErr);
+
+            console.log("[Dashboard] Permissions set from role:", roleName);
           }
+        } else {
+          console.warn("[Dashboard] Failed to fetch role:", roleRes.status);
         }
+      } else {
+        // Fallback to user_type if no role_id
+        console.log("[Dashboard] No role_id, using user_type fallback:", user.user_type);
+        const role = user.user_type ?? "";
 
-        console.log("[Dashboard] Determined role:", roleName, "from user_type:", record.user_type);
-
-        // Set permissions based on role
-        if (roleName === "siteadmin") {
+        if (role === "siteadmin") {
           setIsSiteadmin(true);
           setIsMinisiteadmin(true);
           setIsAgent(true);
-          console.log("[Dashboard] User is SITEADMIN - full access");
-        } else if (roleName === "minisiteadmin") {
+          setUserPermissions({
+            can_access_management_panel: true,
+            can_scan_qr: true,
+            can_provision_without_qr: true,
+            can_view_devices: true,
+            can_adopt_devices: true,
+            can_create_users: true,
+            can_view_users: true,
+          });
+        } else if (role === "minisiteadmin") {
           setIsMinisiteadmin(true);
           setIsAgent(true);
-          console.log("[Dashboard] User is MINISITEADMIN");
-        } else if (roleName === "agent") {
+          setUserPermissions({
+            can_access_management_panel: true,
+            can_scan_qr: true,
+            can_provision_without_qr: true,
+            can_view_devices: true,
+            can_adopt_devices: true,
+            can_create_users: true,
+            can_view_users: true,
+          });
+        } else if (role === "agent") {
           setIsAgent(true);
-          console.log("[Dashboard] User is AGENT");
+          setUserPermissions({
+            can_access_management_panel: true,
+            can_scan_qr: true,
+            can_provision_without_qr: true,
+            can_view_devices: true,
+            can_adopt_devices: true,
+            can_create_users: true,
+            can_view_users: true,
+          });
         } else {
-          console.log("[Dashboard] User is COLABORADOR or other:", roleName);
+          // colaborador or other
+          setUserPermissions({
+            can_access_management_panel: false,
+            can_scan_qr: true,
+            can_provision_without_qr: true,
+            can_view_devices: true,
+            can_adopt_devices: true,
+            can_create_users: false,
+            can_view_users: false,
+          });
         }
-
-        // Set domain and display name
-        setUserDomain(record.domain || "");
-        setUserDisplayName(record.display_name || record.mesh_username || "");
-        
-        setUserTypeChecked(true);
-      } else {
-        console.warn("[Dashboard] No user found for email:", userEmail);
-        setIsAgent(false);
-        setIsMinisiteadmin(false);
-        setIsSiteadmin(false);
-        setUserTypeChecked(true);
       }
+
+      setUserTypeChecked(true);
     } catch (error) {
-      console.error("[Dashboard] Error checking user type:", error);
-      setIsAgent(false);
-      setIsMinisiteadmin(false);
-      setIsSiteadmin(false);
+      console.error("[Dashboard] Error:", error);
       setUserTypeChecked(true);
     }
   }, [jwt, userTypeChecked]);
@@ -1209,7 +1279,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {isAgent && (
+        {/* Painel de Gestão - visível se tem permissão can_access_management_panel */}
+        {userPermissions.can_access_management_panel && (
           <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
