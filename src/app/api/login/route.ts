@@ -161,6 +161,19 @@ export async function POST(req: Request) {
     await ensureSupabaseUser(email, fullDomain);
     console.log("[Login] SUCCESS - Token length:", token.length);
 
+    // STEP 4: Set session cookie for middleware
+    const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+    const now = new Date();
+    const session: MeshSession = {
+      email,
+      domain: fullDomain,
+      authenticated: true,
+      authenticatedAt: now.toISOString(),
+      expiresAt: new Date(now.getTime() + SESSION_MAX_AGE * 1000).toISOString(),
+    };
+    await setSessionCookie(session);
+    console.log("[Login] Session cookie set");
+
     return NextResponse.json({ token }, { status: 200, headers: CORS_HEADERS });
 
   } catch (error) {
