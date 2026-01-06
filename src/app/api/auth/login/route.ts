@@ -78,7 +78,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Mirror user to Supabase tables
+    console.log(`[API] Mirroring user to Supabase: ${email} @ ${fullDomain}`);
     const meshUser = await ensureSupabaseUser(email, fullDomain);
+    console.log(`[API] meshUser result:`, meshUser);
     
     let token = "";
     
@@ -87,16 +89,20 @@ export async function POST(request: NextRequest) {
       await ensureProfileExists(meshUser.auth_user_id, email);
       
       // Get JWT from Supabase Auth
+      console.log(`[API] Getting JWT for auth_user_id: ${meshUser.auth_user_id}`);
       const jwtResult = await getSupabaseJWT(email, meshUser.auth_user_id);
       if (jwtResult?.token) {
         token = jwtResult.token;
-        console.log(`[API] JWT obtained for user: ${email}`);
+        console.log(`[API] JWT obtained for user: ${email}, token length: ${token.length}`);
       } else {
         console.warn(`[API] Could not get JWT for user: ${email}`, jwtResult?.error);
       }
+    } else {
+      console.warn(`[API] No auth_user_id for user: ${email}, meshUser:`, meshUser);
     }
 
     // Return success with token
+    console.log(`[API] Returning response, token length: ${token.length}`);
     return NextResponse.json({
       success: true,
       token,
