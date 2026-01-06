@@ -343,13 +343,13 @@ export default function UsersManagementPage() {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, allRoles, currentHierarchyLevel]);
 
   // Ref para evitar chamadas duplicadas
   const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    if (!jwt || !accessChecked) return;
+    if (!jwt || !accessChecked || allRoles.length === 0) return;
     
     // Evitar chamadas repetidas
     if (hasFetchedRef.current) return;
