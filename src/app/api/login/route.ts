@@ -151,11 +151,27 @@ export async function POST(req: Request) {
 
     // STEP 3: Return JWT
     const token = signInResult.data?.session?.access_token;
+    const authUserId = signInResult.data?.user?.id;
     if (!token) {
       return NextResponse.json(
         { message: "Sem token na resposta." },
         { status: 502, headers: CORS_HEADERS }
       );
+    }
+
+    // Sync auth_user_id in mesh_users table
+    if (authUserId && supabaseAdmin) {
+      console.log("[Login] Syncing auth_user_id in mesh_users:", authUserId);
+      const { error: syncError } = await supabaseAdmin
+        .from("mesh_users")
+        .update({ auth_user_id: authUserId })
+        .eq("mesh_username", email);
+      
+      if (syncError) {
+        console.log("[Login] Sync error (non-fatal):", syncError.message);
+      } else {
+        console.log("[Login] auth_user_id synced successfully");
+      }
     }
 
     await ensureSupabaseUser(email, fullDomain);
