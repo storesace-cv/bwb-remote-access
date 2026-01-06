@@ -1,10 +1,10 @@
 /**
- * Login Route - Simplified Supabase JWT
+ * Login Route - Supabase JWT com Admin API
  * 
- * TEMPORÁRIO: Validação MeshCentral removida para debugging
+ * FLOW:
  * 1. Aceita email/password
- * 2. Faz signIn no Supabase com password FIXA
- * 3. Se utilizador não existe no Supabase, cria-o
+ * 2. Usa Admin API para criar/atualizar utilizador (evita confirmação de email)
+ * 3. Faz signIn no Supabase com password FIXA
  * 4. Retorna JWT
  */
 
@@ -24,6 +24,10 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 const supabaseAdmin = supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey, {
   auth: { autoRefreshToken: false, persistSession: false }
 }) : null;
+
+// Log configuration at startup
+console.log("[Login] Config - URL:", supabaseUrl);
+console.log("[Login] Config - Has Admin Key:", Boolean(supabaseServiceKey));
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
