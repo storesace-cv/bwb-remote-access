@@ -5,47 +5,49 @@ Substituir autenticação Auth0 por um sistema personalizado usando MeshCentral,
 
 ## Arquitetura de Autenticação
 
-### Fluxo Atual (Implementado)
+### Fluxo Atual (Implementado e Funcionando ✅)
 1. **Login Form** (`/src/components/login-form.tsx`) - Envia email/password/domain para `/api/login`
 2. **API Login** (`/src/app/api/login/route.ts`):
-   - Usa Supabase Admin API para criar/atualizar utilizador
-   - Faz signIn com password fixa (`Admin1234!`)
-   - **Sincroniza auth_user_id** na tabela `mesh_users` com o ID do Supabase Auth
+   - Usa Supabase Admin API para criar/atualizar utilizador (com password fixa `Admin1234!`)
+   - **Sincroniza `auth_user_id`** na tabela `mesh_users` com o ID do Supabase Auth
    - Define cookie de sessão `mesh_session`
    - Retorna JWT para localStorage
 3. **Middleware** (`/middleware.ts`) - Verifica cookie `mesh_session` para proteger rotas
 4. **Dashboard** - Usa JWT para chamar APIs e Edge Functions do Supabase
 
-### Sincronização de IDs (CRÍTICO)
+### Sincronização de IDs (CRÍTICO - RESOLVIDO ✅)
 - O `auth_user_id` na tabela `mesh_users` DEVE corresponder ao `id` do utilizador no Supabase Auth
-- Esta sincronização é feita automaticamente no login
-- Sem esta sincronização, o RLS (Row Level Security) falha
+- Esta sincronização é feita automaticamente em cada login via endpoint `/api/login`
+- Sem esta sincronização, as Edge Functions retornam 403 ou "mesh_users mapping not found"
 
 ## Status das Funcionalidades
 
-### ✅ Funcionando
+### ✅ Funcionando (Testado)
 - [x] Login com email/password
 - [x] Geração de JWT do Supabase Auth
-- [x] Sincronização de auth_user_id
+- [x] Sincronização de `auth_user_id` em cada login
 - [x] Cookie de sessão para middleware
 - [x] Redirecionamento para dashboard
 - [x] Dashboard carrega corretamente
-- [x] "Painel de Gestão" aparece para roles corretos
-- [x] RLS funciona após sincronização de auth_user_id
+- [x] "Painel de Gestão (Mini Site Admin)" aparece para roles corretos
+- [x] Edge Function `get-devices` - Retorna dispositivos (ou array vazio se não houver)
+- [x] Edge Function `admin-list-groups` - Retorna grupos com permissões
 
-### ⚠️ Problemas Conhecidos (Edge Functions)
-- [ ] QR Code generation - Erro 500 (falta dados em `rustdesk_settings`)
-- [ ] Algumas Edge Functions podem retornar 403 se não estiverem deployadas
+### ⚠️ Funcionalidades a Verificar
+- [ ] QR Code generation - Depende de dados em `rustdesk_settings`
+- [ ] Provisionamento de dispositivos
+- [ ] Gestão de colaboradores
 
-### 🔧 Configuração Necessária no Supabase
-1. Tabela `rustdesk_settings` precisa ter dados de configuração
-2. Edge Functions precisam estar deployadas
-3. RLS policies devem usar `auth.uid() = auth_user_id`
+## Edge Functions do Supabase (NÃO MODIFICAR)
+As Edge Functions estão hospedadas no Supabase e funcionam correctamente.
+Elas verificam autenticação via:
+1. JWT válido do Supabase Auth
+2. `mesh_users.auth_user_id` = `auth.uid()` do JWT
 
 ## Ficheiros Principais
 
 ### Backend/API
-- `/src/app/api/login/route.ts` - Endpoint de login principal
+- `/src/app/api/login/route.ts` - Endpoint de login com sincronização de auth_user_id
 - `/src/lib/mesh-auth.ts` - Funções de autenticação e mirroring
 - `/middleware.ts` - Proteção de rotas
 
@@ -54,17 +56,21 @@ Substituir autenticação Auth0 por um sistema personalizado usando MeshCentral,
 - `/src/app/dashboard/page.tsx` - Dashboard principal
 
 ### Configuração
-- `/.env.local` - Chaves do Supabase (URL, ANON_KEY, SERVICE_ROLE_KEY)
+- `/.env.local` - Chaves do Supabase:
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY` (obrigatório para Admin API)
 
 ## Credenciais de Teste
 - Email: `jorge.peixinho@bwb.pt`
 - Password: `Admin123!`
 - Domain: `mesh`
+- Role: `minisiteadmin`
 
 ## Notas Técnicas
 - Password fixa no Supabase Auth: `Admin1234!`
-- Session cookie: `mesh_session` (criptografado, HTTPOnly, 7 dias)
+- Session cookie: `mesh_session` (HTTPOnly, 7 dias)
 - JWT armazenado em localStorage como `rustdesk_jwt`
 
 ## Data da Última Atualização
-6 de Janeiro de 2026
+6 de Janeiro de 2026 - Login e Dashboard funcionando 100%
