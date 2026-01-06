@@ -125,8 +125,6 @@ export default function UsersManagementPage() {
         );
         const payload = JSON.parse(payloadJson) as { sub?: string; email?: string };
         if (payload.sub && typeof payload.sub === "string") {
-          setAuthUserId(payload.sub);
-          
           // Buscar user_type da tabela mesh_users
           const checkAccess = async () => {
             try {
