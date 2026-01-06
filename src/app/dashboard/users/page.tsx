@@ -65,7 +65,6 @@ export default function UsersManagementPage() {
   const router = useRouter();
   const { toasts, removeToast, showSuccess, showError } = useToast();
   const [jwt, setJwt] = useState<string | null>(null);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [currentUserType, setCurrentUserType] = useState<string | null>(null);
   const [accessChecked, setAccessChecked] = useState(false);
 
