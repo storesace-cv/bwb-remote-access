@@ -72,6 +72,8 @@ export default function UsersManagementPage() {
   const { toasts, removeToast, showSuccess, showError } = useToast();
   const [jwt, setJwt] = useState<string | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [currentUserType, setCurrentUserType] = useState<string | null>(null);
+  const [accessChecked, setAccessChecked] = useState(false);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(false);
@@ -109,6 +111,7 @@ export default function UsersManagementPage() {
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
 
+  // Verificar acesso baseado no user_type
   useEffect(() => {
     if (typeof window === "undefined") return;
 
