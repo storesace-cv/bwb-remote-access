@@ -240,8 +240,9 @@ export default function UsersManagementPage() {
     setErrorMsg(null);
 
     try {
+      // Usar admin-list-mesh-users que suporta siteadmin, minisiteadmin e agent
       const res = await fetchWithTimeout(
-        `${supabaseUrl}/functions/v1/admin-list-auth-users?page=1&per_page=200`,
+        `${supabaseUrl}/functions/v1/admin-list-mesh-users`,
         {
           method: "GET",
           headers: {
