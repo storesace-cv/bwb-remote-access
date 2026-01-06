@@ -1170,6 +1170,7 @@ export default function DashboardPage() {
             <Link
               href="/dashboard/profile"
               className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
+              data-testid="dashboard-profile-link"
             >
               Perfil
             </Link>
@@ -1246,10 +1247,10 @@ export default function DashboardPage() {
         )}
 
         {/* Secção Adicionar Dispositivo - visível para todos os utilizadores */}
-        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
+        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="add-device-section">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-lg font-semibold text-sky-400">📱 Adicionar Dispositivo</h2>
+              <h2 className="text-lg font-semibold text-sky-400" data-testid="add-device-title">📱 Adicionar Dispositivo</h2>
               <p className="text-xs text-slate-400 mt-1">
                 Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
               </p>
@@ -1262,6 +1263,7 @@ export default function DashboardPage() {
               onClick={startRegistrationSession}
               disabled={!jwt}
               className={`group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left ${!jwt ? 'opacity-50 cursor-not-allowed' : ''}`}
+              data-testid="scan-qr-button"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
@@ -1286,6 +1288,7 @@ export default function DashboardPage() {
               <Link
                 href="/provisioning"
                 className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 block"
+                data-testid="provisioning-link"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
