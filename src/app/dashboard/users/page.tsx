@@ -139,9 +139,9 @@ export default function UsersManagementPage() {
   }, [router]);
 
   const loadMeshUsers = useCallback(async () => {
-    if (!jwt) return;
-    if (meshUsersLoading || meshUsers.length > 0) return;
-
+    const currentJwt = window.localStorage.getItem("rustdesk_jwt");
+    if (!currentJwt) return;
+    
     setMeshUsersLoading(true);
     setMeshUsersError(null);
 
@@ -149,7 +149,7 @@ export default function UsersManagementPage() {
       const res = await fetch(`${supabaseUrl}/functions/v1/admin-list-mesh-users`, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          Authorization: `Bearer ${currentJwt}`,
           apikey: anonKey,
         },
       });
@@ -185,7 +185,7 @@ export default function UsersManagementPage() {
     } finally {
       setMeshUsersLoading(false);
     }
-  }, [jwt, meshUsersLoading, meshUsers.length]);
+  }, []);
 
   const fetchUsers = useCallback(async () => {
     if (!jwt) return;
