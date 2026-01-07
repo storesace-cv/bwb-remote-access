@@ -1217,7 +1217,7 @@ export default function DashboardPage() {
           totalDevices={devices.length}
           adoptedCount={adoptedDevices.length}
           unadoptedCount={unadoptedDevices.length}
-          onRefresh={handleManualRefresh}
+          onRefresh={handleRefreshStatus}
           refreshing={refreshing}
         />
 

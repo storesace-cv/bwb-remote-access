@@ -16,6 +16,13 @@ export interface GroupedDevice {
   created_at: string | null;
   updated_at: string | null;
   from_provisioning_code?: boolean | null;
+  is_online?: boolean;
+  adopted?: boolean;
+  observations?: string | null;
+  device_info?: {
+    ip?: string;
+    os?: string;
+  } | null;
 }
 
 /**
