@@ -225,9 +225,11 @@ interface DeviceListItemProps {
   onEdit: (device: GroupableDevice) => void;
   onDelete: (device: GroupableDevice) => void;
   onConnect: (device: GroupableDevice) => void;
+  canEditDevices: boolean;
+  canDeleteDevices: boolean;
 }
 
-function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect }: DeviceListItemProps) {
+function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect, canEditDevices, canDeleteDevices }: DeviceListItemProps) {
   const d = device;
   const fromProvisioningCode = !!d.from_provisioning_code;
   const tagLabel = fromProvisioningCode ? "PM" : "QR";
@@ -277,7 +279,8 @@ function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect }: Device
         </div>
         <div className="flex items-stretch gap-2 ml-2">
           <div className="flex flex-col gap-1">
-            {!isAdmin && (
+            {/* Editar - requer can_edit_devices e não ser admin */}
+            {!isAdmin && canEditDevices && (
               <button
                 type="button"
                 onClick={() => onEdit(d)}
@@ -286,13 +289,16 @@ function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect }: Device
                 Editar
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => onDelete(d)}
-              className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[10px] text-white"
-            >
-              Apagar
-            </button>
+            {/* Apagar - requer can_delete_devices */}
+            {canDeleteDevices && (
+              <button
+                type="button"
+                onClick={() => onDelete(d)}
+                className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[10px] text-white"
+              >
+                Apagar
+              </button>
+            )}
           </div>
           <button
             type="button"
