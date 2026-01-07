@@ -378,6 +378,11 @@ compliance_gate
 run_supabase_migrations
 
 # ---------------------------------------------------------
+# 1.1. Edge Functions Deployment
+# ---------------------------------------------------------
+deploy_edge_functions
+
+# ---------------------------------------------------------
 # 2. Verify local build exists
 # ---------------------------------------------------------
 echo "🔍 Checking local build artifacts..."
