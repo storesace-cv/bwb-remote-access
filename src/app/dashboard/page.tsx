@@ -2,13 +2,22 @@
 
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
-import QRCode from "react-qr-code";
 
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
 import { RolePermissions } from "@/lib/permissions-service";
+
+// Refactored components
+import {
+  DashboardHeader,
+  ManagementPanel,
+  DeviceFilters,
+  AddDeviceSection,
+  UnadoptedDevicesList,
+  AdminUnassignedDevicesList,
+  type RustdeskAbi,
+} from "./components";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -81,10 +90,9 @@ export default function DashboardPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
 
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("date_desc");
-  const [showFilters, setShowFilters] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<FilterStatus>("all");
 
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const [expandedSubgroups, setExpandedSubgroups] = useState<Record<string, boolean>>({});
@@ -129,11 +137,11 @@ export default function DashboardPage() {
   const [meshUsersLoading, setMeshUsersLoading] = useState(false);
   const [meshUsers, setMeshUsers] = useState<MeshUserOption[]>([]);
 
-  const [selectedRustdeskAbi, setSelectedRustdeskAbi] = useState<"arm64" | "armeabi" | "x86_64" | null>(null);
+  const [selectedRustdeskAbi, setSelectedRustdeskAbi] = useState<RustdeskAbi>(null);
   const [currentAdoptedPage, setCurrentAdoptedPage] = useState<number>(1);
   const [adoptedPageSize, setAdoptedPageSize] = useState<number>(ADOPTED_PAGE_SIZE);
 
-  const RUSTDESK_APK_URLS = {
+  const RUSTDESK_APK_URLS: Record<"arm64" | "armeabi" | "x86_64", string> = {
     arm64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=arm64-v8a",
     armeabi: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=armeabi-v7a",
     x86_64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=x86_64",
@@ -1168,44 +1176,13 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen flex flex-col bg-slate-950">
       <div className="w-full max-w-5xl mx-auto px-4 py-8">
-        <header className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-xl font-semibold text-white">BWB | Suporte Android</h1>
-            <div className="flex flex-col">
-              <p className="text-sm text-slate-400">
-                © jorge peixinho - Business with Brains
-              </p>
-              {userDisplayName && (
-                <p className="text-xs text-slate-500">
-                  {userDisplayName}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {userPermissions?.can_view_users && (
-              <Link
-                href="/dashboard/users"
-                className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-              >
-                Gestão de Utilizadores
-              </Link>
-            )}
-            <Link
-              href="/dashboard/profile"
-              className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-              data-testid="dashboard-profile-link"
-            >
-              Perfil
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="px-3 py-1.5 text-sm rounded-md bg-red-600 hover:bg-red-500 transition text-white"
-            >
-              Sair
-            </button>
-          </div>
-        </header>
+        <DashboardHeader
+          userRole={userRole}
+          userDomain={userDomain}
+          userDisplayName={userDisplayName}
+          userPermissions={userPermissions}
+          onLogout={handleLogout}
+        />
 
         {refreshError && (
           <div className="mb-4 p-3 bg-amber-950/40 border border-amber-900 rounded-md">
@@ -1213,470 +1190,46 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Painel de Gestão - visível se tem permissão can_access_management_panel */}
-        {userPermissions?.can_access_management_panel && (
-          <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-semibold text-emerald-400">
-                  🎯 Painel de Gestão ({userRole.displayName || "Utilizador"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
-                </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  {userPermissions?.can_access_all_domains
-                    ? "Tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
-                    : userPermissions?.can_access_own_domain_only
-                    ? "Podes gerir utilizadores e colaboradores do teu domínio"
-                    : "Tens acesso ao painel de gestão"}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Utilizadores - visível se pode ver utilizadores */}
-              {userPermissions?.can_view_users && (
-                <Link
-                  href="/dashboard/users"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-                  data-testid="users-link"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
-                      👥
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Utilizadores</h3>
-                  <p className="text-xs text-slate-400">
-                    Gerir todos os utilizadores: candidatos, colaboradores e administradores
-                  </p>
-                </Link>
-              )}
-
-              {/* Grupos - visível se pode ver grupos */}
-              {userPermissions?.can_view_groups && (
-                <Link
-                  href="/dashboard/groups"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
-                      📦
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
-                  <p className="text-xs text-slate-400">
-                    Organizar dispositivos em grupos e gerir permissões dos colaboradores
-                  </p>
-                </Link>
-              )}
-
-              {/* Gestão de Roles - visível apenas se pode gerir roles */}
-              {userPermissions?.can_manage_roles && (
-                <Link
-                  href="/dashboard/roles"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-purple-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-purple-900/20"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
-                      ⚙️
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Gestão de Roles</h3>
-                  <p className="text-xs text-slate-400">
-                    Configurar permissões de cada role do sistema
-                  </p>
-                </Link>
-              )}
-            </div>
-          </section>
-        )}
+        <ManagementPanel userPermissions={userPermissions} />
 
         {/* Secção Adicionar Dispositivo - visível para todos os utilizadores */}
-        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="add-device-section">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-semibold text-sky-400" data-testid="add-device-title">📱 Adicionar Dispositivo</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
-              </p>
-            </div>
-          </div>
+        <AddDeviceSection
+          jwt={jwt}
+          selectedRustdeskAbi={selectedRustdeskAbi}
+          onSelectAbi={setSelectedRustdeskAbi}
+          onOpenQrModal={startRegistrationSession}
+          rustdeskApkUrls={RUSTDESK_APK_URLS}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
-              type="button"
-              onClick={startRegistrationSession}
-              disabled={!jwt}
-              className={`group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left ${!jwt ? 'opacity-50 cursor-not-allowed' : ''}`}
-              data-testid="scan-qr-button"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
-                  📷
-                </div>
-                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
-                <p className="text-xs text-slate-400">
-                  Gera um QR code para dispositivos móveis com câmara (smartphones, tablets Android)
-                </p>
-                <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
-                  <span>Abrir modal QR</span>
-                  <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
-              </button>
+        <DeviceFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          filterStatus={filterStatus}
+          onFilterStatusChange={setFilterStatus}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          totalDevices={devices.length}
+          adoptedCount={adoptedDevices.length}
+          unadoptedCount={unadoptedDevices.length}
+          onRefresh={handleManualRefresh}
+          refreshing={refreshing}
+        />
 
-              <Link
-                href="/provisioning"
-                className="group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 block"
-                data-testid="provisioning-link"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
-                    🔢
-                  </div>
-                  <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Provisionamento sem QR</h3>
-                <p className="text-xs text-slate-400">
-                  Gera código de 4 dígitos para Android TV, boxes e dispositivos sem câmara
-                </p>
-                <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
-                  <span>Ir para Provisioning</span>
-                  <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
-              </Link>
-            </div>
-
-            <div className="mt-4 space-y-4">
-              <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                <button
-                  type="button"
-                  onClick={() => setSelectedRustdeskAbi("arm64")}
-                  className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
-                    selectedRustdeskAbi === "arm64"
-                      ? "bg-emerald-600 border-emerald-500 text-white"
-                      : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                  }`}
-                >
-                  arm64‑v8a (recomendado)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedRustdeskAbi("armeabi")}
-                  className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
-                    selectedRustdeskAbi === "armeabi"
-                      ? "bg-emerald-600 border-emerald-500 text-white"
-                      : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                  }`}
-                >
-                  armeabi‑v7a (dispositivos mais antigos, 32‑bit)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedRustdeskAbi("x86_64")}
-                  className={`px-3 py-2 text-xs sm:text-sm rounded-md border transition ${
-                    selectedRustdeskAbi === "x86_64"
-                      ? "bg-emerald-600 border-emerald-500 text-white"
-                      : "bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700"
-                  }`}
-                >
-                  x86_64 (Android TV / x86)
-                </button>
-              </div>
-
-              {selectedRustdeskAbi ? (
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="bg-white p-3 rounded-md shadow-sm">
-                    <QRCode
-                      value={RUSTDESK_APK_URLS[selectedRustdeskAbi]}
-                      size={128}
-                      bgColor="#ffffff"
-                      fgColor="#020617"
-                    />
-                  </div>
-                  <p className="text-xs font-semibold text-slate-100">
-                    {selectedRustdeskAbi === "arm64" && "arm64‑v8a (a maioria dos dispositivos Android recentes)"}
-                    {selectedRustdeskAbi === "armeabi" && "armeabi‑v7a (dispositivos mais antigos, 32‑bit)"}
-                    {selectedRustdeskAbi === "x86_64" && "x86_64 (Android TV / boxes e ambientes x86_64)"}
-                  </p>
-                  <p className="text-[11px] text-center text-slate-400">
-                    Aponta a câmara do dispositivo Android para este QR code para descarregar o APK correspondente.
-                  </p>
-                  <p className="text-[10px] text-center text-slate-500 break-all">
-                    {RUSTDESK_APK_URLS[selectedRustdeskAbi]}
-                  </p>
-                </div>
-              ) : (
-                <p className="text-xs text-slate-400 text-center">
-                  Escolhe primeiro o tipo de processador para ver o QR‑code correspondente.
-                </p>
-              )}
-            </div>
-          </section>
-
-        <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-4 mb-6 backdrop-blur-sm">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="🔍 Procurar por ID, nome ou notas..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="px-4 py-2 text-sm rounded-lg bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            >
-              <option value="date_desc">📅 Mais recentes</option>
-              <option value="date_asc">📅 Mais antigos</option>
-              <option value="name_asc">🔤 Nome A-Z</option>
-              <option value="name_desc">🔤 Nome Z-A</option>
-              <option value="id_asc">🔢 ID crescente</option>
-              <option value="id_desc">🔢 ID decrescente</option>
-            </select>
-
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`px-4 py-2 text-sm rounded-lg transition ${
-                showFilters
-                  ? "bg-emerald-600 text-white"
-                  : "bg-slate-800 border border-slate-600 text-slate-300 hover:bg-slate-700"
-              }`}
-            >
-              🔧 Filtros
-            </button>
-          </div>
-
-          {showFilters && (
-            <div className="mt-4 pt-4 border-t border-slate-700/50">
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setFilterStatus("all")}
-                  className={`px-3 py-1.5 text-xs rounded-md transition ${
-                    filterStatus === "all"
-                      ? "bg-emerald-600 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  Todos ({devices.length})
-                </button>
-                <button
-                  onClick={() => setFilterStatus("adopted")}
-                  className={`px-3 py-1.5 text-xs rounded-md transition ${
-                    filterStatus === "adopted"
-                      ? "bg-emerald-600 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  Adoptados ({devices.filter(d => isDeviceAdopted(d)).length})
-                </button>
-                {!isAdmin && (
-                  <button
-                    onClick={() => setFilterStatus("unadopted")}
-                    className={`px-3 py-1.5 text-xs rounded-md transition ${
-                      filterStatus === "unadopted"
-                        ? "bg-amber-600 text-white"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                    }`}
-                  >
-                    Por adoptar ({devices.filter(d => !isDeviceAdopted(d)).length})
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-        </section>
-
-        {!isAdmin && unadoptedDevices.length > 0 && (
-          <section className="bg-amber-950/30 border border-amber-800/50 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-medium text-amber-400">
-                  ⚠️ Dispositivos por adoptar
-                </h2>
-                <p className="text-sm text-amber-300/70 mt-1">
-                  Estes dispositivos conectaram mas ainda precisam de informações
-                  adicionais (grupo, nome, etc.)
-                </p>
-              </div>
-              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-amber-600 text-white">
-                {unadoptedDevices.length}
-              </span>
-            </div>
-
-            <div className="grid gap-3 md:grid-cols-2">
-              {unadoptedDevices.map((device: GroupableDevice) => {
-                const fromProvisioningCode = !!device.from_provisioning_code;
-                const tagLabel = fromProvisioningCode ? "PM" : "QR";
-                const tagClassName = fromProvisioningCode
-                  ? "bg-white text-black border border-slate-300"
-                  : "bg-sky-600/80 text-white border border-sky-500";
-                const notesParts = (device.notes ?? "")
-                  .split("|")
-                  .map((p: string) => p.trim())
-                  .filter((p: string) => p.length > 0);
-
-                const groupLabel =
-                  device.group_name || notesParts[0] || "";
-                const subgroupLabel =
-                  device.subgroup_name || notesParts[1] || "";
-                const observations =
-                  notesParts.length > 2
-                    ? notesParts.slice(2).join(" | ")
-                    : "";
-
-                return (
-                  <div
-                    key={device.id}
-                    className="border border-amber-700/50 rounded-lg px-4 py-3 bg-slate-950/50"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold text-amber-100 text-sm">
-                            {device.device_id}
-                          </span>
-                          {device.friendly_name && (
-                            <span className="text-xs text-amber-300/70">
-                              ({device.friendly_name})
-                            </span>
-                          )}
-                          <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${tagClassName}`}
-                          >
-                            {tagLabel}
-                          </span>
-                        </div>
-                        {(groupLabel || subgroupLabel) && (
-                          <p className="text-xs text-slate-400">
-                            {groupLabel}
-                            {groupLabel && subgroupLabel ? " | " : ""}
-                            {subgroupLabel}
-                          </p>
-                        )}
-                        {observations && (
-                          <p className="text-xs text-slate-500 mt-0.5">
-                            Obs: {observations}
-                          </p>
-                        )}
-                        <p className="text-xs text-slate-500 mt-1">
-                          Visto:{" "}
-                          {new Date(
-                            device.last_seen_at || device.created_at || "",
-                          ).toLocaleString("pt-PT")}
-                        </p>
-                        {device.owner && (
-                          <p className="text-xs text-emerald-400 mt-1">
-                            ✓ Associado ao utilizador
-                          </p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => openAdoptModal(device)}
-                        className="px-3 py-1.5 text-xs font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 transition text-white"
-                      >
-                        ✓ Adoptar
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+        {!isAdmin && (
+          <UnadoptedDevicesList
+            devices={unadoptedDevices}
+            onAdopt={openAdoptModal}
+          />
         )}
 
-        {isAdmin && adminUnassignedDevices.length > 0 && (
-          <section className="bg-purple-950/30 border border-purple-800/60 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-medium text-purple-200">
-                  🧩 Dispositivos sem Utilizador Atribuido
-                </h2>
-                <p className="text-sm text-purple-200/70 mt-1">
-                  Dispositivos que não foi possível associar com segurança a nenhum utilizador. Pode reatribuir manualmente ou apagar.
-                </p>
-              </div>
-              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-purple-600 text-white">
-                {adminUnassignedDevices.length}
-              </span>
-            </div>
-
-            {adminActionError && (
-              <div className="mb-4 p-3 bg-red-950/40 border border-red-900 rounded-md">
-                <p className="text-sm text-red-400">{adminActionError}</p>
-              </div>
-            )}
-
-            <div className="grid gap-3 md:grid-cols-2">
-              {adminUnassignedDevices.map((device: GroupableDevice) => (
-                <div
-                  key={device.id}
-                  className="border border-purple-800/60 rounded-lg px-4 py-3 bg-slate-950/60"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-purple-100 text-sm">
-                          {device.device_id}
-                        </span>
-                        {device.friendly_name && (
-                          <span className="text-xs text-purple-200/80">
-                            ({device.friendly_name})
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-400 mt-1">
-                        Visto:{" "}
-                        {new Date(
-                          device.last_seen_at || device.created_at ||
-                          "",
-                        ).toLocaleString("pt-PT")}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-2 ml-2">
-                      <button
-                        type="button"
-                        onClick={() => openAdminReassignModal(device)}
-                        disabled={adminActionLoading}
-                        className="px-3 py-1.5 text-xs rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                      >
-                        Reatribuir
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleAdminDeleteDevice(device)}
-                        disabled={adminActionLoading}
-                        className="px-3 py-1.5 text-xs rounded-md bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                      >
-                        Apagar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+        {isAdmin && (
+          <AdminUnassignedDevicesList
+            devices={adminUnassignedDevices}
+            onReassign={openAdminReassignModal}
+            onDelete={handleAdminDeleteDevice}
+            loading={adminActionLoading}
+            error={adminActionError}
+          />
         )}
 
         {(!isAdmin || adoptedDevices.length > 0) && (
