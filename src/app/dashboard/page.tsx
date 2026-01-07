@@ -1172,12 +1172,6 @@ export default function DashboardPage() {
   const grouped = useMemo(() => groupDevices(paginatedAdoptedDevices), [paginatedAdoptedDevices]);
   const isEditingDevice = adoptingDevice ? isDeviceAdopted(adoptingDevice) : false;
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   const selectedGroup = adoptFormData.group_id 
     ? canonicalGroups.find(g => g.id === adoptFormData.group_id)
     : null;
