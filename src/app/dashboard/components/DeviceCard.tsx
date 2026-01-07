@@ -5,7 +5,6 @@ import { GroupableDevice } from "@/lib/grouping";
 interface DeviceCardProps {
   device: GroupableDevice;
   onAdopt?: (device: GroupableDevice) => void;
-  onConnect?: (device: GroupableDevice) => void;
   onReassign?: (device: GroupableDevice) => void;
   showAdoptButton?: boolean;
   showConnectButton?: boolean;
@@ -16,7 +15,6 @@ interface DeviceCardProps {
 export function DeviceCard({
   device,
   onAdopt,
-  onConnect,
   onReassign,
   showAdoptButton = false,
   showConnectButton = false,
