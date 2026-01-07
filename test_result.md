@@ -47,3 +47,47 @@
 ### Incorporate User Feedback
 - Verificar todos os 4 bugs reportados pelo utilizador
 - Testar fluxo completo de login -> dashboard -> logout
+
+## Resultados dos Testes (Janeiro 2025)
+
+### Ambiente de Teste
+- **URL**: http://localhost:3000
+- **Credenciais**: suporte@bwb.pt / Admin123! / mesh.bwb.pt
+- **Browser**: Playwright (Desktop 1920x1080)
+
+### Testes Realizados
+
+#### ✅ Login Funcional
+- Login com credenciais fornecidas foi bem-sucedido
+- Dashboard carregou correctamente com interface BWB
+- Utilizador tem acesso a painel de gestão (Site Admin)
+
+#### ❌ Bug 1 - Logout Parcialmente Funcional
+- Botão "Sair" foi encontrado e clicado
+- Não houve redirecionamento imediato para página de login
+- Sessão foi eventualmente perdida (possível logout assíncrono)
+- **Recomendação**: Investigar timing do redirecionamento
+
+#### ❌ Bugs 2 & 3 - Não Testados (Problemas de Acesso)
+- Não foi possível aceder às páginas `/dashboard/roles` e `/dashboard/users`
+- Redirecionamento automático para login
+- **Possíveis causas**: 
+  - Problema de permissões do utilizador de teste
+  - Sessão perdida após primeiro logout
+  - Configuração de roles/permissões
+
+#### ✅ Bug 4 - Aparentemente Corrigido
+- Sem erros de tipo detectados no DeviceCard
+- Dashboard carregou sem erros de consola
+- **Nota**: Teste limitado devido à ausência de dispositivos visíveis
+
+### Limitações dos Testes
+- Não foi possível testar completamente os Bugs 2 e 3 devido a problemas de acesso
+- Teste do Bug 4 limitado pela ausência de dados de dispositivos
+- Possível problema de configuração de permissões ou dados de teste
+
+### Recomendações para Main Agent
+1. **Bug 1**: Verificar implementação do redirecionamento no `handleLogout`
+2. **Bugs 2 & 3**: Verificar permissões do utilizador `suporte@bwb.pt` para acesso a roles e users
+3. **Configuração**: Verificar se existem dados de teste adequados (utilizadores, roles, dispositivos)
+4. **Sessão**: Investigar persistência de sessão após logout
