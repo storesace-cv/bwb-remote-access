@@ -1239,15 +1239,42 @@ export default function DashboardPage() {
           />
         )}
 
-        {(!isAdmin || adoptedDevices.length > 0) && (
-          <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium text-white">✅ Dispositivos Adoptados</h2>
-              <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <span className="hidden sm:inline">Por página:</span>
-                  <select
-                    value={adoptedPageSize}
+        <AdoptedDevicesList
+          devices={adoptedDevices}
+          grouped={grouped}
+          loading={loading}
+          refreshing={refreshing}
+          errorMsg={errorMsg}
+          isAdmin={isAdmin}
+          currentPage={currentAdoptedPage}
+          totalPages={adoptedTotalPages}
+          pageSize={adoptedPageSize}
+          onPageChange={setCurrentAdoptedPage}
+          onPageSizeChange={setAdoptedPageSize}
+          onRefresh={handleRefreshStatus}
+          onEdit={openAdoptModal}
+          onDelete={handleDeleteDevice}
+          onConnect={(d) => {
+            const url = buildRustdeskUrl(d);
+            if (typeof window !== "undefined") {
+              window.location.href = url;
+            }
+          }}
+          expandedGroups={expandedGroups}
+          expandedSubgroups={expandedSubgroups}
+          onToggleGroup={(groupKey) =>
+            setExpandedGroups((prev) => ({
+              ...prev,
+              [groupKey]: !(prev[groupKey] ?? true),
+            }))
+          }
+          onToggleSubgroup={(subKey) =>
+            setExpandedSubgroups((prev) => ({
+              ...prev,
+              [subKey]: !prev[subKey],
+            }))
+          }
+        />
                     onChange={(e) => {
                       const value = Number.parseInt(e.target.value, 10);
                       setAdoptedPageSize(Number.isNaN(value) ? ADOPTED_PAGE_SIZE : value);
