@@ -52,7 +52,7 @@ Substituir autenticação Auth0 por um sistema personalizado usando MeshCentral,
 - [x] Sincronização de `auth_user_id`
 - [x] Dashboard com permissões dinâmicas da tabela `roles`
 - [x] Painel de Gestão baseado em `can_access_management_panel`
-- [x] Gestão de Utilizadores baseada em `can_view_users`
+- [x] **Gestão de Utilizadores UNIFICADA** - Candidatos, Colaboradores e Admins numa única página
 - [x] Gestão de Roles baseada em `can_manage_roles`
 - [x] Filtragem por hierarquia (`hierarchy_level`)
 - [x] QR Code generation
@@ -65,12 +65,22 @@ Substituir autenticação Auth0 por um sistema personalizado usando MeshCentral,
 
 ### Páginas
 - `/src/app/dashboard/page.tsx` - Dashboard principal (usa `userPermissions`)
-- `/src/app/dashboard/users/page.tsx` - Gestão de utilizadores
-- `/src/app/dashboard/roles/page.tsx` - **NOVA** Gestão de roles
+- `/src/app/dashboard/users/page.tsx` - **CONSOLIDADA** Gestão completa de utilizadores (candidatos, colaboradores, admins)
+- `/src/app/dashboard/collaborators/page.tsx` - **DEPRECATED** Redireciona para /dashboard/users
+- `/src/app/dashboard/roles/page.tsx` - Gestão de roles
+
+### Consolidação de Páginas (Dez 2025)
+A página "Gestão de Colaboradores" foi consolidada com "Gestão de Utilizadores" numa única interface que permite:
+- Ver todos os utilizadores (candidatos, activos, inactivos, admins)
+- Filtrar por status e domínio
+- Activar candidatos do MeshCentral
+- Criar/Editar/Apagar utilizadores
+- Desactivar/Reactivar utilizadores
+- Estatísticas visuais por categoria
 
 ## Credenciais de Teste
 - **siteadmin**: `suporte@bwb.pt` / `Admin123!`
 - **minisiteadmin**: `jorge.peixinho@bwb.pt` / `Admin123!`
 
 ## Data da Última Atualização
-6 de Janeiro de 2026 - RBAC completo e Gestão de Roles implementada
+Dezembro de 2025 - Consolidação da gestão de utilizadores numa única página
