@@ -83,4 +83,19 @@ A página "Gestão de Colaboradores" foi consolidada com "Gestão de Utilizadore
 - **minisiteadmin**: `jorge.peixinho@bwb.pt` / `Admin123!`
 
 ## Data da Última Atualização
-Dezembro de 2025 - Consolidação da gestão de utilizadores numa única página
+Dezembro de 2025 - Consolidação da gestão de utilizadores e refatoração do Dashboard
+
+## Refatoração do Dashboard (Dezembro 2025)
+O componente monolítico `/dashboard/page.tsx` foi refatorado de 2513 para 2066 linhas, com extração de 7 componentes reutilizáveis:
+
+| Componente | Linhas | Descrição |
+|------------|--------|-----------|
+| `DashboardHeader` | 73 | Header com info do utilizador e navegação |
+| `ManagementPanel` | 93 | Cards de acesso rápido (Utilizadores, Grupos, Roles) |
+| `AddDeviceSection` | 175 | Secção de adicionar dispositivo (QR codes) |
+| `DeviceFilters` | 169 | Filtros e pesquisa de dispositivos |
+| `UnadoptedDevicesList` | 110 | Lista de dispositivos por adoptar |
+| `AdminUnassignedDevicesList` | 98 | Lista de dispositivos sem utilizador (admin) |
+| `DeviceCard` | 129 | Card individual de dispositivo |
+
+Localização: `/src/app/dashboard/components/`
