@@ -549,13 +549,15 @@ export default function UsersManagementPage() {
   };
 
   const openEditModal = (user: AdminUser) => {
+    // IMPORTANTE: O Edge Function admin-update-auth-user espera o auth_user_id, não o mesh_users.id
+    // O user.auth_user_id é o ID correto para a atualização no Supabase Auth
     setEditForm({
-      id: user.id,
+      id: user.auth_user_id ?? user.id, // Usar auth_user_id se disponível, senão usar id
       email: user.email ?? user.mesh_username ?? "",
       password: "",
       display_name: user.display_name ?? "",
       mesh_username: user.mesh_username ?? "",
-      mesh_user_id: user.id,
+      mesh_user_id: user.id, // Este é o mesh_users.id para atualização de dados adicionais
       email_confirm: true,
       ban: false,
       user_type: user.user_type ?? "colaborador",
