@@ -1198,13 +1198,14 @@ export default function DashboardPage() {
 
         <ManagementPanel userPermissions={userPermissions} />
 
-        {/* Secção Adicionar Dispositivo - visível para todos os utilizadores */}
+        {/* Secção Adicionar Dispositivo - verifica permissões internamente */}
         <AddDeviceSection
           jwt={jwt}
           selectedRustdeskAbi={selectedRustdeskAbi}
           onSelectAbi={setSelectedRustdeskAbi}
           onOpenQrModal={startRegistrationSession}
           rustdeskApkUrls={RUSTDESK_APK_URLS}
+          userPermissions={userPermissions}
         />
 
         <DeviceFilters
@@ -1225,6 +1226,7 @@ export default function DashboardPage() {
           <UnadoptedDevicesList
             devices={unadoptedDevices}
             onAdopt={openAdoptModal}
+            userPermissions={userPermissions}
           />
         )}
 
@@ -1273,6 +1275,7 @@ export default function DashboardPage() {
               [subKey]: !prev[subKey],
             }))
           }
+          userPermissions={userPermissions}
         />
       </div>
 
