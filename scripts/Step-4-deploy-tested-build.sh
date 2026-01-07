@@ -84,6 +84,95 @@ run_supabase_migrations() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# EDGE FUNCTIONS DEPLOYMENT PHASE
+# ═══════════════════════════════════════════════════════════════════════════════
+deploy_edge_functions() {
+  echo "╔════════════════════════════════════════════════════════════╗"
+  echo "║         Edge Functions Deployment Phase                    ║"
+  echo "║         (Deploys all Supabase Edge Functions)              ║"
+  echo "╚════════════════════════════════════════════════════════════╝"
+  echo ""
+
+  # Check if supabase CLI is installed
+  if ! command -v supabase &> /dev/null; then
+    echo "❌ ERROR: supabase CLI not found"
+    echo "   Skipping Edge Functions deployment"
+    return 0
+  fi
+
+  # Check if functions directory exists
+  if [[ ! -d "$REPO_ROOT/supabase/functions" ]]; then
+    echo "ℹ️  No Edge Functions directory found"
+    return 0
+  fi
+
+  # Count functions
+  local FUNC_COUNT
+  FUNC_COUNT=$(find "$REPO_ROOT/supabase/functions" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "_*" | wc -l | tr -d ' ')
+  
+  if [[ "$FUNC_COUNT" -eq 0 ]]; then
+    echo "ℹ️  No Edge Functions to deploy"
+    return 0
+  fi
+
+  echo "📦 Found $FUNC_COUNT Edge Function(s) to deploy"
+  echo ""
+
+  local DEPLOYED=0
+  local FAILED=0
+  local FAILED_FUNCS=()
+
+  for FUNC_DIR in "$REPO_ROOT/supabase/functions"/*/; do
+    if [[ -d "$FUNC_DIR" ]]; then
+      FUNC_NAME=$(basename "$FUNC_DIR")
+      
+      # Skip hidden and special directories
+      if [[ "$FUNC_NAME" =~ ^\. ]] || [[ "$FUNC_NAME" =~ ^_ ]]; then
+        continue
+      fi
+      
+      # Check if index.ts exists
+      if [[ ! -f "$FUNC_DIR/index.ts" ]]; then
+        echo "   ⚠️  Skipping $FUNC_NAME (no index.ts)"
+        continue
+      fi
+      
+      echo "   🚀 Deploying: $FUNC_NAME"
+      
+      if (cd "$REPO_ROOT" && supabase functions deploy "$FUNC_NAME" --no-verify-jwt 2>&1); then
+        echo "      ✅ $FUNC_NAME deployed"
+        ((DEPLOYED++))
+      else
+        echo "      ❌ $FUNC_NAME FAILED"
+        ((FAILED++))
+        FAILED_FUNCS+=("$FUNC_NAME")
+      fi
+    fi
+  done
+
+  echo ""
+  echo "📊 Edge Functions Summary:"
+  echo "   ✅ Deployed: $DEPLOYED"
+  echo "   ❌ Failed:   $FAILED"
+  
+  if [[ $FAILED -gt 0 ]]; then
+    echo ""
+    echo "   Failed functions:"
+    for FUNC in "${FAILED_FUNCS[@]}"; do
+      echo "      - $FUNC"
+    done
+    echo ""
+    echo "⚠️  Some Edge Functions failed to deploy."
+    echo "   You may need to deploy them manually with:"
+    echo "   supabase functions deploy <function-name>"
+  else
+    echo ""
+    echo "✅ All Edge Functions deployed successfully"
+  fi
+  echo ""
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # COMPLIANCE GATE (MeshCentral Auth - No Auth0)
 # ═══════════════════════════════════════════════════════════════════════════════
 compliance_gate() {
