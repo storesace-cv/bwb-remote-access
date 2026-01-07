@@ -839,14 +839,17 @@ export default function GroupsPage() {
                 Clique no botão "permissões" em cada grupo para gerir o acesso dos colaboradores.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => openCreateModal()}
-              className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1"
-            >
-              <Plus className="w-4 h-4" />
-              Criar Grupo Raiz
-            </button>
+            {/* Botão Criar Grupo Raiz - requer can_create_groups */}
+            {userPermissions?.can_create_groups && (
+              <button
+                type="button"
+                onClick={() => openCreateModal()}
+                className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1"
+              >
+                <Plus className="w-4 h-4" />
+                Criar Grupo Raiz
+              </button>
+            )}
           </div>
 
           {errorMsg && (
