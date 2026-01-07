@@ -140,7 +140,7 @@ export default function DashboardPage() {
   const [meshUsersLoading, setMeshUsersLoading] = useState(false);
   const [meshUsers, setMeshUsers] = useState<MeshUserOption[]>([]);
 
-  const [selectedRustdeskAbi, setSelectedRustdeskAbi] = useState<"arm64" | "armeabi" | "x86_64" | null>(null);
+  const [selectedRustdeskAbi, setSelectedRustdeskAbi] = useState<RustdeskAbi>(null);
   const [currentAdoptedPage, setCurrentAdoptedPage] = useState<number>(1);
   const [adoptedPageSize, setAdoptedPageSize] = useState<number>(ADOPTED_PAGE_SIZE);
 
