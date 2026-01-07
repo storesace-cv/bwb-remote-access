@@ -950,15 +950,18 @@ export default function UsersManagementPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={openCreateModal}
-              className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1"
-              data-testid="create-user-btn"
-            >
-              <UserPlus className="w-4 h-4" />
-              Criar Utilizador
-            </button>
+            {/* Botão Criar Utilizador - só aparece se tiver permissão */}
+            {currentUserPermissions?.can_create_users && (
+              <button
+                type="button"
+                onClick={openCreateModal}
+                className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1"
+                data-testid="create-user-btn"
+              >
+                <UserPlus className="w-4 h-4" />
+                Criar Utilizador
+              </button>
+            )}
             <Link
               href="/dashboard"
               className="px-3 py-1.5 text-sm rounded-md bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-100"
