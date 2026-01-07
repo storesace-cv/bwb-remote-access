@@ -80,6 +80,7 @@ export default function UsersManagementPage() {
   const [allRoles, setAllRoles] = useState<RolePermissions[]>([]);
   const [accessChecked, setAccessChecked] = useState(false);
   const [isSiteadmin, setIsSiteadmin] = useState(false);
+  const [currentUserPermissions, setCurrentUserPermissions] = useState<RolePermissions | null>(null);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(false);
