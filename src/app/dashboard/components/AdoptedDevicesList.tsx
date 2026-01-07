@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { GroupableDevice } from "@/lib/grouping";
+import { RolePermissions } from "@/lib/permissions-service";
 
 interface GroupBucket {
   name: string | null;
@@ -37,6 +38,7 @@ interface AdoptedDevicesListProps {
   expandedSubgroups: Record<string, boolean>;
   onToggleGroup: (groupKey: string) => void;
   onToggleSubgroup: (subKey: string) => void;
+  userPermissions?: RolePermissions | null;
 }
 
 export function AdoptedDevicesList({
