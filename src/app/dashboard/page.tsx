@@ -713,6 +713,14 @@ export default function DashboardPage() {
     }
   }, [countdownIntervalRef, qrImageUrl]);
 
+  const handleTryAgainRegistration = useCallback(() => {
+    closeRegistrationModal();
+    // Start a new registration session after closing
+    setTimeout(() => {
+      void startRegistrationSession();
+    }, 100);
+  }, [closeRegistrationModal, startRegistrationSession]);
+
   const handleHybridSubmit = useCallback(async () => {
     if (!jwt) {
       setHybridSubmitError("Sessão inválida. Por favor, faça login novamente.");
