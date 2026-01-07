@@ -50,14 +50,6 @@ interface MeshUserOption {
   display_name: string | null;
 }
 
-interface AdoptFormData {
-  friendly_name: string;
-  group_id: string;
-  subgroup_id?: string;
-  rustdesk_password: string;
-  observations: string;
-}
-
 interface CanonicalGroup {
   id: string;
   name: string;
