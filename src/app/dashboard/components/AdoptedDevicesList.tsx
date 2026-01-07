@@ -198,6 +198,8 @@ export function AdoptedDevicesList({
                                   onEdit={onEdit}
                                   onDelete={onDelete}
                                   onConnect={onConnect}
+                                  canEditDevices={canEditDevices}
+                                  canDeleteDevices={canDeleteDevices}
                                 />
                               ))}
                             </div>
