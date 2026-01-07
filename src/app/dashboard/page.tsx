@@ -1174,7 +1174,7 @@ export default function DashboardPage() {
 
   const selectedGroup = adoptFormData.group_id 
     ? canonicalGroups.find(g => g.id === adoptFormData.group_id)
-    : null;
+    : undefined;
   const availableSubgroups = selectedGroup 
     ? canonicalGroups.filter(g => g.parent_group_id === selectedGroup.id)
     : [];
