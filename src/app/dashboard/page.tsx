@@ -1193,121 +1193,47 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Painel de Gestão - visível se tem permissão can_access_management_panel */}
-        {userPermissions?.can_access_management_panel && (
-          <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-semibold text-emerald-400">
-                  🎯 Painel de Gestão ({userRole.displayName || "Utilizador"}){userDomain && ` | ${userDomain}`}{userDisplayName && ` | ${userDisplayName}`}
-                </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  {userPermissions?.can_access_all_domains
-                    ? "Tens acesso total à gestão de utilizadores, colaboradores e dispositivos"
-                    : userPermissions?.can_access_own_domain_only
-                    ? "Podes gerir utilizadores e colaboradores do teu domínio"
-                    : "Tens acesso ao painel de gestão"}
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Utilizadores - visível se pode ver utilizadores */}
-              {userPermissions?.can_view_users && (
-                <Link
-                  href="/dashboard/users"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-                  data-testid="users-link"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
-                      👥
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Utilizadores</h3>
-                  <p className="text-xs text-slate-400">
-                    Gerir todos os utilizadores: candidatos, colaboradores e administradores
-                  </p>
-                </Link>
-              )}
-
-              {/* Grupos - visível se pode ver grupos */}
-              {userPermissions?.can_view_groups && (
-                <Link
-                  href="/dashboard/groups"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-xl">
-                      📦
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Grupos e Permissões</h3>
-                  <p className="text-xs text-slate-400">
-                    Organizar dispositivos em grupos e gerir permissões dos colaboradores
-                  </p>
-                </Link>
-              )}
-
-              {/* Gestão de Roles - visível apenas se pode gerir roles */}
-              {userPermissions?.can_manage_roles && (
-                <Link
-                  href="/dashboard/roles"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-purple-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-purple-900/20"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center text-xl">
-                      ⚙️
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Gestão de Roles</h3>
-                  <p className="text-xs text-slate-400">
-                    Configurar permissões de cada role do sistema
-                  </p>
-                </Link>
-              )}
-            </div>
-          </section>
-        )}
+        <ManagementPanel userPermissions={userPermissions} />
 
         {/* Secção Adicionar Dispositivo - visível para todos os utilizadores */}
-        <section className="bg-gradient-to-br from-sky-900/20 to-slate-900/40 border border-sky-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm" data-testid="add-device-section">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-semibold text-sky-400" data-testid="add-device-title">📱 Adicionar Dispositivo</h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Escolhe o método de provisionamento que melhor se adapta ao teu dispositivo
-              </p>
-            </div>
-          </div>
+        <AddDeviceSection
+          jwt={jwt}
+          selectedRustdeskAbi={selectedRustdeskAbi}
+          onSelectAbi={setSelectedRustdeskAbi}
+          onOpenQrModal={startRegistrationSession}
+          rustdeskApkUrls={RUSTDESK_APK_URLS}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
-              type="button"
-              onClick={startRegistrationSession}
-              disabled={!jwt}
-              className={`group bg-slate-900/70 border border-slate-700 hover:border-sky-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-sky-900/20 text-left ${!jwt ? 'opacity-50 cursor-not-allowed' : ''}`}
-              data-testid="scan-qr-button"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg bg-sky-600/20 flex items-center justify-center text-xl">
-                  📷
-                </div>
-                <svg className="w-5 h-5 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-white mb-1">Escanear QR Code</h3>
-                <p className="text-xs text-slate-400">
+        <DeviceFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          filterStatus={filterStatus}
+          onFilterStatusChange={setFilterStatus}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          totalDevices={devices.length}
+          adoptedCount={adoptedDevices.length}
+          unadoptedCount={unadoptedDevices.length}
+          onRefresh={handleManualRefresh}
+          refreshing={refreshing}
+        />
+
+        {!isAdmin && (
+          <UnadoptedDevicesList
+            devices={unadoptedDevices}
+            onAdopt={openAdoptModal}
+          />
+        )}
+
+        {isAdmin && (
+          <AdminUnassignedDevicesList
+            devices={adminUnassignedDevices}
+            onReassign={openAdminReassignModal}
+            onDelete={handleAdminDeleteDevice}
+            loading={adminActionLoading}
+            error={adminActionError}
+          />
+        )}
                   Gera um QR code para dispositivos móveis com câmara (smartphones, tablets Android)
                 </p>
                 <div className="mt-3 inline-flex items-center text-xs text-sky-400 font-medium">
