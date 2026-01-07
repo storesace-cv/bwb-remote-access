@@ -1179,44 +1179,13 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen flex flex-col bg-slate-950">
       <div className="w-full max-w-5xl mx-auto px-4 py-8">
-        <header className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-xl font-semibold text-white">BWB | Suporte Android</h1>
-            <div className="flex flex-col">
-              <p className="text-sm text-slate-400">
-                © jorge peixinho - Business with Brains
-              </p>
-              {userDisplayName && (
-                <p className="text-xs text-slate-500">
-                  {userDisplayName}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {userPermissions?.can_view_users && (
-              <Link
-                href="/dashboard/users"
-                className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-              >
-                Gestão de Utilizadores
-              </Link>
-            )}
-            <Link
-              href="/dashboard/profile"
-              className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-              data-testid="dashboard-profile-link"
-            >
-              Perfil
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="px-3 py-1.5 text-sm rounded-md bg-red-600 hover:bg-red-500 transition text-white"
-            >
-              Sair
-            </button>
-          </div>
-        </header>
+        <DashboardHeader
+          userRole={userRole}
+          userDomain={userDomain}
+          userDisplayName={userDisplayName}
+          userPermissions={userPermissions}
+          onLogout={handleLogout}
+        />
 
         {refreshError && (
           <div className="mb-4 p-3 bg-amber-950/40 border border-amber-900 rounded-md">
