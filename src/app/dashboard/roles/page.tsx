@@ -245,7 +245,7 @@ export default function RolesManagementPage() {
     void fetchRoles();
   }, [jwt, accessChecked, canManageRoles, fetchRoles]);
 
-  // Toggle permission
+  // Toggle permission via Edge Function
   const togglePermission = async (roleId: string, permissionKey: string, currentValue: boolean) => {
     if (!jwt) return;
 
@@ -254,20 +254,23 @@ export default function RolesManagementPage() {
     setError(null);
 
     try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/roles?id=eq.${roleId}`, {
-        method: "PATCH",
+      const res = await fetch(`${supabaseUrl}/functions/v1/admin-update-role`, {
+        method: "POST",
         headers: {
           apikey: anonKey,
           Authorization: `Bearer ${jwt}`,
           "Content-Type": "application/json",
-          Prefer: "return=representation",
         },
-        body: JSON.stringify({ [permissionKey]: !currentValue }),
+        body: JSON.stringify({ 
+          role_id: roleId, 
+          permission_key: permissionKey, 
+          value: !currentValue 
+        }),
       });
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error((errorData as { message?: string }).message || "Erro ao actualizar permissão");
+        throw new Error((errorData as { error?: string }).error || "Erro ao actualizar permissão");
       }
 
       // Actualizar estado local
