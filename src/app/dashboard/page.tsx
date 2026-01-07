@@ -1237,6 +1237,7 @@ export default function DashboardPage() {
             onDelete={handleAdminDeleteDevice}
             loading={adminActionLoading}
             error={adminActionError}
+            userPermissions={userPermissions}
           />
         )}
 
