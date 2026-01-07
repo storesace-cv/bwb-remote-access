@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FolderTree, Plus, ChevronRight, ChevronDown, Shield, X } from "lucide-react";
+import { RolePermissions } from "@/lib/permissions-service";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
