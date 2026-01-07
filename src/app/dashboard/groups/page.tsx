@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FolderTree, Plus, ChevronRight, ChevronDown, Shield, X } from "lucide-react";
+import { RolePermissions } from "@/lib/permissions-service";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -54,6 +55,9 @@ export default function GroupsPage() {
   const [isAgent, setIsAgent] = useState(false);
   const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
   const [isSiteadmin, setIsSiteadmin] = useState(false);
+  
+  // Permissões do utilizador baseadas na tabela roles
+  const [userPermissions, setUserPermissions] = useState<RolePermissions | null>(null);
 
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(false);
@@ -125,6 +129,36 @@ export default function GroupsPage() {
       setIsSiteadmin(true);
       setIsMinisiteadmin(true);
       setIsAgent(true);
+      // Criar permissões completas para admin canónico
+      setUserPermissions({
+        id: "admin",
+        name: "siteadmin",
+        display_name: "Site Admin",
+        description: null,
+        hierarchy_level: 0,
+        can_access_management_panel: true,
+        can_access_user_profile: true,
+        can_scan_qr: true,
+        can_provision_without_qr: true,
+        can_view_devices: true,
+        can_adopt_devices: true,
+        can_edit_devices: true,
+        can_delete_devices: true,
+        can_view_users: true,
+        can_create_users: true,
+        can_edit_users: true,
+        can_delete_users: true,
+        can_change_user_role: true,
+        can_view_groups: true,
+        can_create_groups: true,
+        can_edit_groups: true,
+        can_delete_groups: true,
+        can_assign_permissions: true,
+        can_access_all_domains: true,
+        can_access_own_domain_only: false,
+        can_manage_roles: true,
+        can_view_audit_logs: true,
+      });
       return;
     }
 
@@ -162,6 +196,30 @@ export default function GroupsPage() {
             // manter comportamento antigo para colaborador
             setIsAgent(true);
           }
+          
+          // Carregar permissões da tabela roles
+          const roleRes = await fetch(
+            `${supabaseUrl}/rest/v1/roles?select=*&name=eq.${encodeURIComponent(role)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+                apikey: anonKey,
+              },
+            }
+          );
+          
+          if (roleRes.ok) {
+            const roleData = (await roleRes.json()) as RolePermissions[];
+            if (roleData.length > 0) {
+              setUserPermissions(roleData[0]);
+              
+              // Verificar se tem permissão para ver grupos
+              if (!roleData[0].can_view_groups) {
+                router.replace("/dashboard");
+                return;
+              }
+            }
+          }
         }
       }
     } catch (error) {
@@ -169,8 +227,9 @@ export default function GroupsPage() {
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
+      setUserPermissions(null);
     }
-  }, [jwt, authUserId]);
+  }, [jwt, authUserId, router]);
 
   useEffect(() => {
     void checkUserType();
@@ -581,6 +640,12 @@ export default function GroupsPage() {
   };
 
   const renderGroupTree = (groupList: Group[], level = 0) => {
+    // Extrair permissões para uso local
+    const canCreateGroups = userPermissions?.can_create_groups ?? false;
+    const canEditGroups = userPermissions?.can_edit_groups ?? false;
+    const canDeleteGroups = userPermissions?.can_delete_groups ?? false;
+    const canAssignPermissions = userPermissions?.can_assign_permissions ?? false;
+    
     return groupList.map((group) => {
       const isExpanded = expandedGroups[group.id] ?? true;
       const hasChildren = group.children && group.children.length > 0;
@@ -623,6 +688,9 @@ export default function GroupsPage() {
         setActionsOpenForGroupId(null);
       };
 
+      // Verificar se há pelo menos uma acção disponível para mostrar o dropdown
+      const hasAnyAction = canAssignPermissions || canEditGroups || canDeleteGroups;
+
       return (
         <div key={group.id} className="mb-2">
           <div
@@ -662,7 +730,8 @@ export default function GroupsPage() {
               <span className="px-2 py-0.5 rounded-full text-[10px] bg-sky-600/20 text-sky-300">
                 {group.device_count ?? 0} dispositivos
               </span>
-              {isRootGroup && (
+              {/* Botão Criar Subgrupo - requer can_create_groups e ser grupo raiz */}
+              {isRootGroup && canCreateGroups && (
                 <button
                   type="button"
                   onClick={() => openCreateModal(group.id)}
@@ -673,53 +742,64 @@ export default function GroupsPage() {
                 </button>
               )}
 
-              {/* Ações dropdown */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setActionsOpenForGroupId((current) =>
-                      current === group.id ? null : group.id
-                    )
-                  }
-                  className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-100 text-[11px]"
-                >
-                  Ações
-                </button>
-                {actionsOpenForGroupId === group.id && (
-                  <div className="absolute right-0 mt-1 w-40 rounded-md bg-slate-900 border border-slate-700 shadow-lg z-10">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActionsOpenForGroupId(null);
-                        openPermissionsModal(group);
-                      }}
-                      className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800 flex items-center gap-2"
-                    >
-                      <Shield className="w-3 h-3 text-purple-300" />
-                      Permissões
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openEditForGroup(group)}
-                      className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openDeleteForGroup(group)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-800 ${
-                        canDelete
-                          ? "text-red-300"
-                          : "text-slate-500 cursor-not-allowed"
-                      }`}
-                    >
-                      Apagar
-                    </button>
-                  </div>
-                )}
-              </div>
+              {/* Ações dropdown - só mostra se tiver pelo menos uma permissão */}
+              {hasAnyAction && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActionsOpenForGroupId((current) =>
+                        current === group.id ? null : group.id
+                      )
+                    }
+                    className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-100 text-[11px]"
+                  >
+                    Ações
+                  </button>
+                  {actionsOpenForGroupId === group.id && (
+                    <div className="absolute right-0 mt-1 w-40 rounded-md bg-slate-900 border border-slate-700 shadow-lg z-10">
+                      {/* Permissões - requer can_assign_permissions */}
+                      {canAssignPermissions && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActionsOpenForGroupId(null);
+                            openPermissionsModal(group);
+                          }}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800 flex items-center gap-2"
+                        >
+                          <Shield className="w-3 h-3 text-purple-300" />
+                          Permissões
+                        </button>
+                      )}
+                      {/* Editar - requer can_edit_groups */}
+                      {canEditGroups && (
+                        <button
+                          type="button"
+                          onClick={() => openEditForGroup(group)}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800"
+                        >
+                          Editar
+                        </button>
+                      )}
+                      {/* Apagar - requer can_delete_groups */}
+                      {canDeleteGroups && (
+                        <button
+                          type="button"
+                          onClick={() => openDeleteForGroup(group)}
+                          className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-800 ${
+                            canDelete
+                              ? "text-red-300"
+                              : "text-slate-500 cursor-not-allowed"
+                          }`}
+                        >
+                          Apagar
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -780,14 +860,17 @@ export default function GroupsPage() {
                 Clique no botão "permissões" em cada grupo para gerir o acesso dos colaboradores.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => openCreateModal()}
-              className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1"
-            >
-              <Plus className="w-4 h-4" />
-              Criar Grupo Raiz
-            </button>
+            {/* Botão Criar Grupo Raiz - requer can_create_groups */}
+            {userPermissions?.can_create_groups && (
+              <button
+                type="button"
+                onClick={() => openCreateModal()}
+                className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 hover:bg-emerald-500 text-white flex items-center gap-1"
+              >
+                <Plus className="w-4 h-4" />
+                Criar Grupo Raiz
+              </button>
+            )}
           </div>
 
           {errorMsg && (
