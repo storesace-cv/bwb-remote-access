@@ -224,6 +224,8 @@ export default function UsersManagementPage() {
           return;
         }
 
+        // Guardar permissões do utilizador actual para verificações na UI
+        setCurrentUserPermissions(role);
         setCurrentHierarchyLevel(role.hierarchy_level);
 
         const roles = await getAllRoles(stored);
