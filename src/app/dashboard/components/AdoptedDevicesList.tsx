@@ -61,7 +61,12 @@ export function AdoptedDevicesList({
   expandedSubgroups,
   onToggleGroup,
   onToggleSubgroup,
+  userPermissions,
 }: AdoptedDevicesListProps) {
+  // Verificar permissões
+  const canEditDevices = userPermissions?.can_edit_devices ?? false;
+  const canDeleteDevices = userPermissions?.can_delete_devices ?? false;
+
   if (isAdmin && devices.length === 0) {
     return null;
   }
