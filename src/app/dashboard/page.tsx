@@ -144,7 +144,7 @@ export default function DashboardPage() {
   const [currentAdoptedPage, setCurrentAdoptedPage] = useState<number>(1);
   const [adoptedPageSize, setAdoptedPageSize] = useState<number>(ADOPTED_PAGE_SIZE);
 
-  const RUSTDESK_APK_URLS = {
+  const RUSTDESK_APK_URLS: Record<"arm64" | "armeabi" | "x86_64", string> = {
     arm64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=arm64-v8a",
     armeabi: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=armeabi-v7a",
     x86_64: "https://rustdesk.bwb.pt/apk/rustdesk/latest?abi=x86_64",
