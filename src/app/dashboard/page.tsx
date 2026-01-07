@@ -1232,11 +1232,12 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Colaboradores - visível se pode ver utilizadores */}
+              {/* Utilizadores - visível se pode ver utilizadores */}
               {userPermissions?.can_view_users && (
                 <Link
-                  href="/dashboard/collaborators"
+                  href="/dashboard/users"
                   className="group bg-slate-900/70 border border-slate-700 hover:border-emerald-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-emerald-900/20"
+                  data-testid="users-link"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center text-xl">
@@ -1246,9 +1247,9 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
-                  <h3 className="font-medium text-white mb-1">Colaboradores</h3>
+                  <h3 className="font-medium text-white mb-1">Utilizadores</h3>
                   <p className="text-xs text-slate-400">
-                    Criar e gerir colaboradores que terão acesso aos teus dispositivos
+                    Gerir todos os utilizadores: candidatos, colaboradores e administradores
                   </p>
                 </Link>
               )}
