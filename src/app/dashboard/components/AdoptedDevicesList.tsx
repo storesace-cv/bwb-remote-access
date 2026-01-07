@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { GroupableDevice } from "@/lib/grouping";
+import { RolePermissions } from "@/lib/permissions-service";
 
 interface GroupBucket {
   name: string | null;
@@ -37,6 +38,7 @@ interface AdoptedDevicesListProps {
   expandedSubgroups: Record<string, boolean>;
   onToggleGroup: (groupKey: string) => void;
   onToggleSubgroup: (subKey: string) => void;
+  userPermissions?: RolePermissions | null;
 }
 
 export function AdoptedDevicesList({
@@ -59,7 +61,12 @@ export function AdoptedDevicesList({
   expandedSubgroups,
   onToggleGroup,
   onToggleSubgroup,
+  userPermissions,
 }: AdoptedDevicesListProps) {
+  // Verificar permissões
+  const canEditDevices = userPermissions?.can_edit_devices ?? false;
+  const canDeleteDevices = userPermissions?.can_delete_devices ?? false;
+
   if (isAdmin && devices.length === 0) {
     return null;
   }
@@ -191,6 +198,8 @@ export function AdoptedDevicesList({
                                   onEdit={onEdit}
                                   onDelete={onDelete}
                                   onConnect={onConnect}
+                                  canEditDevices={canEditDevices}
+                                  canDeleteDevices={canDeleteDevices}
                                 />
                               ))}
                             </div>
@@ -216,9 +225,11 @@ interface DeviceListItemProps {
   onEdit: (device: GroupableDevice) => void;
   onDelete: (device: GroupableDevice) => void;
   onConnect: (device: GroupableDevice) => void;
+  canEditDevices: boolean;
+  canDeleteDevices: boolean;
 }
 
-function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect }: DeviceListItemProps) {
+function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect, canEditDevices, canDeleteDevices }: DeviceListItemProps) {
   const d = device;
   const fromProvisioningCode = !!d.from_provisioning_code;
   const tagLabel = fromProvisioningCode ? "PM" : "QR";
@@ -268,7 +279,8 @@ function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect }: Device
         </div>
         <div className="flex items-stretch gap-2 ml-2">
           <div className="flex flex-col gap-1">
-            {!isAdmin && (
+            {/* Editar - requer can_edit_devices e não ser admin */}
+            {!isAdmin && canEditDevices && (
               <button
                 type="button"
                 onClick={() => onEdit(d)}
@@ -277,13 +289,16 @@ function DeviceListItem({ device, isAdmin, onEdit, onDelete, onConnect }: Device
                 Editar
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => onDelete(d)}
-              className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[10px] text-white"
-            >
-              Apagar
-            </button>
+            {/* Apagar - requer can_delete_devices */}
+            {canDeleteDevices && (
+              <button
+                type="button"
+                onClick={() => onDelete(d)}
+                className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[10px] text-white"
+              >
+                Apagar
+              </button>
+            )}
           </div>
           <button
             type="button"

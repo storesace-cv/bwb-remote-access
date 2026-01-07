@@ -1,13 +1,18 @@
 "use client";
 
 import { GroupableDevice } from "@/lib/grouping";
+import { RolePermissions } from "@/lib/permissions-service";
 
 interface UnadoptedDevicesListProps {
   devices: GroupableDevice[];
   onAdopt: (device: GroupableDevice) => void;
+  userPermissions?: RolePermissions | null;
 }
 
-export function UnadoptedDevicesList({ devices, onAdopt }: UnadoptedDevicesListProps) {
+export function UnadoptedDevicesList({ devices, onAdopt, userPermissions }: UnadoptedDevicesListProps) {
+  // Verificar permissão de adoptar dispositivos
+  const canAdoptDevices = userPermissions?.can_adopt_devices ?? false;
+
   if (devices.length === 0) {
     return null;
   }
@@ -93,13 +98,16 @@ export function UnadoptedDevicesList({ devices, onAdopt }: UnadoptedDevicesListP
                     </p>
                   )}
                 </div>
-                <button
-                  onClick={() => onAdopt(device)}
-                  className="px-3 py-1.5 text-xs font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 transition text-white"
-                  data-testid={`adopt-btn-${device.device_id}`}
-                >
-                  ✓ Adoptar
-                </button>
+                {/* Botão Adoptar - requer can_adopt_devices */}
+                {canAdoptDevices && (
+                  <button
+                    onClick={() => onAdopt(device)}
+                    className="px-3 py-1.5 text-xs font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 transition text-white"
+                    data-testid={`adopt-btn-${device.device_id}`}
+                  >
+                    ✓ Adoptar
+                  </button>
+                )}
               </div>
             </div>
           );
