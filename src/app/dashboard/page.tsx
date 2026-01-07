@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
@@ -16,7 +15,12 @@ import {
   AddDeviceSection,
   UnadoptedDevicesList,
   AdminUnassignedDevicesList,
+  AdoptedDevicesList,
+  RegistrationModal,
+  AdoptModal,
+  AdminReassignModal,
   type RustdeskAbi,
+  type AdoptFormData,
 } from "./components";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
@@ -706,6 +710,14 @@ export default function DashboardPage() {
     }
   }, [countdownIntervalRef, qrImageUrl]);
 
+  const handleTryAgainRegistration = useCallback(() => {
+    closeRegistrationModal();
+    // Start a new registration session after closing
+    setTimeout(() => {
+      void startRegistrationSession();
+    }, 100);
+  }, [closeRegistrationModal, startRegistrationSession]);
+
   const handleHybridSubmit = useCallback(async () => {
     if (!jwt) {
       setHybridSubmitError("Sessão inválida. Por favor, faça login novamente.");
@@ -1160,12 +1172,6 @@ export default function DashboardPage() {
   const grouped = useMemo(() => groupDevices(paginatedAdoptedDevices), [paginatedAdoptedDevices]);
   const isEditingDevice = adoptingDevice ? isDeviceAdopted(adoptingDevice) : false;
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   const selectedGroup = adoptFormData.group_id 
     ? canonicalGroups.find(g => g.id === adoptFormData.group_id)
     : null;
@@ -1232,836 +1238,93 @@ export default function DashboardPage() {
           />
         )}
 
-        {(!isAdmin || adoptedDevices.length > 0) && (
-          <section className="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium text-white">✅ Dispositivos Adoptados</h2>
-              <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center sm:gap-3">
-                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <span className="hidden sm:inline">Por página:</span>
-                  <select
-                    value={adoptedPageSize}
-                    onChange={(e) => {
-                      const value = Number.parseInt(e.target.value, 10);
-                      setAdoptedPageSize(Number.isNaN(value) ? ADOPTED_PAGE_SIZE : value);
-                    }}
-                    className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 text-slate-100 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                  >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                  </select>
-                </div>
-                <div className="flex items-center gap-3">
-                  {adoptedTotalPages > 1 && (
-                    <div className="flex items-center gap-2 text-xs text-slate-300">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCurrentAdoptedPage((prev: number) => Math.max(1, prev - 1))
-                        }
-                        disabled={currentAdoptedPage === 1}
-                        className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
-                      >
-                        Anterior
-                      </button>
-                      <span>
-                        Página {currentAdoptedPage} de {adoptedTotalPages}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCurrentAdoptedPage((prev: number) =>
-                            Math.min(adoptedTotalPages, prev + 1),
-                          )
-                        }
-                        disabled={currentAdoptedPage === adoptedTotalPages}
-                        className="px-2 py-1 rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-50"
-                      >
-                        Próxima
-                      </button>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={handleRefreshStatus}
-                    disabled={refreshing}
-                    className="px-3 py-1.5 text-xs rounded-md border border-slate-600 bg-slate-800 hover:bg-slate-700 disabled:opacity-60 text-slate-100 flex items-center gap-1"
-                  >
-                    {refreshing ? (
-                      <>
-                        <span className="h-3 w-3 rounded-full border-2 border-slate-600 border-t-transparent animate-spin" />
-                        <span>A sincronizar…</span>
-                      </>
-                    ) : (
-                      <>🔄 Atualizar estado</>
-                    )}
-                  </button>
-                  {loading && (
-                    <span className="text-xs text-slate-400">A carregar…</span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {errorMsg && (
-              <p className="text-sm text-amber-400 mb-3">{errorMsg}</p>
-            )}
-
-            {adoptedDevices.length === 0 && !loading && !errorMsg && (
-              <p className="text-sm text-slate-400">
-                Sem dispositivos adoptados.
-              </p>
-            )}
-
-            {grouped.groups.length > 0 && (
-              <div className="space-y-4 mt-2">
-                {grouped.groups.map((groupBucket) => {
-                  const groupName = groupBucket.name ?? "";
-                  const groupKey = groupName || "__semgrupo__";
-                  const isGroupExpanded = expandedGroups[groupKey] ?? true;
-
-                  return (
-                    <div
-                      key={groupKey}
-                      className="border border-slate-700 rounded-xl overflow-hidden"
-                    >
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setExpandedGroups((prev) => ({
-                            ...prev,
-                            [groupKey]: !isGroupExpanded,
-                          }))
-                        }
-                        className="w-full flex items-center justify-between px-4 py-2 bg-slate-800/70 hover:bg-slate-800 text-left"
-                      >
-                        <span className="font-medium text-sm text-white">
-                          {groupName}
-                        </span>
-                        <span className="text-xs text-slate-400">
-                          {isGroupExpanded ? "▼" : "►"}
-                        </span>
-                      </button>
-
-                      {isGroupExpanded && (
-                        <div className="px-4 py-3 space-y-3">
-                          {groupBucket.subgroups.map((subBucket) => {
-                            const subgroupName = subBucket.name ?? "";
-                            const groupLabel = groupBucket.name ?? "Sem grupo";
-                            const subgroupLabel = subgroupName || "Sem subgrupo";
-                            const subKey = `${groupKey}::${subgroupName || "__nosub__"}`;
-                            const isSubExpanded =
-                              expandedSubgroups[subKey] ?? false;
-
-                            return (
-                              <div key={subKey} className="flex flex-col gap-1">
-                                {subgroupName ? (
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      setExpandedSubgroups((prev) => ({
-                                        ...prev,
-                                        [subKey]: !isSubExpanded,
-                                      }))
-                                    }
-                                    className="flex items-center justify-between text-xs text-muted-foreground hover:text-slate-300 transition-colors text-left"
-                                  >
-                                    <span>{groupLabel} · {subgroupLabel}</span>
-                                    <span className="ml-2">{isSubExpanded ? "▼" : "►"}</span>
-                                  </button>
-                                ) : (
-                                  <div className="text-xs text-muted-foreground">
-                                    {groupLabel} · {subgroupLabel}
-                                  </div>
-                                )}
-                                {(isSubExpanded || !subgroupName) && (
-                                  <div className="grid gap-3 md:grid-cols-2">
-                                    {subBucket.devices.map((d: GroupableDevice) => {
-                                      const fromProvisioningCode =
-                                        !!d.from_provisioning_code;
-                                      const tagLabel = fromProvisioningCode ? "PM" : "QR";
-                                      const tagClassName = fromProvisioningCode
-                                        ? "bg-white text-black border border-slate-300"
-                                        : "bg-sky-600/80 text-white border border-sky-500";
-
-                                      const notesParts = (d.notes ?? "")
-                                        .split("|")
-                                        .map((p: string) => p.trim())
-                                        .filter((p: string) => p.length > 0);
-
-                                      const groupLabelDevice =
-                                        d.group_name || notesParts[0] || "";
-                                      const subgroupLabelDevice =
-                                        d.subgroup_name || notesParts[1] || "";
-
-                                      const observations =
-                                        notesParts.length > 2
-                                          ? notesParts.slice(2).join(" | ")
-                                          : "";
-
-                                      const groupLine =
-                                        groupLabelDevice || subgroupLabelDevice
-                                          ? `${groupLabelDevice}${
-                                              groupLabelDevice && subgroupLabelDevice
-                                                ? " | "
-                                                : ""
-                                            }${subgroupLabelDevice}`
-                                          : "";
-
-                                      return (
-                                        <div
-                                          key={d.id}
-                                          className="border border-slate-700 rounded-lg px-3 py-2 bg-slate-950/50 text-xs"
-                                        >
-                                          <div className="flex justify-between items-start mb-1">
-                                            <div>
-                                              <div className="flex items-center gap-2">
-                                                <span className="font-semibold text-white">
-                                                  {d.friendly_name || d.device_id}
-                                                </span>
-                                                {d.mesh_username && (
-                                                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-                                                    {d.mesh_username}
-                                                  </span>
-                                                )}
-                                                {fromProvisioningCode && (
-                                                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white text-black border border-slate-300">
-                                                    PM
-                                                  </span>
-                                                )}
-                                                <span
-                                                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${tagClassName}`}
-                                                >
-                                                  {tagLabel}
-                                                </span>
-                                              </div>
-                                              <p className="text-[11px] text-slate-400 mt-0.5">
-                                                ID: {d.device_id}
-                                              </p>
-                                              {groupLine && (
-                                                <p className="text-[11px] text-slate-400 mt-0.5">
-                                                  {groupLine}
-                                                </p>
-                                              )}
-                                              {observations && (
-                                                <p className="text-[11px] text-slate-500 mt-0.5">
-                                                  Obs: {observations}
-                                                </p>
-                                              )}
-                                              <p className="text-[11px] text-slate-500 mt-0.5">
-                                                Visto:{" "}
-                                                {new Date(
-                                                  d.last_seen_at ||
-                                                    d.created_at ||
-                                                    "",
-                                                ).toLocaleString("pt-PT")}
-                                              </p>
-                                            </div>
-                                            <div className="flex items-stretch gap-2 ml-2">
-                                              <div className="flex flex-col gap-1">
-                                                {!isAdmin && (
-                                                  <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                      openAdoptModal(d)
-                                                    }
-                                                    className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[10px] text-white"
-                                                  >
-                                                    Editar
-                                                  </button>
-                                                )}
-                                                <button
-                                                  type="button"
-                                                  onClick={() =>
-                                                    handleDeleteDevice(d)
-                                                  }
-                                                  className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[10px] text-white"
-                                                >
-                                                  Apagar
-                                                </button>
-                                              </div>
-                                              <button
-                                                type="button"
-                                                onClick={() => {
-                                                  const url = buildRustdeskUrl(d);
-                                                  if (typeof window !== "undefined") {
-                                                    window.location.href = url;
-                                                  }
-                                                }}
-                                                className="w-9 h-9 flex items-center justify-center rounded-md bg-sky-600 hover:bg-sky-500 text-white shadow-sm"
-                                                aria-label="Abrir no RustDesk"
-                                              >
-                                                <Image
-                                                  src="/rustdesk-logo.svg"
-                                                  alt="RustDesk"
-                                                  width={18}
-                                                  height={18}
-                                                />
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </section>
-        )}
-
+        <AdoptedDevicesList
+          devices={adoptedDevices}
+          grouped={grouped}
+          loading={loading}
+          refreshing={refreshing}
+          errorMsg={errorMsg}
+          isAdmin={isAdmin}
+          currentPage={currentAdoptedPage}
+          totalPages={adoptedTotalPages}
+          pageSize={adoptedPageSize}
+          onPageChange={setCurrentAdoptedPage}
+          onPageSizeChange={setAdoptedPageSize}
+          onRefresh={handleRefreshStatus}
+          onEdit={openAdoptModal}
+          onDelete={handleDeleteDevice}
+          onConnect={(d) => {
+            const url = buildRustdeskUrl(d);
+            if (typeof window !== "undefined") {
+              window.location.href = url;
+            }
+          }}
+          expandedGroups={expandedGroups}
+          expandedSubgroups={expandedSubgroups}
+          onToggleGroup={(groupKey) =>
+            setExpandedGroups((prev) => ({
+              ...prev,
+              [groupKey]: !(prev[groupKey] ?? true),
+            }))
+          }
+          onToggleSubgroup={(subKey) =>
+            setExpandedSubgroups((prev) => ({
+              ...prev,
+              [subKey]: !prev[subKey],
+            }))
+          }
+        />
       </div>
 
-      {showRegistrationModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-            {registrationStatus === "awaiting" && (
-              <>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Escanear QR Code</h3>
-                  <button
-                    onClick={closeRegistrationModal}
-                    className="text-slate-400 hover:text-white transition"
-                    disabled={qrLoading || hybridSubmitLoading}
-                  >
-                    ✕
-                  </button>
-                </div>
+      <RegistrationModal
+        isOpen={showRegistrationModal}
+        onClose={closeRegistrationModal}
+        registrationStatus={registrationStatus}
+        qrLoading={qrLoading}
+        qrError={qrError}
+        qrImageUrl={qrImageUrl}
+        timeRemaining={timeRemaining}
+        hybridDeviceIdInput={hybridDeviceIdInput}
+        onHybridDeviceIdChange={setHybridDeviceIdInput}
+        hybridSubmitLoading={hybridSubmitLoading}
+        hybridSubmitError={hybridSubmitError}
+        hybridSubmitSuccess={hybridSubmitSuccess}
+        onHybridSubmit={handleHybridSubmit}
+        onRestart={handleRestartRegistration}
+        matchedDevice={matchedDevice}
+        onTryAgain={handleTryAgainRegistration}
+      />
 
-                <div className="flex flex-col items-center mb-4">
-                  {qrLoading ? (
-                    <div className="w-64 h-64 rounded-lg bg-slate-800 flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-600 border-t-emerald-500"></div>
-                    </div>
-                  ) : qrError && !qrImageUrl ? (
-                    <div className="w-64 h-64 rounded-lg bg-slate-800 flex items-center justify-center text-center p-4">
-                      <div>
-                        <p className="text-red-400 font-semibold mb-2">Erro</p>
-                        <p className="text-xs text-slate-400">{qrError}</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <img
-                      src={qrImageUrl}
-                      alt="RustDesk QR"
-                      width={256}
-                      height={256}
-                      className="rounded-lg bg-white p-3"
-                    />
-                  )}
-                </div>
-
-                <div className="bg-slate-800/50 rounded-lg p-4 mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-slate-400">Tempo restante:</span>
-                    <span className="text-2xl font-bold text-emerald-400 font-mono">
-                      {formatTime(timeRemaining)}
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-emerald-500 h-full transition-all duration-1000"
-                      style={{ width: `${(timeRemaining / 300) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-2">
-                  <label className="block text-sm font-medium text-slate-700">
-                    ID RustDesk do dispositivo
-                  </label>
-                  <form
-                    className="flex gap-2"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      void handleHybridSubmit();
-                    }}
-                  >
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:cursor-not-allowed disabled:bg-slate-100"
-                      placeholder="Ex.: 123 456 789"
-                      value={hybridDeviceIdInput}
-                      onChange={(e) => setHybridDeviceIdInput(e.target.value)}
-                      disabled={qrLoading || hybridSubmitLoading}
-                    />
-                    <button
-                      type="submit"
-                      className="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
-                      disabled={qrLoading || hybridSubmitLoading}
-                    >
-                      {hybridSubmitLoading ? "A enviar..." : "ENVIAR"}
-                    </button>
-                  </form>
-                  <p className="text-xs text-slate-500">
-                    Podes escrever o ID com ou sem espaços, mas apenas dígitos são aceites.
-                  </p>
-                </div>
-
-                {hybridSubmitError && (
-                  <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                    {hybridSubmitError}
-                  </div>
-                )}
-
-                {hybridSubmitSuccess && (
-                  <div className="mt-3 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-                    {hybridSubmitSuccess}
-                  </div>
-                )}
-
-                <div className="mt-6 flex justify-end gap-2">
-                  <button
-                    type="button"
-                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                    onClick={handleRestartRegistration}
-                    disabled={qrLoading || hybridSubmitLoading}
-                  >
-                    Tentar novamente
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-md bg-slate-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                    onClick={closeRegistrationModal}
-                    disabled={qrLoading || hybridSubmitLoading}
-                  >
-                    Fechar
-                  </button>
-                </div>
-              </>
-            )}
-
-            {registrationStatus === "completed" && matchedDevice && (
-              <>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-emerald-400">✅ Dispositivo Detectado!</h3>
-                  <button
-                    onClick={closeRegistrationModal}
-                    className="text-slate-400 hover:text-white transition"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="bg-emerald-950/30 border border-emerald-800/50 rounded-lg p-4 mb-4">
-                  <p className="text-sm text-slate-300">
-                    <span className="font-semibold">ID:</span> {matchedDevice.device_id}
-                  </p>
-                  {matchedDevice.friendly_name && (
-                    <p className="text-sm text-slate-300">
-                      <span className="font-semibold">Nome:</span> {matchedDevice.friendly_name}
-                    </p>
-                  )}
-                  <p className="text-xs text-amber-400 mt-2">
-                    ⚠️ O dispositivo aparecerá em &quot;Dispositivos por adoptar&quot;. Clica em &quot;Adoptar&quot; para adicionar informações adicionais.
-                  </p>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      setShowRegistrationModal(false);
-                      setRegistrationSession(null);
-                      setQrImageUrl("");
-                      setQrError("");
-                      setRegistrationStatus("awaiting");
-                      setMatchedDevice(null);
-                      setTimeRemaining(0);
-                      setCheckingDevice(false);
-                      setHybridDeviceIdInput("");
-                      setHybridSubmitError(null);
-                      setHybridSubmitSuccess(null);
-                      setHybridSubmitLoading(false);
-
-                      if (countdownIntervalRef.current) {
-                        clearInterval(countdownIntervalRef.current);
-                        countdownIntervalRef.current = null;
-                      }
-
-                      if (qrImageUrl) {
-                        URL.revokeObjectURL(qrImageUrl);
-                      }
-                    }}
-                    className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                  >
-                    Tentar Novamente
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowRegistrationModal(false);
-                      setRegistrationSession(null);
-                      setQrImageUrl("");
-                      setQrError("");
-                      setRegistrationStatus("awaiting");
-                      setMatchedDevice(null);
-                      setTimeRemaining(0);
-                      setCheckingDevice(false);
-                      setHybridDeviceIdInput("");
-                      setHybridSubmitError(null);
-                      setHybridSubmitSuccess(null);
-                      setHybridSubmitLoading(false);
-
-                      if (countdownIntervalRef.current) {
-                        clearInterval(countdownIntervalRef.current);
-                        countdownIntervalRef.current = null;
-                      }
-
-                      if (qrImageUrl) {
-                        URL.revokeObjectURL(qrImageUrl);
-                      }
-                    }}
-                    className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                  >
-                    Fechar
-                  </button>
-                </div>
-              </>
-            )}
-
-            {registrationStatus === "expired" && (
-              <>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-amber-400">⏱️ Tempo Esgotado</h3>
-                  <button
-                    onClick={closeRegistrationModal}
-                    className="text-slate-400 hover:text-white transition"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="bg-amber-950/30 border border-amber-800/50 rounded-lg p-4 mb-4">
-                  <p className="text-sm text-slate-300">
-                    A sessão de registro expirou. Por favor, tente novamente.
-                  </p>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => {
-                      setShowRegistrationModal(false);
-                      setRegistrationSession(null);
-                      setQrImageUrl("");
-                      setQrError("");
-                      setRegistrationStatus("awaiting");
-                      setMatchedDevice(null);
-                      setTimeRemaining(0);
-                      setCheckingDevice(false);
-                      setHybridDeviceIdInput("");
-                      setHybridSubmitError(null);
-                      setHybridSubmitSuccess(null);
-                      setHybridSubmitLoading(false);
-
-                      if (countdownIntervalRef.current) {
-                        clearInterval(countdownIntervalRef.current);
-                        countdownIntervalRef.current = null;
-                      }
-
-                      if (qrImageUrl) {
-                        URL.revokeObjectURL(qrImageUrl);
-                      }
-                    }}
-                    className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                  >
-                    Tentar Novamente
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowRegistrationModal(false);
-                      setRegistrationSession(null);
-                      setQrImageUrl("");
-                      setQrError("");
-                      setRegistrationStatus("awaiting");
-                      setMatchedDevice(null);
-                      setTimeRemaining(0);
-                      setCheckingDevice(false);
-                      setHybridDeviceIdInput("");
-                      setHybridSubmitError(null);
-                      setHybridSubmitSuccess(null);
-                      setHybridSubmitLoading(false);
-
-                      if (countdownIntervalRef.current) {
-                        clearInterval(countdownIntervalRef.current);
-                        countdownIntervalRef.current = null;
-                      }
-
-                      if (qrImageUrl) {
-                        URL.revokeObjectURL(qrImageUrl);
-                      }
-                    }}
-                    className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                  >
-                    Fechar
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+      {!isAdmin && (
+        <AdoptModal
+          isOpen={showAdoptModal && !!adoptingDevice}
+          device={adoptingDevice}
+          isEditing={isEditingDevice}
+          formData={adoptFormData}
+          onFormChange={setAdoptFormData}
+          onSubmit={handleAdoptSubmit}
+          onClose={closeAdoptModal}
+          loading={adoptLoading}
+          error={adoptError}
+          groupsLoading={groupsLoading}
+          groups={canonicalGroups}
+          availableSubgroups={availableSubgroups}
+          selectedGroup={selectedGroup}
+        />
       )}
 
-      {showAdoptModal && adoptingDevice && !isAdmin && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">
-                {isEditingDevice ? "Editar Dispositivo" : "Adoptar Dispositivo"}
-              </h3>
-              <button
-                onClick={closeAdoptModal}
-                className="text-slate-400 hover:text-white transition"
-                disabled={adoptLoading}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="mb-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
-              <p className="text-xs text-slate-400 mb-1">Device ID:</p>
-              <p className="text-sm font-mono text-white">{adoptingDevice.device_id}</p>
-            </div>
-
-            <form onSubmit={handleAdoptSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">
-                  Nome do Dispositivo <span className="text-slate-500">(opcional)</span>
-                </label>
-                <input
-                  type="text"
-                  value={adoptFormData.friendly_name}
-                  onChange={(e) =>
-                    setAdoptFormData({ ...adoptFormData, friendly_name: e.target.value })
-                  }
-                  placeholder="Ex: Tablet Sala, Samsung A54, etc."
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  disabled={adoptLoading}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">
-                  Grupo <span className="text-red-400">*</span>
-                </label>
-                <select
-                  value={adoptFormData.group_id}
-                  onChange={(e) =>
-                    setAdoptFormData({ ...adoptFormData, group_id: e.target.value })
-                  }
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  disabled={adoptLoading}
-                  required
-                >
-                  {groupsLoading && (
-                    <option value="">A carregar lista de grupos...</option>
-                  )}
-                  {!groupsLoading && canonicalGroups.length === 0 && (
-                    <option value="">Nenhum grupo encontrado</option>
-                  )}
-                  {!groupsLoading && canonicalGroups.length > 0 && (
-                    <>
-                      <option value="">Selecione um grupo...</option>
-                      {canonicalGroups
-                        .filter(g => !g.parent_group_id)
-                        .map((group) => (
-                          <option key={group.id} value={group.id}>
-                            {group.name}
-                          </option>
-                        ))}
-                    </>
-                  )}
-                </select>
-                <p className="text-xs text-slate-500 mt-1">Campo obrigatório</p>
-              </div>
-
-              {availableSubgroups.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-slate-200 mb-1">
-                    Subgrupo <span className="text-slate-500">(opcional)</span>
-                  </label>
-                  <select
-                    value={adoptFormData.subgroup_id || ""}
-                    onChange={(e) =>
-                      setAdoptFormData({ ...adoptFormData, subgroup_id: e.target.value || undefined })
-                    }
-                    className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    disabled={adoptLoading}
-                  >
-                    <option value="">Nenhum subgrupo</option>
-                    {availableSubgroups.map((subgroup) => (
-                      <option key={subgroup.id} value={subgroup.id}>
-                        {subgroup.name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Seleccione um subgrupo dentro de {selectedGroup?.name}
-                  </p>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">
-                  Observações <span className="text-slate-500">(opcional)</span>
-                </label>
-                <textarea
-                  value={adoptFormData.observations}
-                  onChange={(e) =>
-                    setAdoptFormData({ ...adoptFormData, observations: e.target.value })
-                  }
-                  placeholder="Notas adicionais sobre o equipamento, localização, etc."
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 min-h-[72px]"
-                  disabled={adoptLoading}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">
-                  Password RustDesk <span className="text-slate-500">(opcional)</span>
-                </label>
-                <input
-                  type="text"
-                  value={adoptFormData.rustdesk_password}
-                  onChange={(e) =>
-                    setAdoptFormData({ ...adoptFormData, rustdesk_password: e.target.value })
-                  }
-                  placeholder="Se preenchido, o link abre com ?password=..."
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  disabled={adoptLoading}
-                />
-              </div>
-
-              {adoptError && (
-                <div className="p-3 bg-red-950/40 border border-red-900 rounded-md">
-                  <p className="text-sm text-red-400">{adoptError}</p>
-                </div>
-              )}
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={adoptLoading}
-                  className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                >
-                  {adoptLoading
-                    ? "A processar..."
-                    : isEditingDevice
-                      ? "Guardar Alterações"
-                      : "✓ Adoptar Dispositivo"}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeAdoptModal}
-                  disabled={adoptLoading}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {showAdminReassignModal && adminDeviceToManage && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">
-                Reatribuir Dispositivo
-              </h3>
-              <button
-                onClick={closeAdminReassignModal}
-                className="text-slate-400 hover:text-white transition"
-                disabled={adminActionLoading}
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="mb-4 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
-              <p className="text-xs text-slate-400 mb-1">Device ID:</p>
-              <p className="text-sm font-mono text-white">
-                {adminDeviceToManage.device_id}
-              </p>
-            </div>
-
-            <form onSubmit={handleAdminReassignSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">
-                  Utilizador de destino (mesh_username) <span className="text-red-400">*</span>
-                </label>
-                <select
-                  value={adminReassignForm.mesh_username}
-                  onChange={(e) =>
-                    setAdminReassignForm({
-                      ...adminReassignForm,
-                      mesh_username: e.target.value,
-                    })}
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  disabled={adminActionLoading || meshUsersLoading}
-                  required
-                >
-                  {meshUsersLoading && (
-                    <option value="">A carregar lista de utilizadores...</option>
-                  )}
-                  {!meshUsersLoading && meshUsers.length === 0 && (
-                    <option value="">Nenhum utilizador encontrado em mesh_users</option>
-                  )}
-                  {!meshUsersLoading && meshUsers.length > 0 && (
-                    <>
-                      <option value="">Selecione um utilizador...</option>
-                      {meshUsers.map((user) => (
-                        <option key={user.id} value={user.mesh_username ?? ""}>
-                          {user.display_name
-                            ? `${user.display_name} (${user.mesh_username ?? "sem username"})`
-                            : user.mesh_username ?? user.id}
-                        </option>
-                      ))}
-                    </>
-                  )}
-                </select>
-                <p className="text-xs text-slate-500 mt-1">
-                  O utilizador destino deve existir na tabela mesh_users.
-                </p>
-              </div>
-
-              {adminActionError && (
-                <div className="p-3 bg-red-950/40 border border-red-900 rounded-md">
-                  <p className="text-sm text-red-400">{adminActionError}</p>
-                </div>
-              )}
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={adminActionLoading}
-                  className="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                >
-                  {adminActionLoading ? "A processar..." : "Reatribuir"}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeAdminReassignModal}
-                  disabled={adminActionLoading}
-                  className="flex-1 px-4 py-2 text-sm rounded-md bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition text-white"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <AdminReassignModal
+        isOpen={showAdminReassignModal && !!adminDeviceToManage}
+        device={adminDeviceToManage}
+        formData={adminReassignForm}
+        onFormChange={setAdminReassignForm}
+        onSubmit={handleAdminReassignSubmit}
+        onClose={closeAdminReassignModal}
+        loading={adminActionLoading}
+        error={adminActionError}
+        meshUsersLoading={meshUsersLoading}
+        meshUsers={meshUsers}
+      />
     </main>
   );
 }

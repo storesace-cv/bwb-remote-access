@@ -83,19 +83,37 @@ A página "Gestão de Colaboradores" foi consolidada com "Gestão de Utilizadore
 - **minisiteadmin**: `jorge.peixinho@bwb.pt` / `Admin123!`
 
 ## Data da Última Atualização
-Dezembro de 2025 - Consolidação da gestão de utilizadores e refatoração do Dashboard
+Dezembro de 2025 - Refatoração completa do Dashboard e melhorias UX na página de Roles
 
 ## Refatoração do Dashboard (Dezembro 2025)
-O componente monolítico `/dashboard/page.tsx` foi refatorado de 2513 para 2066 linhas, com extração de 7 componentes reutilizáveis:
 
+### Antes vs Depois
+| Métrica | Antes | Depois | Melhoria |
+|---------|-------|--------|----------|
+| Linhas page.tsx | 2513 | 1329 | **-47%** |
+| Componentes extraídos | 0 | 11 | +11 |
+| Código em componentes | 0 | 1732 | +1732 |
+
+### Componentes Criados
 | Componente | Linhas | Descrição |
 |------------|--------|-----------|
-| `DashboardHeader` | 73 | Header com info do utilizador e navegação |
-| `ManagementPanel` | 93 | Cards de acesso rápido (Utilizadores, Grupos, Roles) |
-| `AddDeviceSection` | 175 | Secção de adicionar dispositivo (QR codes) |
-| `DeviceFilters` | 169 | Filtros e pesquisa de dispositivos |
-| `UnadoptedDevicesList` | 110 | Lista de dispositivos por adoptar |
-| `AdminUnassignedDevicesList` | 98 | Lista de dispositivos sem utilizador (admin) |
+| `DashboardHeader` | 73 | Header com info do utilizador |
+| `ManagementPanel` | 93 | Cards de navegação |
+| `AddDeviceSection` | 175 | Secção QR code |
+| `DeviceFilters` | 169 | Filtros e pesquisa |
+| `UnadoptedDevicesList` | 110 | Dispositivos por adoptar |
+| `AdminUnassignedDevicesList` | 98 | Dispositivos sem utilizador |
+| `AdoptedDevicesList` | 302 | Lista de dispositivos adoptados |
+| `RegistrationModal` | 254 | Modal de registo QR |
+| `AdoptModal` | 203 | Modal de adopção |
+| `AdminReassignModal` | 126 | Modal de reatribuição |
 | `DeviceCard` | 129 | Card individual de dispositivo |
 
 Localização: `/src/app/dashboard/components/`
+
+### Melhorias UX na Página de Roles
+- Ícones e cores por categoria de permissão
+- Contador de permissões activas por role e por categoria
+- Interface expansível/colapsável
+- Descrições para cada permissão
+- Dicas de utilização
