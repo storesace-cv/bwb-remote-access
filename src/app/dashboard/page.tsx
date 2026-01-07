@@ -469,14 +469,15 @@ export default function DashboardPage() {
       // Chamar API de logout para limpar cookie de sessão
       await fetch("/api/auth/logout", { method: "POST" });
       
-      // Redirecionar para login
-      window.location.href = "/";
+      // Usar router.push para navegação client-side do Next.js
+      // Isto garante uma transição suave e limpa o estado do router
+      router.push("/");
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
-      // Em caso de erro, tentar redirecionar mesmo assim
+      // Em caso de erro, forçar redirecionamento com reload completo
       window.location.href = "/";
     }
-  }, []);
+  }, [router]);
 
   const handleRefreshStatus = useCallback(async () => {
     if (!jwt) return;
