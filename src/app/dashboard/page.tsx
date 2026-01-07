@@ -1275,27 +1275,6 @@ export default function DashboardPage() {
                 </Link>
               )}
 
-              {/* Gestão de Utilizadores - visível se pode ver utilizadores */}
-              {userPermissions?.can_view_users && (
-                <Link
-                  href="/dashboard/users"
-                  className="group bg-slate-900/70 border border-slate-700 hover:border-amber-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-amber-900/20"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-amber-600/20 flex items-center justify-center text-xl">
-                      🔑
-                    </div>
-                    <svg className="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                  <h3 className="font-medium text-white mb-1">Gestão de Utilizadores</h3>
-                  <p className="text-xs text-slate-400">
-                    Gerir utilizadores, criar contas e atribuir roles
-                  </p>
-                </Link>
-              )}
-
               {/* Gestão de Roles - visível apenas se pode gerir roles */}
               {userPermissions?.can_manage_roles && (
                 <Link
