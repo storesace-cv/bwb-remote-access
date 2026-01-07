@@ -55,6 +55,9 @@ export default function GroupsPage() {
   const [isAgent, setIsAgent] = useState(false);
   const [isMinisiteadmin, setIsMinisiteadmin] = useState(false);
   const [isSiteadmin, setIsSiteadmin] = useState(false);
+  
+  // Permissões do utilizador baseadas na tabela roles
+  const [userPermissions, setUserPermissions] = useState<RolePermissions | null>(null);
 
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(false);
