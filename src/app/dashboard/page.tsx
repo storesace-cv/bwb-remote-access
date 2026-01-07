@@ -21,9 +21,6 @@ import {
   AdminReassignModal,
   type RustdeskAbi,
   type AdoptFormData,
-  type AdminReassignFormData,
-  type RegistrationStatus,
-  type MatchedDevice,
 } from "./components";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
