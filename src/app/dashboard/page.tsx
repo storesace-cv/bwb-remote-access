@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
@@ -16,7 +15,15 @@ import {
   AddDeviceSection,
   UnadoptedDevicesList,
   AdminUnassignedDevicesList,
+  AdoptedDevicesList,
+  RegistrationModal,
+  AdoptModal,
+  AdminReassignModal,
   type RustdeskAbi,
+  type AdoptFormData,
+  type AdminReassignFormData,
+  type RegistrationStatus,
+  type MatchedDevice,
 } from "./components";
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
