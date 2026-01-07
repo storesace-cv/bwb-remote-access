@@ -459,17 +459,24 @@ export default function DashboardPage() {
     void loadMeshUsers();
   }, [jwt, userTypeChecked, userPermissions?.can_access_management_panel, loadMeshUsers]);
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
     try {
       if (typeof window === "undefined") return;
+      
+      // Limpar localStorage primeiro
       window.localStorage.removeItem("rustdesk_jwt");
+      
+      // Chamar API de logout para limpar cookie de sessão
+      await fetch("/api/auth/logout", { method: "POST" });
+      
+      // Redirecionar para login
       window.location.href = "/";
-      return;
-    } catch {
-      // Se não conseguirmos limpar o localStorage, continuamos o logout mesmo assim.
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      // Em caso de erro, tentar redirecionar mesmo assim
+      window.location.href = "/";
     }
-    router.push("/");
-  }, [router]);
+  }, []);
 
   const handleRefreshStatus = useCallback(async () => {
     if (!jwt) return;
