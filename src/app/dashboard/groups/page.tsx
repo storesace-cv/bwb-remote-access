@@ -129,6 +129,36 @@ export default function GroupsPage() {
       setIsSiteadmin(true);
       setIsMinisiteadmin(true);
       setIsAgent(true);
+      // Criar permissões completas para admin canónico
+      setUserPermissions({
+        id: "admin",
+        name: "siteadmin",
+        display_name: "Site Admin",
+        description: null,
+        hierarchy_level: 0,
+        can_access_management_panel: true,
+        can_access_user_profile: true,
+        can_scan_qr: true,
+        can_provision_without_qr: true,
+        can_view_devices: true,
+        can_adopt_devices: true,
+        can_edit_devices: true,
+        can_delete_devices: true,
+        can_view_users: true,
+        can_create_users: true,
+        can_edit_users: true,
+        can_delete_users: true,
+        can_change_user_role: true,
+        can_view_groups: true,
+        can_create_groups: true,
+        can_edit_groups: true,
+        can_delete_groups: true,
+        can_assign_permissions: true,
+        can_access_all_domains: true,
+        can_access_own_domain_only: false,
+        can_manage_roles: true,
+        can_view_audit_logs: true,
+      });
       return;
     }
 
@@ -166,6 +196,30 @@ export default function GroupsPage() {
             // manter comportamento antigo para colaborador
             setIsAgent(true);
           }
+          
+          // Carregar permissões da tabela roles
+          const roleRes = await fetch(
+            `${supabaseUrl}/rest/v1/roles?select=*&name=eq.${encodeURIComponent(role)}`,
+            {
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+                apikey: anonKey,
+              },
+            }
+          );
+          
+          if (roleRes.ok) {
+            const roleData = (await roleRes.json()) as RolePermissions[];
+            if (roleData.length > 0) {
+              setUserPermissions(roleData[0]);
+              
+              // Verificar se tem permissão para ver grupos
+              if (!roleData[0].can_view_groups) {
+                router.replace("/dashboard");
+                return;
+              }
+            }
+          }
         }
       }
     } catch (error) {
@@ -173,8 +227,9 @@ export default function GroupsPage() {
       setIsAgent(false);
       setIsMinisiteadmin(false);
       setIsSiteadmin(false);
+      setUserPermissions(null);
     }
-  }, [jwt, authUserId]);
+  }, [jwt, authUserId, router]);
 
   useEffect(() => {
     void checkUserType();
