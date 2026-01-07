@@ -640,6 +640,12 @@ export default function GroupsPage() {
   };
 
   const renderGroupTree = (groupList: Group[], level = 0) => {
+    // Extrair permissões para uso local
+    const canCreateGroups = userPermissions?.can_create_groups ?? false;
+    const canEditGroups = userPermissions?.can_edit_groups ?? false;
+    const canDeleteGroups = userPermissions?.can_delete_groups ?? false;
+    const canAssignPermissions = userPermissions?.can_assign_permissions ?? false;
+    
     return groupList.map((group) => {
       const isExpanded = expandedGroups[group.id] ?? true;
       const hasChildren = group.children && group.children.length > 0;
@@ -682,6 +688,9 @@ export default function GroupsPage() {
         setActionsOpenForGroupId(null);
       };
 
+      // Verificar se há pelo menos uma acção disponível para mostrar o dropdown
+      const hasAnyAction = canAssignPermissions || canEditGroups || canDeleteGroups;
+
       return (
         <div key={group.id} className="mb-2">
           <div
@@ -721,7 +730,8 @@ export default function GroupsPage() {
               <span className="px-2 py-0.5 rounded-full text-[10px] bg-sky-600/20 text-sky-300">
                 {group.device_count ?? 0} dispositivos
               </span>
-              {isRootGroup && (
+              {/* Botão Criar Subgrupo - requer can_create_groups e ser grupo raiz */}
+              {isRootGroup && canCreateGroups && (
                 <button
                   type="button"
                   onClick={() => openCreateModal(group.id)}
@@ -732,53 +742,64 @@ export default function GroupsPage() {
                 </button>
               )}
 
-              {/* Ações dropdown */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setActionsOpenForGroupId((current) =>
-                      current === group.id ? null : group.id
-                    )
-                  }
-                  className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-100 text-[11px]"
-                >
-                  Ações
-                </button>
-                {actionsOpenForGroupId === group.id && (
-                  <div className="absolute right-0 mt-1 w-40 rounded-md bg-slate-900 border border-slate-700 shadow-lg z-10">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActionsOpenForGroupId(null);
-                        openPermissionsModal(group);
-                      }}
-                      className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800 flex items-center gap-2"
-                    >
-                      <Shield className="w-3 h-3 text-purple-300" />
-                      Permissões
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openEditForGroup(group)}
-                      className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openDeleteForGroup(group)}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-800 ${
-                        canDelete
-                          ? "text-red-300"
-                          : "text-slate-500 cursor-not-allowed"
-                      }`}
-                    >
-                      Apagar
-                    </button>
-                  </div>
-                )}
-              </div>
+              {/* Ações dropdown - só mostra se tiver pelo menos uma permissão */}
+              {hasAnyAction && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActionsOpenForGroupId((current) =>
+                        current === group.id ? null : group.id
+                      )
+                    }
+                    className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-100 text-[11px]"
+                  >
+                    Ações
+                  </button>
+                  {actionsOpenForGroupId === group.id && (
+                    <div className="absolute right-0 mt-1 w-40 rounded-md bg-slate-900 border border-slate-700 shadow-lg z-10">
+                      {/* Permissões - requer can_assign_permissions */}
+                      {canAssignPermissions && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActionsOpenForGroupId(null);
+                            openPermissionsModal(group);
+                          }}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800 flex items-center gap-2"
+                        >
+                          <Shield className="w-3 h-3 text-purple-300" />
+                          Permissões
+                        </button>
+                      )}
+                      {/* Editar - requer can_edit_groups */}
+                      {canEditGroups && (
+                        <button
+                          type="button"
+                          onClick={() => openEditForGroup(group)}
+                          className="w-full text-left px-3 py-2 text-xs text-slate-100 hover:bg-slate-800"
+                        >
+                          Editar
+                        </button>
+                      )}
+                      {/* Apagar - requer can_delete_groups */}
+                      {canDeleteGroups && (
+                        <button
+                          type="button"
+                          onClick={() => openDeleteForGroup(group)}
+                          className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-800 ${
+                            canDelete
+                              ? "text-red-300"
+                              : "text-slate-500 cursor-not-allowed"
+                          }`}
+                        >
+                          Apagar
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
