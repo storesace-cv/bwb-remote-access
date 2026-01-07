@@ -838,7 +838,8 @@ export default function UsersManagementPage() {
 
     return (
       <div className="inline-flex items-center gap-2">
-        {status === "candidate" && (
+        {/* Activar candidato - requer can_create_users */}
+        {status === "candidate" && currentUserPermissions?.can_create_users && (
           <button
             type="button"
             onClick={() => openActivateModal(user)}
@@ -852,66 +853,84 @@ export default function UsersManagementPage() {
 
         {status === "active" && (
           <>
-            <button
-              type="button"
-              onClick={() => openEditModal(user)}
-              className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[11px]"
-              data-testid={`edit-user-${user.id}`}
-            >
-              Editar
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDeactivate(user)}
-              className="px-2 py-1 rounded-md bg-amber-600 hover:bg-amber-500 text-[11px] flex items-center gap-1"
-              data-testid={`deactivate-user-${user.id}`}
-            >
-              <UserX className="w-3 h-3" />
-              Desactivar
-            </button>
+            {/* Editar - requer can_edit_users */}
+            {currentUserPermissions?.can_edit_users && (
+              <button
+                type="button"
+                onClick={() => openEditModal(user)}
+                className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[11px]"
+                data-testid={`edit-user-${user.id}`}
+              >
+                Editar
+              </button>
+            )}
+            {/* Desactivar - requer can_delete_users */}
+            {currentUserPermissions?.can_delete_users && (
+              <button
+                type="button"
+                onClick={() => handleDeactivate(user)}
+                className="px-2 py-1 rounded-md bg-amber-600 hover:bg-amber-500 text-[11px] flex items-center gap-1"
+                data-testid={`deactivate-user-${user.id}`}
+              >
+                <UserX className="w-3 h-3" />
+                Desactivar
+              </button>
+            )}
           </>
         )}
 
         {status === "inactive" && (
           <>
-            <button
-              type="button"
-              onClick={() => handleReactivate(user)}
-              className="px-2 py-1 rounded-md bg-sky-600 hover:bg-sky-500 text-[11px] flex items-center gap-1"
-              data-testid={`reactivate-user-${user.id}`}
-            >
-              <UserCheck className="w-3 h-3" />
-              Reactivar
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDeleteUser(user)}
-              className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[11px]"
-              data-testid={`delete-user-${user.id}`}
-            >
-              Apagar
-            </button>
+            {/* Reactivar - requer can_edit_users */}
+            {currentUserPermissions?.can_edit_users && (
+              <button
+                type="button"
+                onClick={() => handleReactivate(user)}
+                className="px-2 py-1 rounded-md bg-sky-600 hover:bg-sky-500 text-[11px] flex items-center gap-1"
+                data-testid={`reactivate-user-${user.id}`}
+              >
+                <UserCheck className="w-3 h-3" />
+                Reactivar
+              </button>
+            )}
+            {/* Apagar - requer can_delete_users */}
+            {currentUserPermissions?.can_delete_users && (
+              <button
+                type="button"
+                onClick={() => handleDeleteUser(user)}
+                className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[11px]"
+                data-testid={`delete-user-${user.id}`}
+              >
+                Apagar
+              </button>
+            )}
           </>
         )}
 
         {status === "admin" && (
           <>
-            <button
-              type="button"
-              onClick={() => openEditModal(user)}
-              className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[11px]"
-              data-testid={`edit-user-${user.id}`}
-            >
-              Editar
-            </button>
-            <button
-              type="button"
-              onClick={() => handleDeleteUser(user)}
-              className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[11px]"
-              data-testid={`delete-user-${user.id}`}
-            >
-              Apagar
-            </button>
+            {/* Editar admin - requer can_edit_users */}
+            {currentUserPermissions?.can_edit_users && (
+              <button
+                type="button"
+                onClick={() => openEditModal(user)}
+                className="px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 text-[11px]"
+                data-testid={`edit-user-${user.id}`}
+              >
+                Editar
+              </button>
+            )}
+            {/* Apagar admin - requer can_delete_users */}
+            {currentUserPermissions?.can_delete_users && (
+              <button
+                type="button"
+                onClick={() => handleDeleteUser(user)}
+                className="px-2 py-1 rounded-md bg-red-600 hover:bg-red-500 text-[11px]"
+                data-testid={`delete-user-${user.id}`}
+              >
+                Apagar
+              </button>
+            )}
           </>
         )}
       </div>
