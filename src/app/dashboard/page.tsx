@@ -10,6 +10,17 @@ import { GroupableDevice, groupDevices } from "@/lib/grouping";
 import { logError } from "@/lib/debugLogger";
 import { RolePermissions } from "@/lib/permissions-service";
 
+// Refactored components
+import {
+  DashboardHeader,
+  ManagementPanel,
+  DeviceFilters,
+  AddDeviceSection,
+  UnadoptedDevicesList,
+  AdminUnassignedDevicesList,
+  type RustdeskAbi,
+} from "./components";
+
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const anonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
