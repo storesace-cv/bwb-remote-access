@@ -183,7 +183,7 @@ export function LoginForm() {
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-500">
-              Autenticação via MeshCentral
+              © 2025 - Jorge Peixinho
             </p>
           </div>
         </div>
