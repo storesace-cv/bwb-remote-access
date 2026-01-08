@@ -1434,20 +1434,6 @@ export default function UsersManagementPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">Password inicial <span className="text-red-400">*</span></label>
-                <input
-                  type="password"
-                  value={activateForm.password}
-                  onChange={(e) => setActivateForm({ ...activateForm, password: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  required
-                  disabled={activateLoading}
-                  placeholder="Mínimo 6 caracteres"
-                  data-testid="activate-password"
-                />
-              </div>
-
-              <div>
                 <label className="block text-sm font-medium text-slate-200 mb-1">Tipo de utilizador</label>
                 <select
                   value={activateForm.user_type}
