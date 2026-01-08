@@ -158,6 +158,22 @@ serve(async (req: Request) => {
     if (display_name !== undefined) meshUpdates.display_name = display_name;
     if (user_type) meshUpdates.user_type = user_type;
 
+    // Se user_type foi alterado, buscar o role_id correspondente
+    if (user_type) {
+      const { data: roleData, error: roleError } = await adminClient
+        .from("roles")
+        .select("id")
+        .eq("name", user_type)
+        .maybeSingle();
+      
+      if (!roleError && roleData) {
+        meshUpdates.role_id = roleData.id;
+        console.log(`[admin-update-auth-user] Found role_id for user_type ${user_type}: ${roleData.id}`);
+      } else {
+        console.warn(`[admin-update-auth-user] Role not found for user_type: ${user_type}`);
+      }
+    }
+
     if (mesh_user_id) {
       const { data: meshTarget, error: meshTargetError } = await adminClient
         .from("mesh_users")
