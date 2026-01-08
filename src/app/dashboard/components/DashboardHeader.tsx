@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { RolePermissions } from "@/lib/permissions-service";
 
 interface DashboardHeaderProps {
   userRole: { name: string; displayName: string };
   userDomain: string;
   userDisplayName: string;
-  userPermissions: RolePermissions | null;
   onLogout: () => void;
 }
 
@@ -15,7 +13,6 @@ export function DashboardHeader({
   userRole,
   userDomain,
   userDisplayName,
-  userPermissions,
   onLogout,
 }: DashboardHeaderProps) {
   return (
