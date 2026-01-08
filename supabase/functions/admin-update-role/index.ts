@@ -39,6 +39,7 @@ const VALID_PERMISSIONS = [
   "can_access_own_domain_only",
   "can_manage_roles",
   "can_view_audit_logs",
+  "can_access_meshcentral",
 ];
 
 interface UpdateRoleBody {
