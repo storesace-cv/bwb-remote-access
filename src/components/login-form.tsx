@@ -83,7 +83,7 @@ export function LoginForm() {
             />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            BWB Remote Access
+            Remote Access
           </h1>
           <p className="text-slate-400">
             Introduza as suas credenciais
