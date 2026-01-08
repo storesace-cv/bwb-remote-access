@@ -34,6 +34,7 @@ export interface RolePermissions {
   can_access_own_domain_only: boolean;
   can_manage_roles: boolean;
   can_view_audit_logs: boolean;
+  can_access_meshcentral: boolean;
 }
 
 export interface UserPermissionContext {
