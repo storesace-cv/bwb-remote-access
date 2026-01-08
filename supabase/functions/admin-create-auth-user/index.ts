@@ -96,30 +96,9 @@ serve(async (req: Request) => {
       );
     }
 
-    logger.info("Creating auth user", { email: email.charAt(0) + "***@" + email.split("@")[1] }, callerId);
+    logger.info("Activating user", { email: email.charAt(0) + "***@" + email.split("@")[1] }, callerId);
 
-    const { data: createdUser, error: createError } =
-      await adminClient.auth.admin.createUser({
-        email,
-        password,
-        email_confirm,
-        user_metadata: {
-          display_name: display_name || null,
-        },
-      });
-
-    if (createError || !createdUser.user) {
-      logger.error("Error creating user", { error: createError?.message }, callerId);
-      return jsonResponse(
-        { error: createError?.message || "Erro ao criar utilizador" },
-        500,
-        corsHeaders,
-      );
-    }
-
-    const authUserId = createdUser.user.id;
-    logger.info("Auth user created", { authUserId }, callerId);
-
+    // PRIMEIRO: Verificar se o mesh_user existe
     const { data: meshExisting, error: meshExistingError } = await adminClient
       .from("mesh_users")
       .select("*")
@@ -144,15 +123,85 @@ serve(async (req: Request) => {
       );
     }
 
-    if (meshExisting.auth_user_id && meshExisting.auth_user_id !== authUserId) {
-      logger.warn("Mesh user already linked", { mesh_user_id, existing_auth_user_id: meshExisting.auth_user_id }, callerId);
+    // Se o mesh_user já tem auth_user_id, apenas actualizar os dados
+    if (meshExisting.auth_user_id) {
+      logger.info("User already activated, updating data", { auth_user_id: meshExisting.auth_user_id }, callerId);
+      
+      const updatePayload: Record<string, unknown> = {
+        email,
+        user_type,
+      };
+      if (display_name) {
+        updatePayload.display_name = display_name;
+      }
+
+      const { error: updateError } = await adminClient
+        .from("mesh_users")
+        .update(updatePayload)
+        .eq("id", mesh_user_id);
+
+      if (updateError) {
+        logger.error("Error updating mesh_users", { error: updateError.message }, callerId);
+        return jsonResponse(
+          { error: `Erro ao atualizar mesh_users: ${updateError.message}` },
+          500,
+          corsHeaders,
+        );
+      }
+
       return jsonResponse(
-        { error: `mesh_user_id ${mesh_user_id} já está associado a outro utilizador` },
-        409,
+        {
+          success: true,
+          auth_user_id: meshExisting.auth_user_id,
+          mesh_user_id,
+          message: "Utilizador actualizado com sucesso (já estava activado)",
+        },
+        200,
         corsHeaders,
       );
     }
 
+    // SEGUNDO: Verificar se já existe um auth user com este email
+    const { data: existingAuthUsers, error: listError } = await adminClient.auth.admin.listUsers();
+    
+    let authUserId: string | null = null;
+    
+    if (!listError && existingAuthUsers?.users) {
+      const existingUser = existingAuthUsers.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+      if (existingUser) {
+        authUserId = existingUser.id;
+        logger.info("Found existing auth user", { authUserId }, callerId);
+      }
+    }
+
+    // Se não existe auth user, criar um novo
+    if (!authUserId) {
+      logger.info("Creating new auth user", { email: email.charAt(0) + "***@" + email.split("@")[1] }, callerId);
+
+      const { data: createdUser, error: createError } =
+        await adminClient.auth.admin.createUser({
+          email,
+          password,
+          email_confirm,
+          user_metadata: {
+            display_name: display_name || null,
+          },
+        });
+
+      if (createError || !createdUser.user) {
+        logger.error("Error creating user", { error: createError?.message }, callerId);
+        return jsonResponse(
+          { error: createError?.message || "Erro ao criar utilizador" },
+          500,
+          corsHeaders,
+        );
+      }
+
+      authUserId = createdUser.user.id;
+      logger.info("Auth user created", { authUserId }, callerId);
+    }
+
+    // TERCEIRO: Actualizar mesh_users com o auth_user_id
     const updatePayload: Record<string, unknown> = {
       auth_user_id: authUserId,
       email,
@@ -171,9 +220,6 @@ serve(async (req: Request) => {
     if (updateError) {
       logger.error("Error updating mesh_users", { error: updateError.message }, callerId);
 
-      // Rollback: delete the auth user
-      await adminClient.auth.admin.deleteUser(authUserId);
-
       return jsonResponse(
         { error: `Erro ao atualizar mesh_users: ${updateError.message}` },
         500,
@@ -181,12 +227,13 @@ serve(async (req: Request) => {
       );
     }
 
-    logger.info("User created and linked successfully", { authUserId, mesh_user_id }, callerId);
+    logger.info("User activated and linked successfully", { authUserId, mesh_user_id }, callerId);
 
     return jsonResponse(
       {
-        message: "Utilizador criado e associado com sucesso",
-        user_id: authUserId,
+        success: true,
+        message: "Utilizador activado e associado com sucesso",
+        auth_user_id: authUserId,
         mesh_user_id,
       },
       200,
