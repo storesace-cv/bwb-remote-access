@@ -83,7 +83,7 @@ export function LoginForm() {
             />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            BWB Remote Access
+            Remote Access
           </h1>
           <p className="text-slate-400">
             Introduza as suas credenciais
@@ -183,7 +183,7 @@ export function LoginForm() {
           {/* Footer */}
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-500">
-              Autenticação via MeshCentral
+              © 2025 - Jorge Peixinho
             </p>
           </div>
         </div>
