@@ -113,6 +113,10 @@ serve(async (req: Request) => {
       );
     }
 
+    // Verificar se o auth user existe antes de tentar actualizar
+    const { data: existingAuthUser, error: getUserError } = await adminClient.auth.admin.getUserById(id);
+    const authUserExists = !getUserError && existingAuthUser?.user;
+
     const authUpdates: Record<string, unknown> = {};
     if (email) authUpdates.email = email;
     if (password) authUpdates.password = password;
@@ -128,7 +132,8 @@ serve(async (req: Request) => {
       metadataUpdates.display_name = display_name;
     }
 
-    if (Object.keys(authUpdates).length > 0 || Object.keys(metadataUpdates).length > 0) {
+    // Só tenta actualizar auth.users se o utilizador existir
+    if (authUserExists && (Object.keys(authUpdates).length > 0 || Object.keys(metadataUpdates).length > 0)) {
       const updatePayload: Record<string, unknown> = { ...authUpdates };
       if (Object.keys(metadataUpdates).length > 0) {
         updatePayload.user_metadata = metadataUpdates;
@@ -141,13 +146,11 @@ serve(async (req: Request) => {
 
       if (authUpdateError) {
         console.error("Error updating auth.users:", authUpdateError);
-        return new Response(
-          JSON.stringify({
-            error: `Erro ao atualizar auth.users: ${authUpdateError.message}`,
-          }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        // Continuar mesmo com erro - vamos tentar actualizar mesh_users
+        console.warn("Continuing to update mesh_users despite auth.users error");
       }
+    } else if (!authUserExists) {
+      console.log("Auth user not found, will only update mesh_users");
     }
 
     const meshUpdates: Record<string, unknown> = {};
