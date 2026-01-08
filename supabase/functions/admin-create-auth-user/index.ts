@@ -220,9 +220,6 @@ serve(async (req: Request) => {
     if (updateError) {
       logger.error("Error updating mesh_users", { error: updateError.message }, callerId);
 
-      // Rollback: delete the auth user
-      await adminClient.auth.admin.deleteUser(authUserId);
-
       return jsonResponse(
         { error: `Erro ao atualizar mesh_users: ${updateError.message}` },
         500,
@@ -230,12 +227,13 @@ serve(async (req: Request) => {
       );
     }
 
-    logger.info("User created and linked successfully", { authUserId, mesh_user_id }, callerId);
+    logger.info("User activated and linked successfully", { authUserId, mesh_user_id }, callerId);
 
     return jsonResponse(
       {
-        message: "Utilizador criado e associado com sucesso",
-        user_id: authUserId,
+        success: true,
+        message: "Utilizador activado e associado com sucesso",
+        auth_user_id: authUserId,
         mesh_user_id,
       },
       200,
