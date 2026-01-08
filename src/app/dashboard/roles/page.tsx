@@ -47,6 +47,7 @@ const permissionGroups = [
     permissions: [
       { key: "can_access_management_panel", label: "Aceder ao Painel de Gestão", description: "Permite ver o painel de gestão" },
       { key: "can_access_user_profile", label: "Aceder ao Perfil", description: "Permite aceder ao perfil pessoal" },
+      { key: "can_access_meshcentral", label: "Aceder ao MeshCentral", description: "Permite abrir o MeshCentral do domínio do utilizador" },
       { key: "can_view_audit_logs", label: "Ver Logs de Auditoria", description: "Permite visualizar histórico de acções" },
     ],
   },
