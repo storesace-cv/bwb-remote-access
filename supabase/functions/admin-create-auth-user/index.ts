@@ -201,12 +201,34 @@ serve(async (req: Request) => {
       logger.info("Auth user created", { authUserId }, callerId);
     }
 
-    // TERCEIRO: Actualizar mesh_users com o auth_user_id
+    // TERCEIRO: Buscar o role_id correspondente ao user_type
+    let roleId: string | null = null;
+    if (user_type) {
+      const { data: roleData, error: roleError } = await adminClient
+        .from("roles")
+        .select("id")
+        .eq("name", user_type)
+        .maybeSingle();
+      
+      if (!roleError && roleData) {
+        roleId = roleData.id;
+        logger.info("Found role_id for user_type", { user_type, roleId }, callerId);
+      } else {
+        logger.warn("Role not found for user_type, will only set user_type field", { user_type }, callerId);
+      }
+    }
+
+    // QUARTO: Actualizar mesh_users com o auth_user_id e role_id
     const updatePayload: Record<string, unknown> = {
       auth_user_id: authUserId,
       email,
       user_type,
     };
+
+    // Adicionar role_id se encontrado
+    if (roleId) {
+      updatePayload.role_id = roleId;
+    }
 
     if (display_name) {
       updatePayload.display_name = display_name;
@@ -227,7 +249,7 @@ serve(async (req: Request) => {
       );
     }
 
-    logger.info("User activated and linked successfully", { authUserId, mesh_user_id }, callerId);
+    logger.info("User activated and linked successfully", { authUserId, mesh_user_id, roleId }, callerId);
 
     return jsonResponse(
       {
@@ -235,6 +257,7 @@ serve(async (req: Request) => {
         message: "Utilizador activado e associado com sucesso",
         auth_user_id: authUserId,
         mesh_user_id,
+        role_id: roleId,
       },
       200,
       corsHeaders,
