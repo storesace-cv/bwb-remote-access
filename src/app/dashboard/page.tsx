@@ -1200,7 +1200,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <ManagementPanel userPermissions={userPermissions} />
+        <ManagementPanel userPermissions={userPermissions} userDomain={userDomain} />
 
         {/* Secção Adicionar Dispositivo - verifica permissões internamente */}
         <AddDeviceSection
