@@ -113,6 +113,10 @@ serve(async (req: Request) => {
       );
     }
 
+    // Verificar se o auth user existe antes de tentar actualizar
+    const { data: existingAuthUser, error: getUserError } = await adminClient.auth.admin.getUserById(id);
+    const authUserExists = !getUserError && existingAuthUser?.user;
+
     const authUpdates: Record<string, unknown> = {};
     if (email) authUpdates.email = email;
     if (password) authUpdates.password = password;
@@ -128,7 +132,8 @@ serve(async (req: Request) => {
       metadataUpdates.display_name = display_name;
     }
 
-    if (Object.keys(authUpdates).length > 0 || Object.keys(metadataUpdates).length > 0) {
+    // Só tenta actualizar auth.users se o utilizador existir
+    if (authUserExists && (Object.keys(authUpdates).length > 0 || Object.keys(metadataUpdates).length > 0)) {
       const updatePayload: Record<string, unknown> = { ...authUpdates };
       if (Object.keys(metadataUpdates).length > 0) {
         updatePayload.user_metadata = metadataUpdates;
@@ -141,19 +146,33 @@ serve(async (req: Request) => {
 
       if (authUpdateError) {
         console.error("Error updating auth.users:", authUpdateError);
-        return new Response(
-          JSON.stringify({
-            error: `Erro ao atualizar auth.users: ${authUpdateError.message}`,
-          }),
-          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        // Continuar mesmo com erro - vamos tentar actualizar mesh_users
+        console.warn("Continuing to update mesh_users despite auth.users error");
       }
+    } else if (!authUserExists) {
+      console.log("Auth user not found, will only update mesh_users");
     }
 
     const meshUpdates: Record<string, unknown> = {};
     if (email) meshUpdates.email = email;
     if (display_name !== undefined) meshUpdates.display_name = display_name;
     if (user_type) meshUpdates.user_type = user_type;
+
+    // Se user_type foi alterado, buscar o role_id correspondente
+    if (user_type) {
+      const { data: roleData, error: roleError } = await adminClient
+        .from("roles")
+        .select("id")
+        .eq("name", user_type)
+        .maybeSingle();
+      
+      if (!roleError && roleData) {
+        meshUpdates.role_id = roleData.id;
+        console.log(`[admin-update-auth-user] Found role_id for user_type ${user_type}: ${roleData.id}`);
+      } else {
+        console.warn(`[admin-update-auth-user] Role not found for user_type: ${user_type}`);
+      }
+    }
 
     if (mesh_user_id) {
       const { data: meshTarget, error: meshTargetError } = await adminClient
