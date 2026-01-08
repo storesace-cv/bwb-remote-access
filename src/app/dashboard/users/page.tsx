@@ -699,13 +699,8 @@ export default function UsersManagementPage() {
     e.preventDefault();
     if (!jwt) return;
 
-    if (!activateForm.email.trim() || !activateForm.password.trim()) {
-      setActivateError("Email e password são obrigatórios.");
-      return;
-    }
-
-    if (activateForm.password.length < 6) {
-      setActivateError("Password deve ter pelo menos 6 caracteres.");
+    if (!activateForm.email.trim()) {
+      setActivateError("Email é obrigatório.");
       return;
     }
 
@@ -715,7 +710,7 @@ export default function UsersManagementPage() {
     try {
       const payload = {
         email: activateForm.email.trim(),
-        password: activateForm.password.trim(),
+        // Password será gerada automaticamente pela Edge Function
         display_name: activateForm.display_name.trim() || null,
         mesh_username: activateForm.mesh_username.trim(),
         mesh_user_id: activateForm.mesh_user_id,
@@ -1430,20 +1425,6 @@ export default function UsersManagementPage() {
                   disabled={activateLoading}
                   placeholder="utilizador@exemplo.com"
                   data-testid="activate-email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-1">Password inicial <span className="text-red-400">*</span></label>
-                <input
-                  type="password"
-                  value={activateForm.password}
-                  onChange={(e) => setActivateForm({ ...activateForm, password: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  required
-                  disabled={activateLoading}
-                  placeholder="Mínimo 6 caracteres"
-                  data-testid="activate-password"
                 />
               </div>
 

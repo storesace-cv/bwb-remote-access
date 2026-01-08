@@ -67,7 +67,7 @@ serve(async (req: Request) => {
     const body = (await req.json()) as AdminCreateUserBody;
     const {
       email,
-      password,
+      password: providedPassword,
       display_name,
       mesh_username,
       mesh_user_id,
@@ -75,10 +75,22 @@ serve(async (req: Request) => {
       user_type = "colaborador",
     } = body;
 
-    if (!email || !password || !mesh_user_id) {
-      logger.warn("Missing required fields", { hasEmail: !!email, hasPassword: !!password, hasMeshUserId: !!mesh_user_id }, callerId);
+    // Gerar password automática se não for fornecida (RustDesk usa password hardcoded)
+    const generateRandomPassword = (): string => {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+      let result = "";
+      for (let i = 0; i < 16; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    };
+    
+    const password = providedPassword?.trim() || generateRandomPassword();
+
+    if (!email || !mesh_user_id) {
+      logger.warn("Missing required fields", { hasEmail: !!email, hasMeshUserId: !!mesh_user_id }, callerId);
       return jsonResponse(
-        { error: "email, password e mesh_user_id são obrigatórios" },
+        { error: "email e mesh_user_id são obrigatórios" },
         400,
         corsHeaders,
       );

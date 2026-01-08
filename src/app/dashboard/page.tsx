@@ -211,8 +211,8 @@ export default function DashboardPage() {
         return;
       }
 
-      // Query mesh_users with role_id
-      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=domain,display_name,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
+      // Query mesh_users with user_type (role name)
+      const userQueryUrl = `${supabaseUrl}/rest/v1/mesh_users?select=domain,display_name,user_type,role_id&mesh_username=eq.${encodeURIComponent(userEmail.toLowerCase())}`;
       
       console.log("[Dashboard] Querying user:", userEmail.toLowerCase());
 
@@ -232,6 +232,7 @@ export default function DashboardPage() {
       const userData = (await userRes.json()) as Array<{
         domain: string;
         display_name: string | null;
+        user_type: string | null;
         role_id: string | null;
       }>;
 
@@ -247,12 +248,16 @@ export default function DashboardPage() {
       setUserDomain(user.domain || "");
       setUserDisplayName(user.display_name || "");
 
-      // Fetch permissions from roles table
-      if (user.role_id) {
-        // Trazer todas as colunas da tabela roles
-        const roleQueryUrl = `${supabaseUrl}/rest/v1/roles?select=*&id=eq.${user.role_id}`;
+      // Fetch permissions from roles table - usar user_type (nome do role) como fallback
+      const roleIdentifier = user.role_id || user.user_type;
+      
+      if (roleIdentifier) {
+        // Se temos role_id, buscar por id; senão, buscar por name (user_type)
+        const roleQueryUrl = user.role_id 
+          ? `${supabaseUrl}/rest/v1/roles?select=*&id=eq.${user.role_id}`
+          : `${supabaseUrl}/rest/v1/roles?select=*&name=eq.${encodeURIComponent(user.user_type || '')}`;
         
-        console.log("[Dashboard] Fetching role permissions for role_id:", user.role_id);
+        console.log("[Dashboard] Fetching role permissions:", roleIdentifier);
 
         const roleRes = await fetch(roleQueryUrl, {
           headers: {

@@ -46,14 +46,6 @@ export function DashboardHeader({
         </div>
       </div>
       <div className="flex items-center gap-3">
-        {userPermissions?.can_view_users && (
-          <Link
-            href="/dashboard/users"
-            className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
-          >
-            Gestão de Utilizadores
-          </Link>
-        )}
         <Link
           href="/dashboard/profile"
           className="px-3 py-1.5 text-sm rounded-md bg-slate-700 hover:bg-slate-600 transition text-white"
