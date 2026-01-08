@@ -1191,7 +1191,6 @@ export default function DashboardPage() {
           userRole={userRole}
           userDomain={userDomain}
           userDisplayName={userDisplayName}
-          userPermissions={userPermissions}
           onLogout={handleLogout}
         />
 
