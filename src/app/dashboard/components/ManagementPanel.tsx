@@ -2,15 +2,22 @@
 
 import Link from "next/link";
 import { RolePermissions } from "@/lib/permissions-service";
+import { getMeshCentralUrl } from "@/lib/domain";
 
 interface ManagementPanelProps {
   userPermissions: RolePermissions | null;
+  userDomain?: string;
 }
 
-export function ManagementPanel({ userPermissions }: ManagementPanelProps) {
+export function ManagementPanel({ userPermissions, userDomain }: ManagementPanelProps) {
   if (!userPermissions?.can_access_management_panel) {
     return null;
   }
+
+  const handleOpenMeshCentral = () => {
+    const url = getMeshCentralUrl(userDomain || "mesh");
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   return (
     <section className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-700/40 rounded-2xl p-6 mb-6 backdrop-blur-sm">
@@ -86,6 +93,29 @@ export function ManagementPanel({ userPermissions }: ManagementPanelProps) {
               Configurar permissões e níveis de acesso para cada tipo de utilizador
             </p>
           </Link>
+        )}
+
+        {/* Aceder ao MeshCentral */}
+        {userPermissions?.can_access_meshcentral && (
+          <button
+            type="button"
+            onClick={handleOpenMeshCentral}
+            className="group bg-slate-900/70 border border-slate-700 hover:border-amber-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-amber-900/20 text-left"
+            data-testid="meshcentral-link"
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-10 h-10 rounded-lg bg-amber-600/20 flex items-center justify-center text-xl">
+                🌐
+              </div>
+              <svg className="w-5 h-5 text-slate-600 group-hover:text-amber-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </div>
+            <h3 className="font-medium text-white mb-1">Aceder ao MeshCentral</h3>
+            <p className="text-xs text-slate-400">
+              Abrir o painel MeshCentral do domínio {userDomain || "mesh"}.bwb.pt
+            </p>
+          </button>
         )}
       </div>
     </section>

@@ -15,6 +15,26 @@ export const DOMAIN_LABELS: Record<ValidDomain, string> = {
 };
 
 /**
+ * MeshCentral URLs for each domain
+ */
+export const MESHCENTRAL_URLS: Record<ValidDomain, string> = {
+  mesh: "https://mesh.bwb.pt",
+  zonetech: "https://zonetech.bwb.pt",
+  zsangola: "https://zsangola.bwb.pt",
+};
+
+/**
+ * Get MeshCentral URL for a given domain
+ */
+export function getMeshCentralUrl(domain: string): string {
+  if (isValidDomain(domain)) {
+    return MESHCENTRAL_URLS[domain];
+  }
+  // Default to mesh if domain is invalid
+  return MESHCENTRAL_URLS.mesh;
+}
+
+/**
  * Get default domain based on hostname
  */
 export function getDefaultDomainFromHostname(hostname: string): ValidDomain {

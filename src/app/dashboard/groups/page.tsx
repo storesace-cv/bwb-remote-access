@@ -158,6 +158,7 @@ export default function GroupsPage() {
         can_access_own_domain_only: false,
         can_manage_roles: true,
         can_view_audit_logs: true,
+        can_access_meshcentral: true,
       });
       return;
     }
